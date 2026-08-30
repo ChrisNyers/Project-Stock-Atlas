@@ -16,11 +16,22 @@ logger = logging.getLogger(__name__)
 # XBRL CONCEPT MAPPING
 # ============================================================================
 
-# Canonical financial fields and their common XBRL concept mappings
+# Canonical financial fields and their APPROVED XBRL concept families.
+#
+# Governing rule (Phase 4A.5.0): a canonical Stock Atlas field is an economic
+# concept, never permanently bound to a single XBRL tag. Each family is an
+# ORDERED priority list; selection searches only within the family and records
+# the exact concept actually used in provenance (see select_canonical_fact).
 XBRL_CONCEPT_MAPPINGS = {
     # Income Statement
     "revenue": [
+        # ASC 606 revenue, net of assessed (sales/VAT) taxes — the modern default.
+        "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+        # ASC 606 revenue, gross of assessed taxes (some issuers file this instead).
+        "us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax",
+        # Pre-ASC-606 / legacy aggregate revenue tag.
         "us-gaap:Revenues",
+        # Older ASC 606 aggregate + legacy alternatives already in the taxonomy.
         "us-gaap:RevenueFromContractWithCustomer",
         "us-gaap:NetRevenue"
     ],
@@ -103,6 +114,225 @@ XBRL_CONCEPT_MAPPINGS = {
         "us-gaap:SharesOutstanding"
     ]
 }
+
+
+# Period type each canonical field must be reported as:
+#   "duration" -> flow measured over a period (income statement / cash flow); the
+#                 XBRL fact carries a `start` and an `end`.
+#   "instant"  -> stock measured at a point in time (balance sheet); the XBRL fact
+#                 carries only an `end`.
+CANONICAL_FIELD_PERIOD_TYPE = {
+    "revenue": "duration",
+    "gross_profit": "duration",
+    "operating_income": "duration",
+    "pretax_income": "duration",
+    "taxes": "duration",
+    "net_income": "duration",
+    "basic_eps": "duration",
+    "diluted_eps": "duration",
+    "cash_from_operations": "duration",
+    "capex": "duration",
+    "sbc": "duration",
+    "share_repurchases": "duration",
+    "dividends": "duration",
+    "weighted_average_diluted_shares": "duration",
+    "cash": "instant",
+    "marketable_securities": "instant",
+    "short_term_debt": "instant",
+    "long_term_debt": "instant",
+    "shareholders_equity": "instant",
+    "period_end_shares": "instant",
+}
+
+# Relative tolerance below which two candidate values are treated as the same
+# number (absorbs XBRL rounding only). Larger disagreement between approved
+# concepts for the SAME field and SAME period => CONFLICTED, never a silent pick.
+_CANONICAL_CONFLICT_REL_TOL = 1e-4
+
+
+def _split_concept_id(concept_id: str):
+    """'us-gaap:Revenues' -> ('us-gaap', 'Revenues'); bare name -> ('us-gaap', name)."""
+    if ":" in concept_id:
+        taxonomy, name = concept_id.split(":", 1)
+        return taxonomy, name
+    return "us-gaap", concept_id
+
+
+def _fact_period_type(fact: Dict) -> str:
+    return "duration" if fact.get("start") else "instant"
+
+
+def select_canonical_fact(
+    company_facts: Dict[str, Any],
+    canonical_field: str,
+    *,
+    accession: Optional[str] = None,
+    period_end: Optional[str] = None,
+    period_start: Optional[str] = None,
+    period_type: Optional[str] = None,
+    unit: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Resolve a canonical Stock Atlas field to ONE authoritative SEC XBRL fact.
+
+    Searches ONLY the field's approved concept family (XBRL_CONCEPT_MAPPINGS), in
+    priority order, over the SEC CompanyFacts JSON. Applies the Phase 4A.5.0
+    selection rule:
+
+      1. approved concept family only
+      2. fact must match the intended filing (accession), when given
+      3. fact must match the reporting period (period_end / period_start)
+      4. fact must match the required period type (duration vs instant)
+      5. unit must be compatible (when a unit is required)
+      6. one fact is chosen by approved priority (highest-priority concept that
+         has a match; deterministic within a concept)
+      7. full provenance is preserved, including the EXACT concept used
+
+    Never sums or averages alternative concepts. If two approved concepts give
+    materially different values for the same field + same exact period, the
+    result status is "CONFLICTED" (the numbers are surfaced, none is silently
+    chosen to make anything pass).
+
+    Returns a dict with:
+      status: "SELECTED" | "CONFLICTED" | "UNAVAILABLE"
+      and, when not UNAVAILABLE: concept, taxonomy, unit, raw_value,
+      normalized_value, period_start, period_end, period_type, accession, form,
+      fy, fp, frame, filed, candidates[], conflict
+    """
+    family = XBRL_CONCEPT_MAPPINGS.get(canonical_field)
+    if not family:
+        return {
+            "canonical_field": canonical_field,
+            "status": "UNAVAILABLE",
+            "reason": f"No approved concept family defined for '{canonical_field}'",
+        }
+
+    if period_type is None:
+        period_type = CANONICAL_FIELD_PERIOD_TYPE.get(canonical_field)
+
+    facts_root = (company_facts or {}).get("facts", {})
+
+    def _matches(fact: Dict) -> bool:
+        if fact.get("val") is None:
+            return False
+        if accession is not None and fact.get("accn") != accession:
+            return False
+        if period_end is not None and fact.get("end") != period_end:
+            return False
+        if period_start is not None and fact.get("start") != period_start:
+            return False
+        if period_type is not None and _fact_period_type(fact) != period_type:
+            return False
+        return True
+
+    # Collect matches per concept, preserving family priority.
+    per_concept = []  # [(concept_id, [fact + _unit/_concept]), ...]
+    for concept_id in family:
+        taxonomy, name = _split_concept_id(concept_id)
+        cdata = facts_root.get(taxonomy, {}).get(name)
+        if not cdata or "units" not in cdata:
+            continue
+        matches = []
+        for u, flist in cdata["units"].items():
+            if unit is not None and u != unit:
+                continue
+            if not isinstance(flist, list):
+                continue
+            for fact in flist:
+                if not _matches(fact):
+                    continue
+                m = dict(fact)
+                m["_unit"] = u
+                m["_concept"] = f"{taxonomy}:{name}"
+                matches.append(m)
+        if matches:
+            matches.sort(key=lambda m: (m.get("start") or "", m.get("end") or "", m["_unit"]))
+            per_concept.append((f"{taxonomy}:{name}", matches))
+
+    if not per_concept:
+        return {
+            "canonical_field": canonical_field,
+            "status": "UNAVAILABLE",
+            "period_type": period_type,
+            "reason": (
+                "No fact in the approved concept family "
+                f"{family} matches accession={accession}, period_end={period_end}, "
+                f"period_start={period_start}, period_type={period_type}, unit={unit}"
+            ),
+        }
+
+    sel_concept, sel_matches = per_concept[0]
+    selected = sel_matches[0]
+    sel_period = (selected.get("start"), selected.get("end"))
+
+    def _material(a: float, b: float) -> bool:
+        if a == b:
+            return False
+        scale = max(abs(a), abs(b), 1.0)
+        return abs(a - b) / scale > _CANONICAL_CONFLICT_REL_TOL
+
+    conflict = None
+
+    # (a) selected concept disagrees with itself for the SAME exact period
+    same_period_vals = sorted({
+        float(m["val"]) for m in sel_matches
+        if (m.get("start"), m.get("end")) == sel_period
+    })
+    if len(same_period_vals) > 1 and _material(same_period_vals[0], same_period_vals[-1]):
+        conflict = {
+            "kind": "intra_concept",
+            "concept": sel_concept,
+            "period": {"start": sel_period[0], "end": sel_period[1]},
+            "values": same_period_vals,
+        }
+
+    # (b) a lower-priority approved concept materially disagrees for the SAME period
+    for other_concept, other_matches in per_concept[1:]:
+        for m in other_matches:
+            if (m.get("start"), m.get("end")) != sel_period:
+                continue
+            if _material(float(selected["val"]), float(m["val"])):
+                conflict = conflict or {"kind": "cross_concept", "competing": []}
+                conflict.setdefault("competing", []).append({
+                    "concept": other_concept,
+                    "unit": m["_unit"],
+                    "value": float(m["val"]),
+                })
+
+    return {
+        "canonical_field": canonical_field,
+        "status": "CONFLICTED" if conflict else "SELECTED",
+        "concept": sel_concept,
+        "taxonomy": sel_concept.split(":", 1)[0],
+        "unit": selected["_unit"],
+        "raw_value": selected.get("val"),
+        # SEC CompanyFacts delivers values in native units (already unscaled),
+        # unlike raw XBRL instance documents. No thousands multiplier here.
+        "normalized_value": float(selected["val"]),
+        "normalization": "companyfacts_native_units",
+        "period_start": selected.get("start"),
+        "period_end": selected.get("end"),
+        "period_type": _fact_period_type(selected),
+        "accession": selected.get("accn"),
+        "form": selected.get("form"),
+        "fy": selected.get("fy"),
+        "fp": selected.get("fp"),
+        "frame": selected.get("frame"),
+        "filed": selected.get("filed"),
+        "candidates": [
+            {
+                "concept": c,
+                "unit": m["_unit"],
+                "value": m.get("val"),
+                "start": m.get("start"),
+                "end": m.get("end"),
+                "accession": m.get("accn"),
+                "form": m.get("form"),
+            }
+            for c, ms in per_concept for m in ms
+        ],
+        "conflict": conflict,
+    }
 
 
 # ============================================================================

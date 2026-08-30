@@ -25,7 +25,31 @@ import os
 from dotenv import load_dotenv
 import hashlib
 
+# Single source of truth for canonical field -> approved XBRL concept family and
+# fact selection. The harness must NOT keep a second, competing normalization.
+from xbrl_parser import (
+    XBRL_CONCEPT_MAPPINGS,
+    CANONICAL_FIELD_PERIOD_TYPE,
+    select_canonical_fact,
+)
+
 load_dotenv()
+
+# Canonical Stock Atlas field -> canonical key in xbrl_parser.XBRL_CONCEPT_MAPPINGS.
+# (Names differ only where the harness historically used a short label.)
+HARNESS_FIELD_TO_CANONICAL = {
+    "revenue": "revenue",
+    "gross_profit": "gross_profit",
+    "operating_income": "operating_income",
+    "net_income": "net_income",
+    "cash_from_operations": "cash_from_operations",
+    "capex": "capex",
+    "sbc": "sbc",
+    "cash": "cash",
+    "short_term_debt": "short_term_debt",
+    "long_term_debt": "long_term_debt",
+    "diluted_shares": "weighted_average_diluted_shares",
+}
 
 # ============================================================================
 # EVIDENCE PROVENANCE STRUCTURE
@@ -35,38 +59,54 @@ class FinancialFieldEvidence:
     """Complete provenance for a single financial field."""
     
     def __init__(self):
-        self.value = None
+        self.canonical_field = None
+        self.value = None                 # raw value as reported by SEC CompanyFacts
+        self.normalized_value = None      # normalized value (companyfacts = native units)
         self.unit = None
-        self.concept = None
+        self.concept = None               # EXACT us-gaap concept actually used
+        self.concept_family = None        # approved family searched, in priority order
+        self.taxonomy = None
         self.accession = None
         self.form = None
         self.filed = None
+        self.accepted_datetime = None     # SEC acceptanceDateTime (raw, UTC)
         self.start = None
         self.end = None
+        self.period_type = None           # "duration" | "instant"
         self.fy = None
         self.fp = None
         self.frame = None
         self.derivation_formula = None
         self.source_url = None
-        self.extraction_status = None  # PASS, BLOCKED, FAIL
+        self.candidates = None            # all approved-family facts seen (transparency)
+        self.conflict = None              # populated when status == CONFLICTED
+        self.extraction_status = None     # PASS | BLOCKED | CONFLICTED | FAIL
         self.extraction_reason = None
 
     def to_dict(self) -> Dict:
         """Full provenance as dictionary."""
         return {
+            "canonical_field": self.canonical_field,
             "value": self.value,
+            "normalized_value": self.normalized_value,
             "unit": self.unit,
             "concept": self.concept,
+            "concept_family": self.concept_family,
+            "taxonomy": self.taxonomy,
             "accession": self.accession,
             "form": self.form,
             "filed": self.filed,
+            "accepted_datetime": self.accepted_datetime,
             "start": self.start,
             "end": self.end,
+            "period_type": self.period_type,
             "fy": self.fy,
             "fp": self.fp,
             "frame": self.frame,
             "derivation_formula": self.derivation_formula,
             "source_url": self.source_url,
+            "candidates": self.candidates,
+            "conflict": self.conflict,
             "extraction_status": self.extraction_status,
             "extraction_reason": self.extraction_reason
         }
@@ -244,19 +284,30 @@ class LiveValidator:
             return result
         
         us_gaap = data["facts"]["us-gaap"]
-        
-        # Check for key concepts
-        required = ["Revenues", "NetIncomeLoss", "NetCashProvidedByUsedInOperatingActivities"]
-        found = sum(1 for c in required if c in us_gaap and "units" in us_gaap[c])
-        
-        if found < 2:
-            result.fail_test(f"Only found {found} required concepts")
+
+        # Structural sanity: for a few core canonical fields, at least one concept
+        # in the APPROVED family (xbrl_parser) must be present with units. No
+        # harness-local concept list.
+        core_fields = ["revenue", "net_income", "cash_from_operations"]
+        present = []
+        for field in core_fields:
+            for concept_id in XBRL_CONCEPT_MAPPINGS.get(field, []):
+                name = concept_id.split(":", 1)[-1]
+                if name in us_gaap and "units" in us_gaap[name]:
+                    present.append(field)
+                    break
+
+        if len(present) < 2:
+            result.fail_test(f"Only {len(present)}/3 core canonical fields have a usable concept: {present}")
             return result
-        
+
         # Store for Gate E
         self.companyfacts = data
-        
-        result.pass_test(f"CompanyFacts structure valid. Found {found} key concepts")
+
+        result.pass_test(
+            f"CompanyFacts structure valid; {len(us_gaap)} us-gaap concepts; "
+            f"core fields present: {present}"
+        )
         return result
 
     # ========================================================================
@@ -264,164 +315,182 @@ class LiveValidator:
     # ========================================================================
 
     def gate_e_twelve_field_validation(self) -> TestResult:
-        """FIXED: Each field individually evaluated, not 10/12 threshold."""
+        """Each canonical field resolved via the shared xbrl_parser concept
+        families (no harness-local concept hard-coding). Every field ends in a
+        terminal state: SELECTED (PASS), UNAVAILABLE (BLOCKED), or CONFLICTED.
+        FCF is derived from CFO and CapEx only."""
         result = TestResult("E", "TWELVE_FIELD_VALIDATION")
         print(f"\n[GATE E] TWELVE FIELD VALIDATION")
-        
+
         if not hasattr(self, 'companyfacts'):
             result.block_test("CompanyFacts not retrieved (Gate D failed)")
             return result
-        
-        us_gaap = self.companyfacts["facts"]["us-gaap"]
-        
-        field_concepts = {
-            "revenue": "Revenues",
-            "gross_profit": "GrossProfit",
-            "operating_income": "OperatingIncomeLoss",
-            "net_income": "NetIncomeLoss",
-            "cash_from_operations": "NetCashProvidedByUsedInOperatingActivities",
-            "capex": "PaymentsToAcquirePropertyPlantAndEquipment",
-            "sbc": "ShareBasedCompensation",
-            "cash": "CashAndCashEquivalentsAtCarryingValue",
-            "short_term_debt": "ShortTermBorrowings",
-            "long_term_debt": "LongTermDebt",
-            "diluted_shares": "WeightedAverageNumberOfDilutedSharesOutstanding"
-        }
-        
-        # FIXED: Filter by accession, form, fy, fp, end, unit, context
+
+        cf = self.companyfacts
         target_accession = self.target_10k["accession"]
         target_form = self.target_10k["form"]
         target_fy = self.target_10k["fy"]
         target_fp = self.target_10k["fp"]
         target_end = self.target_10k["period_end"]
-        
+        accepted = getattr(self, "filing_acceptance_datetime_raw", None)
+        source_url = f"{self.base_url}/api/xbrl/companyfacts/CIK{self.msft_cik}.json"
+
+        counts = {"SELECTED": 0, "CONFLICTED": 0, "UNAVAILABLE": 0, "ERROR": 0}
         field_results = {}
-        passed_fields = 0
-        blocked_fields = 0
-        failed_fields = 0
-        
-        for field_name, concept_name in field_concepts.items():
+
+        for harness_field, canonical_key in HARNESS_FIELD_TO_CANONICAL.items():
             evidence = FinancialFieldEvidence()
-            
-            if concept_name not in us_gaap:
-                evidence.extraction_status = "BLOCKED"
-                evidence.extraction_reason = f"Concept '{concept_name}' not in XBRL"
-                blocked_fields += 1
-            else:
-                concept_data = us_gaap[concept_name]
-                if "units" not in concept_data:
-                    evidence.extraction_status = "BLOCKED"
-                    evidence.extraction_reason = "Concept has no units"
-                    blocked_fields += 1
+            evidence.canonical_field = harness_field
+            evidence.concept_family = list(XBRL_CONCEPT_MAPPINGS.get(canonical_key, []))
+            evidence.source_url = source_url
+            evidence.form = target_form
+            evidence.fy = target_fy
+            evidence.fp = target_fp
+            evidence.accepted_datetime = accepted
+
+            try:
+                sel = select_canonical_fact(
+                    cf, canonical_key,
+                    accession=target_accession,
+                    period_end=target_end,
+                    period_type=CANONICAL_FIELD_PERIOD_TYPE.get(canonical_key),
+                )
+            except Exception as e:
+                sel = {"status": "ERROR", "reason": repr(e)}
+
+            status = sel.get("status")
+            if status in ("SELECTED", "CONFLICTED"):
+                evidence.value = sel.get("raw_value")
+                evidence.normalized_value = sel.get("normalized_value")
+                evidence.unit = sel.get("unit")
+                evidence.concept = sel.get("concept")
+                evidence.taxonomy = sel.get("taxonomy")
+                evidence.accession = sel.get("accession")
+                evidence.filed = sel.get("filed")
+                evidence.start = sel.get("period_start")
+                evidence.end = sel.get("period_end")
+                evidence.period_type = sel.get("period_type")
+                evidence.frame = sel.get("frame")
+                evidence.candidates = sel.get("candidates")
+                evidence.conflict = sel.get("conflict")
+                if status == "SELECTED":
+                    evidence.extraction_status = "PASS"
+                    counts["SELECTED"] += 1
                 else:
-                    # FIXED: Search for matching fact with proper filtering
-                    found = False
-                    for unit_key, facts_list in concept_data["units"].items():
-                        for fact in facts_list:
-                            # FIXED: Verify ALL required filters
-                            if (fact.get("end") == target_end and
-                                fact.get("accn") == target_accession and
-                                fact.get("val") is not None):
-                                
-                                # Store full provenance
-                                evidence.value = fact.get("val")
-                                evidence.unit = unit_key
-                                evidence.concept = concept_name
-                                evidence.accession = fact.get("accn")
-                                evidence.form = target_form
-                                evidence.filed = fact.get("filed")
-                                evidence.start = fact.get("start")
-                                evidence.end = fact.get("end")
-                                evidence.fy = target_fy
-                                evidence.fp = target_fp
-                                evidence.frame = fact.get("frame")
-                                evidence.source_url = f"{self.base_url}/api/xbrl/companyfacts/CIK{self.msft_cik}.json"
-                                evidence.extraction_status = "PASS"
-                                
-                                found = True
-                                passed_fields += 1
-                                break
-                        if found:
-                            break
-                    
-                    if not found:
-                        evidence.extraction_status = "BLOCKED"
-                        evidence.extraction_reason = f"No fact matching: end={target_end}, accn={target_accession}"
-                        blocked_fields += 1
-            
-            field_results[field_name] = evidence
-            self.extracted_12_fields[field_name] = evidence
-        
-        # FIXED: Gate passes if all fields have terminal classification (PASS or BLOCKED, no FAIL)
-        if failed_fields > 0:
-            result.fail_test(f"Field extraction errors: {failed_fields} FAIL")
+                    evidence.extraction_status = "CONFLICTED"
+                    evidence.extraction_reason = (
+                        "Approved concepts disagree materially for this field/period; "
+                        "not silently resolved."
+                    )
+                    counts["CONFLICTED"] += 1
+            elif status == "UNAVAILABLE":
+                evidence.extraction_status = "BLOCKED"
+                evidence.extraction_reason = sel.get("reason", "No approved-family fact matched")
+                counts["UNAVAILABLE"] += 1
+            else:
+                evidence.extraction_status = "FAIL"
+                evidence.extraction_reason = sel.get("reason", "selection error")
+                counts["ERROR"] += 1
+
+            field_results[harness_field] = evidence
+            self.extracted_12_fields[harness_field] = evidence
+
+        # A hard error resolving a field fails the gate; SELECTED/BLOCKED/CONFLICTED
+        # are all terminal and acceptable.
+        if counts["ERROR"] > 0:
+            bad = [f for f, e in field_results.items() if e.extraction_status == "FAIL"]
+            result.fail_test(f"Selection error for field(s): {bad}")
             return result
-        
-        # Derive FCF
-        if field_results["cash_from_operations"].extraction_status == "PASS" and \
-           field_results["capex"].extraction_status == "PASS":
-            cfo_val = field_results["cash_from_operations"].value
-            capex_val = field_results["capex"].value
-            
+
+        # Derive FCF strictly from CFO and CapEx (same accession), never from tags.
+        cfo = field_results["cash_from_operations"]
+        capex = field_results["capex"]
+        if cfo.extraction_status == "PASS" and capex.extraction_status == "PASS":
             fcf_evidence = FinancialFieldEvidence()
-            fcf_evidence.value = cfo_val - capex_val
-            fcf_evidence.concept = "FreeCashFlow"
-            fcf_evidence.derivation_formula = "CFO - CapEx"
-            fcf_evidence.accession = field_results["cash_from_operations"].accession
+            fcf_evidence.canonical_field = "fcf"
+            fcf_evidence.value = cfo.value - capex.value
+            fcf_evidence.normalized_value = (cfo.normalized_value or 0) - (capex.normalized_value or 0)
+            fcf_evidence.unit = cfo.unit
+            fcf_evidence.concept = "DERIVED:FreeCashFlow"
+            fcf_evidence.derivation_formula = f"{cfo.concept} - {capex.concept}"
+            fcf_evidence.accession = cfo.accession
             fcf_evidence.form = target_form
+            fcf_evidence.start = cfo.start
             fcf_evidence.end = target_end
+            fcf_evidence.period_type = "duration"
             fcf_evidence.fy = target_fy
             fcf_evidence.fp = target_fp
+            fcf_evidence.accepted_datetime = accepted
             fcf_evidence.extraction_status = "PASS"
-            fcf_evidence.extraction_reason = "Derived from CFO and CapEx"
-            
+            fcf_evidence.extraction_reason = "Derived from CFO and CapEx (same accession)"
             self.extracted_12_fields["fcf"] = fcf_evidence
-            passed_fields += 1
-        
-        report = f"Fields: {passed_fields} PASS, {blocked_fields} BLOCKED. All 12 classified."
+
+        report = (
+            f"Fields: {counts['SELECTED']} SELECTED, "
+            f"{counts['UNAVAILABLE']} UNAVAILABLE, {counts['CONFLICTED']} CONFLICTED "
+            f"(of {len(HARNESS_FIELD_TO_CANONICAL)}); FCF "
+            f"{'derived' if 'fcf' in self.extracted_12_fields else 'not derivable'}. "
+            f"All fields terminally classified."
+        )
         result.pass_test(report)
         return result
 
     # ========================================================================
-    # GATE F (unchanged from v2)
+    # GATE F: PERIOD_CONTEXT_VALIDATION
+    # Uses the shared canonical mapping. Asserts period-TYPE semantics only:
+    #   - the canonical revenue fact is a DURATION fact
+    #   - the canonical cash (balance-sheet) fact is an INSTANT fact
+    #   - the exact source XBRL concept is preserved for each
+    # It does NOT require any particular revenue tag.
     # ========================================================================
 
     def gate_f_period_context_validation(self) -> TestResult:
         result = TestResult("F", "PERIOD_CONTEXT_VALIDATION")
         print(f"\n[GATE F] PERIOD CONTEXT VALIDATION")
-        
+
         if not hasattr(self, 'companyfacts'):
             result.block_test("CompanyFacts not retrieved")
             return result
-        
-        us_gaap = self.companyfacts["facts"]["us-gaap"]
-        target_q3_end = "2026-03-31"
-        
-        # Check for duration fact (income statement)
-        has_duration = False
-        revenue = us_gaap.get("Revenues")
-        if revenue and "units" in revenue:
-            for unit_key, facts_list in revenue["units"].items():
-                for fact in facts_list:
-                    if fact.get("end") == target_q3_end and fact.get("start"):
-                        has_duration = True
-                        break
-        
-        # Check for instant fact (balance sheet)
-        has_instant = False
-        cash = us_gaap.get("CashAndCashEquivalentsAtCarryingValue")
-        if cash and "units" in cash:
-            for unit_key, facts_list in cash["units"].items():
-                for fact in facts_list:
-                    if fact.get("end") == target_q3_end and not fact.get("start"):
-                        has_instant = True
-                        break
-        
-        if not has_duration or not has_instant:
-            result.fail_test("Period classification invalid")
+
+        cf = self.companyfacts
+        q_accession = self.target_10q["accession"]
+        q_end = self.target_10q["period_end"]
+
+        rev = select_canonical_fact(
+            cf, "revenue", accession=q_accession, period_end=q_end, period_type="duration"
+        )
+        cash = select_canonical_fact(
+            cf, "cash", accession=q_accession, period_end=q_end, period_type="instant"
+        )
+
+        problems = []
+
+        if rev.get("status") not in ("SELECTED", "CONFLICTED"):
+            problems.append(f"canonical revenue not resolvable as a duration fact ({rev.get('reason', rev.get('status'))})")
+        else:
+            if rev.get("period_type") != "duration":
+                problems.append(f"canonical revenue fact is {rev.get('period_type')}, expected duration")
+            if not rev.get("concept"):
+                problems.append("canonical revenue fact missing source concept in provenance")
+
+        if cash.get("status") not in ("SELECTED", "CONFLICTED"):
+            problems.append(f"canonical cash not resolvable as an instant fact ({cash.get('reason', cash.get('status'))})")
+        else:
+            if cash.get("period_type") != "instant":
+                problems.append(f"canonical cash fact is {cash.get('period_type')}, expected instant")
+            if not cash.get("concept"):
+                problems.append("canonical cash fact missing source concept in provenance")
+
+        if problems:
+            result.fail_test("; ".join(problems))
             return result
-        
-        result.pass_test("Period classification verified (duration and instant facts present)")
+
+        result.pass_test(
+            f"Period type verified: revenue={rev['concept']} "
+            f"(duration {rev.get('period_start')}..{rev.get('period_end')}), "
+            f"cash={cash['concept']} (instant @ {cash.get('period_end')}); "
+            f"source concepts preserved in provenance."
+        )
         return result
 
     # ========================================================================
@@ -722,6 +791,9 @@ class LiveValidator:
             "generated_utc": datetime.now(timezone.utc).isoformat(),
             "cik": self.msft_cik,
             "targets": {"10-K": self.target_10k, "10-Q": self.target_10q},
+            "extracted_fields": {
+                name: ev.to_dict() for name, ev in self.extracted_12_fields.items()
+            },
             "gates": [
                 {
                     "gate": r.gate_id,
@@ -775,6 +847,21 @@ def _write_artifacts(summary: Dict, results_dir) -> Dict:
         for err in g.get("errors", []):
             lines.append(f"- error: {err}")
         lines.append("")
+
+    ef = summary.get("extracted_fields") or {}
+    if ef:
+        lines.append("## Extracted canonical fields (provenance)")
+        lines.append("")
+        lines.append("| Canonical field | Status | Exact concept | Value | Unit | Period | Accession |")
+        lines.append("|---|---|---|---|---|---|---|")
+        for name, d in ef.items():
+            period = f"{d.get('start') or ''}..{d.get('end') or ''}" if d.get('start') else (d.get('end') or '')
+            lines.append(
+                f"| {name} | {d.get('extraction_status')} | {d.get('concept') or ''} "
+                f"| {d.get('value')} | {d.get('unit') or ''} | {period} | {d.get('accession') or ''} |"
+            )
+        lines.append("")
+
     with open(md_path, "w") as f:
         f.write("\n".join(lines))
 
@@ -794,6 +881,9 @@ if __name__ == "__main__":
             "generated_utc": datetime.now(timezone.utc).isoformat(),
             "fatal_error": repr(e),
             "traceback": traceback.format_exc(),
+            "extracted_fields": {
+                name: ev.to_dict() for name, ev in validator.extracted_12_fields.items()
+            },
             "gates": [
                 {"gate": r.gate_id, "name": r.gate_name, "status": r.status,
                  "evidence": list(r.evidence), "errors": list(r.errors)}
