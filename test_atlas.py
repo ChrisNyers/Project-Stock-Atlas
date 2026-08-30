@@ -919,7 +919,7 @@ class TestMarketDataIdentityJoin:
 
 from market_data_providers import (  # noqa: E402
     build_providers, TwelveDataProvider, AlpacaProvider, TiingoProvider, MassiveProvider,
-    MDResult, STATES,
+    MDResult, STATES, FEED_CLASSES, USAGE_RIGHTS_VERDICTS, classify_feed_from_age,
 )
 
 
@@ -935,23 +935,47 @@ class TestMarketDataProviders:
         assert AlpacaProvider().provider_symbol("BRK-B") == "BRK.B"
         assert TiingoProvider().provider_symbol("BRK.B") == "BRK-B"
 
-    def test_massive_is_not_eligible_for_every_capability(self):
+    def test_massive_is_a_free_with_key_candidate_disabled_without_key(self, monkeypatch):
+        """Phase 4A.5.2A correction: Massive IS a real free equities API
+        ('Stocks Basic' $0/mo). Without a key the adapter is disabled and
+        reports NOT_EXERCISED — never NOT_ELIGIBLE, never a substituted value."""
+        monkeypatch.delenv("MASSIVE_API_KEY", raising=False)
         m = MassiveProvider()
-        assert m.eligibility == "NOT_ELIGIBLE"
+        assert m.eligibility == "FREE_WITH_KEY"
+        assert m.key_env == ("MASSIVE_API_KEY",)
+        assert m.enabled is False
         for cap in ("resolve_symbol", "latest_price", "daily_history", "dividends", "splits"):
             r = getattr(m, cap)("MSFT")
-            assert r.state == "NOT_ELIGIBLE"
+            assert r.state == "NOT_EXERCISED"
             assert r.data is None  # never a substituted number
 
     def test_adapters_without_keys_report_not_exercised(self, monkeypatch):
-        for var in ("ALPACA_API_KEY_ID", "ALPACA_API_SECRET_KEY", "TIINGO_API_TOKEN"):
+        for var in ("ALPACA_API_KEY_ID", "ALPACA_API_SECRET_KEY", "TIINGO_API_TOKEN", "MASSIVE_API_KEY"):
             monkeypatch.delenv(var, raising=False)
-        for cls in (AlpacaProvider, TiingoProvider):
+        for cls in (AlpacaProvider, TiingoProvider, MassiveProvider):
             p = cls()
             assert p.enabled is False
             r = p.latest_price("MSFT")
             assert r.state == "NOT_EXERCISED"
             assert r.data is None
+
+    def test_every_provider_declares_a_usage_rights_verdict(self):
+        for p in build_providers():
+            v = (p.usage_rights or {}).get("verdict")
+            assert v in USAGE_RIGHTS_VERDICTS, f"{p.name}: {v!r}"
+
+    def test_tiingo_free_plan_is_incompatible_with_atlas_persistence(self):
+        """Tiingo Starter terms forbid persistent/durable storage; Stock Atlas
+        requires persistent audit/provenance records."""
+        assert TiingoProvider().usage_rights["verdict"] == "INCOMPATIBLE_WITH_ATLAS_USE"
+
+    def test_feed_class_taxonomy_and_classifier(self):
+        assert set(FEED_CLASSES) == {"REAL_TIME", "DELAYED", "EOD", "IEX_ONLY", "UNKNOWN"}
+        assert classify_feed_from_age(None) == "UNKNOWN"
+        assert classify_feed_from_age(10, market_open=True) == "REAL_TIME"
+        assert classify_feed_from_age(600, market_open=True) == "DELAYED"
+        assert classify_feed_from_age(10, market_open=False) == "EOD"
+        assert classify_feed_from_age(5 * 3600, market_open=True) == "EOD"
 
     def test_mdresult_state_vocabulary(self):
         r = MDResult(provider="x", capability="latest_price", query_symbol="MSFT",
