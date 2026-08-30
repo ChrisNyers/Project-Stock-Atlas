@@ -6,6 +6,8 @@ SEC CompanyFacts uses XBRL concepts that vary by issuer.
 """
 
 from typing import Optional, Dict, List, Any
+from datetime import date
+from enum import Enum
 from sqlalchemy.orm import Session
 import logging
 
@@ -150,6 +152,95 @@ CANONICAL_FIELD_PERIOD_TYPE = {
 _CANONICAL_CONFLICT_REL_TOL = 1e-4
 
 
+# ============================================================================
+# PERIOD GRANULARITY (Phase 4A.5.1A)
+# ============================================================================
+#
+# SEC CompanyFacts routinely carries OVERLAPPING duration contexts that share
+# the same period_end: e.g. a 10-Q reports both the current fiscal quarter
+# (~3 months) and the fiscal year-to-date (6 or 9 months). Filtering on
+# period_end + period_type alone is not enough — the caller must state which
+# duration it wants. select_canonical_fact() must never silently return YTD when
+# a quarter was requested (and vice versa).
+#
+# Granularity is classified DETERMINISTICALLY from the fact's own (start, end)
+# span in days, never from context ordering or "earliest start wins".
+
+class PeriodGranularity(str, Enum):
+    ANNUAL = "ANNUAL"            # full fiscal year (~365 days)
+    QUARTER = "QUARTER"          # a single fiscal quarter (~91 days)
+    YEAR_TO_DATE = "YEAR_TO_DATE"  # fiscal-year start .. period end (H1 ~182, 9M ~273)
+    INSTANT = "INSTANT"          # balance-sheet point in time (no start)
+
+
+# Day-span thresholds. Fiscal quarters run 13-14 weeks; 52/53-week fiscal years
+# run 364-371 days; a leap year is 366. Slack is deliberate.
+_QUARTER_MAX_DAYS = 105
+_YTD_MAX_DAYS = 315
+_ANNUAL_MAX_DAYS = 380
+
+
+def _parse_iso_date(s: Optional[str]) -> Optional[date]:
+    if not s or not isinstance(s, str):
+        return None
+    try:
+        return date(int(s[0:4]), int(s[5:7]), int(s[8:10]))
+    except (ValueError, IndexError):
+        return None
+
+
+def duration_granularity(start: Optional[str], end: Optional[str]) -> Optional[str]:
+    """Classify a duration (start,end) into a PeriodGranularity value.
+
+    Returns None if start is missing (an instant) or dates cannot be parsed.
+    A span longer than a fiscal year is reported as None (multi-year, not a
+    canonical reporting granularity)."""
+    ds, de = _parse_iso_date(start), _parse_iso_date(end)
+    if ds is None or de is None:
+        return None
+    span = (de - ds).days
+    if span <= 0:
+        return None
+    if span <= _QUARTER_MAX_DAYS:
+        return PeriodGranularity.QUARTER.value
+    if span <= _YTD_MAX_DAYS:
+        return PeriodGranularity.YEAR_TO_DATE.value
+    if span <= _ANNUAL_MAX_DAYS:
+        return PeriodGranularity.ANNUAL.value
+    return None  # multi-year
+
+
+def _normalize_granularity(g) -> Optional[str]:
+    if g is None:
+        return None
+    return str(getattr(g, "value", g)).strip().upper()
+
+
+def _fact_satisfies_granularity(fact: Dict, requested: str) -> bool:
+    """Does this XBRL fact match the requested period granularity?
+
+    - INSTANT      -> the fact has no `start`.
+    - ANNUAL / YTD / QUARTER -> the fact's own day-span classifies to that value.
+    - Special case: the FIRST fiscal quarter IS the year-to-date for that
+      quarter, so a ~quarter-length fact tagged fp="Q1" also satisfies a
+      YEAR_TO_DATE request. This is an explicit, documented equivalence — not an
+      inference from ordering.
+    """
+    has_start = bool(fact.get("start"))
+    if requested == PeriodGranularity.INSTANT.value:
+        return not has_start
+    if not has_start:
+        return False
+    g = duration_granularity(fact.get("start"), fact.get("end"))
+    if g == requested:
+        return True
+    if (requested == PeriodGranularity.YEAR_TO_DATE.value
+            and g == PeriodGranularity.QUARTER.value
+            and str(fact.get("fp") or "").strip().upper() == "Q1"):
+        return True
+    return False
+
+
 def _split_concept_id(concept_id: str):
     """'us-gaap:Revenues' -> ('us-gaap', 'Revenues'); bare name -> ('us-gaap', name)."""
     if ":" in concept_id:
@@ -170,6 +261,7 @@ def select_canonical_fact(
     period_end: Optional[str] = None,
     period_start: Optional[str] = None,
     period_type: Optional[str] = None,
+    period_granularity: Optional[str] = None,
     unit: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
@@ -193,12 +285,24 @@ def select_canonical_fact(
     result status is "CONFLICTED" (the numbers are surfaced, none is silently
     chosen to make anything pass).
 
+    ``period_granularity`` (Phase 4A.5.1A) makes the requested duration explicit:
+    "ANNUAL" | "QUARTER" | "YEAR_TO_DATE" | "INSTANT" (or the PeriodGranularity
+    enum). When set, only facts whose own (start,end) day-span classifies to that
+    granularity are eligible — so a QUARTER request can never fall through to a
+    year-to-date context, and vice versa. When omitted, behavior is unchanged
+    (period_end + period_type filtering only).
+
     Returns a dict with:
       status: "SELECTED" | "CONFLICTED" | "UNAVAILABLE"
       and, when not UNAVAILABLE: concept, taxonomy, unit, raw_value,
-      normalized_value, period_start, period_end, period_type, accession, form,
+      normalized_value, period_start, period_end, period_type,
+      period_granularity, requested_granularity, accession, form,
       fy, fp, frame, filed, candidates[], conflict
     """
+    requested_granularity = _normalize_granularity(period_granularity)
+    if requested_granularity is not None and period_type is None:
+        period_type = "instant" if requested_granularity == PeriodGranularity.INSTANT.value else "duration"
+
     family = XBRL_CONCEPT_MAPPINGS.get(canonical_field)
     if not family:
         return {
@@ -222,6 +326,8 @@ def select_canonical_fact(
         if period_start is not None and fact.get("start") != period_start:
             return False
         if period_type is not None and _fact_period_type(fact) != period_type:
+            return False
+        if requested_granularity is not None and not _fact_satisfies_granularity(fact, requested_granularity):
             return False
         return True
 
@@ -254,10 +360,12 @@ def select_canonical_fact(
             "canonical_field": canonical_field,
             "status": "UNAVAILABLE",
             "period_type": period_type,
+            "requested_granularity": requested_granularity,
             "reason": (
                 "No fact in the approved concept family "
                 f"{family} matches accession={accession}, period_end={period_end}, "
-                f"period_start={period_start}, period_type={period_type}, unit={unit}"
+                f"period_start={period_start}, period_type={period_type}, "
+                f"period_granularity={requested_granularity}, unit={unit}"
             ),
         }
 
@@ -313,6 +421,11 @@ def select_canonical_fact(
         "period_start": selected.get("start"),
         "period_end": selected.get("end"),
         "period_type": _fact_period_type(selected),
+        "period_granularity": (
+            PeriodGranularity.INSTANT.value if not selected.get("start")
+            else duration_granularity(selected.get("start"), selected.get("end"))
+        ),
+        "requested_granularity": requested_granularity,
         "accession": selected.get("accn"),
         "form": selected.get("form"),
         "fy": selected.get("fy"),

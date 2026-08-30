@@ -183,39 +183,80 @@ class SECAdapter:
             self.last_error = str(e)
             return None
 
-    def resolve_cik(self, ticker: str) -> Optional[str]:
+    @staticmethod
+    def _norm_ticker(t: str) -> str:
+        """Normalize a ticker for matching. SEC uses a hyphen for share-class /
+        preferred tickers (e.g. "BRK-B", "JPM-PC"); callers often pass the dotted
+        form ("BRK.B")."""
+        return str(t or "").upper().strip().replace(".", "-")
+
+    def get_company_tickers(self) -> Optional[Dict]:
         """
-        Resolve ticker to CIK.
-        Uses SEC company tickers JSON endpoint.
+        Fetch the SEC ticker -> CIK map.
 
-        Args:
-            ticker: Stock ticker (e.g., "MSFT")
-
-        Returns:
-            CIK (zero-padded 10 digits) or None
+        SEC publishes it as a single JSON object keyed by row index:
+        {"0": {"cik_str": 789019, "ticker": "MSFT", "title": "MICROSOFT CORP"}, ...}
+        One row per listed ticker, so a single issuer (CIK) can appear on several
+        rows (e.g. BRK-A and BRK-B both map to CIK 1067983).
         """
-        cache_key = "cik_lookup_all"
+        return self._request(SEC_COMPANY_TICKERS_URL, cache_key="cik_lookup_all")
 
-        # SEC publishes the full ticker->CIK map as a single JSON object keyed
-        # by row index: {"0": {"cik_str": 789019, "ticker": "MSFT", "title": ...}, ...}
-        data = self._request(SEC_COMPANY_TICKERS_URL, cache_key=cache_key)
+    def resolve_ticker(self, ticker: str) -> Optional[Dict]:
+        """
+        Resolve a ticker to its SEC row.
 
+        Returns ``{"cik": <10-digit>, "sec_ticker": <exact SEC ticker>,
+        "title": <issuer title>}`` or None. ``sec_ticker`` is the hyphenated form
+        SEC (and most market-data vendors) expect — preserve it for downstream
+        adapters rather than the caller's dotted input.
+        """
+        data = self.get_company_tickers()
         if not data:
             return None
 
-        # SEC uses a hyphen for share-class / preferred tickers (e.g. "BRK-B",
-        # "JPM-PC"); callers often pass the dotted form ("BRK.B"). Match both.
-        def _norm(t: str) -> str:
-            return str(t).upper().strip().replace(".", "-")
+        wanted = self._norm_ticker(ticker)
+        for row in data.values():
+            if self._norm_ticker(row.get("ticker", "")) == wanted:
+                return {
+                    "cik": str(int(row["cik_str"])).zfill(10),
+                    "sec_ticker": row.get("ticker"),
+                    "title": row.get("title"),
+                }
 
-        wanted = _norm(ticker)
-        for company_info in data.values():
-            if _norm(company_info.get("ticker", "")) == wanted:
-                # Return zero-padded 10-digit CIK
-                return str(int(company_info["cik_str"])).zfill(10)
-
-        logger.warning(f"CIK not found for ticker {ticker}")
+        logger.warning(f"ticker not found in SEC company_tickers: {ticker}")
         return None
+
+    def tickers_for_cik(self, cik: str) -> List[Dict]:
+        """
+        List every SEC ticker row that maps to ``cik``.
+
+        Used to enumerate the distinct securities (share classes, preferred
+        series) that share one issuer CIK. Returns [] if the map is unavailable.
+        """
+        data = self.get_company_tickers()
+        if not data:
+            return []
+        try:
+            target = int(cik)
+        except (TypeError, ValueError):
+            return []
+        rows = []
+        for row in data.values():
+            if int(row.get("cik_str", -1)) == target:
+                rows.append({"sec_ticker": row.get("ticker"), "title": row.get("title")})
+        return rows
+
+    def resolve_cik(self, ticker: str) -> Optional[str]:
+        """
+        Resolve ticker to CIK (zero-padded 10 digits) or None.
+
+        Thin wrapper over resolve_ticker for callers that only need the issuer
+        CIK. Note: a CIK identifies the ISSUER, not the security/share class —
+        use resolve_ticker (or identity_resolver.resolve_security) when the
+        distinction matters.
+        """
+        row = self.resolve_ticker(ticker)
+        return row["cik"] if row else None
 
     def get_company_submissions(self, cik: str) -> Optional[Dict]:
         """

@@ -28,6 +28,16 @@ from point_in_time import PointInTimeService
 from formulas import FormulaRegistry
 from market_macro_adapters import get_market_adapter, get_macro_adapter
 
+from xbrl_parser import (
+    select_canonical_fact, duration_granularity, PeriodGranularity,
+)
+from entity_classification import (
+    classify_entity, filing_regime_for, EntityArchetype, FilingRegime,
+)
+from identity_resolver import (
+    resolve_security, share_class_from_ticker, same_issuer, distinct_securities,
+)
+
 
 # ============================================================================
 # FIXTURES
@@ -561,6 +571,203 @@ class TestMSFTGoldenSecurity:
             datetime(2024, 8, 22)
         )
         assert len(evidence_on_date) == 1
+
+
+# ============================================================================
+# PHASE 4A.5.1A: PERIOD GRANULARITY
+# ============================================================================
+
+def _facts_with_quarter_and_ytd():
+    """Synthetic CompanyFacts: one 10-Q accession carrying BOTH the current
+    fiscal quarter and the fiscal year-to-date revenue for the same period_end."""
+    return {
+        "facts": {
+            "us-gaap": {
+                "RevenueFromContractWithCustomerExcludingAssessedTax": {
+                    "units": {
+                        "USD": [
+                            {"val": 241832000000, "start": "2025-07-01", "end": "2026-03-31",
+                             "accn": "0000-Q", "fp": "Q3", "form": "10-Q"},
+                            {"val": 82886000000, "start": "2026-01-01", "end": "2026-03-31",
+                             "accn": "0000-Q", "fp": "Q3", "form": "10-Q"},
+                        ]
+                    }
+                }
+            }
+        }
+    }
+
+
+class TestPeriodGranularity:
+    """A QUARTER request must never fall through to a year-to-date duration."""
+
+    def test_duration_granularity_classification(self):
+        assert duration_granularity("2026-01-01", "2026-03-31") == "QUARTER"
+        assert duration_granularity("2026-01-01", "2026-06-30") == "YEAR_TO_DATE"   # H1
+        assert duration_granularity("2025-07-01", "2026-03-31") == "YEAR_TO_DATE"   # 9 month
+        assert duration_granularity("2025-07-01", "2026-06-30") == "ANNUAL"
+        assert duration_granularity("2024-01-01", "2026-12-31") is None             # multi-year
+        assert duration_granularity(None, "2026-03-31") is None                     # instant
+
+    def test_quarter_request_returns_quarter_not_ytd(self):
+        cf = _facts_with_quarter_and_ytd()
+        sel = select_canonical_fact(
+            cf, "revenue", accession="0000-Q", period_end="2026-03-31",
+            period_granularity=PeriodGranularity.QUARTER,
+        )
+        assert sel["status"] == "SELECTED"
+        assert sel["raw_value"] == 82886000000
+        assert sel["period_start"] == "2026-01-01"
+        assert sel["period_granularity"] == "QUARTER"
+
+    def test_ytd_request_returns_ytd_not_quarter(self):
+        cf = _facts_with_quarter_and_ytd()
+        sel = select_canonical_fact(
+            cf, "revenue", accession="0000-Q", period_end="2026-03-31",
+            period_granularity="YEAR_TO_DATE",
+        )
+        assert sel["status"] == "SELECTED"
+        assert sel["raw_value"] == 241832000000
+        assert sel["period_start"] == "2025-07-01"
+
+    def test_legacy_call_unchanged(self):
+        """No period_granularity -> identical to prior behavior (earliest-start)."""
+        cf = _facts_with_quarter_and_ytd()
+        sel = select_canonical_fact(
+            cf, "revenue", accession="0000-Q", period_end="2026-03-31",
+            period_type="duration",
+        )
+        assert sel["status"] == "SELECTED"
+        assert sel["raw_value"] == 241832000000  # unchanged: still the YTD fact
+
+    def test_first_quarter_is_also_year_to_date(self):
+        cf = {
+            "facts": {"us-gaap": {"Revenues": {"units": {"USD": [
+                {"val": 100, "start": "2026-01-01", "end": "2026-03-31",
+                 "accn": "Q1", "fp": "Q1", "form": "10-Q"},
+            ]}}}}
+        }
+        q = select_canonical_fact(cf, "revenue", accession="Q1", period_end="2026-03-31",
+                                  period_granularity="QUARTER")
+        ytd = select_canonical_fact(cf, "revenue", accession="Q1", period_end="2026-03-31",
+                                    period_granularity="YEAR_TO_DATE")
+        assert q["raw_value"] == 100
+        assert ytd["raw_value"] == 100  # Q1 quarter == Q1 YTD
+
+    def test_quarter_unavailable_when_only_ytd_exists(self):
+        cf = {
+            "facts": {"us-gaap": {"Revenues": {"units": {"USD": [
+                {"val": 300, "start": "2025-07-01", "end": "2026-03-31",
+                 "accn": "Q", "fp": "Q3", "form": "10-Q"},
+            ]}}}}
+        }
+        sel = select_canonical_fact(cf, "revenue", accession="Q", period_end="2026-03-31",
+                                    period_granularity="QUARTER")
+        assert sel["status"] == "UNAVAILABLE"
+
+
+# ============================================================================
+# PHASE 4A.5.1A: ENTITY ARCHETYPE / FILING REGIME
+# ============================================================================
+
+def _subs(entity_type="operating", sic="7372", sic_desc="Services-Prepackaged Software", forms=("10-K", "10-Q")):
+    return {
+        "entityType": entity_type,
+        "sic": sic,
+        "sicDescription": sic_desc,
+        "filings": {"recent": {"form": list(forms)}},
+    }
+
+
+class TestEntityClassification:
+    """Routing is derived from entityType + SIC + form set, never issuer names."""
+
+    def test_operating_company(self):
+        arch, _ = classify_entity(_subs())
+        assert arch == EntityArchetype.OPERATING_COMPANY
+        assert filing_regime_for(arch) == FilingRegime.SEC_CORPORATE
+
+    def test_bank(self):
+        arch, _ = classify_entity(_subs(sic="6021", sic_desc="National Commercial Banks"))
+        assert arch == EntityArchetype.FINANCIAL_BANK
+
+    def test_reit(self):
+        arch, _ = classify_entity(_subs(sic="6798", sic_desc="Real Estate Investment Trusts"))
+        assert arch == EntityArchetype.REIT
+
+    def test_insurance(self):
+        arch, _ = classify_entity(_subs(sic="6331", sic_desc="Fire, Marine & Casualty Insurance"))
+        assert arch == EntityArchetype.INSURANCE
+
+    def test_investment_company_by_forms(self):
+        arch, _ = classify_entity(_subs(entity_type="other", sic="", sic_desc="",
+                                        forms=("N-CEN", "NPORT-P", "485BPOS", "24F-2NT")))
+        assert arch == EntityArchetype.INVESTMENT_COMPANY_ETF
+        assert filing_regime_for(arch) == FilingRegime.SEC_INVESTMENT_COMPANY
+
+    def test_investment_company_by_entity_type(self):
+        arch, _ = classify_entity(_subs(entity_type="other", sic="", sic_desc="", forms=("497",)))
+        assert arch == EntityArchetype.INVESTMENT_COMPANY_ETF
+
+    def test_unclassified_regime_is_unknown(self):
+        arch, _ = classify_entity(_subs(entity_type="", sic="", sic_desc="", forms=()))
+        assert arch == EntityArchetype.UNCLASSIFIED
+        assert filing_regime_for(arch) == FilingRegime.UNKNOWN
+
+
+# ============================================================================
+# PHASE 4A.5.1A: ISSUER vs SECURITY IDENTITY
+# ============================================================================
+
+class TestIdentityResolver:
+    """Issuer (CIK) and security (ticker / share class) stay distinct."""
+
+    def test_share_class_from_ticker(self):
+        assert share_class_from_ticker("BRK-A") == "A"
+        assert share_class_from_ticker("BRK-B") == "B"
+        assert share_class_from_ticker("JPM-PC") == "PC"
+        assert share_class_from_ticker("MSFT") is None
+
+    def test_brk_a_and_brk_b_distinct_same_issuer(self):
+        """Live: BRK.A != BRK.B as securities, same issuer, no share-class collapse."""
+        a = resolve_security("BRK.A")
+        b = resolve_security("BRK.B")
+        assert a.resolved and b.resolved
+        assert a.cik == b.cik == "0001067983"          # same issuer CIK
+        assert same_issuer(a, b)
+        assert distinct_securities(a, b)                # different security_key
+        assert a.sec_ticker == "BRK-A" and b.sec_ticker == "BRK-B"
+        assert a.share_class == "A" and b.share_class == "B"
+        assert a.security_key != b.security_key
+
+    def test_single_class_issuer_has_no_share_class(self):
+        m = resolve_security("MSFT")
+        assert m.resolved
+        assert m.share_class is None
+        assert m.security_type == "COMMON_STOCK"
+
+    def test_orm_kwargs_keep_issuer_and_security_distinct(self, db: Session):
+        """Two share classes persist as two rows under one issuer_id."""
+        a = resolve_security("BRK.A")
+        b = resolve_security("BRK.B")
+        for r in (a, b):
+            kw = r.to_orm_kwargs()
+            kw["exchange"] = kw.get("exchange") or "NYSE"
+            db.add(SecurityIdentityORM(**kw))
+        db.commit()
+        rows = db.query(SecurityIdentityORM).order_by(SecurityIdentityORM.ticker).all()
+        assert len(rows) == 2
+        assert rows[0].ticker == "BRK-A" and rows[1].ticker == "BRK-B"
+        assert rows[0].share_class == "A" and rows[1].share_class == "B"
+        assert rows[0].issuer_id == rows[1].issuer_id           # same issuer
+        assert rows[0].security_id != rows[1].security_id       # distinct securities
+
+    def test_spy_routes_to_investment_company(self):
+        s = resolve_security("SPY")
+        assert s.resolved
+        assert s.entity_archetype == "INVESTMENT_COMPANY_ETF"
+        assert s.filing_regime == "SEC_INVESTMENT_COMPANY"
+        assert s.security_type == "FUND_OR_ETF"
 
 
 # ============================================================================

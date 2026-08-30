@@ -36,6 +36,13 @@ from xbrl_parser import (
     CANONICAL_FIELD_PERIOD_TYPE,
     select_canonical_fact,
 )
+# Phase 4A.5.1A: archetype + filing-regime routing now lives in a core module,
+# not in this benchmark. Imported here with the original signatures.
+from entity_classification import (
+    classify_archetype,
+    discover_regime,
+    INVESTMENT_COMPANY_FORMS,
+)
 
 load_dotenv()
 
@@ -155,10 +162,7 @@ FIELD_CANDIDATE_CONCEPTS = {
     },
 }
 
-INVESTMENT_COMPANY_FORMS = {
-    "N-CEN", "NPORT-P", "N-PORT", "NPORT-EX", "N-CSR", "N-CSRS", "485BPOS", "485APOS",
-    "497", "497K", "24F-2NT", "NSAR-U", "NSAR-B", "N-30D", "N-1A",
-}
+# INVESTMENT_COMPANY_FORMS is imported from entity_classification (Phase 4A.5.1A).
 
 
 # ---------------------------------------------------------------------------
@@ -181,36 +185,6 @@ def parse_accepted_utc(raw):
         return None
 
 
-def classify_archetype(subs):
-    """Route a filer to a broad SEC evidence archetype from entityType + SIC +
-    the set of forms it actually files. No issuer names involved."""
-    etype = (subs.get("entityType") or "").strip().lower()
-    sic = str(subs.get("sic") or "").strip()
-    sic_desc = (subs.get("sicDescription") or "").strip()
-    forms = set(subs.get("filings", {}).get("recent", {}).get("form", []))
-    has_10k = "10-K" in forms
-    has_10q = "10-Q" in forms
-
-    if not (has_10k or has_10q) and (forms & INVESTMENT_COMPANY_FORMS):
-        return "INVESTMENT_COMPANY_ETF", (
-            f"no 10-K/10-Q; files investment-company forms "
-            f"({sorted(forms & INVESTMENT_COMPANY_FORMS)[:5]}); entityType={etype!r}"
-        )
-    if etype == "other" and not has_10k and not has_10q:
-        return "INVESTMENT_COMPANY_ETF", f"entityType='other', no 10-K/10-Q"
-
-    if sic in {"6021", "6022", "6020", "6029", "6199", "6120", "6712"} or sic_desc.lower().find("bank") >= 0:
-        return "FINANCIAL_BANK", f"SIC {sic} ({sic_desc})"
-    if sic == "6798" or "real estate investment trust" in sic_desc.lower():
-        return "REIT", f"SIC {sic} ({sic_desc})"
-    if sic in {"6311", "6321", "6331", "6411", "6351", "6361"} or "insurance" in sic_desc.lower():
-        return "INSURANCE", f"SIC {sic} ({sic_desc})"
-
-    if etype == "operating" and (has_10k or has_10q):
-        return "OPERATING_COMPANY", f"entityType='operating', SIC {sic} ({sic_desc})"
-    return "UNCLASSIFIED", f"entityType={etype!r}, SIC {sic!r} ({sic_desc!r}), forms={sorted(forms)[:6]}"
-
-
 def latest_filing_of(subs_recent_iter, form):
     for f in subs_recent_iter:
         if f.get("form") == form:
@@ -218,27 +192,8 @@ def latest_filing_of(subs_recent_iter, form):
     return None
 
 
-def discover_regime(archetype, adapter, cik):
-    """Return (regime_label, primary_filing_dict, secondary_filing_dict, notes)."""
-    notes = []
-    if archetype == "INVESTMENT_COMPANY_ETF":
-        ncen = adapter.get_recent_filings(cik, "N-CEN", 1)
-        nport = adapter.get_recent_filings(cik, "NPORT-P", 1) or adapter.get_recent_filings(cik, "N-PORT", 1)
-        primary = ncen[0] if ncen else None
-        secondary = nport[0] if nport else None
-        if not primary and not secondary:
-            for alt in ("N-CSR", "24F-2NT", "485BPOS"):
-                got = adapter.get_recent_filings(cik, alt, 1)
-                if got:
-                    primary = got[0]
-                    notes.append(f"fell back to {alt}")
-                    break
-        return "INVESTMENT_COMPANY (N-CEN annual + NPORT-P holdings)", primary, secondary, notes
-
-    # operating-company-like regimes (bank / REIT / insurance / operating all file 10-K/10-Q)
-    tk = adapter.get_recent_filings(cik, "10-K", 1)
-    tq = adapter.get_recent_filings(cik, "10-Q", 1)
-    return "OPERATING (10-K annual + 10-Q interim)", (tk[0] if tk else None), (tq[0] if tq else None), notes
+# classify_archetype() and discover_regime() are imported from
+# entity_classification (Phase 4A.5.1A) with identical signatures.
 
 
 def scan_mapping_candidates(company_facts, field, accession, period_end, period_type):
