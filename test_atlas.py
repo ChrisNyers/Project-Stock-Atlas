@@ -914,6 +914,72 @@ class TestMarketDataIdentityJoin:
 
 
 # ============================================================================
+# PHASE 4A.5.2: FREE MARKET DATA PROVIDER ADAPTERS (offline)
+# ============================================================================
+
+from market_data_providers import (  # noqa: E402
+    build_providers, TwelveDataProvider, AlpacaProvider, TiingoProvider, MassiveProvider,
+    MDResult, STATES,
+)
+
+
+class TestMarketDataProviders:
+    """Adapter envelope + identity discipline. Offline (no live calls)."""
+
+    def test_build_providers_returns_the_four_candidates(self):
+        names = {p.name for p in build_providers()}
+        assert names == {"twelvedata", "alpaca", "tiingo", "massive"}
+
+    def test_share_class_symbol_conventions(self):
+        assert TwelveDataProvider().provider_symbol("BRK-B") == "BRK.B"
+        assert AlpacaProvider().provider_symbol("BRK-B") == "BRK.B"
+        assert TiingoProvider().provider_symbol("BRK.B") == "BRK-B"
+
+    def test_massive_is_not_eligible_for_every_capability(self):
+        m = MassiveProvider()
+        assert m.eligibility == "NOT_ELIGIBLE"
+        for cap in ("resolve_symbol", "latest_price", "daily_history", "dividends", "splits"):
+            r = getattr(m, cap)("MSFT")
+            assert r.state == "NOT_ELIGIBLE"
+            assert r.data is None  # never a substituted number
+
+    def test_adapters_without_keys_report_not_exercised(self, monkeypatch):
+        for var in ("ALPACA_API_KEY_ID", "ALPACA_API_SECRET_KEY", "TIINGO_API_TOKEN"):
+            monkeypatch.delenv(var, raising=False)
+        for cls in (AlpacaProvider, TiingoProvider):
+            p = cls()
+            assert p.enabled is False
+            r = p.latest_price("MSFT")
+            assert r.state == "NOT_EXERCISED"
+            assert r.data is None
+
+    def test_mdresult_state_vocabulary(self):
+        r = MDResult(provider="x", capability="latest_price", query_symbol="MSFT",
+                     atlas_symbol="MSFT", state="AVAILABLE")
+        assert r.state in STATES
+        assert r.retrieved_at  # always stamped
+
+    def test_security_key_binding_is_atlas_side_and_distinct_for_brk(self):
+        """A provider adapter binds observations to the Atlas security_key,
+        never the bare CIK, and BRK.A / BRK.B never collapse."""
+        p = TwelveDataProvider()
+        ka = p._security_key("BRK.A")
+        kb = p._security_key("BRK.B")
+        assert ka == "SEC-CIK:0001067983:BRK-A"
+        assert kb == "SEC-CIK:0001067983:BRK-B"
+        assert ka != kb
+        assert ka != "0001067983" and kb != "0001067983"
+
+    def test_twelvedata_demo_guard_blocks_non_aapl_data_calls(self, monkeypatch):
+        monkeypatch.delenv("TWELVEDATA_API_KEY", raising=False)
+        p = TwelveDataProvider()
+        assert p.using_demo is True
+        r = p.latest_price("MSFT")
+        assert r.state == "NOT_EXERCISED"
+        assert "demo key only serves AAPL" in " ".join(r.notes)
+
+
+# ============================================================================
 # RUN TESTS
 # ============================================================================
 
