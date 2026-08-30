@@ -3,119 +3,96 @@
 ################################################################################
 # Stock Atlas Sprint 1 — Run Live SEC Validation
 #
-# This script executes the live SEC validation harness and saves results.
+# Executes the ACTIVE live SEC validation harness (v3) and saves results.
+#
+#   Active harness:   validation_harness_live_v3.py
+#   Predecessors:     validation_harness_live.py    (v1, historical)
+#                     validation_harness_live_v2.py (v2, historical)
+#   v1/v2 are retained for audit/history only and are NOT run by this script.
 #
 # Usage:
 #   ./run_live_validation.sh
 #
-# Output:
-#   live_validation_results/
-#     - TIMESTAMP_validation_results.txt
+# Output (written by the harness):
+#   live_validation_results/<UTC-timestamp>_gate_results.json   (machine-readable)
+#   live_validation_results/<UTC-timestamp>_gate_results.md     (human-readable)
 ################################################################################
 
-set -e
+set -u
+
+VENV_DIR=".venv"
+HARNESS="validation_harness_live_v3.py"
+PY="$VENV_DIR/bin/python"
 
 echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║     Stock Atlas Sprint 1 — Live SEC Validation                ║"
+echo "║     Stock Atlas Sprint 1 — Live SEC Validation (v3)           ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
-
-# ============================================================================
-# 1. VERIFY ENVIRONMENT
-# ============================================================================
-
 echo ""
 echo "Verifying environment..."
 
-# Check if virtual environment is activated
-if [ -z "$VIRTUAL_ENV" ]; then
-    echo "✗ ERROR: Virtual environment not activated"
-    echo ""
-    echo "Please run setup first:"
-    echo "  ./setup_live.sh"
-    echo ""
-    echo "Then activate the virtual environment:"
-    echo "  source venv/bin/activate"
+# --- Python / venv -----------------------------------------------------------
+if [ ! -x "$PY" ]; then
+    echo "✗ ERROR: $PY not found. Run ./setup_live.sh first."
     exit 1
 fi
 
-echo "✓ Virtual environment activated: $VIRTUAL_ENV"
+PY_VER=$("$PY" -c 'import sys; print("%d.%d.%d" % sys.version_info[:3])')
+case "$PY_VER" in
+    3.11.*) echo "✓ Python $PY_VER ($VENV_DIR)" ;;
+    *) echo "✗ ERROR: baseline requires Python 3.11, $VENV_DIR is $PY_VER. Re-run ./setup_live.sh." ; exit 1 ;;
+esac
 
-# Check .env
+# --- .env -------------------------------------------------------------------
 if [ ! -f ".env" ]; then
     echo "✗ ERROR: .env not found"
     exit 1
 fi
-
 echo "✓ Configuration found (.env)"
 
-# Check SEC_USER_AGENT is set
-SEC_USER_AGENT=$(grep "^SEC_USER_AGENT=" .env | cut -d'=' -f2 | tr -d '"')
-if [ -z "$SEC_USER_AGENT" ]; then
+SEC_UA=$(grep "^SEC_USER_AGENT=" .env | cut -d'=' -f2- | tr -d '"')
+if [ -z "$SEC_UA" ]; then
     echo "✗ ERROR: SEC_USER_AGENT not configured in .env"
-    echo "   Please set SEC_USER_AGENT in .env before running"
     exit 1
 fi
-
 echo "✓ SEC_USER_AGENT configured"
 
-# Check validation harness
-if [ ! -f "validation_harness_live.py" ]; then
-    echo "✗ ERROR: validation_harness_live.py not found"
+# --- harness ---------------------------------------------------------------
+if [ ! -f "$HARNESS" ]; then
+    echo "✗ ERROR: $HARNESS not found"
     exit 1
 fi
-
-echo "✓ Validation harness found"
-
-# ============================================================================
-# 2. CREATE RESULTS DIRECTORY
-# ============================================================================
-
-echo ""
-echo "Preparing results directory..."
+echo "✓ Active harness: $HARNESS"
 
 mkdir -p live_validation_results
-
-echo "✓ Results directory ready: live_validation_results/"
-
-# ============================================================================
-# 3. RUN VALIDATION HARNESS
-# ============================================================================
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
 echo "║            LIVE SEC VALIDATION STARTING                       ║"
-echo "║            Connecting to SEC EDGAR...                         ║"
+echo "║            Connecting to SEC EDGAR...                        ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
-
 echo ""
 
-# Run the validation harness
-python3 validation_harness_live.py
-
+# Do not let a nonzero harness exit abort before we print the summary.
+set +e
+"$PY" "$HARNESS"
 VALIDATION_EXIT_CODE=$?
-
-# ============================================================================
-# 4. RESULTS SUMMARY
-# ============================================================================
+set -e
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
 echo "║                    VALIDATION COMPLETE                        ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
-
 echo ""
-echo "Results saved to: live_validation_results/"
-echo ""
-echo "View results:"
-echo "  ls -la live_validation_results/"
+echo "Result artifacts:"
+ls -1t live_validation_results/*_gate_results.* 2>/dev/null | head -4 || echo "  (none written — check harness output above)"
 echo ""
 
-if [ $VALIDATION_EXIT_CODE -eq 0 ]; then
-    echo "✓ All tests completed successfully"
+if [ "$VALIDATION_EXIT_CODE" -eq 0 ]; then
+    echo "✓ Harness completed; all gates PASS or acceptably BLOCKED."
 else
-    echo "⚠ Some tests did not pass (exit code: $VALIDATION_EXIT_CODE)"
+    echo "⚠ Harness completed with non-PASS gates (exit code: $VALIDATION_EXIT_CODE)."
+    echo "  See the .md artifact for the per-gate breakdown."
 fi
-
 echo ""
 
 exit $VALIDATION_EXIT_CODE

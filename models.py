@@ -17,8 +17,9 @@ import json
 
 class SecurityIdentityStatus(str, Enum):
     """Status of security identity resolution."""
+    UNVERIFIED = "UNVERIFIED"  # Identity not yet verified (initial state)
     VERIFIED = "VERIFIED"
-    AMBIGUOUS = "AMBIGUOUS"
+    AMBIGUOUS = "AMBIGUOUS"  # Evidence exists but identity cannot be resolved cleanly
     INACTIVE = "INACTIVE"
     CORPORATE_ACTION_PENDING = "CORPORATE_ACTION_PENDING"
 

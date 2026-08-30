@@ -23,8 +23,11 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 SEC_BASE_URL = "https://data.sec.gov"
+SEC_WWW_URL = "https://www.sec.gov"
 SEC_FILINGS_URL = f"{SEC_BASE_URL}/submissions"
 SEC_FACTS_URL = f"{SEC_BASE_URL}/api/xbrl"
+# Ticker -> CIK map (published on www.sec.gov, not data.sec.gov)
+SEC_COMPANY_TICKERS_URL = f"{SEC_WWW_URL}/files/company_tickers.json"
 
 # Rate limiting
 SEC_RATE_LIMIT = 8  # requests per second (SEC allows more, we're conservative)
@@ -191,19 +194,20 @@ class SECAdapter:
         Returns:
             CIK (zero-padded 10 digits) or None
         """
-        cache_key = f"cik_lookup_{ticker.upper()}"
+        cache_key = "cik_lookup_all"
 
-        url = f"{SEC_BASE_URL}/files/fall23cik-lookup-data.json"
-        data = self._request(url, cache_key=cache_key)
+        # SEC publishes the full ticker->CIK map as a single JSON object keyed
+        # by row index: {"0": {"cik_str": 789019, "ticker": "MSFT", "title": ...}, ...}
+        data = self._request(SEC_COMPANY_TICKERS_URL, cache_key=cache_key)
 
         if not data:
             return None
 
         ticker_upper = ticker.upper()
-        for cik_str, company_info in data.items():
-            if company_info.get("ticker", "").upper() == ticker_upper:
+        for company_info in data.values():
+            if str(company_info.get("ticker", "")).upper() == ticker_upper:
                 # Return zero-padded 10-digit CIK
-                return str(int(cik_str)).zfill(10)
+                return str(int(company_info["cik_str"])).zfill(10)
 
         logger.warning(f"CIK not found for ticker {ticker}")
         return None
@@ -243,9 +247,45 @@ class SECAdapter:
         url = f"{SEC_FACTS_URL}/companyfacts/CIK{cik_normalized}.json"
         return self._request(url, cache_key=cache_key)
 
+    # Fields SEC exposes as parallel arrays under filings.recent. These are the
+    # ones downstream code relies on; each is preserved verbatim (raw SEC value).
+    RECENT_FILING_FIELDS = (
+        "accessionNumber",
+        "form",
+        "filingDate",
+        "reportDate",
+        "acceptanceDateTime",
+        "primaryDocument",
+        "primaryDocDescription",
+        "isXBRL",
+        "isInlineXBRL",
+        "size",
+    )
+
+    @staticmethod
+    def _iter_recent_filings(submissions: Dict):
+        """
+        Yield one dict per filing from the SEC ``filings.recent`` block.
+
+        SEC returns ``recent`` as a dict of column arrays (accessionNumber[],
+        form[], acceptanceDateTime[], ...), NOT a list of records. This zips the
+        columns back into per-filing rows by index. Missing/short columns yield
+        ``None`` for that field (never a substituted value).
+        """
+        recent = (submissions or {}).get("filings", {}).get("recent", {})
+        if not isinstance(recent, dict):
+            return
+        accessions = recent.get("accessionNumber", []) or []
+        for i in range(len(accessions)):
+            row = {}
+            for field in SECAdapter.RECENT_FILING_FIELDS:
+                col = recent.get(field, [])
+                row[field] = col[i] if isinstance(col, list) and i < len(col) else None
+            yield row
+
     def get_recent_filings(self, cik: str, form_type: str = "10-K", limit: int = 10) -> List[Dict]:
         """
-        Get recent filings of specific type.
+        Get recent filings of a specific type, newest first.
 
         Args:
             cik: 10-digit CIK
@@ -253,14 +293,14 @@ class SECAdapter:
             limit: Maximum filings to return
 
         Returns:
-            List of filing metadata
+            List of filing metadata dicts (raw SEC field names/values preserved)
         """
         submissions = self.get_company_submissions(cik)
         if not submissions or "filings" not in submissions:
             return []
 
         filings = []
-        for filing in submissions["filings"]["recent"]:
+        for filing in self._iter_recent_filings(submissions):
             if filing.get("form") == form_type:
                 filings.append(filing)
                 if len(filings) >= limit:
@@ -270,25 +310,25 @@ class SECAdapter:
 
     def get_filing_metadata(self, cik: str, accession: str) -> Optional[Dict]:
         """
-        Get metadata for specific filing.
+        Get metadata for a specific filing by accession number.
 
         Args:
             cik: 10-digit CIK
-            accession: Accession number (e.g., "0001144659-21-015555")
+            accession: Accession number (e.g., "0001193125-26-323660")
 
         Returns:
-            Filing metadata or None
+            Filing metadata dict (raw SEC values preserved) or None if not in
+            the recent-filings window.
         """
         submissions = self.get_company_submissions(cik)
         if not submissions:
             return None
 
-        # Search recent filings
-        for filing in submissions.get("filings", {}).get("recent", []):
+        for filing in self._iter_recent_filings(submissions):
             if filing.get("accessionNumber") == accession:
                 return filing
 
-        # Search older filings (not implemented for simplicity)
+        # Older filings live in filings.files[*].name (paged JSON); not fetched here.
         return None
 
     def download_filing(self, cik: str, accession: str, filename: str = "0001144659-21-015555.htm") -> Optional[str]:

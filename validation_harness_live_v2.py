@@ -1,4 +1,11 @@
 """
+=============================================================================
+HISTORICAL — v2. NOT the active harness.
+The active live-validation harness is `validation_harness_live_v3.py`.
+v1 and v2 are retained only for audit/history. Do not run them for validation.
+See HARNESS_VERSIONS.md.
+=============================================================================
+
 Sprint 1 Live Validation Harness v2 — COMPLETE REWRITE
 
 Actual SEC EDGAR integration with proper JSON structure parsing.

@@ -1,4 +1,10 @@
 """
+=============================================================================
+ACTIVE live-validation harness (Phase 4A.5.0 baseline).
+Predecessors validation_harness_live.py (v1) and _v2.py are historical only.
+Run via ./run_live_validation.sh. See HARNESS_VERSIONS.md.
+=============================================================================
+
 Sprint 1 Live Validation Harness v3 — CORRECTED AFTER STATIC REVIEW
 
 Fixes for Lou's v2 review:
@@ -152,8 +158,8 @@ class LiveValidator:
         if not data or "filings" not in data or "recent" not in data["filings"]:
             result.fail_test("Cannot retrieve or parse MSFT submissions")
             return result
-        
-        result.pass_test(f"SEC reachable. Retrieved {len(data['filings']['recent'].get('accession_number', []))} filings")
+
+        result.pass_test(f"SEC reachable. Retrieved {len(data['filings']['recent'].get('accessionNumber', []))} filings")
         return result
 
     def gate_b_filing_discovery(self) -> TestResult:
@@ -167,7 +173,7 @@ class LiveValidator:
             result.block_test("No submissions data")
             return result
         
-        accessions = data["filings"]["recent"].get("accession_number", [])
+        accessions = data["filings"]["recent"].get("accessionNumber", [])
         found_10k = self.target_10k["accession"] in accessions
         found_10q = self.target_10q["accession"] in accessions
         
@@ -190,25 +196,41 @@ class LiveValidator:
             return result
         
         filings = data["filings"]["recent"]
-        accessions = filings.get("accession_number", [])
-        acceptance_datetimes = filings.get("acceptance_datetime", [])
-        
+        accessions = filings.get("accessionNumber", [])
+        acceptance_datetimes = filings.get("acceptanceDateTime", [])
+
         try:
             idx = accessions.index(self.target_10k["accession"])
-            acceptance_datetime = acceptance_datetimes[idx]
-            
-            if not acceptance_datetime or len(acceptance_datetime) < 19:
-                result.fail_test(f"Invalid acceptance_datetime: {acceptance_datetime}")
-                return result
-            
-            # Store for Gate H and I
-            self.filing_acceptance_datetime = acceptance_datetime
-            
-            result.pass_test(f"10-K acceptance_datetime: {acceptance_datetime} (raw, source: America/New_York)")
+        except ValueError:
+            result.fail_test(f"10-K accession {self.target_10k['accession']} not in recent filings")
             return result
-        except Exception as e:
-            result.fail_test(f"Cannot retrieve filing metadata: {e}")
+
+        if idx >= len(acceptance_datetimes):
+            result.fail_test("acceptanceDateTime column shorter than accessionNumber column")
             return result
+
+        acceptance_datetime = acceptance_datetimes[idx]
+
+        # SEC supplies an ISO-8601 UTC timestamp, e.g. "2026-07-29T20:08:01.000Z".
+        # Preserve the raw source value verbatim; normalization happens in Gate H.
+        if not acceptance_datetime or not isinstance(acceptance_datetime, str):
+            result.fail_test(f"Missing acceptanceDateTime for 10-K: {acceptance_datetime!r}")
+            return result
+
+        # Store raw for Gate H / Gate I (do NOT reinterpret the timezone here).
+        self.filing_acceptance_datetime_raw = acceptance_datetime
+        self.filing_filed_date = (
+            filings.get("filingDate", [None] * (idx + 1))[idx] if idx < len(filings.get("filingDate", [])) else None
+        )
+        self.filing_report_date = (
+            filings.get("reportDate", [None] * (idx + 1))[idx] if idx < len(filings.get("reportDate", [])) else None
+        )
+
+        result.pass_test(
+            f"10-K acceptanceDateTime (raw, ISO-8601 UTC): {acceptance_datetime} | "
+            f"filingDate={self.filing_filed_date} reportDate={self.filing_report_date}"
+        )
+        return result
 
     def gate_d_xbrl_extraction(self) -> TestResult:
         result = TestResult("D", "XBRL_EXTRACTION")
@@ -437,29 +459,44 @@ class LiveValidator:
         result = TestResult("H", "TIMEZONE_NORMALIZATION")
         print(f"\n[GATE H] TIMEZONE NORMALIZATION")
         
-        if not hasattr(self, 'filing_acceptance_datetime'):
-            result.block_test("Filing datetime not retrieved")
+        if not hasattr(self, 'filing_acceptance_datetime_raw'):
+            result.block_test("Filing acceptance datetime not retrieved (Gate C failed)")
             return result
-        
-        raw_datetime_str = self.filing_acceptance_datetime
-        
+
+        raw_datetime_str = self.filing_acceptance_datetime_raw
+
+        # SEC's acceptanceDateTime is already UTC (trailing 'Z'). Parse it as-is;
+        # do NOT add or subtract any offset. Just normalize to a tz-aware UTC datetime.
         try:
-            dt = datetime.strptime(raw_datetime_str, "%Y-%m-%d %H:%M:%S")
-            utc_dt = dt.replace(tzinfo=timezone.utc)
-            utc_dt = utc_dt.replace(hour=utc_dt.hour + 4)
-            
-            expected_utc = datetime(2026, 7, 29, 20, 8, 1, tzinfo=timezone.utc)
-            
-            if utc_dt.hour == expected_utc.hour and utc_dt.minute == expected_utc.minute:
-                result.pass_test(f"TZ conversion: {raw_datetime_str} ET → {utc_dt.isoformat()} UTC")
-                self.known_at_utc = utc_dt  # Store for Gate I
-                return result
-            else:
-                result.fail_test(f"TZ conversion mismatch: expected {expected_utc}, got {utc_dt}")
-                return result
+            iso = raw_datetime_str.strip()
+            if iso.endswith("Z"):
+                iso = iso[:-1] + "+00:00"
+            parsed = datetime.fromisoformat(iso)
+            if parsed.tzinfo is None:
+                # No zone marker at all: SEC documents this field as UTC.
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            utc_dt = parsed.astimezone(timezone.utc)
         except Exception as e:
-            result.fail_test(f"TZ conversion error: {e}")
+            result.fail_test(f"Could not parse acceptanceDateTime {raw_datetime_str!r}: {e}")
             return result
+
+        # The normalized instant must equal the raw instant (no clock shift).
+        # Cross-check against the independently-known MSFT FY2026 10-K acceptance.
+        expected_utc = datetime(2026, 7, 29, 20, 8, 1, tzinfo=timezone.utc)
+        if utc_dt != expected_utc:
+            result.fail_test(
+                f"Normalized UTC {utc_dt.isoformat()} != expected {expected_utc.isoformat()} "
+                f"(raw was {raw_datetime_str})"
+            )
+            return result
+
+        self.known_at_raw = raw_datetime_str          # preserved source value
+        self.known_at_utc = utc_dt                     # normalized, tz-aware UTC (for Gate I)
+        result.pass_test(
+            f"acceptanceDateTime preserved raw={raw_datetime_str}; "
+            f"normalized to UTC={utc_dt.isoformat()} with no offset reinterpretation"
+        )
+        return result
 
     # ========================================================================
     # GATE I: POINT_IN_TIME (FIXED NameError)
@@ -513,20 +550,21 @@ class LiveValidator:
         
         filings = data["filings"]["recent"]
         forms = filings.get("form", [])
-        accessions = filings.get("accession_number", [])
-        acceptance_datetimes = filings.get("acceptance_datetime", [])
-        
-        # FIXED: Look for actual original/amended pair
+        accessions = filings.get("accessionNumber", [])
+        acceptance_datetimes = filings.get("acceptanceDateTime", [])
+
+        # FIXED: correct SEC field names + bounds-safe indexing (parallel arrays
+        # can in principle differ in length; never let that crash the harness).
         amendments = []
         for i, form in enumerate(forms):
-            if "/A" in form:
+            if isinstance(form, str) and "/A" in form:
                 amendments.append({
                     "index": i,
-                    "amended_accession": accessions[i],
-                    "amended_datetime": acceptance_datetimes[i],
+                    "amended_accession": accessions[i] if i < len(accessions) else None,
+                    "amended_datetime": acceptance_datetimes[i] if i < len(acceptance_datetimes) else None,
                     "amended_form": form
                 })
-        
+
         if not amendments:
             result.block_test(
                 "No amended filings in recent Microsoft data. "
@@ -624,19 +662,40 @@ class LiveValidator:
         print(f"\nConfiguration:")
         print(f"  User-Agent: {self.sec_user_agent}")
         print(f"  CIK: {self.msft_cik}")
-        
-        self.results.append(self.gate_a_sec_connectivity())
-        self.results.append(self.gate_b_filing_discovery())
-        self.results.append(self.gate_c_real_filing_retrieval())
-        self.results.append(self.gate_d_xbrl_extraction())
-        self.results.append(self.gate_e_twelve_field_validation())
-        self.results.append(self.gate_f_period_context_validation())
-        self.results.append(self.gate_g_fcf_provenance())
-        self.results.append(self.gate_h_timezone_normalization())
-        self.results.append(self.gate_i_point_in_time())
-        self.results.append(self.gate_j_amendment_restatement())
-        self.results.append(self.gate_k_freeze_hash_integrity())
-        
+
+        gates = [
+            ("A", self.gate_a_sec_connectivity),
+            ("B", self.gate_b_filing_discovery),
+            ("C", self.gate_c_real_filing_retrieval),
+            ("D", self.gate_d_xbrl_extraction),
+            ("E", self.gate_e_twelve_field_validation),
+            ("F", self.gate_f_period_context_validation),
+            ("G", self.gate_g_fcf_provenance),
+            ("H", self.gate_h_timezone_normalization),
+            ("I", self.gate_i_point_in_time),
+            ("J", self.gate_j_amendment_restatement),
+            ("K", self.gate_k_freeze_hash_integrity),
+        ]
+
+        gate_names = {
+            "A": "SEC_CONNECTIVITY", "B": "FILING_DISCOVERY", "C": "REAL_FILING_RETRIEVAL",
+            "D": "XBRL_EXTRACTION", "E": "TWELVE_FIELD_VALIDATION", "F": "PERIOD_CONTEXT_VALIDATION",
+            "G": "FCF_PROVENANCE", "H": "TIMEZONE_NORMALIZATION", "I": "POINT_IN_TIME_BEFORE_EQUAL_AFTER",
+            "J": "AMENDMENT_RESTATEMENT_POINT_IN_TIME", "K": "FREEZE_HASH_INTEGRITY",
+        }
+
+        for gate_id, gate_fn in gates:
+            try:
+                r = gate_fn()
+            except Exception as e:
+                # A gate must never crash the harness; record it as FAIL with detail.
+                import traceback
+                r = TestResult(gate_id, gate_names.get(gate_id, gate_fn.__name__))
+                r.fail_test(f"Unhandled exception in gate {gate_id}: {e!r}")
+                r.errors.append(traceback.format_exc())
+            self.results.append(r)
+            print(f"  -> {r.report()}")
+
         print("\n╔════════════════════════════════════════════════════════════════╗")
         print("║                     RESULTS                                   ║")
         print("╚════════════════════════════════════════════════════════════════╝\n")
@@ -659,34 +718,96 @@ class LiveValidator:
         print(f"{'─'*64}\n")
         
         return {
-            "results": [(r.gate_id, r.gate_name, r.status) for r in self.results],
+            "harness": "validation_harness_live_v3.py",
+            "generated_utc": datetime.now(timezone.utc).isoformat(),
+            "cik": self.msft_cik,
+            "targets": {"10-K": self.target_10k, "10-Q": self.target_10q},
+            "gates": [
+                {
+                    "gate": r.gate_id,
+                    "name": r.gate_name,
+                    "status": r.status,
+                    "evidence": list(r.evidence),
+                    "errors": list(r.errors),
+                }
+                for r in self.results
+            ],
             "passed": passed,
             "failed": failed,
             "blocked": blocked,
-            "total": len(self.results)
+            "total": len(self.results),
         }
 
 
-if __name__ == "__main__":
-    validator = LiveValidator()
-    summary = validator.run_all_gates()
-    
+def _write_artifacts(summary: Dict, results_dir) -> Dict:
+    """Write machine-readable JSON and human-readable Markdown. Always callable,
+    even for a partial/failed run."""
     from pathlib import Path
-    results_dir = Path("live_validation_results")
+    results_dir = Path(results_dir)
     results_dir.mkdir(exist_ok=True)
-    
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = results_dir / f"{timestamp}_validation_results.txt"
-    
-    with open(log_file, "w") as f:
-        f.write("SPRINT 1 LIVE VALIDATION v3\n")
-        f.write(f"Generated: {timestamp}\n")
-        f.write(f"Passed: {summary['passed']}/{summary['total']}\n")
-        f.write(f"Failed: {summary['failed']}/{summary['total']}\n")
-        f.write(f"Blocked: {summary['blocked']}/{summary['total']}\n")
-        f.write("\nGates:\n")
-        for gate_id, gate_name, status in summary["results"]:
-            f.write(f"  [{gate_id}] {gate_name}: {status}\n")
-    
-    print(f"Results saved to: {log_file}")
-    exit(0 if summary['failed'] == 0 else 1)
+
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    json_path = results_dir / f"{ts}_gate_results.json"
+    md_path = results_dir / f"{ts}_gate_results.md"
+
+    with open(json_path, "w") as f:
+        json.dump(summary, f, indent=2, sort_keys=True)
+
+    lines = []
+    lines.append(f"# Sprint 1 Live Validation — v3 Gate Results")
+    lines.append("")
+    lines.append(f"- Harness: `{summary.get('harness')}`")
+    lines.append(f"- Generated (UTC): {summary.get('generated_utc')}")
+    lines.append(f"- CIK: {summary.get('cik')}")
+    lines.append(f"- Totals: **{summary.get('passed')} PASS / "
+                 f"{summary.get('failed')} FAIL / {summary.get('blocked')} BLOCKED** "
+                 f"of {summary.get('total')}")
+    lines.append("")
+    lines.append("| Gate | Name | Status |")
+    lines.append("|------|------|--------|")
+    for g in summary.get("gates", []):
+        lines.append(f"| {g['gate']} | {g['name']} | {g['status']} |")
+    lines.append("")
+    for g in summary.get("gates", []):
+        lines.append(f"## [{g['gate']}] {g['name']} — {g['status']}")
+        for ev in g.get("evidence", []):
+            lines.append(f"- evidence: {ev}")
+        for err in g.get("errors", []):
+            lines.append(f"- error: {err}")
+        lines.append("")
+    with open(md_path, "w") as f:
+        f.write("\n".join(lines))
+
+    return {"json": str(json_path), "md": str(md_path)}
+
+
+if __name__ == "__main__":
+    results_dir = "live_validation_results"
+    validator = LiveValidator()
+    try:
+        summary = validator.run_all_gates()
+    except Exception as e:
+        # Even a catastrophic failure must leave a machine- and human-readable artifact.
+        import traceback
+        summary = {
+            "harness": "validation_harness_live_v3.py",
+            "generated_utc": datetime.now(timezone.utc).isoformat(),
+            "fatal_error": repr(e),
+            "traceback": traceback.format_exc(),
+            "gates": [
+                {"gate": r.gate_id, "name": r.gate_name, "status": r.status,
+                 "evidence": list(r.evidence), "errors": list(r.errors)}
+                for r in validator.results
+            ],
+            "passed": sum(1 for r in validator.results if r.status == "PASS"),
+            "failed": sum(1 for r in validator.results if r.status == "FAIL"),
+            "blocked": sum(1 for r in validator.results if r.status == "BLOCKED"),
+            "total": len(validator.results),
+        }
+
+    artifacts = _write_artifacts(summary, results_dir)
+    print(f"\nResult artifacts:")
+    print(f"  JSON: {artifacts['json']}")
+    print(f"  MD:   {artifacts['md']}")
+
+    exit(0 if summary.get("failed", 1) == 0 and "fatal_error" not in summary else 1)

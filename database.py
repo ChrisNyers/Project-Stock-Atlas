@@ -11,7 +11,7 @@ from uuid import uuid4
 
 from sqlalchemy import (
     create_engine, Column, String, Float, Integer, DateTime,
-    Boolean, Enum, ForeignKey, Text, JSON, Index,
+    Boolean, Enum, ForeignKey, Text, JSON, Index, Table,
     event, and_, func
 )
 from sqlalchemy.ext.declarative import declarative_base
@@ -214,8 +214,9 @@ class CanonicalFactORM(Base):
 
 
 # Association table for many-to-many relationship
-canonical_fact_evidence = Base.metadata.create_table(
+canonical_fact_evidence = Table(
     'canonical_fact_evidence',
+    Base.metadata,
     Column('canonical_fact_id', String(36), ForeignKey('canonical_fact.canonical_fact_id')),
     Column('evidence_id', String(36), ForeignKey('evidence_record.evidence_id'))
 )

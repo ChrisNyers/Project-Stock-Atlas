@@ -3,16 +3,16 @@
 ################################################################################
 # Stock Atlas Sprint 1 — Live Validation Setup
 #
-# This script prepares the Stock Atlas environment for live SEC validation.
-# Run this once before running `run_live_validation.sh`
+# Prepares the Stock Atlas environment for live SEC validation.
+# Run this once before running `run_live_validation.sh`.
 #
 # Usage:
 #   ./setup_live.sh
 #
-# Prerequisites:
-#   - Python 3.10+
-#   - pip
-#   - Bash
+# Baseline (Phase 4A.5.0) standard:
+#   - Python 3.11 (required)
+#   - Virtual environment lives in ./.venv  (NOT ./venv)
+#   - Dependencies pinned in requirements.txt (do not float versions)
 ################################################################################
 
 set -e  # Exit on error
@@ -21,50 +21,57 @@ echo "╔═══════════════════════�
 echo "║     Stock Atlas Sprint 1 — Live Validation Setup              ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 
-# ============================================================================
-# 1. CHECK PYTHON
-# ============================================================================
-
-echo ""
-echo "Checking Python installation..."
-
-if ! command -v python3 &> /dev/null; then
-    echo "✗ FATAL: Python 3 not found"
-    echo "  Please install Python 3.10+ and try again"
-    exit 1
-fi
-
-PYTHON_VERSION=$(python3 --version | awk '{print $2}')
-echo "✓ Python $PYTHON_VERSION found"
-
-# Check Python 3.10+
-PYTHON_MAJOR=$(echo $PYTHON_VERSION | cut -d. -f1)
-PYTHON_MINOR=$(echo $PYTHON_VERSION | cut -d. -f2)
-
-if [ "$PYTHON_MAJOR" -lt 3 ] || [ "$PYTHON_MINOR" -lt 10 ]; then
-    echo "✗ FATAL: Python 3.10+ required (you have $PYTHON_VERSION)"
-    exit 1
-fi
+VENV_DIR=".venv"
 
 # ============================================================================
-# 2. CREATE VIRTUAL ENVIRONMENT
+# 1. LOCATE PYTHON 3.11
 # ============================================================================
 
 echo ""
-echo "Setting up virtual environment..."
+echo "Locating Python 3.11..."
 
-if [ -d "venv" ]; then
-    echo "  Virtual environment already exists"
-    echo "  Activating existing venv..."
+PYTHON_BIN=""
+for candidate in python3.11 python3; do
+    if command -v "$candidate" &> /dev/null; then
+        ver=$("$candidate" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2>/dev/null || echo "")
+        if [ "$ver" = "3.11" ]; then
+            PYTHON_BIN=$(command -v "$candidate")
+            break
+        fi
+    fi
+done
+
+if [ -z "$PYTHON_BIN" ]; then
+    echo "✗ FATAL: Python 3.11 not found."
+    echo "  This baseline standardizes on Python 3.11. Install it and retry."
+    echo "  (e.g. 'uv python install 3.11' or 'brew install python@3.11')"
+    exit 1
+fi
+
+echo "✓ Using: $PYTHON_BIN ($($PYTHON_BIN --version))"
+
+# ============================================================================
+# 2. CREATE VIRTUAL ENVIRONMENT (.venv)
+# ============================================================================
+
+echo ""
+echo "Setting up virtual environment in $VENV_DIR ..."
+
+if [ -d "$VENV_DIR" ]; then
+    existing_ver=$("$VENV_DIR/bin/python" -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2>/dev/null || echo "")
+    if [ "$existing_ver" = "3.11" ]; then
+        echo "  Existing $VENV_DIR (Python $existing_ver) — reusing."
+    else
+        echo "  Existing $VENV_DIR is Python '$existing_ver', not 3.11 — recreating."
+        rm -rf "$VENV_DIR"
+        "$PYTHON_BIN" -m venv "$VENV_DIR"
+    fi
 else
-    echo "  Creating new virtual environment..."
-    python3 -m venv venv
+    "$PYTHON_BIN" -m venv "$VENV_DIR"
     echo "✓ Virtual environment created"
 fi
 
-# Activate venv
-source venv/bin/activate
-echo "✓ Virtual environment activated"
+PY="$VENV_DIR/bin/python"
 
 # ============================================================================
 # 3. UPGRADE PIP
@@ -72,24 +79,25 @@ echo "✓ Virtual environment activated"
 
 echo ""
 echo "Upgrading pip..."
-pip install --upgrade pip > /dev/null 2>&1 || true
+"$PY" -m pip install --upgrade pip > /dev/null 2>&1 || true
 echo "✓ pip ready"
 
 # ============================================================================
-# 4. INSTALL REQUIREMENTS
+# 4. INSTALL REQUIREMENTS (pinned)
 # ============================================================================
 
 echo ""
 echo "Installing dependencies from requirements.txt..."
 
 if [ ! -f "requirements.txt" ]; then
-    echo "✗ ERROR: requirements.txt not found"
-    echo "  Make sure you're in the stock-atlas project directory"
+    echo "✗ ERROR: requirements.txt not found (run from the project directory)"
     exit 1
 fi
 
-pip install -r requirements.txt
+"$PY" -m pip install -r requirements.txt
 echo "✓ All dependencies installed"
+
+"$PY" -m pip check || echo "  ⚠ pip reported dependency warnings (see above)"
 
 # ============================================================================
 # 5. CREATE DIRECTORIES
@@ -97,15 +105,8 @@ echo "✓ All dependencies installed"
 
 echo ""
 echo "Setting up directories..."
-
 mkdir -p live_validation_results
 echo "✓ Directory: live_validation_results/"
-
-mkdir -p sec_archive
-echo "✓ Directory: sec_archive/"
-
-mkdir -p cache
-echo "✓ Directory: cache/"
 
 # ============================================================================
 # 6. CHECK CONFIGURATION
@@ -118,12 +119,9 @@ if [ ! -f ".env" ]; then
     if [ -f ".env.example" ]; then
         echo "  .env not found, copying from .env.example..."
         cp .env.example .env
-        echo "  ⚠ WARNING: .env created from template"
-        echo "  ⚠ Please edit .env and add your contact email to SEC_USER_AGENT"
-        echo ""
-        echo "  Edit .env and set:"
-        echo "    SEC_USER_AGENT=\"Project Stock Atlas your-email@example.com\""
-        echo ""
+        echo "  ⚠ WARNING: .env created from template."
+        echo "  ⚠ Edit .env and set SEC_USER_AGENT to a real contact, e.g.:"
+        echo '      SEC_USER_AGENT="Project Stock Atlas you@example.com"'
     else
         echo "✗ ERROR: Neither .env nor .env.example found"
         exit 1
@@ -132,15 +130,15 @@ else
     echo "✓ .env configuration found"
 fi
 
-# Check if SEC_USER_AGENT is set
-if grep -q "SEC_USER_AGENT" .env; then
-    USER_AGENT=$(grep "SEC_USER_AGENT" .env | cut -d= -f2 | xargs)
-    if [ "$USER_AGENT" = "your-email@example.com" ] || [ "$USER_AGENT" = "" ]; then
-        echo "  ⚠ WARNING: SEC_USER_AGENT not configured"
-        echo "  Please edit .env and set your contact email"
-    else
-        echo "✓ SEC_USER_AGENT configured: $USER_AGENT"
-    fi
+if grep -q "^SEC_USER_AGENT=" .env; then
+    UA=$(grep "^SEC_USER_AGENT=" .env | cut -d= -f2- | tr -d '"' | xargs)
+    case "$UA" in
+        ""|*"example.com"*|*"your-email"*)
+            echo "  ⚠ WARNING: SEC_USER_AGENT still a placeholder ('$UA')."
+            echo "    SEC EDGAR requires a genuine contact; live gates will 403 otherwise." ;;
+        *)
+            echo "✓ SEC_USER_AGENT configured" ;;
+    esac
 fi
 
 # ============================================================================
@@ -151,9 +149,10 @@ echo ""
 echo "Verifying source files..."
 
 REQUIRED_FILES=(
-    "validation_harness_live.py"
+    "validation_harness_live_v3.py"   # active live harness
     "sec_adapter.py"
     "database.py"
+    "models.py"
     "point_in_time.py"
     "formulas.py"
 )
@@ -174,20 +173,13 @@ echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
 echo "║                    SETUP COMPLETE                             ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
-
 echo ""
 echo "Next steps:"
 echo ""
-echo "1. Edit .env and add your contact email:"
-echo "   nano .env"
-echo "   # Set: SEC_USER_AGENT=\"Project Stock Atlas your-email@example.com\""
+echo "  1. Ensure .env has a real SEC_USER_AGENT contact."
+echo "  2. Run the live validation:   ./run_live_validation.sh"
+echo "  3. Results are written to:     live_validation_results/"
 echo ""
-echo "2. Run the live validation:"
-echo "   ./run_live_validation.sh"
-echo ""
-echo "3. Results will be saved to:"
-echo "   live_validation_results/"
-echo ""
-echo "Virtual environment activated."
-echo "To deactivate later, run: deactivate"
+echo "The runner uses $VENV_DIR/bin/python directly; no manual activation needed."
+echo "To work interactively:  source $VENV_DIR/bin/activate"
 echo ""

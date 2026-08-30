@@ -11,7 +11,8 @@ from sqlalchemy.orm import Session
 
 # Import database and models
 from database import (
-    init_db, SessionLocal, SecurityIdentityORM, EvidenceRecordORM,
+    init_db, SessionLocal, Base, engine,
+    SecurityIdentityORM, EvidenceRecordORM,
     CanonicalFactORM, FormulaRegistryORM, EvidenceConflictORM,
     MarketStateORM, MacroDataPointORM
 )
@@ -34,11 +35,20 @@ from market_macro_adapters import get_market_adapter, get_macro_adapter
 
 @pytest.fixture
 def db():
-    """Create test database session."""
-    init_db()
+    """Create an isolated test database session.
+
+    The engine is a process-wide in-memory SQLite (StaticPool), so state would
+    otherwise leak between tests. Drop and recreate the schema per test to keep
+    each test independent.
+    """
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
     session = SessionLocal()
-    yield session
-    session.close()
+    try:
+        yield session
+    finally:
+        session.rollback()
+        session.close()
 
 
 @pytest.fixture
@@ -285,6 +295,7 @@ class TestPointInTime:
             normalized_value=100.0,
             effective_date=datetime(2024, 3, 31),
             known_date=datetime(2024, 4, 25),
+            known_at=datetime(2024, 4, 25),
             source_type="SEC",
             source_tier=DecisionAuthority.DA4,
             source_name="SEC",
@@ -316,6 +327,7 @@ class TestPointInTime:
             normalized_value=100.0,
             effective_date=datetime(2024, 3, 31),
             known_date=datetime(2024, 4, 25),
+            known_at=datetime(2024, 4, 25),
             source_type="SEC",
             source_tier=DecisionAuthority.DA4,
             source_name="SEC",
@@ -349,6 +361,7 @@ class TestPointInTime:
             normalized_value=100.0,
             effective_date=datetime(2024, 3, 31),
             known_date=datetime(2024, 4, 25),
+            known_at=datetime(2024, 4, 25),
             source_type="SEC",
             source_tier=DecisionAuthority.DA4,
             source_name="SEC",
@@ -367,6 +380,7 @@ class TestPointInTime:
             normalized_value=98.0,
             effective_date=datetime(2024, 3, 31),
             known_date=datetime(2024, 5, 15),
+            known_at=datetime(2024, 5, 15),
             source_type="SEC",
             source_tier=DecisionAuthority.DA4,
             source_name="SEC",
@@ -522,6 +536,7 @@ class TestMSFTGoldenSecurity:
             normalized_value=245.1,
             effective_date=datetime(2024, 6, 30),
             known_date=datetime(2024, 8, 22),
+            known_at=datetime(2024, 8, 22),
             source_type="SEC",
             source_tier=DecisionAuthority.DA4,
             source_name="SEC",

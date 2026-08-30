@@ -1,4 +1,11 @@
 """
+=============================================================================
+HISTORICAL — v1. NOT the active harness.
+The active live-validation harness is `validation_harness_live_v3.py`.
+v1 and v2 are retained only for audit/history. Do not run them for validation.
+See HARNESS_VERSIONS.md.
+=============================================================================
+
 Sprint 1 Live Validation Harness — REAL MSFT SEC DATA (CORRECTED)
 
 Makes actual HTTPS requests to SEC EDGAR.
