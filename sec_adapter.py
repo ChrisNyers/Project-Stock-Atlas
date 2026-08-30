@@ -203,9 +203,14 @@ class SECAdapter:
         if not data:
             return None
 
-        ticker_upper = ticker.upper()
+        # SEC uses a hyphen for share-class / preferred tickers (e.g. "BRK-B",
+        # "JPM-PC"); callers often pass the dotted form ("BRK.B"). Match both.
+        def _norm(t: str) -> str:
+            return str(t).upper().strip().replace(".", "-")
+
+        wanted = _norm(ticker)
         for company_info in data.values():
-            if str(company_info.get("ticker", "")).upper() == ticker_upper:
+            if _norm(company_info.get("ticker", "")) == wanted:
                 # Return zero-padded 10-digit CIK
                 return str(int(company_info["cik_str"])).zfill(10)
 
