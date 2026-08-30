@@ -29,13 +29,15 @@ from formulas import FormulaRegistry
 from market_macro_adapters import get_market_adapter, get_macro_adapter
 
 from xbrl_parser import (
-    select_canonical_fact, duration_granularity, PeriodGranularity,
+    select_canonical_fact, select_canonical_fact_production,
+    duration_granularity, classify_period, PeriodGranularity, PeriodIntentError,
 )
 from entity_classification import (
     classify_entity, filing_regime_for, EntityArchetype, FilingRegime,
 )
 from identity_resolver import (
     resolve_security, share_class_from_ticker, same_issuer, distinct_securities,
+    market_price_join_key, assert_distinct_price_series, IdentityJoinError,
 )
 
 
@@ -667,6 +669,90 @@ class TestPeriodGranularity:
 
 
 # ============================================================================
+# PHASE 4A.5.1B: PRODUCTION PERIOD CONTRACT — FAIL CLOSED
+# ============================================================================
+
+class TestProductionPeriodContract:
+    """New production/benchmark calls must state period intent; ambiguous
+    durations must not be confidently selected."""
+
+    def test_production_duration_without_intent_fails_closed(self):
+        cf = _facts_with_quarter_and_ytd()
+        # omitted entirely -> TypeError (required kwarg, hardest fail-closed)
+        with pytest.raises(TypeError):
+            select_canonical_fact_production(cf, "revenue", accession="0000-Q",
+                                             period_end="2026-03-31")
+        # explicit None -> PeriodIntentError (never silently earliest-start/YTD)
+        with pytest.raises(PeriodIntentError):
+            select_canonical_fact_production(cf, "revenue", period_granularity=None,
+                                             accession="0000-Q", period_end="2026-03-31")
+
+    def test_production_instant_field_requires_instant(self):
+        cf = {"facts": {"us-gaap": {"CashAndCashEquivalentsAtCarryingValue": {"units": {"USD": [
+            {"val": 5, "end": "2026-03-31", "accn": "0000-Q", "fp": "Q3", "form": "10-Q"},
+        ]}}}}}
+        with pytest.raises(PeriodIntentError):
+            select_canonical_fact_production(cf, "cash", period_granularity="QUARTER",
+                                             accession="0000-Q", period_end="2026-03-31")
+        ok = select_canonical_fact_production(cf, "cash", period_granularity=PeriodGranularity.INSTANT,
+                                              accession="0000-Q", period_end="2026-03-31")
+        assert ok["status"] == "SELECTED" and ok["raw_value"] == 5
+        assert ok["selection_boundary"] == "production"
+
+    def test_production_standard_quarter_selects_quarter(self):
+        cf = _facts_with_quarter_and_ytd()
+        sel = select_canonical_fact_production(cf, "revenue", period_granularity="QUARTER",
+                                               accession="0000-Q", period_end="2026-03-31")
+        assert sel["status"] == "SELECTED"
+        assert sel["raw_value"] == 82886000000
+        assert sel["period_start"] == "2026-01-01"
+
+    def test_production_standard_ytd_selects_ytd(self):
+        cf = _facts_with_quarter_and_ytd()
+        sel = select_canonical_fact_production(cf, "revenue", period_granularity="YEAR_TO_DATE",
+                                               accession="0000-Q", period_end="2026-03-31")
+        assert sel["status"] == "SELECTED"
+        assert sel["raw_value"] == 241832000000
+
+    def test_stub_period_incompatible_with_fp_not_selected(self):
+        """fp says Q1 (interim) but the duration is a ~5-month stub -> fail closed."""
+        cf = {"facts": {"us-gaap": {"Revenues": {"units": {"USD": [
+            {"val": 999, "start": "2026-01-01", "end": "2026-05-27",  # ~146 days
+             "accn": "STUB", "fp": "Q1", "form": "10-Q"},
+        ]}}}}}
+        assert classify_period(cf["facts"]["us-gaap"]["Revenues"]["units"]["USD"][0]) == set()
+        for g in ("QUARTER", "YEAR_TO_DATE", "ANNUAL"):
+            sel = select_canonical_fact_production(cf, "revenue", period_granularity=g,
+                                                   accession="STUB", period_end="2026-05-27")
+            assert sel["status"] == "UNAVAILABLE"
+
+    def test_stub_period_no_fp_nonstandard_length_not_selected(self):
+        """No fiscal-period metadata + non-standard length (~7 months) -> fail closed."""
+        fact = {"val": 1, "start": "2026-01-01", "end": "2026-08-04", "accn": "X", "form": "10-Q"}
+        assert classify_period(fact) == set()
+        cf = {"facts": {"us-gaap": {"Revenues": {"units": {"USD": [fact]}}}}}
+        sel = select_canonical_fact_production(cf, "revenue", period_granularity="YEAR_TO_DATE",
+                                               accession="X", period_end="2026-08-04")
+        assert sel["status"] == "UNAVAILABLE"
+
+    def test_q1_explicit_behavior_documented(self):
+        """Q1: the single ~91-day duration satisfies BOTH QUARTER and YEAR_TO_DATE."""
+        fact = {"val": 100, "start": "2026-01-01", "end": "2026-03-31",
+                "accn": "Q1", "fp": "Q1", "form": "10-Q"}
+        assert classify_period(fact) == {"QUARTER", "YEAR_TO_DATE"}
+        cf = {"facts": {"us-gaap": {"Revenues": {"units": {"USD": [fact]}}}}}
+        q = select_canonical_fact_production(cf, "revenue", period_granularity="QUARTER",
+                                             accession="Q1", period_end="2026-03-31")
+        ytd = select_canonical_fact_production(cf, "revenue", period_granularity="YEAR_TO_DATE",
+                                               accession="Q1", period_end="2026-03-31")
+        assert q["raw_value"] == 100 and ytd["raw_value"] == 100
+
+    def test_fy_fact_with_quarter_duration_fails_closed(self):
+        fact = {"val": 7, "start": "2026-01-01", "end": "2026-03-31", "accn": "K", "fp": "FY"}
+        assert classify_period(fact) == set()
+
+
+# ============================================================================
 # PHASE 4A.5.1A: ENTITY ARCHETYPE / FILING REGIME
 # ============================================================================
 
@@ -768,6 +854,63 @@ class TestIdentityResolver:
         assert s.entity_archetype == "INVESTMENT_COMPANY_ETF"
         assert s.filing_regime == "SEC_INVESTMENT_COMPANY"
         assert s.security_type == "FUND_OR_ETF"
+
+
+class TestMarketDataIdentityJoin:
+    """Phase 4A.5.1B contract: price observations bind to security_key, not CIK.
+    BRK.A / BRK.B must never share one price series."""
+
+    def test_join_key_is_security_key_not_cik(self):
+        k = market_price_join_key("BRK.B")
+        assert k == "SEC-CIK:0001067983:BRK-B"
+        assert k != "0001067983"  # not the bare issuer CIK
+
+    def test_ticker_resolves_to_correct_security_key(self):
+        assert market_price_join_key("BRK.A") == "SEC-CIK:0001067983:BRK-A"
+        assert market_price_join_key("BRK-A") == "SEC-CIK:0001067983:BRK-A"  # dotted or hyphen
+        assert market_price_join_key("MSFT") == "SEC-CIK:0000789019:MSFT"
+
+    def test_unresolvable_ticker_fails_closed(self):
+        with pytest.raises(IdentityJoinError):
+            market_price_join_key("NOT_A_REAL_TICKER_XYZ")
+
+    def test_brk_a_brk_b_distinct_price_series(self):
+        rep = assert_distinct_price_series("BRK.A", "BRK.B")
+        assert rep["distinct_security_keys"] is True
+        assert rep["shares_issuer"] is True
+        assert rep["security_keys"]["BRK.A"] != rep["security_keys"]["BRK.B"]
+
+    def test_price_rows_bind_to_distinct_securities_in_db(self, db: Session):
+        a = resolve_security("BRK.A")
+        b = resolve_security("BRK.B")
+        for r in (a, b):
+            kw = r.to_orm_kwargs()
+            kw["exchange"] = kw.get("exchange") or "NYSE"
+            db.add(SecurityIdentityORM(**kw))
+        db.commit()
+
+        db.add(MarketStateORM(
+            security_id=market_price_join_key("BRK.A"),
+            timestamp=datetime(2026, 8, 28, 20, 0, 0),
+            price=735000.0, price_source="TEST",
+            provider_status=ProviderStatus.AVAILABLE,
+        ))
+        db.add(MarketStateORM(
+            security_id=market_price_join_key("BRK.B"),
+            timestamp=datetime(2026, 8, 28, 20, 0, 0),
+            price=490.0, price_source="TEST",
+            provider_status=ProviderStatus.AVAILABLE,
+        ))
+        db.commit()
+
+        a_prices = db.query(MarketStateORM).filter(
+            MarketStateORM.security_id == a.security_key).all()
+        b_prices = db.query(MarketStateORM).filter(
+            MarketStateORM.security_id == b.security_key).all()
+        assert len(a_prices) == 1 and len(b_prices) == 1
+        assert a_prices[0].price == 735000.0
+        assert b_prices[0].price == 490.0
+        assert a_prices[0].security_id != b_prices[0].security_id
 
 
 # ============================================================================

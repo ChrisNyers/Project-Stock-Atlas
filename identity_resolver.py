@@ -167,3 +167,44 @@ def same_issuer(a: ResolvedSecurity, b: ResolvedSecurity) -> bool:
 
 def distinct_securities(a: ResolvedSecurity, b: ResolvedSecurity) -> bool:
     return bool(a.security_key and b.security_key and a.security_key != b.security_key)
+
+
+# ---------------------------------------------------------------------------
+# Market-data identity join contract (Phase 4A.5.1B — binds Phase 4A.5.2)
+# ---------------------------------------------------------------------------
+#
+# A market price observation attaches to a SECURITY, not an issuer. The join key
+# is `security_key`, never the bare CIK. A provider ticker is only a lookup
+# identifier: it must be resolved to the correct `security_key` before any price
+# row is stored or compared. BRK.A and BRK.B share one issuer CIK but are two
+# securities and must never share one price series.
+
+class IdentityJoinError(ValueError):
+    """Raised when a market observation cannot be bound to a distinct
+    security_key (ticker unresolved, or resolution collapsed a share class)."""
+
+
+def market_price_join_key(ticker: str, adapter: Optional[SECAdapter] = None) -> str:
+    """Resolve a provider-facing ticker to the `security_key` that a market
+    price observation MUST attach to. Fails closed."""
+    res = resolve_security(ticker, adapter)
+    if not res.resolved or not res.security_key:
+        raise IdentityJoinError(f"ticker {ticker!r} did not resolve to a security_key")
+    return res.security_key
+
+
+def assert_distinct_price_series(*tickers: str, adapter: Optional[SECAdapter] = None) -> dict:
+    """Verify that each ticker resolves to its own security_key (so their price
+    series cannot silently merge), and report the shared issuer(s)."""
+    adapter = adapter or SECAdapter()
+    resolved = {t: resolve_security(t, adapter) for t in tickers}
+    keys = {t: r.security_key for t, r in resolved.items()}
+    if len(set(keys.values())) != len(keys) or any(v is None for v in keys.values()):
+        raise IdentityJoinError(f"tickers do not map to distinct security_keys: {keys}")
+    return {
+        "security_keys": keys,
+        "issuer_keys": {t: r.issuer_key for t, r in resolved.items()},
+        "share_classes": {t: r.share_class for t, r in resolved.items()},
+        "distinct_security_keys": True,
+        "shares_issuer": len({r.issuer_key for r in resolved.values()}) < len(resolved),
+    }

@@ -173,11 +173,30 @@ class PeriodGranularity(str, Enum):
     INSTANT = "INSTANT"          # balance-sheet point in time (no start)
 
 
-# Day-span thresholds. Fiscal quarters run 13-14 weeks; 52/53-week fiscal years
-# run 364-371 days; a leap year is 366. Slack is deliberate.
+class PeriodIntentError(ValueError):
+    """Raised by the production selection boundary when a duration financial
+    fact is requested without an explicit period intent (ANNUAL / QUARTER /
+    YEAR_TO_DATE). Fail closed — never silently fall through to earliest-start."""
+
+
+# --- classification aid: broad day-span buckets (Phase 4A.5.1A) --------------
+# These are TECHNICAL HEURISTICS, not accounting truth. They are used for
+# provenance display and as a coarse hint. Confident matching for selection goes
+# through classify_period() below, which additionally requires the fact's own
+# SEC fiscal-period metadata (`fp`) to agree.
 _QUARTER_MAX_DAYS = 105
 _YTD_MAX_DAYS = 315
 _ANNUAL_MAX_DAYS = 380
+
+# --- confident classification windows (Phase 4A.5.1B) -----------------------
+# Tight day-count windows around the STANDARD reporting periods. A duration that
+# lands in none of these windows is NOT confidently classifiable -> fail closed.
+# (13-week quarter = 91d, 14-week = 98d; H1 ~182d; 9-month ~273d; 52-week year
+#  = 364d, 53-week = 371d, calendar leap year = 366d.)
+_STD_QUARTER_DAYS = (78, 102)
+_STD_H1_DAYS = (167, 197)
+_STD_9M_DAYS = (258, 288)
+_STD_ANNUAL_DAYS = (350, 380)
 
 
 def _parse_iso_date(s: Optional[str]) -> Optional[date]:
@@ -189,17 +208,26 @@ def _parse_iso_date(s: Optional[str]) -> Optional[date]:
         return None
 
 
-def duration_granularity(start: Optional[str], end: Optional[str]) -> Optional[str]:
-    """Classify a duration (start,end) into a PeriodGranularity value.
-
-    Returns None if start is missing (an instant) or dates cannot be parsed.
-    A span longer than a fiscal year is reported as None (multi-year, not a
-    canonical reporting granularity)."""
+def _span_days(start: Optional[str], end: Optional[str]) -> Optional[int]:
     ds, de = _parse_iso_date(start), _parse_iso_date(end)
     if ds is None or de is None:
         return None
     span = (de - ds).days
-    if span <= 0:
+    return span if span > 0 else None
+
+
+def _in(window, n) -> bool:
+    return window[0] <= n <= window[1]
+
+
+def duration_granularity(start: Optional[str], end: Optional[str]) -> Optional[str]:
+    """Coarse classification aid: bucket a duration by day-span alone.
+
+    Returns None if start is missing (an instant), dates cannot be parsed, or the
+    span exceeds a fiscal year. NOT used for selection matching — see
+    classify_period(). Kept for provenance display and backward compatibility."""
+    span = _span_days(start, end)
+    if span is None:
         return None
     if span <= _QUARTER_MAX_DAYS:
         return PeriodGranularity.QUARTER.value
@@ -210,6 +238,63 @@ def duration_granularity(start: Optional[str], end: Optional[str]) -> Optional[s
     return None  # multi-year
 
 
+def classify_period(fact: Dict) -> set:
+    """Confidently classify an XBRL fact into the set of period granularities it
+    can satisfy. Empty set => NOT confidently classifiable => fail closed.
+
+    Uses the fact's own duration together with its SEC fiscal-period tag (`fp`,
+    one of Q1/Q2/Q3/Q4/FY) when present:
+
+      - instant fact (no start)                         -> {INSTANT}
+      - standard-quarter duration                       -> {QUARTER}
+          and if fp == "Q1"                             -> {QUARTER, YEAR_TO_DATE}
+      - standard H1 / 9-month duration                  -> {YEAR_TO_DATE}
+      - standard fiscal-year duration                   -> {ANNUAL}
+      - fp present but inconsistent with the duration   -> {}  (fail closed)
+      - unusual / stub / transition length              -> {}  (fail closed)
+
+    Deliberately narrow: an unusual duration is NOT classified just because its
+    length is under some broad upper bound.
+    """
+    if not fact.get("start"):
+        return {PeriodGranularity.INSTANT.value}
+
+    span = _span_days(fact.get("start"), fact.get("end"))
+    if span is None:
+        return set()
+    fp = str(fact.get("fp") or "").strip().upper()
+
+    is_quarter = _in(_STD_QUARTER_DAYS, span)
+    is_h1 = _in(_STD_H1_DAYS, span)
+    is_9m = _in(_STD_9M_DAYS, span)
+    is_annual = _in(_STD_ANNUAL_DAYS, span)
+
+    if fp == "FY":
+        # A fiscal-year filing's flow fact must be an annual duration.
+        return {PeriodGranularity.ANNUAL.value} if is_annual else set()
+
+    if fp in ("Q1", "Q2", "Q3", "Q4"):
+        if is_quarter:
+            out = {PeriodGranularity.QUARTER.value}
+            if fp == "Q1":
+                out.add(PeriodGranularity.YEAR_TO_DATE.value)  # Q1 quarter == Q1 YTD
+            return out
+        if is_h1 or is_9m:
+            return {PeriodGranularity.YEAR_TO_DATE.value}
+        if is_annual:
+            return {PeriodGranularity.ANNUAL.value}  # a 10-Q may still carry the prior FY
+        return set()  # fp says interim, duration says stub -> fail closed
+
+    # fp absent/unknown: classify only clearly-standard lengths.
+    if is_quarter:
+        return {PeriodGranularity.QUARTER.value}
+    if is_h1 or is_9m:
+        return {PeriodGranularity.YEAR_TO_DATE.value}
+    if is_annual:
+        return {PeriodGranularity.ANNUAL.value}
+    return set()  # no fp + non-standard length -> fail closed
+
+
 def _normalize_granularity(g) -> Optional[str]:
     if g is None:
         return None
@@ -217,28 +302,9 @@ def _normalize_granularity(g) -> Optional[str]:
 
 
 def _fact_satisfies_granularity(fact: Dict, requested: str) -> bool:
-    """Does this XBRL fact match the requested period granularity?
-
-    - INSTANT      -> the fact has no `start`.
-    - ANNUAL / YTD / QUARTER -> the fact's own day-span classifies to that value.
-    - Special case: the FIRST fiscal quarter IS the year-to-date for that
-      quarter, so a ~quarter-length fact tagged fp="Q1" also satisfies a
-      YEAR_TO_DATE request. This is an explicit, documented equivalence — not an
-      inference from ordering.
-    """
-    has_start = bool(fact.get("start"))
-    if requested == PeriodGranularity.INSTANT.value:
-        return not has_start
-    if not has_start:
-        return False
-    g = duration_granularity(fact.get("start"), fact.get("end"))
-    if g == requested:
-        return True
-    if (requested == PeriodGranularity.YEAR_TO_DATE.value
-            and g == PeriodGranularity.QUARTER.value
-            and str(fact.get("fp") or "").strip().upper() == "Q1"):
-        return True
-    return False
+    """Does this fact CONFIDENTLY match the requested period granularity?
+    Fails closed: an ambiguous / stub duration matches nothing."""
+    return requested in classify_period(fact)
 
 
 def _split_concept_id(concept_id: str):
@@ -425,6 +491,7 @@ def select_canonical_fact(
             PeriodGranularity.INSTANT.value if not selected.get("start")
             else duration_granularity(selected.get("start"), selected.get("end"))
         ),
+        "period_classification": sorted(classify_period(selected)),
         "requested_granularity": requested_granularity,
         "accession": selected.get("accn"),
         "form": selected.get("form"),
@@ -446,6 +513,79 @@ def select_canonical_fact(
         ],
         "conflict": conflict,
     }
+
+
+# ============================================================================
+# PRODUCTION SELECTION BOUNDARY (Phase 4A.5.1B)
+# ============================================================================
+#
+# select_canonical_fact() keeps its backward-compatible implicit path (period_end
+# only -> earliest-start) for the frozen v3 harness and other already-tested
+# callers. NEW production ingestion and NEW benchmark code MUST go through this
+# boundary instead, which forces period intent to be explicit and fails closed.
+
+_DURATION_GRANULARITIES = {
+    PeriodGranularity.ANNUAL.value,
+    PeriodGranularity.QUARTER.value,
+    PeriodGranularity.YEAR_TO_DATE.value,
+}
+
+
+def select_canonical_fact_production(
+    company_facts: Dict[str, Any],
+    canonical_field: str,
+    *,
+    period_granularity,
+    accession: Optional[str] = None,
+    period_end: Optional[str] = None,
+    period_start: Optional[str] = None,
+    unit: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Production-facing canonical-fact selection. ``period_granularity`` is
+    REQUIRED (no default).
+
+    - A duration field (revenue, cash_from_operations, ...) MUST be requested
+      with ANNUAL / QUARTER / YEAR_TO_DATE. Passing None or INSTANT for a
+      duration field raises PeriodIntentError (fail closed — never silently
+      earliest-start / YTD).
+    - An instant field (cash, long_term_debt, ...) MUST be requested with
+      INSTANT.
+
+    On a granularity/field-type mismatch: PeriodIntentError. Otherwise delegates
+    to select_canonical_fact() with the explicit granularity, so a stub /
+    transition duration that classify_period() cannot confidently place resolves
+    to UNAVAILABLE, not a wrong period.
+    """
+    g = _normalize_granularity(period_granularity)
+    field_period_type = CANONICAL_FIELD_PERIOD_TYPE.get(canonical_field)
+
+    if field_period_type == "instant":
+        if g != PeriodGranularity.INSTANT.value:
+            raise PeriodIntentError(
+                f"'{canonical_field}' is an instant (balance-sheet) field; "
+                f"period_granularity must be INSTANT, got {g!r}"
+            )
+    elif field_period_type == "duration":
+        if g not in _DURATION_GRANULARITIES:
+            raise PeriodIntentError(
+                f"'{canonical_field}' is a duration (flow) field; production "
+                f"requests must state period intent explicitly as one of "
+                f"{sorted(_DURATION_GRANULARITIES)}, got {g!r}"
+            )
+    else:
+        # Unknown field: require SOME explicit intent rather than guess.
+        if g not in _DURATION_GRANULARITIES and g != PeriodGranularity.INSTANT.value:
+            raise PeriodIntentError(
+                f"period_granularity must be explicit for '{canonical_field}', got {g!r}"
+            )
+
+    result = select_canonical_fact(
+        company_facts, canonical_field,
+        accession=accession, period_end=period_end, period_start=period_start,
+        period_granularity=g, unit=unit,
+    )
+    result["selection_boundary"] = "production"
+    return result
 
 
 # ============================================================================
