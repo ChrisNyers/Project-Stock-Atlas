@@ -1,0 +1,64 @@
+# ---------------------------------------------------------------------------
+# Credentials / configuration (never commit real SEC contact info or secrets)
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Virtual environments (rebuilt locally from requirements.txt; never committed)
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# ---------------------------------------------------------------------------
+# Python bytecode / build artifacts
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+
+# ---------------------------------------------------------------------------
+# Test / coverage artifacts
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# ---------------------------------------------------------------------------
+# Runtime-generated caches / archives / results
+# ---------------------------------------------------------------------------
+cache/
+sec_archive/
+atlas_cache/
+atlas_archive/
+/tmp/atlas_cache/
+/tmp/atlas_archive/
+*.log
+
+# Live validation run outputs (generated); ignore new runs but keep the
+# historical v1 log that shipped with the copied package.
+live_validation_results/*
+!live_validation_results/raw_logs.txt
+
+# ---------------------------------------------------------------------------
+# Local SQLite databases
+# ---------------------------------------------------------------------------
+*.sqlite
+*.sqlite3
+*.db
+
+# ---------------------------------------------------------------------------
+# Editor / OS noise
+# ---------------------------------------------------------------------------
+.DS_Store
+.idea/
+.vscode/
+*.swp
