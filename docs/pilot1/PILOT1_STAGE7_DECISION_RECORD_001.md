@@ -333,3 +333,40 @@ REVIEW ENTRIES (appended only — original above is never edited)
 *None. Stage 8 remains open.*
 
 ---
+
+# STAGE 8 — HUMAN PAPER DECISION
+
+*Appended 2026-09-02. The Stage 7 record above is unchanged. This section
+supersedes the placeholder line "None. Stage 8 remains open." — that line is
+left in place, unedited, per the immutability rule in
+`../manual_pilot_v0_1/05_DECISION_RECORD_TEMPLATE.md`. Full record:
+`PILOT1_STAGE8_HUMAN_DECISION_001.md`.*
+
+| Field | Value |
+|---|---|
+| **Decision** | **$50,000 → Treasury / Cash Sleeve** |
+| **Decision type** | **Implements Stage 7** |
+| **Human override** | **NO** |
+| **Real capital action** | **NO — PAPER / FICTIONAL ONLY** |
+| **Next-best alternative** | **DO NOTHING / no new active mandate** |
+
+### Reason
+
+Stage 7 found no sufficiently explicit equity edge over the Treasury / Cash
+Sleeve under the Pilot 1 methodology, and the human Stage 8 decision
+accepts that conclusion rather than overriding it.
+
+### Governance
+
+> **Security Decision ≠ Portfolio Action.**
+
+This Stage 8 decision is a paper decision. It moves no capital, places no
+order, and constitutes no instruction to any brokerage. The frozen Stage 7
+conclusion above is not altered, rewritten, or reinterpreted by this
+appendix. ACN, RMD, TROW, and VICI remain ATTRACTIVE WITH MATERIAL
+UNCERTAINTY, underwritten and unranked; LOW remains UNDERWRITTEN — NEUTRAL
+/ INSUFFICIENT EDGE, outside the active Opportunity Set.
+
+**Pilot 1 Stage 8: DECIDED — PAPER / FICTIONAL ONLY.**
+
+---
