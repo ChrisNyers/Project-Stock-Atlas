@@ -1,0 +1,20 @@
+Stock Atlas v0.2 remediated source manifest
+Frozen commit: e72a7320ec913941eec7be4f9fa6e05cb09a5188
+Python: Python 3.13.5
+
+=== collected tests ===
+tests/test_controls.py: 103
+tests/test_pilot2_replay.py: 3
+
+
+=== source sha256 ===
+19cfb0714a9b9b2bd2fde08cd51fcf2c329f09c36025e81f840646b30058418a  stock_atlas/__init__.py
+1bc52ae1d3d5a3a7c26f0339a8db12c77e759e723dd4b1517bcb3bcbd0d3573f  stock_atlas/controls.py
+244241c01ba2fc7295f332f698e8b338885186634c485b1addafd9f520dff245  stock_atlas/decision_store.py
+57c8e34f13f3fd7a8b5115f7b70c207420c884d672b0475cdfa6e7a83ace5043  stock_atlas/freeze.py
+6f908fd9608aea789c609860551e8b3fe7a42d5ca102adec70f8a0755576d0e0  stock_atlas/models.py
+adcc2167037f3c4f843812c11a6edb885599a5b1e3dea3a549e89fbb1b0dc8a3  stock_atlas/pipeline.py
+444dd56c94fd7fec366a899b67c23e90ce2a26b4bf33e2000561221cfac6bd1e  stock_atlas/portfolio.py
+bc8e2498f4b525c3e60ab336ee921a6050d24330e25795120e8fa757bad00d62  stock_atlas/presentation.py
+dd702f2e0ee8ffea0f562ff07c6d5869f7f4e815ce759d075e9d1b996c2f45ab  tests/test_controls.py
+ed02237307c6559278c63a1aeb817353bf227e6c6eef0f32327e3a6c7a995f1b  tests/test_pilot2_replay.py

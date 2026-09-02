@@ -1,0 +1,48 @@
+Stock Atlas Code & Implementation v0.1
+Frozen commit: 9ee05c8bc1b99859b00e286ca0c250e0b1751fa0
+Python 3.13.5
+
+=== pytest ===
+........................................................................ [ 83%]
+..............                                                           [100%]
+
+=== collected tests ===
+tests/test_controls.py: 85
+tests/test_pilot2_replay.py: 1
+
+
+=== coverage ===
+........................................................................ [ 83%]
+..............                                                           [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.5-final-0 ________________
+
+Name                            Stmts   Miss  Cover
+---------------------------------------------------
+stock_atlas/__init__.py             8      0   100%
+stock_atlas/controls.py           287     41    86%
+stock_atlas/decision_store.py     125     11    91%
+stock_atlas/freeze.py              44      4    91%
+stock_atlas/models.py             330     29    91%
+stock_atlas/pipeline.py            16      0   100%
+stock_atlas/portfolio.py           48      4    92%
+stock_atlas/presentation.py         8      0   100%
+---------------------------------------------------
+TOTAL                             866     89    90%
+
+=== compileall ===
+compileall: PASS
+
+=== source sha256 ===
+1bb4b8c176fd7b49f9ca24ae035aadfe106e2bafcadf7912044d6fb568ecec21  pyproject.toml
+cfe4e64b227caeb070d8a6117b19e076030381c7ef3ddc3fe196ffdc849ed985  README.md
+1dd97957daecefb8c37e888f9e4fd2e58c7d2cdb3b09cb4ecd69648b574f255a  stock_atlas/__init__.py
+74993981c9d6973e79a91a6fa8a8c619b290418b97988253d482eb6a9a7531eb  stock_atlas/controls.py
+a48ee22f4ac70098371897f00595dac6b3ff841b16a09f166e3c198f30d750dd  stock_atlas/decision_store.py
+2897ab7c984740b7b5452832d1982cd1a28a29a0187ea465957a46d521fad802  stock_atlas/freeze.py
+ee6cbd018d75ffa1a44c59ec32373c8543540aed38282b0e74c4050b4bdebb73  stock_atlas/models.py
+39741b22ebe0453f8bbb156687bb515abed07f972edfb26434021e3188fc36cd  stock_atlas/pipeline.py
+444dd56c94fd7fec366a899b67c23e90ce2a26b4bf33e2000561221cfac6bd1e  stock_atlas/portfolio.py
+d256626ab32370d370d1f83328bd6f9d38c439f61e35681bcbf53eb564950519  stock_atlas/presentation.py
+afad9659e6a938a5b9eefb4e291cc25dfc670d68d01053b476a06aef2b9e2bdf  tests/test_controls.py
+c06925f421dd8cccc7fffc690960812aab395ea9f7211d8e46489e1bdc288020  tests/test_pilot2_replay.py
