@@ -28,22 +28,41 @@ Portfolio Decision → Decision Record → Human Outcome Review → Learning) ha
 **not** passed readiness. This gate does not certify the full loop as ready
 at this time.
 
+> **Full MVSA capital-comparison readiness: NOT PASSED.**
+
 What has actually occurred so far:
 
 - **Discovery and Underwriting are underway**, using the frozen 33-stock
   Pilot 1 Discovery Basket (`09_PILOT_1_DISCOVERY_BASKET.md`). A first
   Discovery Cycle and a first underwriting pass have been recorded there.
-- **Capital Comparison readiness has not been reached.** Per
+- **Beta and cash comparators have been selected — this readiness item is
+  MET.** The Pilot 1 comparators, chosen by the human operator outside this
+  repository, are:
+  - **Relevant beta:** SPY.
+  - **Treasury / cash:** 3-month U.S. Treasury / cash equivalent.
+
+  Selecting comparators does not perform, authorize, or imply any capital
+  comparison. It satisfies one input condition only.
+- **Capital Comparison readiness has still not been reached.** Per
   `02_OPPORTUNITY_SET.md` and `03_CAPITAL_COMPARISON_FRAMEWORK.md`, a valid
-  capital comparison requires a real Opportunity Set — including current
-  holdings/status quo and relevant beta/cash comparators — not merely
-  underwritten candidates in isolation. That requires:
-  - A **privacy-preserving real portfolio snapshot**, completed per
-    `07_PRIVACY_PRESERVING_PORTFOLIO_SNAPSHOT.md`, and
-  - Identification of **relevant beta and cash comparators** for the
-    capital in question.
-  Neither has been completed as part of this documentation package, and
+  capital comparison requires a real Opportunity Set, not merely
+  underwritten candidates in isolation. The remaining blocker is:
+  - A **real privacy-preserving Portfolio Truth snapshot**, completed per
+    `07_PRIVACY_PRESERVING_PORTFOLIO_SNAPSHOT.md`, needed to evaluate
+    portfolio fit, concentration, and existing exposure.
+
+  This has not been completed as part of this documentation package, and
   **no portfolio data is invented or assumed here** to fill that gap.
+
+  Requiring this snapshot does **not** imply that an incumbent security
+  must exist. If the eventual capital question concerns incremental new
+  cash, the status quo member of the Opportunity Set may simply be HOLD
+  CASH / DO NOTHING. The snapshot is required to establish what the status
+  quo actually is — not to assert that any position is held.
+- **Funding source and the exact capital question are not yet confirmed.**
+  Both are per-Decision-Record inputs, supplied when a specific comparison
+  is opened (`05_DECISION_RECORD_TEMPLATE.md`), rather than pilot-level
+  readiness conditions. No capital question is assumed here.
 - Stages 5 through 11 of `04_HUMAN_OPERATING_LOOP.md` (Opportunity Set
   onward) accordingly have not yet been exercised in Pilot 1.
 
@@ -73,8 +92,9 @@ advance it.
 
 This checklist covers readiness for the **full** manual loop
 (`04_HUMAN_OPERATING_LOOP.md`), not only the Discovery/Underwriting portion
-described in "Current Readiness Status" above. As of this writing, the
-Capital Comparison-related items below are not yet met — see that section.
+described in "Current Readiness Status" above. As of this writing the
+comparator item is met and the Portfolio Truth snapshot item is not — see
+that section.
 Before treating Pilot 1 as ready for closure or review, a human should
 confirm:
 
@@ -100,12 +120,14 @@ confirm:
       drift.
 - [ ] No scoring, ranking, optimization, or automated-learning logic has
       been introduced anywhere in the pilot process.
-- [ ] A privacy-preserving real portfolio snapshot
-      (`07_PRIVACY_PRESERVING_PORTFOLIO_SNAPSHOT.md`) has been completed —
-      not yet met as of this writing; no portfolio data is invented to
-      satisfy this item.
-- [ ] Relevant beta and cash comparators have been identified for any
-      capital comparison performed — not yet met as of this writing.
+- [ ] A real privacy-preserving Portfolio Truth snapshot
+      (`07_PRIVACY_PRESERVING_PORTFOLIO_SNAPSHOT.md`) has been completed,
+      sufficient to evaluate portfolio fit, concentration, and existing
+      exposure — **not yet met as of this writing**; this is the remaining
+      blocker, and no portfolio data is invented to satisfy this item.
+- [x] Relevant beta and cash comparators have been identified — **met**:
+      SPY (beta) and 3-month U.S. Treasury / cash equivalent (cash),
+      selected outside this repository.
 
 ## What Clearing This Gate Does — and Does Not — Do
 
