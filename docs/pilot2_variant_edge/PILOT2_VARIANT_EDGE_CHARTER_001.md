@@ -604,4 +604,43 @@ checked** and any required response handled as a **separate scoped decision.**
 
 ---
 
+## 23. Venue readiness — resolved
+
+*Appended September 4, 2026. Section 22 above is left exactly as written; this
+section records how it was closed, per*
+`PILOT2_NASDAQ_SESSION_BINDING_EXTENSION` *in the Decision Log.*
+
+Venue resolution for the frozen basket was checked, as a separate scoped
+decision, per §22.
+
+**Provider-resolved MIC for each of the 10 frozen names:**
+
+| Ticker | MIC | Venue |
+|---|---|---|
+| `FIS` | `XNYS` | NYSE |
+| `FISV` | `XNMS` | Nasdaq Global Market |
+| `MELI` | `XNGS` | Nasdaq Global Select |
+| `JD` | `XNGS` | Nasdaq Global Select |
+| `ADBE` | `XNGS` | Nasdaq Global Select |
+| `SNOW` | `XNYS` | NYSE |
+| `WCC` | `XNYS` | NYSE |
+| `GLNG` | `XNGS` | Nasdaq Global Select |
+| `NTR` | `XNYS` | NYSE |
+| `CVS` | `XNYS` | NYSE |
+
+The Nasdaq group splits across **two** distinct MICs, not one: `XNGS`
+(MELI, JD, ADBE, GLNG) and `XNMS` (FISV alone). Both are now explicitly
+supported, bound to a Nasdaq session calendar requested by its own name — see
+the Decision Log entry for the full binding and the library constraint
+surfaced and resolved during implementation.
+
+> ### Status: **All 10 frozen basket names resolve to an explicitly supported
+> venue/MIC.** Verified live.
+
+The basket was not changed. Architecture was extended narrowly — two MIC
+entries, both required by names already in the frozen basket — not
+redesigned.
+
+---
+
 **Capital status: NO REAL PORTFOLIO ACTION.**

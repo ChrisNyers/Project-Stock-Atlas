@@ -447,6 +447,147 @@ def test_b3_out_of_bounds_decision_time_fails_closed():
         latest_completed_session(datetime(1995, 1, 3, 21, 0, tzinfo=timezone.utc), mic="XNYS")
 
 
+# ---------------------------------------------------------------------------
+# Pilot 2 venue readiness — narrow Nasdaq extension (XNGS/XNMS only)
+#
+# The frozen Pilot 2 basket resolves five names to two Nasdaq-family MICs:
+# XNGS (MELI, JD, ADBE, GLNG) and XNMS (FISV). See
+# PILOT2_NASDAQ_SESSION_BINDING_EXTENSION in the Decision Log.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("mic", ["XNGS", "XNMS"])
+def test_b3_nasdaq_normal_completed_session_resolves(mic):
+    """A completed Nasdaq session binds normally, for both basket MICs."""
+    att = latest_completed_session(
+        datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic=mic
+    )
+    assert att.session_date == date(2026, 9, 2)
+    assert att.exchange == mic  # the requested MIC is preserved, not overwritten
+    assert att.calendar_version == "exchange_calendars==4.13.2"
+
+
+def test_b3_nasdaq_intraday_session_is_not_completed():
+    """A quote stamped with the still-open Nasdaq session is not accepted."""
+    att = latest_completed_session(
+        datetime(2026, 9, 4, 15, 0, tzinfo=timezone.utc), mic="XNGS"
+    )
+    assert att.session_date == date(2026, 9, 3)  # the PRIOR session, not today
+
+
+def test_b3_nasdaq_holiday_is_not_a_session():
+    """Labor Day 2026-09-07 is not a Nasdaq trading session either."""
+    att = latest_completed_session(
+        datetime(2026, 9, 7, 12, 0, tzinfo=timezone.utc), mic="XNGS"
+    )
+    assert att.session_date == date(2026, 9, 4)
+
+
+def test_b3_nasdaq_early_close_is_respected():
+    """The day after Thanksgiving 2026 is a genuine early-close Nasdaq session."""
+    import exchange_calendars as xc
+
+    cal = xc.get_calendar("XNAS")
+    early_close = cal.session_close(datetime(2026, 11, 27))
+    assert early_close.hour == 18 and early_close.tzinfo is not None  # 13:00 ET / 18:00 UTC
+
+    # A decision made after the early close attests to that same shortened session.
+    att = latest_completed_session(
+        datetime(2026, 11, 27, 19, 0, tzinfo=timezone.utc), mic="XNGS"
+    )
+    assert att.session_date == date(2026, 11, 27)
+
+    # A decision made between the early close and a naive "market never closes
+    # before 4pm" assumption must NOT still treat that session as open.
+    att2 = latest_completed_session(
+        datetime(2026, 11, 27, 18, 30, tzinfo=timezone.utc), mic="XNGS"
+    )
+    assert att2.session_date == date(2026, 11, 27)
+
+
+def test_b3_nasdaq_binding_is_deliberate_not_a_silent_nyse_reuse():
+    """XNGS/XNMS request the XNAS calendar BY NAME; NYSE lookups are untouched."""
+    from live_session_calendar import SUPPORTED_MICS
+
+    assert SUPPORTED_MICS["XNGS"] == "XNAS"
+    assert SUPPORTED_MICS["XNMS"] == "XNAS"
+    assert SUPPORTED_MICS["XNYS"] == "XNYS"
+    assert SUPPORTED_MICS["NYSE"] == "XNYS"
+    # Scoped to exactly the MICs this basket needs — no broader alias family.
+    assert set(SUPPORTED_MICS) == {"XNYS", "NYSE", "XNGS", "XNMS"}
+
+
+def test_b3_nyse_regression_unchanged_after_nasdaq_extension():
+    """Every existing XNYS case from before the extension still holds."""
+    assert latest_completed_session(
+        datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic="XNYS"
+    ).session_date == date(2026, 9, 2)
+    assert latest_completed_session(
+        datetime(2026, 9, 2, 15, 0, tzinfo=timezone.utc), mic="XNYS"
+    ).session_date == date(2026, 9, 1)
+    assert latest_completed_session(
+        datetime(2026, 9, 7, 12, 0, tzinfo=timezone.utc), mic="XNYS"
+    ).session_date == date(2026, 9, 4)
+
+
+def test_b3_unsupported_mic_still_fails_closed_after_nasdaq_extension():
+    """The extension is scoped; a non-basket venue is still refused."""
+    for mic in ("XLON", "XHKG", "ARCX", "BATS", "XASE", "NASDAQ"):
+        with pytest.raises(SessionCalendarError, match="No authorized exchange calendar"):
+            latest_completed_session(
+                datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic=mic
+            )
+
+
+def test_b3_no_generic_all_us_exchange_fallback():
+    """A MIC merely resembling a supported one is not accepted."""
+    with pytest.raises(SessionCalendarError):
+        latest_completed_session(
+            datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic="XNCM"
+        )
+
+
+#: The frozen Pilot 2 discrimination basket (identity/venue only — no
+#: investment analysis; see docs/pilot2_variant_edge/
+#: PILOT2_VARIANT_EDGE_CHARTER_001.md section 18).
+PILOT2_FROZEN_BASKET = (
+    "FIS", "FISV", "MELI", "JD", "ADBE", "SNOW", "WCC", "GLNG", "NTR", "CVS",
+)
+
+
+@live
+@requires_key
+def test_b3_pilot2_frozen_basket_venue_readiness(provider):
+    """Every frozen Pilot 2 name resolves to an explicitly supported MIC.
+
+    Identity/MIC resolution only. No price is analysed, no valuation or
+    fundamentals are consulted, and no investment conclusion is drawn — this
+    proves venue readiness for session attestation, nothing else. A ticker
+    resolving to an unsupported MIC is a surfaced blocker, not silently
+    bypassed: the assertion below fails loudly and names the offender.
+    """
+    from live_session_calendar import SUPPORTED_MICS
+
+    unresolved, unsupported = [], []
+    for ticker in PILOT2_FROZEN_BASKET:
+        result = provider.latest_price(ticker).to_dict()
+        if result.get("state") != "AVAILABLE":
+            unresolved.append((ticker, result.get("state")))
+            continue
+        data = result.get("data") or {}
+        raw = result.get("raw") or {}
+        mic = str(data.get("mic_code") or raw.get("mic_code") or "").strip().upper()
+        if mic not in SUPPORTED_MICS:
+            unsupported.append((ticker, mic))
+
+    assert not unresolved, f"Could not resolve identity for: {unresolved}"
+    assert not unsupported, (
+        f"Frozen basket names resolve to unsupported MICs: {unsupported}. "
+        "This is a surfaced blocker per the Pilot 2 freeze rule, not something "
+        "to bypass automatically."
+    )
+
+
 # ===========================================================================
 # B4 — live FX binding
 # ===========================================================================

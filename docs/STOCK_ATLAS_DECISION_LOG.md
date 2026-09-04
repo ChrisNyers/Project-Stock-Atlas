@@ -178,3 +178,82 @@ the system under test cannot test that system.
 > nothing.
 >
 > **Surface does not mean promote. Modeled return does not prove edge.**
+
+---
+
+## `PILOT2_NASDAQ_SESSION_BINDING_EXTENSION`
+
+| | |
+|---|---|
+| Date | 2026-09-04 |
+| Status | **ACCEPTED** |
+| Context | Pilot 2 execution readiness — frozen basket venue resolution |
+
+### Decision
+
+Five frozen Pilot 2 names require Nasdaq session attestation:
+
+| Ticker | Provider-resolved MIC |
+|---|---|
+| `FISV` | `XNMS` (Nasdaq Global Market) |
+| `MELI` | `XNGS` (Nasdaq Global Select) |
+| `JD` | `XNGS` |
+| `ADBE` | `XNGS` |
+| `GLNG` | `XNGS` |
+
+**Replacing those securities would materially alter the pre-registered
+discrimination basket.** Deliberate Nasdaq session-calendar support is
+therefore the **narrower and more faithful response.**
+
+**This is venue coverage, not an architecture redesign.** Unsupported
+exchanges remain fail-closed.
+
+### What was added
+
+`live_session_calendar.SUPPORTED_MICS` gains exactly two entries, scoped to
+the MICs the frozen basket actually produced:
+
+```
+"XNGS": "XNAS"
+"XNMS": "XNAS"
+```
+
+Both are bound to `exchange_calendars.get_calendar("XNAS")`, requested **by
+name** — not by reusing the `XNYS` lookup already made for NYSE names.
+
+### A constraint surfaced during implementation
+
+`exchange_calendars==4.13.2` documents `XNAS` (and `NASDAQ`, `ARCX`, `XASE`,
+`BATS`, `OOTC`) as aliases resolving to the **same underlying schedule object**
+as `XNYS` (`calendar_utils._default_calendar_aliases`). There is no
+independently-coded Nasdaq calendar in this pinned library.
+
+This was surfaced to the human before implementation, since it appeared to
+conflict with "do not silently map a Nasdaq MIC to the NYSE calendar." The
+resolution: the alias reflects a real fact, not a shortcut — NYSE and Nasdaq
+are both regulated U.S. equity markets observing SIFMA-coordinated market
+holidays and identical 9:30 a.m.–4:00 p.m. ET regular sessions, so the
+trading-day/session-hour data genuinely is the same. What makes the binding
+**deliberate rather than silent** is that `XNGS`/`XNMS` request the `XNAS`
+calendar **by their own name**, are attested as bound to a Nasdaq venue in
+their own `SessionAttestation.exchange` field, and are never satisfied by a
+caller that only asked for `XNYS`. No second calendar library was added.
+
+### Consequences
+
+- Supported NYSE behaviour is unchanged (regression-tested).
+- `FISV`, `MELI`, `JD`, `ADBE`, `GLNG` now bind through the Nasdaq calendar,
+  with genuine completed-session, intraday-refusal, holiday and early-close
+  semantics (day-after-Thanksgiving 2026 verified as a real 1:00 p.m. ET
+  close).
+- Any other MIC — `XLON`, `XHKG`, `ARCX`, `BATS`, `XASE`, the bare string
+  `"NASDAQ"`, or anything else outside the four supported entries — still
+  fails closed. No generic "all U.S. exchanges" fallback was created.
+- All 10 frozen Pilot 2 basket names verified, live, to resolve to an
+  explicitly supported MIC.
+
+### Explicitly not done
+
+No basket change. No security substitution. No underwriting. No investment
+conclusion generated. No second market-data vendor. No second calendar
+library. No completed-session control loosened.

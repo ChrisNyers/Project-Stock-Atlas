@@ -169,6 +169,11 @@ removals or rebalancing without an explicit documented scope change.
 Test inputs only — not recommendations, rankings, or preliminary conclusions.
 No security begins preferred, promoted, eligible, underwritten or funded.
 
+**Venue readiness:** all 10 frozen basket names verified live to an explicitly
+supported MIC (5 NYSE, 5 Nasdaq across `XNGS`/`XNMS`) after a narrow Nasdaq
+session-calendar extension — `PILOT2_NASDAQ_SESSION_BINDING_EXTENSION` in the
+[Decision Log](STOCK_ATLAS_DECISION_LOG.md); detail in charter §22–23.
+
 **Underwriting has not begun.**
 
 **This is the next active pilot.** Charter:

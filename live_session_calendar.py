@@ -1,10 +1,11 @@
-"""Gate B3 — authoritative latest-completed-session truth.
+"""Gate B3 / Pilot 2 venue readiness — authoritative latest-completed-session
+truth.
 
 Session truth is derived from an INDEPENDENT exchange calendar
 (``exchange_calendars==4.13.2``), never from a market-data provider's own
 market-state response.
 
-    decision timestamp -> XNYS calendar -> latest completed session
+    decision timestamp -> XNYS/XNAS calendar -> latest completed session
                        -> known_latest_session_date
                        -> existing Stock Atlas freshness validation
 
@@ -13,6 +14,26 @@ is captured as supporting evidence and may be cross-checked, but it never
 overrides this calendar and never determines ``known_latest_session_date``.
 Rationale: a provider that self-asserts freshness can assert a stale session is
 current (Red Team C-02). An independent calendar cannot be talked into it.
+
+Supported venues
+-----------------
+``XNYS``/``NYSE`` and, as of the Pilot 2 basket freeze, the two Nasdaq MICs
+actually present in the frozen basket: ``XNGS`` (Nasdaq Global Select —
+MELI, JD, ADBE, GLNG) and ``XNMS`` (Nasdaq Global Market — FISV). Both Nasdaq
+MICs are bound through ``exchange_calendars.get_calendar("XNAS")``, requested
+BY NAME rather than reused from the NYSE lookup.
+
+``exchange_calendars==4.13.2`` documents ``XNAS`` (and ``NASDAQ``, ``ARCX``,
+``XASE``, ``BATS``, ``OOTC``) as aliases resolving to the same underlying
+schedule object as ``XNYS`` — see
+``exchange_calendars.calendar_utils._default_calendar_aliases``. This is not a
+shortcut taken here: it reflects that NYSE and Nasdaq are both regulated U.S.
+equity markets that observe SIFMA-coordinated market holidays and identical
+9:30 a.m.-4:00 p.m. ET regular sessions, so the trading-day/session-hour data
+genuinely is the same. The binding is still deliberate and explicit — an
+``XNGS``/``XNMS`` security requests the Nasdaq calendar by its own name, is
+recorded as bound to a Nasdaq venue in its own attestation, and is never
+silently satisfied by a caller that only asked for ``XNYS``.
 
 Fail-closed behaviour
 ---------------------
@@ -23,6 +44,10 @@ falls back to "today", or silently substitutes a different exchange:
 * decision timestamp outside calendar bounds     -> raise
 * naive decision timestamp                       -> raise
 * no completed session at/before decision time   -> raise
+
+No generic "all U.S. exchanges" fallback exists. A MIC outside
+:data:`SUPPORTED_MICS` fails closed regardless of how similar its calendar
+might be to a supported one.
 
 This module reads a calendar. It makes no capital decision, holds no
 credentials, and performs no network I/O.
@@ -51,9 +76,18 @@ CALENDAR_PACKAGE_VERSION = "exchange_calendars==4.13.2"
 #: MIC / exchange labels this build is authorized to resolve, mapped to their
 #: calendar. Deliberately narrow: an unmapped venue fails closed rather than
 #: borrowing another exchange's holiday schedule.
+#:
+#: XNGS and XNMS are the two Nasdaq-family MICs actually encountered while
+#: resolving the frozen Pilot 2 basket (see PILOT2_NASDAQ_SESSION_BINDING_
+#: EXTENSION in the Decision Log). Each is bound to "XNAS", requested by name,
+#: not to "XNYS". No other Nasdaq-family alias (NASDAQ, ARCX, XASE, BATS,
+#: OOTC) is added — extension is scoped to the MICs this basket needs, not to
+#: every alias exchange_calendars happens to recognise.
 SUPPORTED_MICS: dict[str, str] = {
     "XNYS": "XNYS",
     "NYSE": "XNYS",
+    "XNGS": "XNAS",
+    "XNMS": "XNAS",
 }
 
 
