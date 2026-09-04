@@ -5,8 +5,15 @@ a record/schema and validation enhancement and nothing more: no allocation
 score, conviction score, sizing formula, optimizer, ranking layer, automated
 recommendation, probability engine, or second capital-allocation model.
 
-Human allocation authority is unchanged, and the historical Pilot 1 decision is
-preserved without backfilled language.
+Human allocation authority is unchanged, and the historical September 3
+post-Pilot-1 calibration decision is preserved without backfilled language.
+
+Scope note: the September 3 allocation is NOT the canonical Pilot 1 Stage 8
+decision. That remains the September 1 Treasury/Cash Sleeve decision
+(``docs/pilot1/PILOT1_STAGE8_HUMAN_DECISION_001.md``). September 3 was a
+separate post-Pilot-1 paper calibration exercise over a different opportunity
+universe; it is used here as a valid historical test case for missing-rationale
+behaviour only.
 
 Capital status: NO REAL PORTFOLIO ACTION. Every value here is a fixture.
 """
@@ -117,7 +124,7 @@ def test_b_funded_paper_line_missing_any_field_is_preserved_and_flagged(tmp_path
 
 
 def test_b_funded_line_with_no_rationale_at_all_is_preserved(tmp_path):
-    """Pilot 1's historical shape: funded, no rationale, still a valid record."""
+    """The September 3 shape: funded, no rationale, still a valid record."""
     facade = _facade(tmp_path)
     record = _fund(facade, _eligible_run(facade), "ALLOC-LOW-NONE")
     assert record.allocation_rationale_status is AllocationRationaleStatus.EXPLORATORY_LOW_RATIONALE
@@ -399,11 +406,16 @@ def test_h_attested_session_binding_still_enforced():
 
 
 # ===========================================================================
-# Pilot 1 historical decision — schema behaviour, no backfilled language
+# September 3, 2026 post-Pilot-1 calibration decision — schema behaviour only
+#
+# NOT the canonical Pilot 1 Stage 8 decision. See the scope note in the module
+# docstring and PILOT1_DECISION_RECORD_SCOPE_CLARIFICATION in the Decision Log.
 # ===========================================================================
 
 #: The September 3, 2026 paper allocation, exactly as recorded. $50,000 total.
-PILOT1_SEPT3_ALLOCATION = (
+#: A separate post-Pilot-1 calibration exercise, preserved as a historical
+#: fixture for missing-rationale behaviour.
+POST_PILOT1_SEPT3_ALLOCATION = (
     ("Tencent", 25_000, "INITIATE"),
     ("VEON", 10_000, "INITIATE"),
     ("SPY", 10_000, "INITIATE"),
@@ -413,32 +425,32 @@ PILOT1_SEPT3_ALLOCATION = (
 )
 
 
-def test_pilot1_sept3_allocation_totals_fifty_thousand():
-    assert sum(amount for _, amount, _ in PILOT1_SEPT3_ALLOCATION) == 50_000
+def test_sept3_calibration_allocation_totals_fifty_thousand():
+    assert sum(amount for _, amount, _ in POST_PILOT1_SEPT3_ALLOCATION) == 50_000
 
 
-def test_pilot1_funded_lines_are_exploratory_low_rationale():
+def test_sept3_calibration_funded_lines_are_exploratory_low_rationale():
     """Chris supplied 'Taking a stab in the dark' and MEDIUM confidence only.
 
     No security-specific rationale existed, so every funded line must land on
     EXPLORATORY_LOW_RATIONALE — preserved, never backfilled.
     """
-    for name, amount, action in PILOT1_SEPT3_ALLOCATION:
+    for name, amount, action in POST_PILOT1_SEPT3_ALLOCATION:
         if amount <= 0:
             continue
         status = derive_allocation_rationale_status(PortfolioAction(action))
         assert status is AllocationRationaleStatus.EXPLORATORY_LOW_RATIONALE, name
 
 
-def test_pilot1_unfunded_finalists_are_not_rejected():
+def test_sept3_calibration_unfunded_finalists_are_not_rejected():
     """HBR and CRM received no capital and remain eligible."""
-    unfunded = [n for n, amt, _ in PILOT1_SEPT3_ALLOCATION if amt == 0]
+    unfunded = [n for n, amt, _ in POST_PILOT1_SEPT3_ALLOCATION if amt == 0]
     assert unfunded == ["HBR", "CRM"]
     for name in unfunded:
         assert derive_allocation_rationale_status(PortfolioAction.DO_NOTHING) is None
 
 
-def test_pilot1_worked_example_is_fixture_text_not_historical_rationale():
+def test_sept3_worked_example_is_fixture_text_not_historical_rationale():
     """The Tencent example is documentation only and must not be attributed."""
     assert "stab in the dark" not in COMPLETE["why_this_vs_alternatives"]
     assert derive_allocation_rationale_status(

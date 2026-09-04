@@ -26,9 +26,54 @@ allocation authority is unchanged.
 | Phase 4A.5.0 baseline | **COMPLETE / FROZEN** | `d37f654` |
 | Phase 4A.5.1 – 4A.5.2A (SEC, identity, period, market data) | **COMPLETE** | `59911d2` |
 | Pilots 1–4 manual methodology + doctrine | **COMPLETE** | `bf03986` |
+| Post-Pilot-1 September 3 calibration exercise | **CLOSED** — produced `ALLOCATION_BRIDGE_AS_FIELDS_NOT_ENGINE` | — |
 | v0.2 control-layer merge + capital-decision facade | **ACCEPTED** (Final Code Red Team) | `8dba996` |
 | Gate B live data binding (B1–B5) | **CLOSED** — awaiting Gate B Red Team review | `4c71d06` |
 | **Pilot 1 Red Team Closeout — Stage 8 Allocation Rationale Fields** | **COMPLETE** | this commit |
+
+---
+
+## Pilot 1
+
+**Canonical human Stage 8 decision: September 1, 2026 — $50,000 → Treasury /
+Cash Sleeve**, over the frozen 33-stock Pilot 1 discovery process and its
+resulting Opportunity Set. Authoritative artifact:
+[`pilot1/PILOT1_STAGE8_HUMAN_DECISION_001.md`](pilot1/PILOT1_STAGE8_HUMAN_DECISION_001.md).
+
+> ### Status: `FROZEN / COMPLETE`
+
+This decision is not superseded, rewritten, or reconciled with any later
+allocation.
+
+---
+
+## Post-Pilot-1 calibration — September 3, 2026
+
+A **separate** paper allocation exercise over a different opportunity universe
+(HBR / Tencent / VEON / CRM plus SPY / Treasury / Do Nothing):
+
+| Asset | Allocation |
+|---|---:|
+| Tencent | $25,000 |
+| VEON | $10,000 |
+| SPY | $10,000 |
+| 1-Year Treasury | $5,000 |
+| **Total** | **$50,000** |
+
+Recorded confidence **MEDIUM**; recorded investor rationale *"Taking a stab in
+the dark."*
+
+- **Exposed an explicit allocation-rationale gap** — no security-specific
+  reasoning linked the evidence to the dollar split.
+- **Resulting accepted improvement:** `ALLOCATION_BRIDGE_AS_FIELDS_NOT_ENGINE`.
+- **Improvement implemented and governing suite passing** — see below.
+
+**This is not the Pilot 1 Stage 8 decision.** Artifact:
+[`pilot1/PILOT1_SEPT3_ALLOCATION_RECORD_001.md`](pilot1/PILOT1_SEPT3_ALLOCATION_RECORD_001.md),
+whose filename places it under Pilot 1 by accident of sequencing. It is
+preserved unchanged for provenance; the correction of record is
+`PILOT1_DECISION_RECORD_SCOPE_CLARIFICATION` in the
+[Decision Log](STOCK_ATLAS_DECISION_LOG.md).
 
 ---
 
@@ -80,18 +125,19 @@ archive — the new record subclasses `DecisionRecord` rather than modifying it.
 |---|---|---|
 | 1 | Allocation-rationale fields implemented | **MET** |
 | 2 | Validation behaviour passes | **MET** |
-| 3 | Historical September 3 decision unchanged | **MET** |
+| 3 | Historical September 3 calibration decision unchanged | **MET** |
 | 4 | Master Project Plan updated | **MET** (this document) |
 | 5 | Decision Log records `ALLOCATION_BRIDGE_AS_FIELDS_NOT_ENGINE` | **MET** |
 | 6 | Governing test suite passes | **MET** — 245 passed |
 
 > ## PILOT 1 — `FROZEN / COMPLETE`
 
-One item is recorded for the human to resolve and does not block this freeze:
-`PILOT1_SEPT3_ALLOCATION_RECORD_001.md` and
-`PILOT1_STAGE8_HUMAN_DECISION_001.md` describe different decisions on different
-dates over different universes. Both are preserved; neither supersedes the
-other; no reconciliation was invented.
+Record scope is settled. The canonical Pilot 1 Stage 8 decision is the
+**September 1 Treasury/Cash Sleeve** allocation; the September 3 allocation is a
+separate post-Pilot-1 calibration exercise. Neither supersedes the other, and
+both artifacts are preserved unchanged. See
+`PILOT1_DECISION_RECORD_SCOPE_CLARIFICATION` in the
+[Decision Log](STOCK_ATLAS_DECISION_LOG.md).
 
 ---
 
