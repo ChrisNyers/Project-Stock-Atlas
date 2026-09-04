@@ -198,17 +198,42 @@ def test_b1_live_observation_binds_with_complete_required_fields(brk_b_evidence)
     assert p.market_session_status == "COMPLETED"
     assert p.adjusted is False  # recorded honestly, not asserted as adjusted
     assert p.price_mode is PriceMode.COMPLETED_SESSION
-    assert p.freshness_status is FreshnessStatus.FRESH
+
+    # Freshness depends on market state at run time, and BOTH outcomes are
+    # correct behaviour:
+    #   * outside market hours the quote's session IS the latest completed
+    #     session -> FRESH;
+    #   * during an open session the provider stamps an in-progress session
+    #     date, which is NOT a completed session -> STALE, refused.
+    # Asserting FRESH unconditionally would demand that an incomplete session
+    # be accepted as completed — exactly what B3 forbids.
+    if p.price_session_date == p.latest_completed_session_date:
+        assert p.freshness_status is FreshnessStatus.FRESH
+    else:
+        assert p.price_session_date > p.latest_completed_session_date
+        assert p.freshness_status is FreshnessStatus.STALE
 
 
 @live
 @requires_key
 def test_b1_bound_live_snapshot_passes_frozen_price_validation(brk_b_evidence, now, attestation):
-    """The live snapshot satisfies the unmodified control-layer validator."""
+    """The live snapshot meets the unmodified control-layer validator.
+
+    Mid-session the same validator must REFUSE the observation, because an
+    in-progress session is not a completed-session close. Both branches assert
+    the control is right; neither weakens it.
+    """
     uw = _underwriting_from(brk_b_evidence.snapshot)
-    validate_price_snapshot(
-        uw, now, known_latest_session_date=attestation.session_date
-    )
+    snapshot = brk_b_evidence.snapshot
+    if snapshot.price_session_date == snapshot.latest_completed_session_date:
+        validate_price_snapshot(
+            uw, now, known_latest_session_date=attestation.session_date
+        )
+    else:
+        with pytest.raises(ControlFailure, match="STALE"):
+            validate_price_snapshot(
+                uw, now, known_latest_session_date=attestation.session_date
+            )
 
 
 @live
