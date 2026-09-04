@@ -125,3 +125,56 @@ canonical Pilot 1 Stage 8 decision, and test fixtures name it accordingly
 
 Records-scope clarification only. Not an architecture reopening. Pilot 1
 remains `FROZEN / COMPLETE`.
+
+---
+
+## `PILOT2_BASKET_FROZEN`
+
+| | |
+|---|---|
+| Date | 2026-09-04 |
+| Status | **ACCEPTED** |
+| Context | Pilot 2 — Variant Edge & Intentional Allocation |
+
+### Decision
+
+The Pilot 2 discrimination basket is **pre-registered and frozen** before any
+underwriting begins:
+
+`FIS` · `FISV` · `MELI` · `JD` · `ADBE` · `SNOW` · `WCC` · `GLNG` · `NTR` ·
+`CVS`
+
+plus **SPY**, **Treasury/Cash** and **Do Nothing** as live alternatives.
+
+Basket status: **`FROZEN / PRE-REGISTERED`**. No additions, substitutions,
+removals or rebalancing without an explicit documented scope change.
+
+### Reason
+
+Pre-registration is what makes the Pilot 2 result interpretable. A basket that
+can move during the pilot cannot falsify anything: a favourable outcome would
+be indistinguishable from selection drift. Freezing first means a later
+reviewer can tell whether Atlas discriminated among the candidates it was
+given, rather than among the candidates that survived.
+
+The names are a **human input**. Atlas did not select them — a basket chosen by
+the system under test cannot test that system.
+
+### Consequences
+
+- These securities are **test inputs**, not recommendations, endorsements,
+  rankings or preliminary investment conclusions.
+- No security begins preferred, promoted, eligible, underwritten or funded.
+  List order is transcription order and carries no priority.
+- A technical issue is evaluated against the **existing frozen architecture**
+  first. Architecture is never expanded merely to preserve a candidate.
+- A genuine operational blocker requiring substitution must be **surfaced and
+  stopped on**, not silently resolved.
+
+### Governing rule recorded with the freeze
+
+> People and agents may surface ideas. Atlas must prove a variant before an
+> idea can compete for capital. Humans allocate — including to cash, beta, or
+> nothing.
+>
+> **Surface does not mean promote. Modeled return does not prove edge.**

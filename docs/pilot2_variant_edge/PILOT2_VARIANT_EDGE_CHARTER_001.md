@@ -488,4 +488,103 @@ it **does not rewrite the original Pilot 2 verdict.**
 
 ---
 
+# PILOT 2 FROZEN DISCRIMINATION BASKET
+
+*Appended September 4, 2026. All prior charter content is unchanged.*
+
+| | |
+|---|---|
+| Pilot | Pilot 2 — Variant Edge & Intentional Allocation |
+| Capital | $50,000 paper/shadow |
+| Freeze date | September 4, 2026 |
+
+> ## Basket status: `FROZEN / PRE-REGISTERED`
+
+---
+
+## 18. The frozen 10-name basket
+
+| # | Ticker |
+|---|---|
+| 1 | `FIS` |
+| 2 | `FISV` |
+| 3 | `MELI` |
+| 4 | `JD` |
+| 5 | `ADBE` |
+| 6 | `SNOW` |
+| 7 | `WCC` |
+| 8 | `GLNG` |
+| 9 | `NTR` |
+| 10 | `CVS` |
+
+### Live capital alternatives
+
+| Alternative | Role |
+|---|---|
+| **SPY** | beta |
+| **Treasury/Cash** | productive waiting capital |
+| **Do Nothing** | status quo |
+
+All three remain **genuine, live alternatives** throughout Pilot 2. Any of them
+winning is a valid outcome.
+
+---
+
+## 19. What these securities are — and are not
+
+These securities are **test inputs for Pilot 2.** They are **not**
+recommendations, endorsements, rankings, or preliminary investment
+conclusions.
+
+**No security begins Pilot 2 as:**
+
+- preferred
+- promoted
+- eligible
+- underwritten
+- funded
+
+The basket's purpose is to test whether Stock Atlas can **discriminate among
+superficially attractive opportunities** by identifying a genuine falsifiable
+variant view.
+
+The list order above is **transcription order only.** It carries no ranking,
+priority, or preference, and must never be read as one.
+
+---
+
+## 20. Freeze rule
+
+After this record is committed:
+
+- **no additions**
+- **no substitutions**
+- **no removals**
+- **no rebalancing** of the test basket
+
+— unless an **explicit documented scope change** is approved.
+
+A technical issue alone should **first be evaluated against the existing frozen
+architecture.** Do not expand architecture merely to preserve a candidate.
+
+> If a genuine operational blocker eventually requires a substitution,
+> **stop and surface it** before changing the frozen basket.
+
+The commit recording this section is the freeze anchor: the basket's content
+and its freeze time are fixed by that commit, and any later change is visible
+as a subsequent commit rather than a silent edit.
+
+---
+
+## 21. Governing Pilot 2 rule
+
+> **People and agents may surface ideas. Atlas must prove a variant before an
+> idea can compete for capital. Humans allocate — including to cash, beta, or
+> nothing.**
+
+> ### Surface does not mean promote.
+> ### Modeled return does not prove edge.
+
+---
+
 **Capital status: NO REAL PORTFOLIO ACTION.**

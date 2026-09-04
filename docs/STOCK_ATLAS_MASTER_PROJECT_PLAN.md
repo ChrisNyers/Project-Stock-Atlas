@@ -159,7 +159,17 @@ decision supersedes the other.
 
 ## Pilot 2 — VARIANT EDGE & INTENTIONAL ALLOCATION
 
-> ### Status: **CHARTER / BASKET DESIGN**
+> ### Status: **BASKET FROZEN / READY TO EXECUTE**
+
+Basket frozen September 4, 2026 as `FROZEN / PRE-REGISTERED` (charter §18–21):
+FIS · FISV · MELI · JD · ADBE · SNOW · WCC · GLNG · NTR · CVS, plus SPY,
+Treasury/Cash and Do Nothing as live alternatives. No additions, substitutions,
+removals or rebalancing without an explicit documented scope change.
+
+Test inputs only — not recommendations, rankings, or preliminary conclusions.
+No security begins preferred, promoted, eligible, underwritten or funded.
+
+**Underwriting has not begun.**
 
 **This is the next active pilot.** Charter:
 [`pilot2_variant_edge/PILOT2_VARIANT_EDGE_CHARTER_001.md`](pilot2_variant_edge/PILOT2_VARIANT_EDGE_CHARTER_001.md).
@@ -258,18 +268,19 @@ branch has never been exercised on live data.
 |---|---|---|
 | 1 | Freeze this cleaned Master Project Plan | **DONE** — this document |
 | 2 | Create Pilot 2 Charter | **DONE** — charter drafted |
-| 3 | Select and freeze 10-name discrimination basket | **BLOCKED — awaiting human selection** |
-| 4 | Do not underwrite before basket freeze | enforced by the charter's freeze gate |
-| 5 | Execute Pilot 2 | not started |
+| 3 | Select and freeze 10-name discrimination basket | **DONE** — frozen 2026-09-04 |
+| 4 | Do not underwrite before basket freeze | **SATISFIED** — freeze recorded before any underwriting |
+| 5 | Execute Pilot 2 | **NEXT** |
 | 6 | Stage 8 paper allocation | not started |
 | 7 | Pilot 2 Health Review | not started |
 | 8 | Red Team | not started |
 | 9 | Decide what worked, failed, or is missing | not started |
 | 10 | Build nothing unless the learning earns it | standing rule |
 
-**Current active task: PILOT 2 CHARTER + 10-NAME DISCRIMINATION BASKET.**
+**Current active task: EXECUTE PILOT 2 — underwriting against the frozen
+basket, not yet begun.**
 
-Action 3 is a human investment judgement. Atlas does not select the basket —
-doing so would be inventing investment conclusions and would contaminate the
-very hypothesis Pilot 2 exists to test. The charter specifies what the
-discrimination set must *do*; the names come from Chris.
+Action 3 was a human investment judgement, as it had to be. Atlas did not
+select the basket — doing so would have invented investment conclusions and
+contaminated the very hypothesis Pilot 2 exists to test. The charter specified
+what the discrimination set must *do*; the names came from Chris.
