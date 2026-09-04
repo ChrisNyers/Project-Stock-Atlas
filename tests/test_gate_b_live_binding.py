@@ -513,8 +513,8 @@ def test_b3_nasdaq_binding_is_deliberate_not_a_silent_nyse_reuse():
     assert SUPPORTED_MICS["XNMS"] == "XNAS"
     assert SUPPORTED_MICS["XNYS"] == "XNYS"
     assert SUPPORTED_MICS["NYSE"] == "XNYS"
-    # Scoped to exactly the MICs this basket needs — no broader alias family.
-    assert set(SUPPORTED_MICS) == {"XNYS", "NYSE", "XNGS", "XNMS"}
+    # The full current set (including ARCX, added later for SPY) is asserted
+    # exactly in test_b3_arcx_binding_is_deliberate_not_a_silent_nyse_reuse.
 
 
 def test_b3_nyse_regression_unchanged_after_nasdaq_extension():
@@ -531,8 +531,11 @@ def test_b3_nyse_regression_unchanged_after_nasdaq_extension():
 
 
 def test_b3_unsupported_mic_still_fails_closed_after_nasdaq_extension():
-    """The extension is scoped; a non-basket venue is still refused."""
-    for mic in ("XLON", "XHKG", "ARCX", "BATS", "XASE", "NASDAQ"):
+    """The extension is scoped; a non-basket, non-alternative venue is still
+    refused. ARCX was unsupported at the time this test was written and was
+    added later, deliberately, for SPY — see
+    test_b3_unsupported_mic_still_fails_closed_after_arcx_extension."""
+    for mic in ("XLON", "XHKG", "BATS", "XASE", "NASDAQ"):
         with pytest.raises(SessionCalendarError, match="No authorized exchange calendar"):
             latest_completed_session(
                 datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic=mic
@@ -544,6 +547,182 @@ def test_b3_no_generic_all_us_exchange_fallback():
     with pytest.raises(SessionCalendarError):
         latest_completed_session(
             datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic="XNCM"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Pilot 2 Stage 8 binding readiness — ARCX (SPY) and JD identity integrity.
+# See PILOT2_STAGE8_BINDING_READINESS in the Decision Log.
+# ---------------------------------------------------------------------------
+
+SPY_KEY = "SEC-CIK:0000884394:SPY"
+JD_KEY = "SEC-CIK:0001549802:JD"
+
+
+def test_b3_arcx_normal_completed_session_resolves():
+    """A completed NYSE Arca (SPY's primary MIC) session binds normally."""
+    att = latest_completed_session(
+        datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic="ARCX"
+    )
+    assert att.session_date == date(2026, 9, 2)
+    assert att.exchange == "ARCX"  # requested MIC preserved, not rewritten to XNYS
+
+
+def test_b3_arcx_intraday_session_is_not_completed():
+    """A still-open ARCX session is not accepted as a completed-session close."""
+    att = latest_completed_session(
+        datetime(2026, 9, 2, 15, 0, tzinfo=timezone.utc), mic="ARCX"
+    )
+    assert att.session_date == date(2026, 9, 1)  # the PRIOR session, not today
+
+
+def test_b3_arcx_holiday_is_not_a_session():
+    att = latest_completed_session(
+        datetime(2026, 9, 7, 12, 0, tzinfo=timezone.utc), mic="ARCX"
+    )
+    assert att.session_date == date(2026, 9, 4)
+
+
+def test_b3_arcx_early_close_is_respected():
+    """Day after Thanksgiving 2026 is a genuine early-close ARCX session too."""
+    import exchange_calendars as xc
+
+    cal = xc.get_calendar("ARCX")
+    early_close = cal.session_close(datetime(2026, 11, 27))
+    assert early_close.hour == 18 and early_close.tzinfo is not None  # 13:00 ET / 18:00 UTC
+
+    att = latest_completed_session(
+        datetime(2026, 11, 27, 19, 0, tzinfo=timezone.utc), mic="ARCX"
+    )
+    assert att.session_date == date(2026, 11, 27)
+
+
+def test_b3_arcx_binding_is_deliberate_not_a_silent_nyse_reuse():
+    """ARCX requests the ARCX calendar BY NAME; other entries are untouched."""
+    from live_session_calendar import SUPPORTED_MICS
+
+    assert SUPPORTED_MICS["ARCX"] == "ARCX"
+    assert SUPPORTED_MICS["XNYS"] == "XNYS"
+    assert SUPPORTED_MICS["NYSE"] == "XNYS"
+    assert SUPPORTED_MICS["XNGS"] == "XNAS"
+    assert SUPPORTED_MICS["XNMS"] == "XNAS"
+    # Scoped to exactly what Pilot 2's basket and required alternatives need.
+    assert set(SUPPORTED_MICS) == {"XNYS", "NYSE", "XNGS", "XNMS", "ARCX"}
+
+
+def test_b3_xnys_regression_unchanged_after_arcx_extension():
+    """Every existing XNYS case from before the ARCX extension still holds."""
+    assert latest_completed_session(
+        datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic="XNYS"
+    ).session_date == date(2026, 9, 2)
+    assert latest_completed_session(
+        datetime(2026, 9, 2, 15, 0, tzinfo=timezone.utc), mic="XNYS"
+    ).session_date == date(2026, 9, 1)
+
+
+def test_b3_xngs_xnms_regression_unchanged_after_arcx_extension():
+    """The Nasdaq extension is unaffected by adding ARCX."""
+    for mic in ("XNGS", "XNMS"):
+        assert latest_completed_session(
+            datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic=mic
+        ).session_date == date(2026, 9, 2)
+
+
+def test_b3_unsupported_mic_still_fails_closed_after_arcx_extension():
+    for mic in ("XLON", "XBUE", "XHKG"):
+        with pytest.raises(SessionCalendarError, match="No authorized exchange calendar"):
+            latest_completed_session(
+                datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc), mic=mic
+            )
+
+
+@live
+@requires_key
+def test_b3_spy_live_identity_and_venue_readiness(provider, attestation_arcx):
+    """SPY resolves through the standard, unambiguous identity path."""
+    resolved = provider.resolve_symbol("SPY").to_dict()
+    assert resolved["state"] == "AVAILABLE"
+    assert resolved["security_key"] == SPY_KEY
+    ev = bind_price_snapshot(
+        provider, "SPY", expected_security_key=SPY_KEY,
+        attestation=attestation_arcx, expected_mic="ARCX",
+    )
+    assert ev.snapshot.security_key == SPY_KEY
+    assert ev.snapshot.currency == "USD"
+    assert ev.snapshot.price > 0
+
+
+@pytest.fixture(scope="module")
+def attestation_arcx(now) -> "SessionAttestation":
+    return latest_completed_session(now, mic="ARCX")
+
+
+# --- JD identity integrity -------------------------------------------------
+
+
+@live
+@requires_key
+def test_jd_bare_ticker_is_genuinely_ambiguous(provider):
+    """The documented starting condition: JD collides with an unrelated issuer."""
+    resolved = provider.resolve_symbol("JD").to_dict()
+    assert resolved["state"] == "AMBIGUOUS"
+
+
+@pytest.fixture(scope="module")
+def attestation_xngs(now) -> "SessionAttestation":
+    return latest_completed_session(now, mic="XNGS")
+
+
+@live
+@requires_key
+def test_jd_identity_proven_via_known_mic_not_ticker_alone(provider, attestation_xngs):
+    """JD.com's identity is established via SEC CIK, then proven live via a
+    MIC-qualified query — not by trusting the provider's bare-ticker default."""
+    ev = bind_price_snapshot(
+        provider, "JD", expected_security_key=JD_KEY,
+        attestation=attestation_xngs, expected_mic="XNGS",
+    )
+    assert ev.snapshot.security_key == JD_KEY
+    assert ev.snapshot.quoted_security_key == JD_KEY
+    assert "JD.com" in ev.snapshot.quoted_instrument
+    evidence = ev.to_dict()["raw_observation"]["_disambiguation"]
+    assert evidence["method"] == "mic_qualified_query"
+    assert evidence["expected_mic"] == "XNGS"
+    # The second, independent signal (resolve_symbol's own live quote_confirmed)
+    # agreed — this is not a single unverified data point.
+    assert evidence["quote_confirmed_cross_check"]["mic_code"] == "XNGS"
+
+
+@live
+@requires_key
+def test_jd_unrelated_same_symbol_security_cannot_satisfy_the_bind(provider):
+    """The mandatory adversarial case: a MIC where JD.com does not list is
+    refused, proving the bind cannot be satisfied by the wrong same-symbol
+    security merely because the ticker text matches."""
+    att = latest_completed_session(datetime.now(timezone.utc), mic="XNMS")
+    with pytest.raises(LiveBindingError, match="disambiguation failed|404"):
+        bind_price_snapshot(
+            provider, "JD", expected_security_key=JD_KEY,
+            attestation=att, expected_mic="XNMS",
+        )
+
+
+def test_jd_unrelated_uk_venue_is_not_even_an_authorized_calendar():
+    """JD Sports Fashion plc's own venue (LSE/XLON) is refused at the
+    calendar layer before any price bind is attempted at all."""
+    with pytest.raises(SessionCalendarError, match="No authorized exchange calendar"):
+        latest_completed_session(datetime.now(timezone.utc), mic="XLON")
+
+
+@live
+@requires_key
+def test_jd_disambiguation_requires_a_known_mic_no_guessing():
+    """Ambiguity is never silently resolved without a caller-supplied MIC."""
+    from live_price_binding import _disambiguate_via_known_mic
+
+    with pytest.raises(LiveBindingError, match="no expected_mic was supplied"):
+        _disambiguate_via_known_mic(
+            mdp.TwelveDataProvider(), "JD", "", {"security_key": JD_KEY}
         )
 
 

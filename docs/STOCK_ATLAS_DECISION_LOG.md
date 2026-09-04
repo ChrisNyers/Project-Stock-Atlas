@@ -257,3 +257,86 @@ caller that only asked for `XNYS`. No second calendar library was added.
 No basket change. No security substitution. No underwriting. No investment
 conclusion generated. No second market-data vendor. No second calendar
 library. No completed-session control loosened.
+
+---
+
+## `PILOT2_STAGE8_BINDING_READINESS`
+
+| | |
+|---|---|
+| Date | 2026-09-04 |
+| Status | **ACCEPTED** |
+| Context | Closing two decision-time binding blockers before Pilot 2 Stage 8 |
+
+### Decision
+
+Two known decision-time binding issues are closed, both by the same narrow
+principle already used for the Nasdaq extension — never by weakening
+identity or freshness controls.
+
+**1. SPY / `ARCX`.** `exchange_calendars==4.13.2` documents `ARCX` (NYSE Arca,
+SPY's primary MIC) as an alias resolving to the same underlying schedule
+object as `XNYS` — structurally identical to how `XNAS` was already handled
+for the Nasdaq basket names. `SUPPORTED_MICS` gains exactly one entry,
+`"ARCX": "ARCX"`, requested by its own name. SPY now binds live, FRESH,
+through the full Gate B pipeline.
+
+**Correction to the prior entry.** `PILOT2_NASDAQ_SESSION_BINDING_EXTENSION`
+(above) listed `ARCX` among the MICs that "still fail closed." That was
+accurate when written — SPY had not yet been bound live. It is not rewritten,
+per the append-only rule; this entry is the correction of record. `ARCX` is
+now supported, deliberately and narrowly, for exactly the reason stated here.
+
+**2. JD identity integrity.** `JD` is a genuine bare-ticker collision:
+TwelveData's `symbol_search` reports `AMBIGUOUS` across JD.com's Nasdaq ADR,
+JD Sports Fashion plc (LSE, unrelated issuer), and a Buenos Aires depositary
+receipt. Atlas's own identity resolution was never ambiguous — SEC CIK
+`0001549802` unambiguously identifies JD.com — but `bind_price_snapshot`
+previously refused to proceed past the provider's `AMBIGUOUS` state at all,
+correctly, rather than trusting a ticker-only match.
+
+`live_price_binding.py` gains `_disambiguate_via_known_mic`, invoked only
+when `resolve_symbol` reports `AMBIGUOUS`: it re-queries the provider with
+`mic_code` supplied explicitly (Atlas already knows JD.com trades on `XNGS`,
+from the venue-readiness work), rather than trusting the provider's
+undocumented bare-ticker default. Two independent signals must agree before
+anything is trusted — the MIC-qualified query itself, and `resolve_symbol`'s
+own separately-fetched `quote_confirmed` field — and TwelveData's `mic_code`
+parameter was empirically confirmed to be a genuine, respected filter (a
+mismatched MIC returns HTTP 404, not a silent substitution) before this was
+built on. A missing `expected_mic`, a failed query, or disagreement between
+the two signals all fail closed; nothing here weakens the existing B2
+class-substitution guard, which still governs every unambiguous name
+unchanged.
+
+### Why this is not "ticker-only matching"
+
+The distinction is the query itself, not just a post-hoc check. A bare
+`symbol=JD` query asks the provider to guess and trusts its guess. A
+`symbol=JD&mic_code=XNGS` query tells the provider which instrument to
+return, using a MIC Atlas already established independently (SEC CIK
+resolution, done once, unambiguous on Atlas's side from the start). The
+ambiguity being resolved is in the *provider's* bare-ticker default, not in
+Atlas's own identity of the security.
+
+### Consequences
+
+- SPY, FIS, MELI, JD, and Treasury/Cash can now all reach a decision-time
+  price/session bind without an unresolved identity or venue-control defect.
+- The adversarial case (JD Sports Fashion's own venue, `XLON`) is refused at
+  the calendar layer — it was never an authorized MIC — before any price bind
+  is even attempted.
+- A MIC-qualified query to a supported calendar where JD.com does not
+  actually list (`XNMS`, tested directly) is refused with a 404, proving the
+  unrelated security cannot satisfy the bind merely because the calendar
+  itself is authorized.
+- `SUPPORTED_MICS` is now `{XNYS, NYSE, XNGS, XNMS, ARCX}` — scoped to exactly
+  the frozen basket's venues plus the required Stage 7 alternative's venue,
+  nothing broader.
+
+### Explicitly not done
+
+No Stage 7 state changed. No return assumption changed. No basket change. No
+new market-data vendor. No generic "all U.S. exchanges" fallback. No
+weakening of the B2 identity guard for any name that already resolves
+unambiguously.

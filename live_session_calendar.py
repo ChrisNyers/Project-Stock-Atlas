@@ -17,22 +17,25 @@ current (Red Team C-02). An independent calendar cannot be talked into it.
 
 Supported venues
 -----------------
-``XNYS``/``NYSE`` and, as of the Pilot 2 basket freeze, the two Nasdaq MICs
-actually present in the frozen basket: ``XNGS`` (Nasdaq Global Select —
-MELI, JD, ADBE, GLNG) and ``XNMS`` (Nasdaq Global Market — FISV). Both Nasdaq
-MICs are bound through ``exchange_calendars.get_calendar("XNAS")``, requested
-BY NAME rather than reused from the NYSE lookup.
+``XNYS``/``NYSE``; the two Nasdaq MICs present in the frozen Pilot 2 basket,
+``XNGS`` (Nasdaq Global Select — MELI, JD, ADBE, GLNG) and ``XNMS`` (Nasdaq
+Global Market — FISV); and ``ARCX`` (NYSE Arca), required because SPY — a
+fixed Stage 7 alternative, not a basket name — primary-lists there. Each of
+``XNGS``, ``XNMS`` and ``ARCX`` is bound by calling
+``exchange_calendars.get_calendar(...)`` with **its own name**
+(``"XNAS"`` for the two Nasdaq MICs, ``"ARCX"`` for NYSE Arca) rather than
+reused from the ``XNYS`` lookup.
 
-``exchange_calendars==4.13.2`` documents ``XNAS`` (and ``NASDAQ``, ``ARCX``,
+``exchange_calendars==4.13.2`` documents ``XNAS``, ``ARCX`` (and ``NASDAQ``,
 ``XASE``, ``BATS``, ``OOTC``) as aliases resolving to the same underlying
 schedule object as ``XNYS`` — see
 ``exchange_calendars.calendar_utils._default_calendar_aliases``. This is not a
-shortcut taken here: it reflects that NYSE and Nasdaq are both regulated U.S.
-equity markets that observe SIFMA-coordinated market holidays and identical
-9:30 a.m.-4:00 p.m. ET regular sessions, so the trading-day/session-hour data
-genuinely is the same. The binding is still deliberate and explicit — an
-``XNGS``/``XNMS`` security requests the Nasdaq calendar by its own name, is
-recorded as bound to a Nasdaq venue in its own attestation, and is never
+shortcut taken here: it reflects that NYSE, Nasdaq and NYSE Arca are all
+regulated U.S. equity markets that observe SIFMA-coordinated market holidays
+and identical 9:30 a.m.-4:00 p.m. ET regular sessions, so the trading-day/
+session-hour data genuinely is the same. The binding is still deliberate and
+explicit — each supported non-XNYS MIC requests its own calendar by name, is
+recorded as bound to its own venue in its own attestation, and is never
 silently satisfied by a caller that only asked for ``XNYS``.
 
 Fail-closed behaviour
@@ -80,14 +83,22 @@ CALENDAR_PACKAGE_VERSION = "exchange_calendars==4.13.2"
 #: XNGS and XNMS are the two Nasdaq-family MICs actually encountered while
 #: resolving the frozen Pilot 2 basket (see PILOT2_NASDAQ_SESSION_BINDING_
 #: EXTENSION in the Decision Log). Each is bound to "XNAS", requested by name,
-#: not to "XNYS". No other Nasdaq-family alias (NASDAQ, ARCX, XASE, BATS,
-#: OOTC) is added — extension is scoped to the MICs this basket needs, not to
-#: every alias exchange_calendars happens to recognise.
+#: not to "XNYS".
+#:
+#: ARCX (NYSE Arca) is added because SPY — a fixed Stage 7 alternative
+#: required alongside every candidate, not a basket name — primary-lists
+#: there (see PILOT2_STAGE8_BINDING_READINESS in the Decision Log). Bound to
+#: "ARCX", requested by name, not to "XNYS".
+#:
+#: No other alias exchange_calendars recognises (NASDAQ, XASE, BATS, OOTC) is
+#: added — extension is scoped to exactly the MICs Pilot 2's frozen basket and
+#: required Stage 7 alternatives need, nothing broader.
 SUPPORTED_MICS: dict[str, str] = {
     "XNYS": "XNYS",
     "NYSE": "XNYS",
     "XNGS": "XNAS",
     "XNMS": "XNAS",
+    "ARCX": "ARCX",
 }
 
 

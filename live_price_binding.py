@@ -122,6 +122,106 @@ def _as_utc(epoch: Any, field: str) -> datetime:
         raise LiveBindingError(f"Provider {field} {epoch!r} is not a usable timestamp") from exc
 
 
+def _disambiguate_via_known_mic(provider, atlas_symbol: str, expected_mic: str, ambiguous_result: dict) -> dict:
+    """Resolve an AMBIGUOUS bare-ticker collision using Atlas's own known MIC.
+
+    Called only when ``provider.resolve_symbol`` reports ``AMBIGUOUS`` — e.g.
+    "JD" collides with JD Sports Fashion plc (LSE) and a Buenos Aires
+    depositary receipt, alongside JD.com's Nasdaq ADR. This does **not** trust
+    whichever instrument the provider's undocumented bare-ticker default
+    happens to return (that is ticker-only matching). Instead it re-queries
+    the provider with ``mic_code`` supplied explicitly — Atlas telling the
+    provider which instrument to return, using a MIC already established
+    through Atlas's own identity work (SEC CIK resolution / the frozen
+    basket's venue-readiness record), rather than asking the provider to
+    guess. Empirically, TwelveData's ``mic_code`` parameter is a genuine
+    filter: querying a MIC where the requested ticker is not actually listed
+    returns HTTP 404, not a silent substitution — verified directly against
+    this ticker before this function was written.
+
+    Two independent signals must agree before this returns anything: (1) the
+    MIC-qualified query itself must succeed and echo back the same
+    ``expected_mic``, and (2) ``resolve_symbol``'s own ``quote_confirmed``
+    sub-field — populated by a separate live call even in the AMBIGUOUS
+    branch — must independently agree on MIC and exchange. Disagreement, a
+    failed query, or a missing ``expected_mic`` all fail closed.
+    """
+    if not expected_mic or not str(expected_mic).strip():
+        raise LiveBindingError(
+            f"Provider reports {atlas_symbol!r} AMBIGUOUS and no expected_mic was "
+            "supplied to disambiguate; refusing to guess which security is intended"
+        )
+    want_mic = str(expected_mic).strip().upper()
+
+    key = os.environ.get("TWELVEDATA_API_KEY")
+    if not key:
+        raise LiveBindingError("TWELVEDATA_API_KEY is absent; cannot disambiguate a MIC-qualified quote")
+    query = urllib.parse.urlencode({"symbol": atlas_symbol, "mic_code": want_mic, "apikey": key})
+    try:
+        with urllib.request.urlopen(f"{_TD_QUOTE_URL}?{query}", timeout=20) as resp:
+            payload = json.load(resp)
+    except Exception as exc:
+        raise LiveBindingError(
+            f"MIC-qualified disambiguation failed for {atlas_symbol!r} on {want_mic!r}: "
+            f"{redact(str(exc))}. Ambiguity was not resolved; refusing to bind."
+        ) from exc
+    if not isinstance(payload, dict) or payload.get("code") or payload.get("status") == "error":
+        raise LiveBindingError(
+            f"MIC-qualified disambiguation returned an error for {atlas_symbol!r} on "
+            f"{want_mic!r}: {redact(json.dumps(payload, default=str))}"
+        )
+
+    returned_mic = str(payload.get("mic_code") or "").strip().upper()
+    if returned_mic != want_mic:
+        raise LiveBindingError(
+            f"MIC-qualified query for {atlas_symbol!r} echoed back {returned_mic!r}, "
+            f"not the requested {want_mic!r}; refusing to bind on a mismatch"
+        )
+
+    # Second, independent signal: resolve_symbol's own live quote_confirmed
+    # sub-field (from a separate call TwelveData already made) must agree.
+    confirmed = ((ambiguous_result.get("data") or {}).get("quote_confirmed")) or {}
+    confirmed_mic = str(confirmed.get("mic_code") or "").strip().upper()
+    if confirmed_mic and confirmed_mic != want_mic:
+        raise LiveBindingError(
+            f"resolve_symbol's independent quote_confirmed for {atlas_symbol!r} disagrees "
+            f"with the MIC-qualified query ({confirmed_mic!r} vs {want_mic!r}); two "
+            "identity signals disagree, refusing to bind"
+        )
+
+    # Atlas's OWN identity resolution for this symbol (CIK-based, via
+    # sec_adapter/identity_resolver) was never ambiguous — only the
+    # provider's bare-ticker quote was. The security_key below is therefore
+    # the caller's already-established expected_security_key, not a new
+    # provider-derived value: what was proven above is that the MIC-qualified
+    # observation corresponds to the venue Atlas already knows this issuer
+    # trades on, via two independently agreeing provider signals.
+    return {
+        "provider": provider.name if hasattr(provider, "name") else "twelvedata",
+        "state": "AVAILABLE",
+        "security_key": ambiguous_result.get("security_key"),
+        "data": {
+            # TwelveData returns numeric fields as strings; coerce here as
+            # market_data_providers._f() does for the same endpoint.
+            "price": float(payload["close"]) if payload.get("close") not in (None, "") else None,
+            "mic_code": returned_mic,
+            "is_market_open": payload.get("is_market_open"),
+        },
+        # Disambiguation evidence rides along inside "raw" so it flows into
+        # BoundPriceEvidence.raw_observation and is preserved/redacted exactly
+        # like every other bind's evidence, without changing that dataclass.
+        "raw": {
+            **payload,
+            "_disambiguation": {
+                "method": "mic_qualified_query",
+                "reason": "resolve_symbol reported AMBIGUOUS",
+                "expected_mic": want_mic,
+                "quote_confirmed_cross_check": confirmed,
+            },
+        },
+    }
+
+
 def bind_price_snapshot(
     provider,
     atlas_symbol: str,
@@ -136,31 +236,53 @@ def bind_price_snapshot(
     ``expected_security_key`` is the identity the caller underwrote. If the
     provider resolves the requested symbol to any other key, this raises — that
     is the B2 class-substitution guard, applied before a price is even read.
+
+    A bare ticker can collide across unrelated issuers on different venues
+    (e.g. "JD" is both JD.com's Nasdaq ADR and JD Sports Fashion plc on the
+    LSE). When the provider itself reports this as ``AMBIGUOUS``, this
+    function does **not** fall back to trusting whichever instrument the
+    provider's bare-ticker default happens to return — that would be exactly
+    the ticker-only matching this control exists to prevent. Instead it
+    requires the caller's own ``expected_mic`` (already established through
+    Atlas's identity work, not derived from this call) and re-queries the
+    provider with that MIC supplied explicitly, so the provider is told which
+    instrument to return rather than asked to guess. The response is then
+    independently checked against ``expected_security_key``/``expected_mic``/
+    ``expected_currency`` exactly as the unambiguous path is. If no
+    ``expected_mic`` is supplied, or the MIC-qualified query fails or its
+    result doesn't verify, this fails closed — ambiguity is never silently
+    resolved.
     """
     resolved = provider.resolve_symbol(atlas_symbol)
     rd = resolved.to_dict()
-    if rd.get("state") != "AVAILABLE":
-        raise LiveBindingError(
-            f"Provider could not resolve {atlas_symbol!r}: state={rd.get('state')}"
-        )
-    resolved_key = rd.get("security_key")
-    if not resolved_key or not str(resolved_key).strip():
-        raise LiveBindingError(f"Provider returned no security_key for {atlas_symbol!r}")
+    state = rd.get("state")
 
-    # --- B2: identity gate, before any price is trusted -----------------------
-    if str(resolved_key).strip() != str(expected_security_key).strip():
+    if state == "AMBIGUOUS":
+        qd = _disambiguate_via_known_mic(provider, atlas_symbol, expected_mic, rd)
+    elif state != "AVAILABLE":
         raise LiveBindingError(
-            f"Security identity mismatch: underwrote {expected_security_key!r} but the "
-            f"provider resolved {atlas_symbol!r} to {resolved_key!r}. Distinct share "
-            "classes are distinct securities; refusing to bind."
+            f"Provider could not resolve {atlas_symbol!r}: state={state}"
         )
+    else:
+        resolved_key = rd.get("security_key")
+        if not resolved_key or not str(resolved_key).strip():
+            raise LiveBindingError(f"Provider returned no security_key for {atlas_symbol!r}")
 
-    quote = provider.latest_price(atlas_symbol)
-    qd = quote.to_dict()
-    if qd.get("state") != "AVAILABLE":
-        raise LiveBindingError(
-            f"Provider returned no usable price for {atlas_symbol!r}: state={qd.get('state')}"
-        )
+        # --- B2: identity gate, before any price is trusted --------------------
+        if str(resolved_key).strip() != str(expected_security_key).strip():
+            raise LiveBindingError(
+                f"Security identity mismatch: underwrote {expected_security_key!r} but the "
+                f"provider resolved {atlas_symbol!r} to {resolved_key!r}. Distinct share "
+                "classes are distinct securities; refusing to bind."
+            )
+
+        quote = provider.latest_price(atlas_symbol)
+        qd = quote.to_dict()
+        if qd.get("state") != "AVAILABLE":
+            raise LiveBindingError(
+                f"Provider returned no usable price for {atlas_symbol!r}: state={qd.get('state')}"
+            )
+
     quoted_key = qd.get("security_key")
     if str(quoted_key).strip() != str(expected_security_key).strip():
         raise LiveBindingError(
