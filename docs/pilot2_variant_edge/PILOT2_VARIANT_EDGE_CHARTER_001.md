@@ -173,3 +173,224 @@ it should be recorded as such rather than dressed up.
 ---
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+# PILOT 2 FEEDBACK LOOPS
+
+*Added to this charter September 4, 2026. Sections 1–7 above are unchanged.*
+
+Pilot 2 uses three feedback loops.
+
+Only **Loop A** is required to run the initial Pilot 2 decision cycle. Loops B
+and C run **only when their triggering evidence exists.**
+
+Feedback may change the **next cycle's questions.**
+
+Feedback must **not**:
+
+- rewrite a frozen record
+- change architecture by default
+- automatically add features
+- allocate capital
+- use hindsight to repair prior reasoning
+
+---
+
+## 8. Loop A — Decision Loop
+
+**When:** during the same sitting as Stage 8.
+
+> ### Primary question: Did we allocate or refuse capital on purpose?
+
+### Capture
+
+For every relevant finalist, preserve:
+
+- observable priced-in view
+- Atlas variant
+- why the gap can exist
+- `allocation_wrong_if`
+- fresh-price / session bind
+- Stage 7 status
+- `why_this_vs_alternatives`
+- `why_this_size`
+- `why_not_this_increment`
+- `EXPLORATORY_LOW_RATIONALE` where applicable
+
+Also record:
+
+> **What did Atlas cause the human decision-maker(s) to do or not do
+> differently from gut alone?**
+
+This is the **primary Pilot 2 decision-usefulness question.**
+
+### Interpretation
+
+If funded names have substantially **interchangeable** rationale or variant
+language, treat that as evidence that the decision remains **noisy**.
+
+**Do not solve that automatically by adding a score.**
+
+A higher modeled return is **not** evidence of intentional allocation by
+itself.
+
+---
+
+## 9. Loop B — Revisit Loop
+
+**When:** only when a previously defined revisit trigger fires.
+
+Valid triggers: a named price condition · a TIME/date trigger · a named
+operating/thesis fact · a catalyst previously defined in the frozen record.
+
+> **Do not revisit merely because someone wants to check the stock.**
+
+> ### Primary question: Is the standing conclusion still valid under current evidence?
+
+### Path
+
+```
+trigger → fresh price/calendar bind → same Stage 7 door → new decision record
+```
+
+**The prior record remains untouched.**
+
+### Capture
+
+- trigger type
+- trigger evidence
+- current price/session bind
+- what changed or did not change in the priced-in view
+- what changed or did not change in the Atlas variant
+- updated uncertainty
+- new Stage 7 conclusion
+- new Stage 8 decision where required, including HOLD, cash, or refusal
+
+### Prohibition
+
+Do **not** use current price action or new information to rewrite the original
+`why_this_vs_alternatives`, `why_this_size`, variant claim, confidence, or
+decision record.
+
+**Every revisit creates a new point-in-time record.**
+
+A future Watchman capability may automate trigger detection. **Pilot 2 requires
+only the existing human/checklist process.**
+
+---
+
+## 10. Loop C — Outcome Loop
+
+**When:** later, at the horizon specified in the original variant thesis, or at
+the named catalyst / gap-closing event.
+
+> **Do not run so early that one earnings print or price move is treated as
+> proof of edge.**
+
+> ### Primary question: Was the claimed edge real, or was the research merely coherent?
+
+Evaluate using the **frozen decision record** and subsequent evidence.
+
+### Four broad outcome categories
+
+| Original decision | Thesis held | Thesis broke |
+|---|---|---|
+| **Funded** | Possible edge — one observation only | Edge claim wrong; preserve the record |
+| **Refused / Cash / SPY** | Good refusal or possible missed edge | Correct refusal |
+
+Compare realized/path outcomes against the **actual alternatives identified at
+the original decision** — SPY, Treasury/Cash, Do Nothing.
+
+> **Do not compare against a hindsight-created portfolio or benchmark.**
+
+### Feedback allowed
+
+- variant language was too thin
+- modeled return anchored the decision
+- overlap should have blocked the allocation
+- stated gap closer never occurred
+- the market expectation was misidentified
+
+### Feedback prohibited
+
+- stock rose, therefore add sentiment
+- stock fell, therefore loosen the cash hurdle
+- one winner proves the model
+- one loser disproves the architecture
+- last outcome automatically triggers a new module
+
+> **One outcome is one observation.**
+
+---
+
+## 11. How feedback changes the next cycle
+
+After Pilot 2, use **only preserved records** to ask:
+
+1. How many funded lines contained a genuine variant rather than a cheapness story?
+2. How many allocations were marked `EXPLORATORY_LOW_RATIONALE`?
+3. Did SPY, Treasury/Cash, or Do Nothing win for a stated reason?
+4. Did lookalike candidates receive different treatment because of variant quality?
+5. Did any revisit trigger fire and correctly re-enter through fresh data?
+6. In shadow only, would sentiment information actually have changed a decision?
+7. What did Atlas cause the human decision-maker(s) to do differently from gut alone?
+
+Then choose **one** disposition:
+
+| Disposition | Meaning |
+|---|---|
+| **`IGNORE`** | **Default.** No change warranted. |
+| **`CHANGE`** | Adjust existing process language or underwriting discipline. **Do not assume code changes are required.** |
+| **`ADD`** | Use an already-specified capability, or add a narrowly justified control, only when the evidence supports it. |
+| **`REMOVE`** | Drop a process element or hypothesis that repeatedly adds noise without decision value. |
+
+> **Building is the exception.**
+
+---
+
+## 12. Do not create as feedback loops
+
+- live P&L dashboard as a Stage 8 input
+- agent voting on capital
+- rolling model changes based on last week's winner
+- sentiment promotion because it happened to be recorded
+- a separate feature-idea loop
+- automatic allocation changes
+- hindsight rewriting
+
+---
+
+## 13. Minimum Pilot 2 record set
+
+Each Pilot 2 cycle produces:
+
+1. **Frozen Stage 7 packet + fresh-price bind**
+2. **Stage 8 + Allocation Bridge or exploratory flag**
+3. **Defined revisit triggers**
+4. **One-page Loop Log**
+
+The Loop Log contains:
+
+| Section | Contents |
+|---|---|
+| **Decision** | Loop A result |
+| **Revisit** | Loop B result — only if triggered |
+| **Outcome** | Loop C result — only when due |
+
+> If the Loop Log cannot answer **"What did Atlas cause us to do
+> differently?"**, then the cycle demonstrated **process mechanics but not
+> decision edge.**
+
+---
+
+## Governing summary
+
+> **Loop A proves intention.
+> Loop B keeps old labels honest.
+> Loop C tests whether the variant was a guess.
+> None of them can spend money or rewrite yesterday.**
+
+---
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
