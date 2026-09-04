@@ -81,3 +81,62 @@ This record demonstrates schema behaviour. It authorises nothing. Human
 allocation authority is unchanged, and no capital moved.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+# APPENDED REVIEW ENTRIES
+
+> Entries below are appended only. No text above this line has been modified.
+
+---
+
+## Review 001 — Records-scope clarification
+
+| | |
+|---|---|
+| Review date | September 3, 2026 |
+| Review type | Records-scope clarification |
+| Authority | `PILOT1_DECISION_RECORD_SCOPE_CLARIFICATION` |
+
+Subsequent records review determined that this September 3 allocation **is not
+the canonical Pilot 1 Stage 8 decision.**
+
+The authoritative Pilot 1 Stage 8 decision remains:
+
+- **Date:** September 1, 2026
+- **Decision:** $50,000 → Treasury/Cash Sleeve
+- **Record:** `PILOT1_STAGE8_HUMAN_DECISION_001.md`
+
+This September 3 record represents a **separate post-Pilot-1 paper calibration
+exercise** using a different opportunity universe:
+
+- Tencent
+- VEON
+- HBR
+- CRM
+- SPY
+- Treasury
+- Do Nothing
+
+Its historical importance is that the exercise exposed the Stage 8
+allocation-rationale gap that subsequently produced:
+
+> `ALLOCATION_BRIDGE_AS_FIELDS_NOT_ENGINE`
+
+This review entry does not supersede, rewrite, or alter the September 3
+allocation itself. **Neither record supersedes the other.**
+
+The September 3 artifact remains valid historical evidence for:
+
+- missing-rationale behavior
+- `EXPLORATORY_LOW_RATIONALE`
+- no synthetic rationale
+- human allocation authority
+- the origin of the Stage 8 rationale-field enhancement
+
+### Effect on the "Relationship" section above
+
+That section was written before this determination and records that the
+question "has not been supplied." This review entry supplies it. The section's
+text is left exactly as written, per the immutable-record rule; this entry is
+the resolution of record.
