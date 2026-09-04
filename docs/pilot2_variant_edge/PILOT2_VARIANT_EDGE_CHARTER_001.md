@@ -587,4 +587,21 @@ as a subsequent commit rather than a silent edit.
 
 ---
 
+## 22. Known execution condition — venue coverage
+
+*Appended September 4, 2026.*
+
+**Known execution condition:** The current live-session binder supports only
+`XNYS` / `NYSE`. Any frozen Pilot 2 basket security that resolves to `XNAS`,
+`XNGS`, or another unsupported MIC will **fail closed** during session
+attestation by design.
+
+This is a **known Pilot 2 execution dependency, not a basket defect and not
+authorization to expand venue coverage.**
+
+Before underwriting begins, **venue resolution for the frozen basket must be
+checked** and any required response handled as a **separate scoped decision.**
+
+---
+
 **Capital status: NO REAL PORTFOLIO ACTION.**
