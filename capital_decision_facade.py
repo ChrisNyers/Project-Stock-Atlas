@@ -61,6 +61,10 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Sequence
 
+from allocation_rationale import (
+    AllocationDecisionRecord,
+    derive_allocation_rationale_status,
+)
 from stock_atlas import ControlFailure, DecisionStore, Stage7Run, run_stage7_pipeline
 from stock_atlas.models import (
     CandidateUnderwriting,
@@ -183,12 +187,22 @@ class CapitalDecisionFacade:
         starter_cap_weight: float | None = None,
         cluster_note: str | None = None,
         prior_record_id: str | None = None,
+        why_this_vs_alternatives: str | None = None,
+        why_this_size: str | None = None,
+        allocation_wrong_if: str | None = None,
+        why_not_this_increment: str | None = None,
     ) -> DecisionRecord:
         """Persist a final human Stage 8 capital decision.
 
         The Stage 7 facts written to the ledger are read from the frozen run,
         never from caller-supplied arguments. ``DecisionStore.append`` then
         independently re-verifies the retained artifact before writing.
+
+        The four allocation-rationale arguments are human-authored text. They
+        are recorded verbatim and never generated, inferred or backfilled. They
+        do not affect the dollar amount, the position weight, or any Stage 7
+        output; ``allocation_rationale_status`` is derived solely from which of
+        the three funded-line fields the human supplied.
         """
         if not isinstance(stage7_run, Stage7Run):
             raise ControlFailure(
@@ -207,7 +221,11 @@ class CapitalDecisionFacade:
             )
 
         position = getattr(result, "position", None)
-        record = DecisionRecord(
+        # Derived from field PRESENCE only — never from content, never generated.
+        rationale_status = derive_allocation_rationale_status(
+            action, why_this_vs_alternatives, why_this_size, allocation_wrong_if
+        )
+        record = AllocationDecisionRecord(
             record_id=record_id,
             created_at=created_at,
             review_event_type=ReviewEventType.FINAL_CAPITAL_DECISION,
@@ -230,6 +248,12 @@ class CapitalDecisionFacade:
             cluster_note=cluster_note,
             input_versions=input_versions,
             prior_record_id=prior_record_id,
+            # Human-authored allocation rationale, recorded verbatim.
+            why_this_vs_alternatives=why_this_vs_alternatives,
+            why_this_size=why_this_size,
+            allocation_wrong_if=allocation_wrong_if,
+            allocation_rationale_status=rationale_status,
+            why_not_this_increment=why_not_this_increment,
         )
         return self._store.append(record)
 
