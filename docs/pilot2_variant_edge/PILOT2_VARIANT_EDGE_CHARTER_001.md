@@ -393,4 +393,99 @@ The Loop Log contains:
 
 ---
 
+# PILOT 2 FORMAL VERDICT STATES
+
+*Appended to this charter September 4, 2026. All prior content is unchanged.*
+
+At Pilot 2 closeout, assign **exactly one** of the following.
+
+---
+
+## 14. `PASS`
+
+Use when the primary Pilot 2 hypothesis is **materially demonstrated**.
+
+### Minimum evidence
+
+- Atlas can state a credible **priced-in view** and a **falsifiable variant**;
+- at least one **superficially comparable** opportunity receives different
+  treatment **because of variant quality rather than modeled-return ranking**;
+- funded decisions are intentional and supported by genuine Allocation Bridge
+  rationale;
+- unfunded finalists are refused **for stated reasons**;
+- SPY, Treasury/Cash and Do Nothing remain **genuine** alternatives;
+- the fresh-price control holds;
+- human Stage 8 authority remains intact;
+- **a later reviewer can reconstruct what Atlas believed the edge was at the
+  decision date.**
+
+> **A PASS does not prove investment edge statistically.** It means Pilot 2
+> successfully demonstrated the intended edge-identification and
+> intentional-allocation *behavior*.
+
+---
+
+## 15. `PASS WITH FINDINGS`
+
+Use when the core hypothesis is **substantially demonstrated** but the pilot
+exposes **one material weakness** that should inform the next learning cycle.
+
+### Examples
+
+- variant views remain too thin or generic;
+- Allocation Bridge language is partly boilerplate;
+- significant capital remains `EXPLORATORY_LOW_RATIONALE`;
+- portfolio overlap changes an otherwise attractive increment;
+- cash/SPY wins because no candidate demonstrates sufficient edge;
+- a narrow process weakness is exposed.
+
+**Identify the single most important finding.**
+
+> **`PASS WITH FINDINGS` is not automatic authorization for new software or
+> architecture.** The default response remains **`IGNORE`** unless the evidence
+> clearly earns `CHANGE`, `ADD`, or `REMOVE` (§11).
+
+---
+
+## 16. `FAIL`
+
+Use when Pilot 2 **does not demonstrate** the primary hypothesis.
+
+### Examples
+
+- allocations still feel like a stab in the dark;
+- higher modeled return effectively determines the allocation;
+- "cheap" substitutes for a real variant thesis;
+- priced-in assumptions cannot be stated credibly;
+- funded names have interchangeable rationale;
+- Atlas cannot explain what it believes the market is getting wrong;
+- the Allocation Bridge becomes boilerplate;
+- the pilot turns into a feature-development exercise.
+
+> **FAIL is a valid learning outcome.**
+
+Do **not** repair a FAIL by rewriting frozen records or adding features
+mid-pilot.
+
+---
+
+## 17. Relationship to the feedback loops
+
+The formal verdict is assigned using evidence from the **preserved Pilot 2
+records**.
+
+| Loop | Role in the verdict |
+|---|---|
+| **Loop A** | **Required** for the initial Pilot 2 verdict |
+| **Loop B** | Included **only if** a revisit trigger has actually fired by closeout |
+| **Loop C** | Included **only if** the stated horizon or catalyst has occurred |
+
+**Pilot 2 does not wait artificially for Loops B or C in order to assign the
+initial verdict.**
+
+A later Loop B or Loop C observation may create a **new learning record**, but
+it **does not rewrite the original Pilot 2 verdict.**
+
+---
+
 **Capital status: NO REAL PORTFOLIO ACTION.**
