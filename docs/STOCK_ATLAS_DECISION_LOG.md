@@ -340,3 +340,93 @@ No Stage 7 state changed. No return assumption changed. No basket change. No
 new market-data vendor. No generic "all U.S. exchanges" fallback. No
 weakening of the B2 identity guard for any name that already resolves
 unambiguously.
+
+---
+
+## `STAGE8_KEY_RISKS_CONSIDERED`
+
+| | |
+|---|---|
+| Date | 2026-09-07 |
+| Status | **ACCEPTED** |
+| Context | Pilot 2, Cycle 2 Stage 8 decision record |
+
+### Decision
+
+A new field, `key_risks_considered`, is added to the Stage 8 decision-record
+vocabulary. It captures the material risks explicitly reviewed by the human
+decision-maker at Stage 8: human-reviewed, concise, no scoring, no fixed
+number of risks, no required categories, and **may be blank** when the human
+did not explicitly review risks — absence is valid evidence, not a defect to
+correct.
+
+**This field supplements the Allocation Bridge. It does not replace**
+`why_this_vs_alternatives`, `why_this_size` or `allocation_wrong_if`, and
+**does not alter** the existing derived allocation-rationale status. Re-run
+with the same three arguments `derive_allocation_rationale_status` already
+took, the result is identical with or without `key_risks_considered` present
+— the function was never given a fourth argument to change its answer.
+
+### Why this is a lightweight record improvement, not a new subsystem
+
+`key_risks_considered` is documentary. It is not scored, not weighted, not
+fed into any comparison, and does not gate Stage 7 or Stage 8 eligibility. No
+risk engine, ranking, weighting system, probability model, or fixed risk
+taxonomy was introduced. It exists so a later Loop B or Loop C can ask which
+identified risks mattered, which did not, and what was missed — a record for
+future comparison, not a live control.
+
+### First application — Cycle 2
+
+FIS's two previously-recorded risk considerations (leverage from ~$7.7B of
+new Issuer Solutions debt and the 2.8x deleveraging target; underlying growth
+weakness despite raised FCF guidance) are formally captured as FIS's
+`key_risks_considered` in `PILOT2_STAGE8_HUMAN_DECISION_002.md`. No risk was
+added beyond what was already explicitly human-reviewed. JD, SPY,
+Treasury/Cash and Do Nothing all carry an empty `key_risks_considered` for
+Cycle 2 — none was invented to populate the field.
+
+### Loop interpretation, clarified alongside this change
+
+- **Loop A** asks what Atlas changed in the decision *process*. During
+  paper/shadow testing, Loop A does **not** require mathematically
+  intentional sizing — a genuinely intentional decision (Cycle 2) and a
+  randomized one (Cycle 1) are both legitimate Loop A findings.
+- **Allocation-rationale status** asks whether the required human-authored
+  fields are complete. This is a **separate control** from Loop A — Cycle 2
+  is Loop A = YES (intentional) while still `EXPLORATORY_LOW_RATIONALE` for
+  both funded lines (the Allocation Bridge was not formally completed). One
+  is not evidence for the other.
+- **Loop B**, when a trigger fires, compares new evidence against: the
+  original thesis, the original variant, `key_risks_considered`, and any
+  newly discovered risks. It does not rewrite the original Stage 8 record.
+- **Loop C**, at the stated horizon, evaluates what Atlas believed, which
+  risks were identified, what actually happened, which risks mattered, which
+  did not, what important risk was missed, and performance versus the
+  contemporaneous alternatives — **never graded solely on price return.**
+
+### Testing-mode allocation clarification (recorded alongside this change)
+
+> Paper/shadow allocations may be random or exploratory by design. Random
+> sizing during system testing is not evidence that the allocation layer is
+> weak or that intentional allocation failed. Live-capital allocation
+> discipline may become more deliberate or structured later based on pilot
+> and outcome evidence. Do not pre-build a sizing engine or formula before
+> that evidence exists.
+
+This prevents a future Loop A review from mistaking a deliberately random
+test allocation (Cycle 1) for a process defect.
+
+### Historical integrity
+
+Applies prospectively. Cycle 1 (`PILOT2_STAGE8_HUMAN_DECISION_001.md`) is
+**not** modified to backfill `key_risks_considered` — it was randomized, no
+risk review was recorded at the time, and the frozen record is not rewritten
+to add one now.
+
+### Explicitly not done
+
+No risk engine. No risk score. No risk ranking or weighting system. No
+probability model. No fixed risk taxonomy or required category list. No new
+decision layer. No change to the allocation-rationale-status derivation. No
+edit to any already-frozen record.

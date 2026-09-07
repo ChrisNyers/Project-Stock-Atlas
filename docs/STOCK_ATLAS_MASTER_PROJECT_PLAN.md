@@ -159,7 +159,7 @@ decision supersedes the other.
 
 ## Pilot 2 — VARIANT EDGE & INTENTIONAL ALLOCATION
 
-> ### Status: **BASKET FROZEN / READY TO EXECUTE**
+> ### Status: **STAGE 8 IN PROGRESS — TWO DECISION CYCLES RECORDED**
 
 Basket frozen September 4, 2026 as `FROZEN / PRE-REGISTERED` (charter §18–21):
 FIS · FISV · MELI · JD · ADBE · SNOW · WCC · GLNG · NTR · CVS, plus SPY,
@@ -174,9 +174,25 @@ supported MIC (5 NYSE, 5 Nasdaq across `XNGS`/`XNMS`) after a narrow Nasdaq
 session-calendar extension — `PILOT2_NASDAQ_SESSION_BINDING_EXTENSION` in the
 [Decision Log](STOCK_ATLAS_DECISION_LOG.md); detail in charter §22–23.
 
-**Underwriting has not begun.**
+Discovery, promotion-check, deep underwriting and Stage 7 have all run: FIS
+and JD reached `ELIGIBLE_FOR_STAGE8`; MELI was refused as
+`NO_DEMONSTRATED_EDGE` on a well-evidenced cautionary variant; GLNG remains
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`. Two independent Stage 8 paper/shadow
+decision cycles are recorded — Cycle 1 (randomized, LOW confidence, Loop A
+= NO) and Cycle 2 (intentional, MEDIUM confidence, Loop A = YES) — each
+preserved separately in `docs/pilot2_variant_edge/`, neither rewriting the
+other.
 
-**This is the next active pilot.** Charter:
+**Testing-mode allocation clarification** (accepted operating rule, see
+`STAGE8_KEY_RISKS_CONSIDERED` in the [Decision Log](STOCK_ATLAS_DECISION_LOG.md)):
+paper/shadow allocations may be random or exploratory by design. Random
+sizing during system testing is **not** evidence that the allocation layer is
+weak or that intentional allocation failed. Live-capital allocation
+discipline may become more deliberate or structured later, based on pilot and
+outcome evidence — no sizing engine or formula is pre-built ahead of that
+evidence.
+
+**This is the active pilot.** Charter:
 [`pilot2_variant_edge/PILOT2_VARIANT_EDGE_CHARTER_001.md`](pilot2_variant_edge/PILOT2_VARIANT_EDGE_CHARTER_001.md).
 
 ### Primary hypothesis
