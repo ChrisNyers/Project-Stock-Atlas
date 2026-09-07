@@ -256,10 +256,25 @@ the price already requires continued strong execution, and named evidence
 gaps (non-AI trend, AI-specific customer concentration, software/VMware
 detail) remain unresolved. Stage 7 has not begun.
 
-**Current active next action:** none authorized. AVGO deep underwriting is
-closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending the named falsifiers/
-revisit triggers (next quarter's filings). XOM still awaiting first
-completed U.S. session following geopolitical escalation.
+**Manual Discovery Batch 002** (`pilot3/PILOT3_MANUAL_DISCOVERY_BATCH_002.md`),
+source `MANUAL_DISCOVERY_BRIDGE` — a temporary bridge while Agent World is
+not yet fully operational, carrying no underwriting privilege over Agent
+World candidates. Six candidates registered (PATH, MDB, SPXC, SOLS, PCG,
+DOCU); only PATH and MDB received primary-evidence triage.
+`pilot3/PILOT3_PATH_PRIMARY_EVIDENCE_TRIAGE_001.md` returned
+`NO_DEMONSTRATED_EDGE` (the discovery variant was contradicted by a
+primary, guided revenue-growth deceleration, roughly halving 13%→7–8% YoY,
+and by a valuation already repriced for weaker growth).
+`pilot3/PILOT3_MDB_PRIMARY_EVIDENCE_TRIAGE_001.md` returned
+`PROMOTE_TO_DEEP_UNDERWRITING` (the discovery variant was corroborated by
+primary RPO/cRPO acceleration of +91%/+73% YoY, far outpacing the 29–30%
+revenue/Atlas growth the market reacted to, and a direct management
+attribution). SPXC, SOLS, PCG, and DOCU remain registered but untriaged.
+
+**Current active next action:** Manual Discovery Batch 002 — PATH and MDB
+primary-evidence triage; XOM awaiting next completed U.S. session. AVGO
+remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named
+falsifiers/revisit triggers.
 
 ---
 

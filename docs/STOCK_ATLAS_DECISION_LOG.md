@@ -542,3 +542,59 @@ semiconductor peer.
 **Explicitly not done:** no Stage 7 comparison, no Stage 8 decision, no
 capital allocated, no second Agent World batch, no advance of XOM or any
 other Batch 001 candidate.
+
+---
+
+## PILOT3_MANUAL_DISCOVERY_BATCH_002_RESULT (2026-09-07)
+
+**Records:** `docs/pilot3/PILOT3_MANUAL_DISCOVERY_BATCH_002.md`,
+`docs/pilot3/PILOT3_PATH_PRIMARY_EVIDENCE_TRIAGE_001.md`,
+`docs/pilot3/PILOT3_MDB_PRIMARY_EVIDENCE_TRIAGE_001.md`
+
+Manual Discovery Batch 002 registers six candidates under a new source
+provenance, `MANUAL_DISCOVERY_BRIDGE`, used because Agent World is not yet
+fully operational. This is a temporary bridge, not an architecture change:
+manual candidates receive no underwriting advantage or disadvantage versus
+Agent World or any other source, per the same governing principle used in
+Batch 001 — **preserve provenance, remove privilege.**
+
+**PATH and MDB** received full primary-evidence triage; SPXC, SOLS, PCG,
+and DOCU were registered with an initial discovery state only and were not
+triaged.
+
+**PATH → `NO_DEMONSTRATED_EDGE`.** The discovery-stage variant (market
+overreacting to near-term ARR/growth mechanics) did not survive: the
+company's own Q3 FY2027 guide, verified against a primary prior-year
+comparable, implies revenue growth roughly halving (13% actual in Q2 to an
+implied ~7–8% YoY), and net-new ARR fell in absolute dollars across the two
+most recent primary data points ($59M → $37M). A reverse-engineered
+valuation (≈3.4x EV/ARR) showed the market has already substantially
+repriced the name for weaker growth, not ignored real evidence of cash
+generation. No alternative variant was substituted to rescue the candidate.
+
+**MDB → `PROMOTE_TO_DEEP_UNDERWRITING`.** The discovery-stage variant
+(market over-weighting a flat, narrow Atlas growth figure) was corroborated
+by primary forward-bookings evidence — remaining performance obligations
++91% YoY and current RPO +73% YoY, both filed the same day as the earnings
+release, far outpacing the 29–30% revenue/Atlas growth rate the market
+reacted to — and a direct CFO attribution that the raised full-year guide
+was "mainly due to Atlas." The market-could-be-right case (a three-quarter
+flat Atlas pattern, possible RPO concentration in large lumpy deals, heavy
+SBC diluting non-GAAP profitability) is real and unresolved, and the
+reverse-engineered valuation (≈9.2x forward revenue, ≈57x forward non-GAAP
+EPS) is full rather than cheap — both are named as open questions for deep
+underwriting, not resolved here.
+
+**AVGO lesson applied explicitly:** both candidates arrived with a similar
+surface pattern (beat/raise plus a selloff). They reached opposite
+dispositions because the underlying primary evidence differed — a real,
+guided negative fact for PATH versus a real, corroborating positive fact
+for MDB — not because of a templated beat/selloff/multiple rule.
+
+**Batch 001 unchanged:** AVGO `BLOCKED_BY_MATERIAL_UNCERTAINTY`, XOM
+`SURFACE_WITH_EVIDENCE_GAP`, SMH `REFERENCE_PEER_TAPE`, AAPL/JPM
+`CALENDAR_HOLD`, NVDA `REFERENCE_ONLY`.
+
+**Explicitly not done:** no deep underwriting for MDB, no triage of SPXC/
+SOLS/PCG/DOCU, no Stage 7 or Stage 8, no capital allocated, no advance of
+XOM, no Batch 003.
