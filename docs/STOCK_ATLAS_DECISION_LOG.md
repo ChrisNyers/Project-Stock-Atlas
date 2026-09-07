@@ -430,3 +430,62 @@ No risk engine. No risk score. No risk ranking or weighting system. No
 probability model. No fixed risk taxonomy or required category list. No new
 decision layer. No change to the allocation-rationale-status derivation. No
 edit to any already-frozen record.
+
+---
+
+## `PILOT3_AGENT_WORLD_DISCOVERY_DISPOSITIONS`
+
+| | |
+|---|---|
+| Date | 2026-09-07 |
+| Status | **ACCEPTED** |
+| Context | Pilot 3, Agent World Batch 001 |
+
+### Decision
+
+Five discovery-stage disposition states are adopted for candidates surfaced
+by an external discovery source (Agent World, the first named instance):
+`SURFACE_WITH_EVIDENCE_GAP`, `REFERENCE_PEER_TAPE`,
+`ADVANCE_TO_PRIMARY_EVIDENCE_TRIAGE`, `CALENDAR_HOLD`, `REFERENCE_ONLY`. Each
+is a discovery-stage label only — none authorizes underwriting, funding, or
+capital action by itself, consistent with Discovery Contract v0.1's "Discovery
+allocates attention, not capital."
+
+The governing principle, extending `PILOT3_RECORD_001.md`'s source-blind
+capital-allocation finding to a new named source:
+
+> **Preserve provenance. Remove privilege.**
+
+Source state (Agent World's `WATCH` / `CALENDAR` / `MAP_ONLY`) is logged as
+provenance. It is never treated as underwriting privilege: no candidate is
+advanced because of where it came from, and none is penalized for that reason
+either. Treatment is driven by the same evidence, typed uncertainty,
+alternatives and portfolio-fit standard as every other Stock Atlas candidate.
+
+### Why this is not a scoring system
+
+No numeric or ordinal score attaches to Agent World or to any candidate
+because of its source. The disposition states are qualitative labels
+describing *what evidence exists so far*, not a ranking of source quality or
+idea quality. A lightweight discovery log accumulates, over time, whether
+Agent World surfaced ideas Atlas would otherwise have missed that survived
+underwriting — but that log records outcomes, not a score.
+
+### Consequences
+
+- XOM, evidence-dependent, is held at `SURFACE_WITH_EVIDENCE_GAP` rather than
+  underwritten ahead of the completed-session evidence its own thesis
+  requires.
+- AAPL and JPM, both calendar-dependent, are held rather than underwritten
+  ahead of their respective events.
+- SMH and NVDA are reference-only; strong sector sentiment alone does not
+  promote them.
+- AVGO alone advanced to primary-evidence triage in Batch 001, and that
+  triage — not its Agent World provenance — produced its
+  `PROMOTE_TO_DEEP_UNDERWRITING` result.
+
+### Explicitly not done
+
+No agent score. No source score. No ranking. No discovery-quality algorithm.
+No change to Discovery Contract v0.1, Stage 7, or Stage 8. No rewrite of
+`PILOT3_RECORD_001.md`, or of any Pilot 1 or Pilot 2 record.

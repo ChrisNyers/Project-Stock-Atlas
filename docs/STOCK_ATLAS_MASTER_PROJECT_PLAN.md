@@ -222,6 +222,38 @@ Pilot 2 must distinguish:
 
 ---
 
+## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
+
+> ### Status: **ACTIVE — BATCH 001 IN PROGRESS**
+
+Builds on the compact historical record
+[`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
+modified, not superseded), which demonstrated source-blind capital allocation
+in one controlled paper case. Pilot 3 now tests the same core question
+against a new, named external discovery source, **Agent World**:
+
+> Can an opportunity-discovery layer surface worthwhile ideas Atlas likely
+> would otherwise have missed, and do those ideas survive the existing Atlas
+> underwriting process?
+
+**Not a test of idea volume.** No agent score, source score, ranking, or
+discovery-quality algorithm exists or is planned. Governing principle:
+**preserve provenance, remove privilege** — source state is logged, never
+treated as underwriting privilege.
+
+**Batch 001** (`pilot3/PILOT3_AGENT_WORLD_BATCH_001.md`): six candidates
+registered — XOM (`SURFACE_WITH_EVIDENCE_GAP`, awaiting first completed U.S.
+session following a geopolitical/oil move), SMH (`REFERENCE_PEER_TAPE`),
+AVGO (`ADVANCE_TO_PRIMARY_EVIDENCE_TRIAGE`), AAPL and JPM
+(`CALENDAR_HOLD`), NVDA (`REFERENCE_ONLY`). AVGO's primary-evidence triage
+(`pilot3/PILOT3_AVGO_PRIMARY_EVIDENCE_TRIAGE_001.md`) returned
+`PROMOTE_TO_DEEP_UNDERWRITING`; deep underwriting has not begun.
+
+**Current active next action:** AVGO primary-evidence triage; XOM awaiting
+first completed U.S. session following geopolitical escalation.
+
+---
+
 ## Future Pilot Candidates — NOT ACTIVE
 
 **Do not assign numbers yet.** Future pilot questions are selected from actual
