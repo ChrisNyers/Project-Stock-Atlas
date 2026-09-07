@@ -247,10 +247,19 @@ session following a geopolitical/oil move), SMH (`REFERENCE_PEER_TAPE`),
 AVGO (`ADVANCE_TO_PRIMARY_EVIDENCE_TRIAGE`), AAPL and JPM
 (`CALENDAR_HOLD`), NVDA (`REFERENCE_ONLY`). AVGO's primary-evidence triage
 (`pilot3/PILOT3_AVGO_PRIMARY_EVIDENCE_TRIAGE_001.md`) returned
-`PROMOTE_TO_DEEP_UNDERWRITING`; deep underwriting has not begun.
+`PROMOTE_TO_DEEP_UNDERWRITING`. AVGO's deep underwriting
+(`pilot3/PILOT3_AVGO_DEEP_UNDERWRITING_001.md`) returned
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`: real business quality (RPO backlog,
+FCF quality, balance-sheet flexibility) survived, but the triage-stage
+mispricing variant did not — a corrected consensus/priced-in test showed
+the price already requires continued strong execution, and named evidence
+gaps (non-AI trend, AI-specific customer concentration, software/VMware
+detail) remain unresolved. Stage 7 has not begun.
 
-**Current active next action:** AVGO primary-evidence triage; XOM awaiting
-first completed U.S. session following geopolitical escalation.
+**Current active next action:** none authorized. AVGO deep underwriting is
+closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending the named falsifiers/
+revisit triggers (next quarter's filings). XOM still awaiting first
+completed U.S. session following geopolitical escalation.
 
 ---
 

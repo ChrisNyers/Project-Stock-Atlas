@@ -489,3 +489,56 @@ underwriting — but that log records outcomes, not a score.
 No agent score. No source score. No ranking. No discovery-quality algorithm.
 No change to Discovery Contract v0.1, Stage 7, or Stage 8. No rewrite of
 `PILOT3_RECORD_001.md`, or of any Pilot 1 or Pilot 2 record.
+
+---
+
+## PILOT3_AVGO_DEEP_UNDERWRITING_RESULT (2026-09-07)
+
+**Record:** `docs/pilot3/PILOT3_AVGO_DEEP_UNDERWRITING_001.md`
+
+AVGO's deep underwriting, following its triage-stage promotion, returned
+`BLOCKED_BY_MATERIAL_UNCERTAINTY` rather than `ADVANCE_TO_FINAL_CAPITAL_COMPARISON`
+or `NO_DEMONSTRATED_EDGE`.
+
+**What survived:** genuine business quality — a $164.6B non-cancellable
+revenue backlog (RPO) including a newly signed long-term custom-AI-
+accelerator contract, free cash flow not flattered by one-time items, and a
+balance sheet with ample flexibility (>20x interest coverage from FCF alone)
+to withstand a significant AI-growth disappointment.
+
+**What did not survive:** the triage-stage variant that the market was
+under-weighting an under-appreciated acceleration. A corrected consensus/
+priced-in test (reverse-engineering FY2027 non-GAAP EPS implied by the
+triage record's own cited forward-multiple range, rather than relying on a
+sector-median P/E comparison) showed the current price already requires
+something close to continued strong execution — not a Downside-priced
+bargain. A variant-durability test found no strong evidence-grounded reason
+a distinctive, persistent gap should exist in one of the most widely
+followed semiconductor names, three trading sessions after the market
+priced the same guidance data.
+
+**Why `BLOCKED_BY_MATERIAL_UNCERTAINTY` rather than a clean call:** several
+named, closeable evidence gaps are load-bearing and unresolved — non-AI
+semiconductor trend, whether AI-specific customer concentration is rising
+(the disclosed company-wide top-5 figure was flat at ≈40% across FY2024 and
+FY2025 despite AI's rise to 56% of Q3 FY2026 revenue — an unexplained
+tension, not resolved by inference in either direction), Infrastructure
+Software/VMware integration detail, and the identity of the new large
+AI-accelerator counterparty. None of these could be resolved from the
+primary sources retrievable through available tooling (the 10-Q/10-K MD&A
+sections were too large for the fetch tool to return intact).
+
+**Consequence:** Stage 7 has not begun for AVGO. Named falsifiers/revisit
+triggers (Q4 FY2026 results, Q1 FY2027 guidance, customer-concentration
+disclosure in the next 10-K/10-Q, MD&A retrieval) are recorded as the path
+to resolving this block — not a new methodology, a new variant, or a second
+deep-underwriting pass on the same evidence.
+
+**Batch 001 controls unchanged:** XOM `SURFACE_WITH_EVIDENCE_GAP`, SMH
+`REFERENCE_PEER_TAPE`, AAPL `CALENDAR_HOLD`, JPM `CALENDAR_HOLD`, NVDA
+`REFERENCE_ONLY`. AVGO's disposition is not used to promote any
+semiconductor peer.
+
+**Explicitly not done:** no Stage 7 comparison, no Stage 8 decision, no
+capital allocated, no second Agent World batch, no advance of XOM or any
+other Batch 001 candidate.
