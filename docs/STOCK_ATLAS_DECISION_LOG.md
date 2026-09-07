@@ -598,3 +598,64 @@ for MDB — not because of a templated beat/selloff/multiple rule.
 **Explicitly not done:** no deep underwriting for MDB, no triage of SPXC/
 SOLS/PCG/DOCU, no Stage 7 or Stage 8, no capital allocated, no advance of
 XOM, no Batch 003.
+
+---
+
+## PILOT3_MDB_DEEP_UNDERWRITING_RESULT (2026-09-07)
+
+**Record:** `docs/pilot3/PILOT3_MDB_DEEP_UNDERWRITING_001.md`
+
+MDB's deep underwriting, following its triage-stage promotion, returned
+`NO_DEMONSTRATED_EDGE`.
+
+**What the triage variant relied on:** RPO +91% YoY and cRPO +73% YoY,
+both far outpacing the 29–30% revenue/Atlas growth rate, taken as evidence
+of forward bookings momentum the market was under-weighting.
+
+**What deep underwriting found:** reconstructing the same primary
+disclosure (SEC XBRL `RevenueRemainingPerformanceObligation`) on a
+quarter-by-quarter basis rather than a single YoY snapshot showed the
+apparent acceleration was a step-change concentrated almost entirely in
+Q3–Q4 FY2026 (RPO nearly doubled, +85%, across those two quarters
+combined). In the two quarters since, RPO grew a combined +3.2% and cRPO
++4.1% — both slower than the ~29% YoY Atlas growth rate they were supposed
+to be leading. The specific mechanism the promoted variant depended on had
+already played out and stopped; no primary source names the cause of the
+step-change (an unresolved evidence gap, not filled by inference in either
+direction).
+
+**Corroborating findings:** Atlas growth confirmed flat at ~29% for a third
+consecutive fiscal quarter (Q4 FY2026, Q1 FY2027, Q2 FY2027, all
+primary-sourced). A reverse-engineered priced-in test showed today's ~57x
+forward non-GAAP P/E requires roughly 28%/year sustained EPS growth for
+three years to normalize to a mature-grower multiple — a demanding,
+specific assumption the flat-Atlas/decelerated-RPO trajectory does not
+currently support. A coarse scenario framework placed the current price
+above the Base case band, inside only the Upside band — the opposite
+pattern from AVGO, where the Base case bracketed the price.
+
+**Genuine positives recorded fairly, not sufficient to sustain the
+variant:** broad-based, continuing customer growth (unaffected by the RPO
+lumpiness); a declining SBC-as-percentage-of-revenue trend (24%→19% over
+five quarters); a first clearly positive GAAP operating-income quarter
+after a noisy, non-monotonic series; no debt; an active buyback program
+(though buyback dollars remain smaller than the SBC expense they partially
+offset).
+
+**Consequence:** Stage 7 has not begun for MDB. No alternative thesis was
+substituted to rescue the candidate, per standing governance. Named
+falsifiers/revisit triggers (next Atlas print, next RPO/cRPO print, RPO
+conversion evidence, margin-inflection confirmation) are recorded as the
+path to reopening this candidate if evidence changes — not a new
+methodology or a second deep-underwriting pass on the same evidence.
+
+**Batch 002/001 controls unchanged:** PATH `NO_DEMONSTRATED_EDGE`, SPXC
+`SURFACE_WITH_EVIDENCE_GAP`, SOLS `EVENT_DRIVEN_HOLD`, PCG
+`SURFACE_WITH_EVIDENCE_GAP`, DOCU `SURFACE_WITH_EVIDENCE_GAP`. Batch 001
+(AVGO `BLOCKED_BY_MATERIAL_UNCERTAINTY`, XOM `SURFACE_WITH_EVIDENCE_GAP`,
+SMH `REFERENCE_PEER_TAPE`, AAPL/JPM `CALENDAR_HOLD`, NVDA
+`REFERENCE_ONLY`) is unchanged.
+
+**Explicitly not done:** no Stage 7 comparison, no Stage 8 decision, no
+capital allocated, no triage of SPXC/SOLS/PCG/DOCU, no advance of XOM, no
+Batch 003.

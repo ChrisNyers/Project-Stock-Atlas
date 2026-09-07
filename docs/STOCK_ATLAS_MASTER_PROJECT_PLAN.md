@@ -271,10 +271,23 @@ primary RPO/cRPO acceleration of +91%/+73% YoY, far outpacing the 29–30%
 revenue/Atlas growth the market reacted to, and a direct management
 attribution). SPXC, SOLS, PCG, and DOCU remain registered but untriaged.
 
-**Current active next action:** Manual Discovery Batch 002 — PATH and MDB
-primary-evidence triage; XOM awaiting next completed U.S. session. AVGO
-remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named
-falsifiers/revisit triggers.
+MDB's deep underwriting (`pilot3/PILOT3_MDB_DEEP_UNDERWRITING_001.md`)
+returned `NO_DEMONSTRATED_EDGE`: the triage-stage variant relied on
+RPO/cRPO growing far faster than revenue (+91%/+73% YoY), but a
+quarter-by-quarter reconstruction of the same primary disclosure showed
+that acceleration was a step-change concentrated in Q3–Q4 FY2026 that has
+since decelerated to a pace slower than revenue growth — the specific
+mechanism the variant relied on had already played out. Atlas growth
+remains flat at ~29% for a third consecutive quarter, and a
+reverse-engineered priced-in test showed the current price already
+requires sustained, not merely continued, multi-year growth.
+
+**Current active next action:** none authorized in Pilot 3. Both PATH
+(`NO_DEMONSTRATED_EDGE`) and MDB (`NO_DEMONSTRATED_EDGE`) are closed;
+SPXC, SOLS, PCG, and DOCU remain registered but untriaged. XOM still
+awaiting next completed U.S. session. AVGO remains closed at
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
+triggers.
 
 ---
 
