@@ -282,10 +282,26 @@ remains flat at ~29% for a third consecutive quarter, and a
 reverse-engineered priced-in test showed the current price already
 requires sustained, not merely continued, multi-year growth.
 
-**Current active next action:** none authorized in Pilot 3. Both PATH
-(`NO_DEMONSTRATED_EDGE`) and MDB (`NO_DEMONSTRATED_EDGE`) are closed;
-SPXC, SOLS, PCG, and DOCU remain registered but untriaged. XOM still
-awaiting next completed U.S. session. AVGO remains closed at
+DOCU's primary-evidence triage
+(`pilot3/PILOT3_DOCU_PRIMARY_EVIDENCE_TRIAGE_001.md`) returned
+`PROMOTE_TO_DEEP_UNDERWRITING`: IAM's share of ARR has risen every quarter
+measured (2.3%→10.8%→12.6%→15.1%), with the pace itself accelerating,
+corroborated by monotonically improving GAAP margins, a declining
+SBC-to-revenue ratio, and a genuine, accelerating reduction in actual share
+count. The open question for deep underwriting is whether this converts
+into a higher consolidated growth rate rather than continuing to offset
+core e-signature maturity (total revenue has held flat at 8–9% YoY for
+five consecutive quarters). A Gate-B `FRESH` price bind could not be
+obtained (market open at decision time; Gate B correctly returned `STALE`)
+— an unvalidated reference price was used with explicit caveats, and a
+certified bind should be captured before deep underwriting relies on a
+specific valuation figure.
+
+**Current active next action:** none authorized in Pilot 3 beyond what is
+recorded. PATH and MDB are closed at `NO_DEMONSTRATED_EDGE`; DOCU is
+`PROMOTE_TO_DEEP_UNDERWRITING` but deep underwriting has not begun; SPXC,
+SOLS, and PCG remain registered but untriaged. XOM still awaiting next
+completed U.S. session. AVGO remains closed at
 `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
 triggers.
 

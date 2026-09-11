@@ -659,3 +659,67 @@ SMH `REFERENCE_PEER_TAPE`, AAPL/JPM `CALENDAR_HOLD`, NVDA
 **Explicitly not done:** no Stage 7 comparison, no Stage 8 decision, no
 capital allocated, no triage of SPXC/SOLS/PCG/DOCU, no advance of XOM, no
 Batch 003.
+
+---
+
+## PILOT3_DOCU_PRIMARY_EVIDENCE_TRIAGE_RESULT (2026-09-11)
+
+**Record:** `docs/pilot3/PILOT3_DOCU_PRIMARY_EVIDENCE_TRIAGE_001.md`
+
+DOCU's primary-evidence triage returned `PROMOTE_TO_DEEP_UNDERWRITING`,
+applying the explicit lesson from the MDB deep underwriting: rather than
+trust a single YoY snapshot, IAM's share of total ARR was reconstructed
+across five consecutive fiscal quarters (2.3% at FY2025 year-end →10.8%
+→12.6%→15.1% through Q2 FY2027), with the quarter-over-quarter point gain
+itself accelerating through the most recent quarter — a live, still-building
+trend, unlike MDB's RPO, which had already peaked and decelerated below the
+revenue growth rate.
+
+**Corroborating findings:** GAAP operating margin improved every quarter
+measured (7.9%→13.4%); SBC declined as a percentage of revenue every
+quarter (~20.0%→17.0%); actual common shares outstanding fell 6.4% over
+four quarters with the pace accelerating, and buyback dollars now clearly
+exceed SBC dollars (unlike MDB) — genuine, not merely dilution-offsetting,
+per-share value creation.
+
+**The unresolved, load-bearing question:** total company revenue growth has
+held flat at 8–9% YoY for five consecutive quarters despite IAM's near-
+sevenfold rise in ARR share — consistent with IAM currently offsetting core
+e-signature maturity rather than lifting the consolidated growth rate. This
+is recorded as genuinely unresolved (not refuted, unlike PATH's and MDB's
+specific mechanisms), checkable within 1-2 quarters as IAM approaches its
+own guided 18-19%-of-ARR exit rate, and is the explicit focus for deep
+underwriting.
+
+**Valuation note:** a Gate-B `FRESH` completed-session price bind could not
+be obtained (the U.S. market was open at decision time; the provider
+returned an in-progress intraday observation rather than the prior
+completed session's close, and Gate B correctly returned `STALE` per its
+fail-closed design). Per standing governance, this was not forced or
+substituted — an unvalidated reference price was used for the coarse
+priced-in test, explicitly labeled as such, with the instruction that a
+certified bind be captured before deep underwriting or Stage 7 relies on a
+specific valuation figure. That coarse math (≈3.3x forward revenue, ≈14x
+forward non-GAAP EPS, ≈9.6% FCF yield) suggests DOCU's price does not
+already assume the growth outcome the variant depends on — a materially
+different pattern from AVGO, PATH, and MDB in this pilot, where reverse-
+engineering showed the price already assumed continued strong execution.
+
+**Batch 002/001 controls unchanged:** PATH `NO_DEMONSTRATED_EDGE`, MDB
+`NO_DEMONSTRATED_EDGE`, SPXC `SURFACE_WITH_EVIDENCE_GAP`, SOLS
+`EVENT_DRIVEN_HOLD`, PCG `SURFACE_WITH_EVIDENCE_GAP`. Batch 001 (AVGO
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, XOM `SURFACE_WITH_EVIDENCE_GAP`, SMH
+`REFERENCE_PEER_TAPE`, AAPL/JPM `CALENDAR_HOLD`, NVDA `REFERENCE_ONLY`) is
+unchanged.
+
+**Process note:** the work order for this triage arrived truncated (cut off
+mid-sentence in its market-reaction instruction, before any disposition
+menu or stop condition was given). The triage was completed using the
+disposition vocabulary and template already established for PATH and MDB
+rather than pausing to ask, since the pattern was unambiguous from
+precedent; this is flagged in the triage record itself for the user to
+correct if different scope was intended.
+
+**Explicitly not done:** no deep underwriting for DOCU, no triage of SPXC/
+SOLS/PCG, no Stage 7 or Stage 8, no capital allocated, no advance of XOM,
+no Batch 003.

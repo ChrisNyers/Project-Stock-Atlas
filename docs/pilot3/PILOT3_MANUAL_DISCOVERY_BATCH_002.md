@@ -41,7 +41,7 @@ Agent World candidates over any other source.
 | SPXC | Material share-price decline despite a prior earnings beat and guidance raise; concern centers on margin softness | `SURFACE_WITH_EVIDENCE_GAP` | Not triaged this record |
 | SOLS | Large proposed merger terminated; company announced a meaningful buyback; stock repriced sharply | `EVENT_DRIVEN_HOLD` | Not triaged this record |
 | PCG | Major selloff tied to wildfire-liability uncertainty; strategic review announced; capital plan reportedly altered | `SURFACE_WITH_EVIDENCE_GAP` | Not triaged this record |
-| DOCU | Strong quarterly performance; IAM product growing as share of ARR; capital returned via buybacks | `SURFACE_WITH_EVIDENCE_GAP` | Not triaged this record |
+| DOCU | Strong quarterly performance; IAM product growing as share of ARR; capital returned via buybacks | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
 
 **Only PATH and MDB receive primary-evidence triage in this record.**
 SPXC, SOLS, PCG, and DOCU are registered with their initial discovery state
@@ -85,12 +85,22 @@ selloff, strategic review, altered capital plan). Explicitly high
 uncertainty. **A low price is not treated as edge** — this instruction is
 preserved verbatim from the work order and not reinterpreted.
 
-## DOCU — not triaged
+## DOCU — full primary-evidence triage
 
-`SURFACE_WITH_EVIDENCE_GAP`. Discovery signal only (strong quarter, IAM
-product mix shift, buybacks). Open question for a future record: is there
-evidence the market is actually mispricing the IAM development, or is it
-already being rewarded in price? Not answered here.
+Recorded separately in `PILOT3_DOCU_PRIMARY_EVIDENCE_TRIAGE_001.md`.
+Disposition: `PROMOTE_TO_DEEP_UNDERWRITING`. IAM's share of ARR has grown
+every quarter measured (2.3%→10.8%→12.6%→15.1%) with the pace itself
+accelerating through the most recent quarter, corroborated by monotonically
+improving GAAP margins, a declining SBC-to-revenue ratio, and a genuine,
+accelerating reduction in actual share count (not merely dilution-
+offsetting). The central open question — whether this converts into a
+higher consolidated growth rate rather than continuing to offset core
+e-signature maturity (total revenue has held flat at 8–9% YoY for five
+consecutive quarters despite IAM's rise) — is unresolved, not refuted, and
+is the focus for deep underwriting. A properly Gate-B-certified `FRESH`
+price bind could not be obtained this record (market open at decision time,
+Gate B correctly returned `STALE`); an unvalidated reference price was used
+with explicit caveats.
 
 ---
 
@@ -116,7 +126,7 @@ underlying primary evidence differs — see the individual triage records.
 | SPXC | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | Not yet triaged | N/A |
 | SOLS | `MANUAL_DISCOVERY_BRIDGE` | `EVENT_DRIVEN_HOLD` | Not yet triaged | N/A |
 | PCG | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | Not yet triaged | N/A |
-| DOCU | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | Not yet triaged | N/A |
+| DOCU | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — the discovery variant's per-share-economics half was corroborated by primary evidence; the growth-inflection half remains open, not refuted, and is the focus for deep underwriting |
 
 No discovery score. This log records outcomes only.
 
