@@ -1154,3 +1154,85 @@ advanced ahead of the September 16 FOMC decision), NVDA `REFERENCE_ONLY`.
 
 **Explicitly not done:** no deep underwriting of SOLS, no advance of JPM,
 no Stage 7 or Stage 8, no capital allocated, no Batch 003.
+
+## PILOT3_SOLS_INTEGRITY_CHECK_AND_DEEP_UNDERWRITING_RESULT (2026-09-11)
+
+**Integrity check (prerequisite):** a work order asserted the committed
+SOLS triage record attributed HSR merger-filing-fee responsibility to
+PG&E. Direct re-verification of both the committed record's own text and
+the primary source (termination agreement exhibit `tm2620579d9_ex10-1.htm`)
+found this premise did not match the record: PG&E is not named anywhere
+in it; the clause reads "Parent remains responsible for all filing
+fees..."; "Parent" is defined in the agreement as Solstice Advanced
+Materials Inc. itself. No correction was required; an addendum
+documenting the check (not a rewrite) was appended to
+`PILOT3_SOLS_POST_MERGER_PRIMARY_EVIDENCE_TRIAGE_001.md`. No effect on
+the triage disposition. Deep underwriting proceeded per the work order's
+own instruction that an immaterial/non-existent correction does not
+block continuation.
+
+**Deep underwriting result:** `pilot3/PILOT3_SOLS_DEEP_UNDERWRITING_001.md`
+closed **`BLOCKED_BY_MATERIAL_UNCERTAINTY`**.
+
+Reconstructed standalone operating history using SEC XBRL company facts
+plus the FY2025 10-K and Q1/Q2 2026 10-Qs, explicitly separating pre-spin
+carve-out results (Honeywell segment, spin-off completed October 30,
+2025, confirmed primary source) from post-spin standalone results.
+Revenue growth genuinely accelerated versus Solstice's own FY2023–FY2025
+trend (~3%/year) to ~10–11%/year standalone in 2026, corroborated by
+growing backlog (RevenueRemainingPerformanceObligation $2.8B→$3.2B over
+three quarters).
+
+The margin question — named as the central open item at triage — was
+resolved with materially more precision and less favorably than the
+218bps headline suggested. The earnings release's own "218bps decline"
+compared 2026 actual Adjusted EBITDA against a non-GAAP "Adjusted
+Standalone EBITDA" pro forma base for Q2 2025 ($283M); verified against
+the audited 10-Q segment footnote's actual as-reported comparative figure
+($304M), the real decline was 417bps (Q2) and 508bps (Q1) — roughly
+double. Segment-level decomposition (newly obtained from each 10-Q's
+segment reconciliation note) found this driven by two separable forces:
+(1) rising standalone corporate/unallocated costs, real but decelerating
+sharply (+168bps drag Q1 → +25bps Q2, consistent with anniversarying the
+spin-off) and (2) Refrigerants & Applied Solutions segment margin
+compression, real and **worsening** (−527bps Q1 → −648bps Q2) — sitting
+directly inside the segment carrying the growth and HFO/IP narrative,
+with no disclosed cause. A new, material interest-expense burden
+($2–3M/quarter pre-spin to $23–53M post-spin, from the ~$2B debt issued
+at separation) and a higher GAAP-basis capex growth rate (+54% per the
+cash-flow statement vs. the company's own +35% non-GAAP figure) were also
+identified and reconciled precisely. Zero shares repurchased under the
+$500M buyback authorization was reconfirmed via three independent sources
+(10-Q equity rollforward, XBRL `TreasuryStockSharesAcquired`=0, absence
+of any subsequent 8-K). The HFO/IP position was reconfirmed as real and
+reasonably durable (primary-sourced "at least into the mid-2030s"
+horizon; one patent challenge already defeated at the EPO), and a
+previously undisclosed $4.685B bridge-financing commitment for the
+abandoned Element Solutions deal was found to have been fully removed by
+the termination, with no residual obligation.
+
+A reverse-engineered priced-in test (not peer-multiple-based) found
+FY2026 guidance requires H2 2026 Adjusted EBITDA of only ~$496–516M —
+essentially flat to H1's $539M — meaning current guidance does not
+require the RAS margin problem to be fixed by year-end, only that it not
+worsen further. Since RAS margin worsened, not improved, across the only
+two comparable quarters that exist, this is treated as a live, unresolved
+test rather than a formality.
+
+Because growth, backlog, and IP evidence remained real and uncontradicted
+throughout, `NO_DEMONSTRATED_EDGE` was not supported. Because the
+specific, named, load-bearing uncertainty from triage resolved less
+favorably (not favorably) under primary-source scrutiny,
+`ADVANCE_TO_FINAL_CAPITAL_COMPARISON` was not supported either. The most
+direct, evidence-gatherable revisit trigger is Q3 2026 RAS segment margin
+(10-Q due ~late October/early November 2026).
+
+**Confirmed unchanged:** PATH/MDB/PCG `NO_DEMONSTRATED_EDGE`; DOCU/SPXC
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`; AVGO `BLOCKED_BY_MATERIAL_UNCERTAINTY`;
+XOM `NO_DEMONSTRATED_EDGE`; AAPL `EVIDENCE_GAP`; JPM `CALENDAR_HOLD` (not
+advanced ahead of the September 16 FOMC decision); SMH
+`REFERENCE_PEER_TAPE`; NVDA `REFERENCE_ONLY`. No Batch 003 candidate
+registered. No Stage 7, no Stage 8, no capital allocated, no control-layer
+or facade change.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**

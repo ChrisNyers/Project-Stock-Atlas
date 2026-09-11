@@ -533,3 +533,65 @@ No deep underwriting of SOLS. No Stage 7 comparison. No Stage 8 decision.
 No capital allocated. No architecture change. No advance of JPM.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## Addendum — mandatory integrity review (2026-09-11, prior to deep underwriting)
+
+**This record is frozen above this line. Nothing above is rewritten. This
+addendum only appends a review finding, per the historical-integrity rule.**
+
+**Statement under review:** a subsequent work order asserted that "the
+triage return package stated: HSR filing fees remain PG&E's
+responsibility," and instructed verification against primary-source
+language, since PG&E is unrelated to this transaction.
+
+**Finding, checked against this record's own committed text (above) and
+against the primary source:**
+
+- **This record's actual committed language (§4, above)** reads: *"the
+  termination agreement specifies 'Parent remains responsible for all
+  filing fees incurred... in connection with the... HSR Act' pre-merger
+  notification."* **PG&E is not named anywhere in this sentence, this
+  section, or this record.** The word "Parent" is a defined term in the
+  termination agreement itself, left as-is in the original quotation
+  rather than resolved to a company name.
+- **Primary source re-verified directly** (SEC EDGAR, accession
+  `0001104659-26-102503`, exhibit `tm2620579d9_ex10-1.htm` — the
+  termination agreement): "Parent" is defined in that agreement as
+  **Solstice Advanced Materials Inc.** (SOLS itself); the "Company"/target
+  was Element Solutions Inc. The exact HSR clause reads: *"Parent shall
+  remain responsible for all filing fees incurred by the Parties in
+  connection with the filing of the premerger notification and report
+  forms relating to the Mergers under the HSR Act and the filing of any
+  notice or other document under any applicable foreign antitrust or
+  competition-related law or regulation or other Legal Requirement."*
+  **No reference to PG&E, Pacific Gas and Electric, or any utility company
+  appears anywhere in this document.**
+
+**Determination:**
+
+- **Not a transcription/entity-name error in this committed record** — no
+  PG&E attribution exists in it to correct. (This pilot separately covers
+  Pacific Gas & Electric under its own, unrelated candidate record,
+  `PILOT3_PCG_PRIMARY_EVIDENCE_TRIAGE_001.md`; the two are not connected
+  in any way, and this record never conflated them.)
+- **The one place "Parent" was resolved to a company name at all** was in
+  this session's own verbal return-package summary delivered in chat
+  after this record's commit, which correctly stated "Parent (SOLS)" —
+  consistent with the primary-source finding above, not PG&E.
+- **No correction to the committed record's text is required.** The
+  original quotation was accurate to the primary source both before and
+  after this review.
+- **Financial materiality, for completeness:** the HSR fees themselves are
+  not separately quantified in any source reviewed (consistent with §4's
+  original finding) — a real but modest, undisclosed-dollar transaction
+  cost borne by Solstice, not a source of hidden liability transfer to or
+  from any third party.
+
+**Effect on triage disposition:** **none.** `PROMOTE_TO_DEEP_UNDERWRITING`
+was never contingent on this clause's counterparty identity, and the
+underlying fact (Parent/SOLS bears its own HSR fees, no termination fee
+owed by either party) is unchanged and re-confirmed. Per the governing
+work order's instruction, this **does not materially change the
+promotion thesis** — deep underwriting proceeds.

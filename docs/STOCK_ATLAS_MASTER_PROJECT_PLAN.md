@@ -384,17 +384,39 @@ licensing relationship), low leverage (1.3x), and a durable (not
 reversed) positive market reaction to the August 27 merger termination
 corroborate the candidate variant. A 218bps EBITDA-margin decline despite
 11% revenue growth, and an unexplained ~28% gap to the
-pre-merger-announcement price level, are named as the central open
+pre-merger-announcement price level, were named as the central open
 questions for deep underwriting.
+
+A follow-on work order first required a mandatory integrity check on the
+committed SOLS triage record (a claim that it attributed HSR merger
+filing fees to PG&E); primary-source re-verification confirmed the
+record never made that attribution and its actual language was accurate
+(`Parent` = Solstice itself), so no correction to the promotion thesis
+was required and deep underwriting proceeded
+(`pilot3/PILOT3_SOLS_DEEP_UNDERWRITING_001.md`), closing
+**`BLOCKED_BY_MATERIAL_UNCERTAINTY`**. Verified against primary sources
+rather than the earnings release's own non-GAAP framing, the real EBITDA
+margin decline was roughly double the headlined figure (417–508bps vs.
+218bps) and traced precisely to the Refrigerants & Applied Solutions
+segment, where margin compression **worsened, not improved**, from
+−527bps (Q1 2026) to −648bps (Q2 2026) — the same segment carrying the
+growth and HFO/IP narrative. A new, material spin-off-related
+interest-expense burden and a higher GAAP-basis capex growth rate (+54%
+vs. the company's own +35% non-GAAP figure) were also identified. Growth,
+backlog, and the IP position remained real and uncontradicted, so the
+record did not close `NO_DEMONSTRATED_EDGE`, but the load-bearing margin
+question resolved less favorably under scrutiny, so it was not advanced
+either.
 
 **Current active next action:** none authorized in Pilot 3 beyond what is
 recorded. PATH, MDB, XOM, and PCG are closed at `NO_DEMONSTRATED_EDGE`;
-DOCU and SPXC are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their
-respective named falsifiers; AAPL is held at `EVIDENCE_GAP` pending the
-Oct 16 iPhone Duo preorder signal or Apple's Q4 FY2026 earnings call; SOLS
-is `PROMOTE_TO_DEEP_UNDERWRITING` but deep underwriting has not begun; JPM
-remains a calendar hold pending the September 16 FOMC decision. AVGO
-remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named
+DOCU, SPXC, and now SOLS are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`
+pending their respective named falsifiers (SOLS's most load-bearing:
+whether Q3 2026 RAS segment margin continues worsening, stabilizes, or
+reverses); AAPL is held at `EVIDENCE_GAP` pending the Oct 16 iPhone Duo
+preorder signal or Apple's Q4 FY2026 earnings call; JPM remains a
+calendar hold pending the September 16 FOMC decision. AVGO remains closed
+at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named
 falsifiers/revisit triggers.
 
 ---
