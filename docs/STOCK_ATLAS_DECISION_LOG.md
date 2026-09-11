@@ -957,3 +957,73 @@ was intended.
 
 **Explicitly not done:** no deep underwriting of SPXC, no triage of
 SOLS/PCG, no Stage 7 or Stage 8, no capital allocated, no Batch 003.
+
+---
+
+## PILOT3_SPXC_DEEP_UNDERWRITING_RESULT (2026-09-11)
+
+**Record:** `docs/pilot3/PILOT3_SPXC_DEEP_UNDERWRITING_001.md`
+
+SPXC's deep underwriting, following its triage-stage promotion, returned
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`.
+
+**What survived and strengthened:** reconstructing organic growth and
+margins across four quarters (Q3 2025 through Q2 2026), not one, found a
+real, accelerating HVAC organic-growth trend (9.0%->9.6%->18.9%)
+corroborated by a $919M backlog (+59% organically YoY) explicitly
+attributed by management to data-center demand; a well-quantified secular
+driver (2026 data-center revenue guide raised from $350M to $430M, +115%
+YoY, full-production capacity target raised to $1.1B); a durable,
+three-consecutive-quarter Detection & Measurement margin-expansion trend
+(25.2%->27.0%->28.9%) that has offset HVAC's pressure at the consolidated
+EBITDA-margin level (which has stayed roughly stable, 21.5%-23.0%, rather
+than declining); an immediately accretive, high-margin (mid-40s% EBITDA
+margin) Neptronic acquisition contributing $0.05-0.06 EPS in five months
+of 2026 ownership; FCF that doubled YoY despite (not because of) a large
+working-capital investment funding growth; and 1.4x pro forma leverage,
+below management's own 1.5-2.5x target floor.
+
+**What remained unresolved:** reconstructing the HVAC margin trend across
+the same four quarters found it worsening for two consecutive quarters
+(+50bps, then -40bps, then -260bps), not troughing -- the opposite
+direction from management's "Q4 better than Q3" claim, which is
+directional, not yet evidenced. Management's own guidance raise was
+confirmed to NOT assume HVAC margin recovery (a credibility-supporting,
+conservative posture), but this also means no company-quantified recovery
+timeline exists to test against. The triage-stage finding of an
+unexplained five-to-six-week price decline back to the post-earnings
+trough was not resolved by this deeper review either -- no new negative
+catalyst was found, but none was ruled out.
+
+**Why `BLOCKED_BY_MATERIAL_UNCERTAINTY` rather than a clean call:** real,
+now multi-quarter-confirmed business quality argues against
+`NO_DEMONSTRATED_EDGE`; a worsening (not troughing) margin trend and an
+unexplained price decline, per the record's own governing instruction not
+to assume the selloff itself creates edge, argue against
+`ADVANCE_TO_FINAL_CAPITAL_COMPARISON`. Both open questions have a
+specific, dated, near-term resolution point (Q3 2026 earnings, expected
+~late October) rather than requiring new methodology.
+
+**Valuation note:** a fresh, Gate-B-certified price ($191.73, 2026-09-11)
+was obtained after the U.S. market's close -- a genuine improvement over
+the triage record's checkpoint, which had to rely on the prior completed
+session because the market was still open at that record's preparation
+time. The price moved modestly (+2.6%) and did not change the record's
+scenario or return-range conclusions.
+
+**Process note:** the work order arrived truncated (cut off mid-sentence in
+its balance-sheet-flexibility instruction, before any scenario framework,
+return range, disposition menu, or stop condition was given). It was
+completed using the template established for AVGO, MDB, and DOCU deep
+underwriting; flagged in the record for correction if different scope was
+intended.
+
+**Batch 002/001 controls unchanged:** PATH `NO_DEMONSTRATED_EDGE`, MDB
+`NO_DEMONSTRATED_EDGE`, DOCU `BLOCKED_BY_MATERIAL_UNCERTAINTY`, SOLS
+`EVENT_DRIVEN_HOLD`, PCG `SURFACE_WITH_EVIDENCE_GAP`; AVGO
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, XOM `NO_DEMONSTRATED_EDGE`, SMH
+`REFERENCE_PEER_TAPE`, AAPL `EVIDENCE_GAP`, JPM `CALENDAR_HOLD`, NVDA
+`REFERENCE_ONLY`.
+
+**Explicitly not done:** no Stage 7 comparison, no Stage 8 decision, no
+capital allocated, no triage of SOLS/PCG, no Batch 003.

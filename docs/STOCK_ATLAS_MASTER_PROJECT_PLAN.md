@@ -348,16 +348,26 @@ recovery over the following five to six weeks for reasons no evidence
 gathered explains — named explicitly as the central open question for
 deep underwriting.
 
+SPXC's deep underwriting (`pilot3/PILOT3_SPXC_DEEP_UNDERWRITING_001.md`)
+returned `BLOCKED_BY_MATERIAL_UNCERTAINTY`: real, multi-quarter-confirmed
+quality was found (accelerating HVAC organic growth corroborated by a
+$919M/+59% backlog, a well-quantified data-center demand driver, a
+durable three-quarter D&M margin-expansion trend offsetting HVAC pressure
+at the consolidated level, an immediately accretive high-margin
+acquisition, and 1.4x pro forma leverage below management's own target
+floor), but HVAC segment margin worsened for a second consecutive quarter
+rather than troughing, and the triage-stage unexplained price decline was
+not resolved. Both open questions have a specific, dated resolution point
+(Q3 2026 earnings, ~late October).
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
-recorded. PATH and MDB are closed at `NO_DEMONSTRATED_EDGE`; DOCU is closed
-at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending its named falsifiers
-(next ARR prints, FY2027 year-end total ARR disclosure); XOM is closed at
-`NO_DEMONSTRATED_EDGE`; AAPL is held at `EVIDENCE_GAP` pending the Oct 16
-iPhone Duo preorder signal or Apple's Q4 FY2026 earnings call; SPXC is
-`PROMOTE_TO_DEEP_UNDERWRITING` but deep underwriting has not begun; SOLS
-and PCG remain registered but untriaged. AVGO remains closed at
-`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
-triggers.
+recorded. PATH and MDB are closed at `NO_DEMONSTRATED_EDGE`; DOCU and SPXC
+are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their respective
+named falsifiers; XOM is closed at `NO_DEMONSTRATED_EDGE`; AAPL is held at
+`EVIDENCE_GAP` pending the Oct 16 iPhone Duo preorder signal or Apple's
+Q4 FY2026 earnings call; SOLS and PCG remain registered but untriaged.
+AVGO remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its
+named falsifiers/revisit triggers.
 
 ---
 
