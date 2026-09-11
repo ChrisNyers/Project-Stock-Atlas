@@ -40,7 +40,7 @@ Agent World candidates over any other source.
 | MDB | Strong revenue growth, raised FY guide; sold off because Atlas growth held near 29% rather than accelerating | `SURFACE_FOR_TRIAGE` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
 | SPXC | Material share-price decline despite a prior earnings beat and guidance raise; concern centers on margin softness | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
 | SOLS | Large proposed merger terminated; company announced a meaningful buyback; stock repriced sharply | `EVENT_DRIVEN_HOLD` | Not triaged this record |
-| PCG | Major selloff tied to wildfire-liability uncertainty; strategic review announced; capital plan reportedly altered | `SURFACE_WITH_EVIDENCE_GAP` | Not triaged this record |
+| PCG | Major selloff tied to wildfire-liability uncertainty; strategic review announced; capital plan reportedly altered | `SURFACE_WITH_EVIDENCE_GAP` | `NO_DEMONSTRATED_EDGE` (see triage record) |
 | DOCU | Strong quarterly performance; IAM product growing as share of ARR; capital returned via buybacks | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
 
 **Only PATH and MDB receive primary-evidence triage in this record.**
@@ -89,12 +89,19 @@ record: does the post-merger standalone capital structure and valuation
 create a durable variant, or is this a one-day event trade with no
 persistent mispricing? Not answered here.
 
-## PCG — not triaged
+## PCG — full primary-evidence triage
 
-`SURFACE_WITH_EVIDENCE_GAP`. Discovery signal only (wildfire-liability
-selloff, strategic review, altered capital plan). Explicitly high
-uncertainty. **A low price is not treated as edge** — this instruction is
-preserved verbatim from the work order and not reinterpreted.
+Recorded separately in `PILOT3_PCG_PRIMARY_EVIDENCE_TRIAGE_001.md`.
+Disposition: `NO_DEMONSTRATED_EDGE`. Real earnings growth and reduced
+near-term financing needs were confirmed, but the strategic review
+discloses no value-creating optionality on evidence gathered, and the
+wildfire-liability framework is shown by primary evidence to be a live,
+partially-already-realized, structurally unresolved risk — a cross-utility
+contagion charge (driven by SCE's loss) already hit Q1 2026 results, and
+SB 492 left the core strict-liability-plus-subrogation framework intact.
+The market's post-announcement rebound partially reversed rather than
+continuing. **A low price was not treated as edge**, per the candidate's
+standing registration instruction.
 
 ## DOCU — full primary-evidence triage
 
@@ -136,7 +143,7 @@ underlying primary evidence differs — see the individual triage records.
 | MDB | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_FOR_TRIAGE` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — the specific discovery variant (market over-weighting a lagging metric) was corroborated by primary forward-bookings and management evidence |
 | SPXC | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — organic growth (74% of total growth) and a specifically-attributed, testable margin-pressure cause corroborated the discovery variant; an unexplained secondary price decline is named as an open question for deep underwriting |
 | SOLS | `MANUAL_DISCOVERY_BRIDGE` | `EVENT_DRIVEN_HOLD` | Not yet triaged | N/A |
-| PCG | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | Not yet triaged | N/A |
+| PCG | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | `NO_DEMONSTRATED_EDGE` | No — the strategic-review half of the variant disclosed no value-creating optionality, and the wildfire-liability half was shown to be a live, structurally unresolved risk rather than an overreaction |
 | DOCU | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — the discovery variant's per-share-economics half was corroborated by primary evidence; the growth-inflection half remains open, not refuted, and is the focus for deep underwriting |
 
 No discovery score. This log records outcomes only.

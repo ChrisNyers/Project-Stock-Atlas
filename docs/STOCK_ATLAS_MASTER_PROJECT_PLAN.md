@@ -360,14 +360,29 @@ rather than troughing, and the triage-stage unexplained price decline was
 not resolved. Both open questions have a specific, dated resolution point
 (Q3 2026 earnings, ~late October).
 
+PCG's primary-evidence triage
+(`pilot3/PILOT3_PCG_PRIMARY_EVIDENCE_TRIAGE_001.md`) returned
+`NO_DEMONSTRATED_EDGE`: real earnings growth and a reduced near-term
+financing need were confirmed, but the strategic review discloses no
+value-creating optionality on evidence gathered (only a capital-plan
+deferral and a withdrawn multi-year outlook), and the wildfire-liability
+framework was shown by primary evidence to be a live, structurally
+unresolved risk — a cross-utility contagion charge (driven by a
+competitor's loss) already hit Q1 2026 results, and California's SB 492
+left the core strict-liability-plus-subrogation framework intact. The
+market's post-announcement rebound partially reversed rather than
+continuing to recover, and the ~8x forward P/E is consistent with a
+durable, not temporary, discount.
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
-recorded. PATH and MDB are closed at `NO_DEMONSTRATED_EDGE`; DOCU and SPXC
-are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their respective
-named falsifiers; XOM is closed at `NO_DEMONSTRATED_EDGE`; AAPL is held at
-`EVIDENCE_GAP` pending the Oct 16 iPhone Duo preorder signal or Apple's
-Q4 FY2026 earnings call; SOLS and PCG remain registered but untriaged.
-AVGO remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its
-named falsifiers/revisit triggers.
+recorded. PATH, MDB, XOM, and PCG are closed at `NO_DEMONSTRATED_EDGE`;
+DOCU and SPXC are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their
+respective named falsifiers; AAPL is held at `EVIDENCE_GAP` pending the
+Oct 16 iPhone Duo preorder signal or Apple's Q4 FY2026 earnings call; SOLS
+remains registered but untriaged; JPM remains a calendar hold pending the
+September 16 FOMC decision. AVGO remains closed at
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
+triggers.
 
 ---
 

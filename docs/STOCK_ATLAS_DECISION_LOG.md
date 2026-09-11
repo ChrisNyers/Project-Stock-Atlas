@@ -1027,3 +1027,75 @@ intended.
 
 **Explicitly not done:** no Stage 7 comparison, no Stage 8 decision, no
 capital allocated, no triage of SOLS/PCG, no Batch 003.
+
+---
+
+## PILOT3_PCG_PRIMARY_EVIDENCE_TRIAGE_RESULT (2026-09-11)
+
+**Record:** `docs/pilot3/PILOT3_PCG_PRIMARY_EVIDENCE_TRIAGE_001.md`
+
+PCG's primary-evidence triage returned `NO_DEMONSTRATED_EDGE`. The
+discovery-stage question -- is the market over-penalizing wildfire and
+financing uncertainty despite improving earnings, reduced borrowing needs,
+and a potentially value-relevant strategic review -- was tested against
+primary evidence with an explicit instruction not to minimize tail risk.
+
+**What was confirmed:** real core-earnings growth (Q2 2026 core EPS +29%
+YoY, GAAP EPS +37.5% YoY), reaffirmed FY2026 guidance, ~$2B lower 2027
+borrowing need, and no anticipated equity issuance through 2030.
+
+**What was not corroborated:** the strategic review, examined directly per
+the instruction not to infer undisclosed options, discloses no specific
+value-creating structural alternative on any source reviewed -- only a
+capital-plan deferral and a withdrawn multi-year outlook. The deferred
+2027 capex was found to be growth-oriented (housing and renewable-energy
+interconnection work), not discretionary, tempering the "value-preserving"
+reading.
+
+**The central, load-bearing finding:** the wildfire-liability framework,
+examined without minimizing tail risk, is live and already
+partially-materializing rather than a market-overweighted hypothetical.
+PG&E's own 10-Q discloses a $78M accelerated Wildfire Fund amortization
+charge in Q1 2026 driven specifically by a competitor's loss (SCE's $1.3
+billion Eaton-fire-related loss) -- direct, primary evidence of a
+cross-utility contagion mechanism within the shared AB 1054 Wildfire Fund
+pool. Separately, at least $699M in recorded wildfire-related regulatory-
+recovery receivables (Dixie Fire, Mosquito Fire) remain subject to CPUC
+prudency-standard disallowance risk. California's SB 492, the legislative
+reform PG&E had been counting on, was found (via well-corroborated
+secondary reporting) to have preserved insurer subrogation and strict
+liability -- leaving the core legal exposure that makes wildfire liability
+severe for California utilities intact.
+
+**Market reaction, checked directly rather than assumed:** the stock fell
+roughly 28% peak-to-trough around the September 2 announcement, partially
+rebounded, then gave back most of that rebound over the following week --
+remaining ~25% below its pre-decline level at the latest completed
+session. This persistent, non-reversing pattern was read as evidence
+against a knee-jerk overreaction, not treated as proof of edge in either
+direction.
+
+**Valuation:** a Gate-B-certified fresh price ($13.80, 2026-09-11)
+implies roughly 8x forward P/E on FY2026/FY2027 core EPS guidance --
+a deep discount to typical regulated-utility multiples, read as consistent
+with a durable, evidence-grounded discount rather than an exploitable
+temporary mispricing.
+
+**Disposition rationale:** the tested variant's growth/financing
+components survived, but its strategic-review and wildfire-liability
+components did not -- this is a rejection of the specific tested variant,
+not a permanent judgment that PG&E can never present an investable case.
+Named falsifiers (a concretely value-creating strategic-review outcome, or
+a durable legislative liability-reform fix) are recorded as the path to
+revisiting this, not a new methodology.
+
+**Batch 002/001 controls unchanged:** PATH `NO_DEMONSTRATED_EDGE`, MDB
+`NO_DEMONSTRATED_EDGE`, DOCU `BLOCKED_BY_MATERIAL_UNCERTAINTY`, SPXC
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, SOLS `EVENT_DRIVEN_HOLD`; AVGO
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, XOM `NO_DEMONSTRATED_EDGE`, SMH
+`REFERENCE_PEER_TAPE`, AAPL `EVIDENCE_GAP`, JPM `CALENDAR_HOLD` (not
+advanced ahead of the September 16 FOMC decision), NVDA `REFERENCE_ONLY`.
+
+**Explicitly not done:** no deep underwriting of PCG, no triage of SOLS,
+no advance of JPM, no Stage 7 or Stage 8, no capital allocated, no
+Batch 003.
