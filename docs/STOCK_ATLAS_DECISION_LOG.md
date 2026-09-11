@@ -898,3 +898,62 @@ NVDA `REFERENCE_ONLY`; PATH `NO_DEMONSTRATED_EDGE`, MDB
 **Explicitly not done:** no deep underwriting of AAPL, no triage of
 SPXC/SOLS/PCG, no advance of JPM, no Stage 7 or Stage 8, no capital
 allocated, no new registration batch.
+
+---
+
+## PILOT3_SPXC_PRIMARY_EVIDENCE_TRIAGE_RESULT (2026-09-11)
+
+**Record:** `docs/pilot3/PILOT3_SPXC_PRIMARY_EVIDENCE_TRIAGE_001.md`
+
+SPXC's primary-evidence triage returned `PROMOTE_TO_DEEP_UNDERWRITING`.
+The discovery-stage question -- is the market over-penalizing near-term
+margin pressure while underweighting durable growth, or correctly
+repricing lower-quality growth -- was tested against Q2 2026 primary
+evidence.
+
+**Corroborating findings:** organic growth (16.9% company-wide) accounted
+for roughly 74% of total reported growth (22.9%) -- not acquisition-
+manufactured. HVAC segment margin fell 260bps for two specific, disclosed,
+directly testable reasons (capacity-expansion startup costs, tariffs),
+while Detection & Measurement margin expanded 610bps on favorable mix --
+a mixed, not uniformly deteriorating, margin picture. FY2026 guidance was
+raised meaningfully across revenue (+4.8% at the midpoint), adjusted
+EBITDA (+5.3%), and adjusted EPS (+5.7%). Leverage remains low (~1.5x pro
+forma gross) despite five acquisitions across two recent periods.
+
+**Market-reaction evidence, checked directly:** the initial post-print
+selloff (-14.4% over two sessions) fully reversed within the following two
+sessions, exceeding the pre-print level -- evidence the market's own
+first-pass reaction largely accepted the temporary-margin-pressure
+explanation. However, the stock then gave back the entire recovery over
+the following five to six weeks, returning to essentially the same trough
+by September, for reasons no primary or secondary evidence gathered in
+this record explains. This is disclosed as a genuine, unresolved gap and
+named explicitly as the central open question for deep underwriting, not
+papered over or used to block promotion given the strength of the
+underlying fundamental evidence.
+
+**Valuation note:** a coarse checkpoint (~22x P/E, ~16x EV/EBITDA on the
+raised guidance) found the stock full, not statistically cheap, tempering
+the promotion without rejecting it. A Gate-B `FRESH` bind could not be
+obtained (market open at decision time); the already-attested 2026-09-10
+completed-session close was used directly, consistent with the XOM and
+AAPL precedent -- no new binding capability was added.
+
+**Process note:** the work order for this triage arrived truncated (cut
+off mid-sentence in its organic-vs-acquired-growth instruction, before any
+market-could-be-right, falsifier, valuation, disposition menu, or stop
+condition was given). It was completed using the disposition vocabulary
+and template established for PATH, MDB, and DOCU rather than pausing to
+ask; flagged in the triage record itself for correction if different scope
+was intended.
+
+**Batch 002/001 controls unchanged:** PATH `NO_DEMONSTRATED_EDGE`, MDB
+`NO_DEMONSTRATED_EDGE`, DOCU `BLOCKED_BY_MATERIAL_UNCERTAINTY`, SOLS
+`EVENT_DRIVEN_HOLD`, PCG `SURFACE_WITH_EVIDENCE_GAP`; AVGO
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, XOM `NO_DEMONSTRATED_EDGE`, SMH
+`REFERENCE_PEER_TAPE`, AAPL `EVIDENCE_GAP`, JPM `CALENDAR_HOLD`, NVDA
+`REFERENCE_ONLY`.
+
+**Explicitly not done:** no deep underwriting of SPXC, no triage of
+SOLS/PCG, no Stage 7 or Stage 8, no capital allocated, no Batch 003.

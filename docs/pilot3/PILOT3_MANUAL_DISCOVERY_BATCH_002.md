@@ -38,7 +38,7 @@ Agent World candidates over any other source.
 |---|---|---|---|
 | PATH | Beat estimates, sold off on Q3 guide; concern centers on forward ARR/growth mechanics and agentic-AI competitive pressure | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` (see triage record) |
 | MDB | Strong revenue growth, raised FY guide; sold off because Atlas growth held near 29% rather than accelerating | `SURFACE_FOR_TRIAGE` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
-| SPXC | Material share-price decline despite a prior earnings beat and guidance raise; concern centers on margin softness | `SURFACE_WITH_EVIDENCE_GAP` | Not triaged this record |
+| SPXC | Material share-price decline despite a prior earnings beat and guidance raise; concern centers on margin softness | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
 | SOLS | Large proposed merger terminated; company announced a meaningful buyback; stock repriced sharply | `EVENT_DRIVEN_HOLD` | Not triaged this record |
 | PCG | Major selloff tied to wildfire-liability uncertainty; strategic review announced; capital plan reportedly altered | `SURFACE_WITH_EVIDENCE_GAP` | Not triaged this record |
 | DOCU | Strong quarterly performance; IAM product growing as share of ARR; capital returned via buybacks | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
@@ -63,12 +63,23 @@ Recorded separately in `PILOT3_PATH_PRIMARY_EVIDENCE_TRIAGE_001.md`.
 
 Recorded separately in `PILOT3_MDB_PRIMARY_EVIDENCE_TRIAGE_001.md`.
 
-## SPXC — not triaged
+## SPXC — full primary-evidence triage
 
-`SURFACE_WITH_EVIDENCE_GAP`. Discovery signal only (material share-price
-decline despite a prior earnings beat/raise, with investor concern centered
-on margin softness). No SEC filings or earnings materials were reviewed in
-this record. No thesis, variant, or evidence work performed.
+Recorded separately in `PILOT3_SPXC_PRIMARY_EVIDENCE_TRIAGE_001.md`.
+Disposition: `PROMOTE_TO_DEEP_UNDERWRITING`. Q2 2026 organic growth (16.9%
+company-wide) accounts for roughly 74% of total reported growth (22.9%) —
+not acquisition-manufactured. HVAC segment margin fell 260bps for two
+specific, disclosed, plausibly temporary reasons (capacity-expansion
+startup costs, tariffs), while Detection & Measurement margin expanded
+610bps on favorable mix; FY2026 guidance was raised meaningfully across
+revenue, adjusted EBITDA, and adjusted EPS. Leverage remains low (~1.5x
+pro forma) despite an active five-deal acquisition program. The market's
+own initial post-print selloff (−14.4%) fully reversed within a week, but
+the stock then gave back the entire recovery over the following five to
+six weeks for reasons no evidence gathered in this record explains — named
+explicitly as the central open question for deep underwriting. Coarse
+valuation (~22x P/E, ~16x EV/EBITDA on raised guidance) is full, not
+statistically cheap.
 
 ## SOLS — not triaged
 
@@ -123,7 +134,7 @@ underlying primary evidence differs — see the individual triage records.
 |---|---|---|---|---|
 | PATH | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the specific discovery variant (overreaction to near-term mechanics) was contradicted by a primary, guided, material growth-deceleration fact |
 | MDB | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_FOR_TRIAGE` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — the specific discovery variant (market over-weighting a lagging metric) was corroborated by primary forward-bookings and management evidence |
-| SPXC | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | Not yet triaged | N/A |
+| SPXC | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — organic growth (74% of total growth) and a specifically-attributed, testable margin-pressure cause corroborated the discovery variant; an unexplained secondary price decline is named as an open question for deep underwriting |
 | SOLS | `MANUAL_DISCOVERY_BRIDGE` | `EVENT_DRIVEN_HOLD` | Not yet triaged | N/A |
 | PCG | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | Not yet triaged | N/A |
 | DOCU | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — the discovery variant's per-share-economics half was corroborated by primary evidence; the growth-inflection half remains open, not refuted, and is the focus for deep underwriting |

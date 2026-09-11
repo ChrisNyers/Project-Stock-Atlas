@@ -335,12 +335,26 @@ evidence needed to judge whether that repricing is proportionate to the
 actual economic magnitude does not yet exist (preorders begin Oct 16,
 2026) — held at `EVIDENCE_GAP`, not promoted on narrative alone.
 
+SPXC's primary-evidence triage
+(`pilot3/PILOT3_SPXC_PRIMARY_EVIDENCE_TRIAGE_001.md`) returned
+`PROMOTE_TO_DEEP_UNDERWRITING`: Q2 2026 organic growth (16.9% company-wide)
+accounted for roughly 74% of total reported growth (22.9%), HVAC segment
+margin pressure had a specific, disclosed, plausibly temporary attribution
+(capacity-expansion startup costs, tariffs) while Detection & Measurement
+margin expanded 610bps, and FY2026 guidance was raised meaningfully across
+revenue, EBITDA, and EPS. The market's own initial post-print selloff
+fully reversed within a week, but the stock then gave back the entire
+recovery over the following five to six weeks for reasons no evidence
+gathered explains — named explicitly as the central open question for
+deep underwriting.
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
 recorded. PATH and MDB are closed at `NO_DEMONSTRATED_EDGE`; DOCU is closed
 at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending its named falsifiers
 (next ARR prints, FY2027 year-end total ARR disclosure); XOM is closed at
 `NO_DEMONSTRATED_EDGE`; AAPL is held at `EVIDENCE_GAP` pending the Oct 16
-iPhone Duo preorder signal or Apple's Q4 FY2026 earnings call; SPXC, SOLS,
+iPhone Duo preorder signal or Apple's Q4 FY2026 earnings call; SPXC is
+`PROMOTE_TO_DEEP_UNDERWRITING` but deep underwriting has not begun; SOLS
 and PCG remain registered but untriaged. AVGO remains closed at
 `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
 triggers.
