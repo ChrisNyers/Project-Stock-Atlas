@@ -723,3 +723,68 @@ correct if different scope was intended.
 **Explicitly not done:** no deep underwriting for DOCU, no triage of SPXC/
 SOLS/PCG, no Stage 7 or Stage 8, no capital allocated, no advance of XOM,
 no Batch 003.
+
+---
+
+## PILOT3_DOCU_DEEP_UNDERWRITING_RESULT (2026-09-11)
+
+**Record:** `docs/pilot3/PILOT3_DOCU_DEEP_UNDERWRITING_001.md`
+
+DOCU's deep underwriting, following its triage-stage promotion, returned
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`.
+
+**What survived:** durable, multi-quarter capital-allocation and margin
+quality — GAAP operating margin improved monotonically across six
+consecutive quarters (7.9%→13.4%), SBC-as-percent-of-revenue declined for
+five straight quarters, and buybacks were executed at an average price
+(~$47/share, from the 10-Q's repurchase table) meaningfully below the
+~$66 reference price used in this record — disciplined, value-accretive
+capital return, not mechanical dilution-offsetting.
+
+**What did not survive intact:** the growth-inflection half of the
+variant. A coarse but directly-derived growth-bridge calculation (using
+only two company-disclosed data points -- FY2026's 8.0% total ARR growth
+and IAM's ARR share at FY2025/FY2026 year-end) found core (ex-IAM) ARR was
+approximately flat to slightly declining (~-1.4%) over FY2026 -- IAM
+accounts for essentially all of the company's net ARR growth. Reaching a
+materially higher blended growth regime would require IAM's own growth
+rate (estimated at ~407% YoY off a small FY2026 base, implying ~56-60%
+YoY at its current larger size) to re-accelerate toward ~83%, which the
+company's own Q4 FY2027 ARR-share guide (implying a moderating, not
+accelerating, pace of further gains) does not support.
+
+**A distinction the record treats as central:** IAM's rising point-of-ARR-
+share gain (+1.8pt then +2.5pt sequentially) is not the same thing as an
+accelerating IAM dollar growth rate -- a constant or declining growth-rate
+spread produces a larger point gain each quarter purely from IAM's
+increasing size. This nuance materially tempers the triage-stage framing.
+
+**Valuation:** no Gate-B-certified `FRESH` price could be obtained -- the
+market was open at decision time, and the sanctioned binder
+(`bind_price_snapshot`) has no capability to bind against a specific
+historical completed-session close, only the current live quote. This is
+reported as a binder capability limitation, not engineered around; no new
+binding path was added. The unvalidated reference price carried forward
+from triage (~$66) was found, via reverse-engineering, to roughly match
+rather than clearly beat this record's own Base case -- removing the
+valuation cushion that might otherwise have offset the unresolved growth
+question.
+
+**Why `BLOCKED_BY_MATERIAL_UNCERTAINTY` rather than a clean call:** real,
+durable business and capital-allocation quality argues against
+`NO_DEMONSTRATED_EDGE`; an unresolved, load-bearing growth question with no
+current valuation cushion argues against `ADVANCE_TO_FINAL_CAPITAL_COMPARISON`.
+The question is closeable by near-term evidence (next 1-2 quarters' ARR
+prints; FY2027 year-end total ARR disclosure, which would let the §4
+growth-bridge calculation be re-run) rather than requiring new methodology.
+
+**Batch 002/001 controls unchanged:** PATH `NO_DEMONSTRATED_EDGE`, MDB
+`NO_DEMONSTRATED_EDGE`, SPXC `SURFACE_WITH_EVIDENCE_GAP`, SOLS
+`EVENT_DRIVEN_HOLD`, PCG `SURFACE_WITH_EVIDENCE_GAP`. Batch 001 (AVGO
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, XOM `SURFACE_WITH_EVIDENCE_GAP`, SMH
+`REFERENCE_PEER_TAPE`, AAPL/JPM `CALENDAR_HOLD`, NVDA `REFERENCE_ONLY`) is
+unchanged.
+
+**Explicitly not done:** no Stage 7 comparison, no Stage 8 decision, no
+capital allocated, no triage of SPXC/SOLS/PCG, no advance of XOM, no
+Batch 003.

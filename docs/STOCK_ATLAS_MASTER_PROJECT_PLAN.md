@@ -297,13 +297,28 @@ obtained (market open at decision time; Gate B correctly returned `STALE`)
 certified bind should be captured before deep underwriting relies on a
 specific valuation figure.
 
+DOCU's deep underwriting (`pilot3/PILOT3_DOCU_DEEP_UNDERWRITING_001.md`)
+returned `BLOCKED_BY_MATERIAL_UNCERTAINTY`: durable, multi-quarter
+capital-allocation and margin quality survived (buybacks executed at an
+average ~$47/share versus a ~$66 reference price; monotonically improving
+GAAP margin across six quarters), but a coarse core-versus-IAM ARR
+growth-bridge calculation (Atlas-derived from two disclosed annual data
+points) found core ARR was approximately flat to slightly declining in
+FY2026 — IAM accounts for essentially all net growth, and reaching a
+materially higher blended growth regime would require IAM's own
+(likely-decelerating) growth rate to re-accelerate, which current guidance
+does not support. No Gate-B-certified `FRESH` price could be obtained
+(market open at decision time; the binder has no capability to bind a
+specific historical close, reported as a limitation rather than engineered
+around).
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
-recorded. PATH and MDB are closed at `NO_DEMONSTRATED_EDGE`; DOCU is
-`PROMOTE_TO_DEEP_UNDERWRITING` but deep underwriting has not begun; SPXC,
-SOLS, and PCG remain registered but untriaged. XOM still awaiting next
-completed U.S. session. AVGO remains closed at
-`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
-triggers.
+recorded. PATH and MDB are closed at `NO_DEMONSTRATED_EDGE`; DOCU is closed
+at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending its named falsifiers
+(next ARR prints, FY2027 year-end total ARR disclosure); SPXC, SOLS, and
+PCG remain registered but untriaged. XOM still awaiting next completed
+U.S. session. AVGO remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`,
+pending its named falsifiers/revisit triggers.
 
 ---
 
