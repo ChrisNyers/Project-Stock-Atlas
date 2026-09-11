@@ -1099,3 +1099,58 @@ advanced ahead of the September 16 FOMC decision), NVDA `REFERENCE_ONLY`.
 **Explicitly not done:** no deep underwriting of PCG, no triage of SOLS,
 no advance of JPM, no Stage 7 or Stage 8, no capital allocated, no
 Batch 003.
+
+---
+
+## PILOT3_SOLS_POST_MERGER_TRIAGE_RESULT (2026-09-11)
+
+**Record:** `docs/pilot3/PILOT3_SOLS_POST_MERGER_PRIMARY_EVIDENCE_TRIAGE_001.md`
+
+SOLS's post-merger primary-evidence triage returned
+`PROMOTE_TO_DEEP_UNDERWRITING`, resolving `EVENT_DRIVEN_HOLD` now that the
+proposed Element Solutions merger has been mutually terminated (no fee
+owed by either party) alongside a first-ever $500M buyback authorization
+and reaffirmed FY2026 guidance.
+
+**Corroborating findings:** Q2 2026 organic growth was broad-based across
+every segment (Nuclear +27%, Healthcare Packaging +24%, Electronic
+Materials +15%, Refrigerants +13%), not a single hot-segment story;
+guidance was raised meaningfully at Q2 earnings and reaffirmed at
+termination; net leverage is low (1.3x) with real balance-sheet capacity;
+and the HFO/refrigerant IP position is real and currently monetizing, not
+merely narrative -- a key European patent (HFO-1234yf process) was upheld
+against multiple challengers, and a licensing relationship with Hudson
+Technologies generates real revenue from the patent estate. Market
+reaction to the termination, checked directly (+12.8% the next session,
+consistent with a reported ~15% after-hours pop), has held for roughly two
+weeks rather than reversing -- a materially different, more durable
+pattern than this pilot found for PCG.
+
+**Unresolved, named for deep underwriting:** adjusted EBITDA margin fell
+218bps YoY even as revenue grew 11% and guidance was raised twice, with no
+management explanation found in evidence reviewed -- a real, unexplained
+profitability tension, not papered over. Separately, the current price
+(~$61.55) remains roughly 28% below the pre-merger-announcement level
+(~$85) even after the positive resolution; no evidence gathered explains
+whether this reflects unrecovered standalone value or a justified
+re-rating. The company's very short standalone operating history (a
+recent Honeywell spinoff) limits how much trend-reconstruction this
+triage could perform.
+
+**Why `PROMOTE_TO_DEEP_UNDERWRITING` rather than a more cautious call:** no
+primary evidence found directly refutes the candidate variant (unlike this
+pilot's PATH or PCG findings) -- the open questions are unresolved, not
+negative findings, and are specifically named as the deep-underwriting
+focus rather than resolved by inference, consistent with how AVGO, MDB,
+DOCU, and SPXC were promoted at triage with comparable named open
+questions.
+
+**Batch 002/001 controls unchanged:** PATH `NO_DEMONSTRATED_EDGE`, MDB
+`NO_DEMONSTRATED_EDGE`, DOCU `BLOCKED_BY_MATERIAL_UNCERTAINTY`, SPXC
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, PCG `NO_DEMONSTRATED_EDGE`; AVGO
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, XOM `NO_DEMONSTRATED_EDGE`, SMH
+`REFERENCE_PEER_TAPE`, AAPL `EVIDENCE_GAP`, JPM `CALENDAR_HOLD` (not
+advanced ahead of the September 16 FOMC decision), NVDA `REFERENCE_ONLY`.
+
+**Explicitly not done:** no deep underwriting of SOLS, no advance of JPM,
+no Stage 7 or Stage 8, no capital allocated, no Batch 003.

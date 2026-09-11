@@ -374,15 +374,28 @@ market's post-announcement rebound partially reversed rather than
 continuing to recover, and the ~8x forward P/E is consistent with a
 durable, not temporary, discount.
 
+SOLS's post-merger primary-evidence triage
+(`pilot3/PILOT3_SOLS_POST_MERGER_PRIMARY_EVIDENCE_TRIAGE_001.md`) returned
+`PROMOTE_TO_DEEP_UNDERWRITING`: broad-based double-digit organic growth
+across every segment (Nuclear +27%, Healthcare Packaging +24%, Electronic
+Materials +15%, Refrigerants +13%), a real and monetizing HFO/IP position
+(a European patent upheld against multiple challengers; an active
+licensing relationship), low leverage (1.3x), and a durable (not
+reversed) positive market reaction to the August 27 merger termination
+corroborate the candidate variant. A 218bps EBITDA-margin decline despite
+11% revenue growth, and an unexplained ~28% gap to the
+pre-merger-announcement price level, are named as the central open
+questions for deep underwriting.
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
 recorded. PATH, MDB, XOM, and PCG are closed at `NO_DEMONSTRATED_EDGE`;
 DOCU and SPXC are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their
 respective named falsifiers; AAPL is held at `EVIDENCE_GAP` pending the
 Oct 16 iPhone Duo preorder signal or Apple's Q4 FY2026 earnings call; SOLS
-remains registered but untriaged; JPM remains a calendar hold pending the
-September 16 FOMC decision. AVGO remains closed at
-`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
-triggers.
+is `PROMOTE_TO_DEEP_UNDERWRITING` but deep underwriting has not begun; JPM
+remains a calendar hold pending the September 16 FOMC decision. AVGO
+remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named
+falsifiers/revisit triggers.
 
 ---
 

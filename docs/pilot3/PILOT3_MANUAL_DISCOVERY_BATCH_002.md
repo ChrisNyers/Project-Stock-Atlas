@@ -39,7 +39,7 @@ Agent World candidates over any other source.
 | PATH | Beat estimates, sold off on Q3 guide; concern centers on forward ARR/growth mechanics and agentic-AI competitive pressure | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` (see triage record) |
 | MDB | Strong revenue growth, raised FY guide; sold off because Atlas growth held near 29% rather than accelerating | `SURFACE_FOR_TRIAGE` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
 | SPXC | Material share-price decline despite a prior earnings beat and guidance raise; concern centers on margin softness | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
-| SOLS | Large proposed merger terminated; company announced a meaningful buyback; stock repriced sharply | `EVENT_DRIVEN_HOLD` | Not triaged this record |
+| SOLS | Large proposed merger terminated; company announced a meaningful buyback; stock repriced sharply | `EVENT_DRIVEN_HOLD` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
 | PCG | Major selloff tied to wildfire-liability uncertainty; strategic review announced; capital plan reportedly altered | `SURFACE_WITH_EVIDENCE_GAP` | `NO_DEMONSTRATED_EDGE` (see triage record) |
 | DOCU | Strong quarterly performance; IAM product growing as share of ARR; capital returned via buybacks | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` (see triage record) |
 
@@ -81,13 +81,17 @@ explicitly as the central open question for deep underwriting. Coarse
 valuation (~22x P/E, ~16x EV/EBITDA on raised guidance) is full, not
 statistically cheap.
 
-## SOLS — not triaged
+## SOLS — full post-merger primary-evidence triage
 
-`EVENT_DRIVEN_HOLD`. Discovery signal only (terminated merger, subsequent
-buyback announcement, sharp repricing). The open question for a future
-record: does the post-merger standalone capital structure and valuation
-create a durable variant, or is this a one-day event trade with no
-persistent mispricing? Not answered here.
+Recorded separately in
+`PILOT3_SOLS_POST_MERGER_PRIMARY_EVIDENCE_TRIAGE_001.md`. Disposition:
+`PROMOTE_TO_DEEP_UNDERWRITING`. Broad-based double-digit organic growth
+across every segment, a real and monetizing HFO/IP position, low leverage
+(1.3x), and a durable (not reversed) positive market reaction to the
+termination corroborate the candidate variant. A 218bps EBITDA-margin
+decline despite 11% revenue growth, and an unexplained ~28% gap to the
+pre-merger-announcement price level, are named as the central open
+questions for deep underwriting rather than resolved here.
 
 ## PCG — full primary-evidence triage
 
@@ -142,7 +146,7 @@ underlying primary evidence differs — see the individual triage records.
 | PATH | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the specific discovery variant (overreaction to near-term mechanics) was contradicted by a primary, guided, material growth-deceleration fact |
 | MDB | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_FOR_TRIAGE` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — the specific discovery variant (market over-weighting a lagging metric) was corroborated by primary forward-bookings and management evidence |
 | SPXC | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — organic growth (74% of total growth) and a specifically-attributed, testable margin-pressure cause corroborated the discovery variant; an unexplained secondary price decline is named as an open question for deep underwriting |
-| SOLS | `MANUAL_DISCOVERY_BRIDGE` | `EVENT_DRIVEN_HOLD` | Not yet triaged | N/A |
+| SOLS | `MANUAL_DISCOVERY_BRIDGE` | `EVENT_DRIVEN_HOLD` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes, on primary evidence gathered; an unexplained EBITDA-margin decline and a persistent gap to the pre-merger price level remain open questions for deep underwriting |
 | PCG | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | `NO_DEMONSTRATED_EDGE` | No — the strategic-review half of the variant disclosed no value-creating optionality, and the wildfire-liability half was shown to be a live, structurally unresolved risk rather than an overreaction |
 | DOCU | `MANUAL_DISCOVERY_BRIDGE` | `SURFACE_WITH_EVIDENCE_GAP` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes — the discovery variant's per-share-economics half was corroborated by primary evidence; the growth-inflection half remains open, not refuted, and is the focus for deep underwriting |
 
