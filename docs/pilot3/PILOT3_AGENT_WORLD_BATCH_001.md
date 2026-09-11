@@ -101,16 +101,27 @@ context, not as independent candidates.
 
 ---
 
-## AAPL / JPM — calendar holds
+## AAPL — resolved: `EVIDENCE_GAP`
 
-- **AAPL:** `CALENDAR_HOLD` — waiting for the September 9 event before
-  deciding whether any actual company-specific variant exists.
+Resolved in `PILOT3_AAPL_POST_EVENT_VARIANT_TEST_001.md` (2026-09-11)
+following the September 9, 2026 event. One genuine piece of new
+information emerged (the $1,999 iPhone Duo starting price undercut the
+pre-event analyst consensus of $2,099–$2,500+), and the market has already
+begun a real, still-developing repricing in response (+3.27% through the
+latest completed session). The evidence needed to determine whether that
+repricing is proportionate to the actual economic magnitude — real
+preorder demand, management commentary, or a stabilized analyst
+consensus — does not yet exist (preorders begin Oct 16, 2026). Held at
+`EVIDENCE_GAP` pending that evidence, not promoted on narrative alone.
+
+## JPM — calendar hold
+
 - **JPM:** `CALENDAR_HOLD` — waiting for the relevant CPI/Fed-rate evidence
   before determining whether there is a company-specific opportunity, as
   opposed to generic macro exposure common to the whole banking sector.
 
 **Calendars are not underwritten.** No thesis, variant, or evidence work has
-been performed for either name in this record.
+been performed for JPM in this record.
 
 ---
 
@@ -130,7 +141,7 @@ work.
 | XOM | Agent World | 1 | WATCH | `NO_DEMONSTRATED_EDGE` (resolved 2026-09-11) | No — the pre-registered lag never materialized once completed-session evidence existed; a correctly rejected candidate | No — XOM led both CVX and XLE on every completed session in the observation window |
 | SMH | Agent World | 1 | WATCH | `REFERENCE_PEER_TAPE` | N/A — reference instrument, not a candidate | N/A |
 | AVGO | Agent World | 1 | WATCH | `ADVANCE_TO_PRIMARY_EVIDENCE_TRIAGE` | See triage record for the survived/useful finding | See triage record |
-| AAPL | Agent World | 1 | CALENDAR | `CALENDAR_HOLD` | Too early — calendar event not yet occurred | Not yet |
+| AAPL | Agent World | 1 | CALENDAR | `EVIDENCE_GAP` (resolved 2026-09-11) | Partial — a real pricing surprise emerged, but economic-magnitude evidence does not yet exist | Pending — awaiting Oct 16 preorder signal / Q4 FY2026 earnings call |
 | JPM | Agent World | 1 | CALENDAR | `CALENDAR_HOLD` | Too early — macro evidence not yet available | Not yet |
 | NVDA | Agent World | 1 | MAP_ONLY | `REFERENCE_ONLY` | N/A — reference instrument, not a candidate | N/A |
 

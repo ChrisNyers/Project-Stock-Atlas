@@ -844,3 +844,57 @@ PATH `NO_DEMONSTRATED_EDGE`, MDB `NO_DEMONSTRATED_EDGE`, DOCU
 
 **Explicitly not done:** no deep underwriting of XOM, no triage of
 SPXC/SOLS/PCG, no Stage 7 or Stage 8, no capital allocated, no Batch 003.
+
+---
+
+## PILOT3_AAPL_POST_EVENT_VARIANT_RESULT (2026-09-11)
+
+**Record:** `docs/pilot3/PILOT3_AAPL_POST_EVENT_VARIANT_TEST_001.md`
+
+AAPL's `CALENDAR_HOLD` (held pending the September 9, 2026 product event)
+was resolved via post-event primary-evidence triage. Following the
+established discipline of not evaluating whether products are interesting
+but whether the event created an investable variant, this record separated
+EXPECTED-BEFORE-EVENT from NEW-AT-EVENT: the foldable iPhone Duo's
+existence, the iPhone 18 Pro/Pro Max's incremental spec/price changes, and
+the AI-enhanced Siri feature set were all broadly anticipated and are not
+new information. One genuine, well-corroborated new fact emerged: the
+$1,999 iPhone Duo starting price undercut every cited pre-event analyst
+estimate (JPMorgan $1,999 floor, BofA $2,099, IDC $2,500+).
+
+**Market-reaction evidence, checked directly (same discipline as the XOM
+relative-dislocation record) rather than assumed:** AAPL was roughly flat
+on the event day itself (Sept 9, -0.28%), then moved +3.56% the following
+completed session (Sept 10) once analyst notes digesting the pricing
+surprise were published -- a delayed, not instant, reaction that continued
+(uncertified) into the next session rather than reversing.
+
+**Why `EVIDENCE_GAP` rather than a clean promote/reject:** a real new fact
+and a real, still-developing market reaction rule out `NO_DEMONSTRATED_EDGE`.
+But whether that reaction is proportionate to, short of, or already ahead
+of the actual economic magnitude cannot be assessed -- iPhone Duo preorders
+do not begin until October 16, 2026, so no real demand signal, company
+guidance, or stabilized analyst consensus yet exists. This is treated as
+the same category of state as XOM's pre-resolution hold (decisive evidence
+not yet in existence, on a short, concrete, dated horizon) rather than
+`BLOCKED_BY_MATERIAL_UNCERTAINTY` (substantial evidence reviewed and found
+genuinely irresolvable, as with AVGO and DOCU).
+
+**Process note:** the work order for this triage arrived truncated (cut off
+mid-sentence in its economic-impact instruction, before any falsifier,
+disposition menu, or stop condition was given). It was completed using the
+disposition vocabulary and template already established for PATH, MDB, and
+DOCU rather than pausing to ask, since the pattern was unambiguous from the
+work order's own "post-event primary-evidence triage" framing; flagged in
+the triage record itself for correction if different scope was intended.
+
+**Batch 001/002 controls unchanged:** AVGO `BLOCKED_BY_MATERIAL_UNCERTAINTY`,
+XOM `NO_DEMONSTRATED_EDGE`, SMH `REFERENCE_PEER_TAPE`, JPM `CALENDAR_HOLD`,
+NVDA `REFERENCE_ONLY`; PATH `NO_DEMONSTRATED_EDGE`, MDB
+`NO_DEMONSTRATED_EDGE`, DOCU `BLOCKED_BY_MATERIAL_UNCERTAINTY`, SPXC
+`SURFACE_WITH_EVIDENCE_GAP`, SOLS `EVENT_DRIVEN_HOLD`, PCG
+`SURFACE_WITH_EVIDENCE_GAP`.
+
+**Explicitly not done:** no deep underwriting of AAPL, no triage of
+SPXC/SOLS/PCG, no advance of JPM, no Stage 7 or Stage 8, no capital
+allocated, no new registration batch.

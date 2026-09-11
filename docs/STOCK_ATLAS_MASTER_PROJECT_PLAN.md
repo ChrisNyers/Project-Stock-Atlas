@@ -324,13 +324,26 @@ outcome (Agent World correctly surfaced a coherent hypothesis; Atlas's
 discipline of waiting for completed-session evidence rather than
 front-running it is what let this be resolved cleanly).
 
+AAPL's post-event variant test
+(`pilot3/PILOT3_AAPL_POST_EVENT_VARIANT_TEST_001.md`) returned
+`EVIDENCE_GAP` following the September 9, 2026 event: the $1,999 iPhone
+Duo starting price undercut pre-event analyst consensus ($2,099–$2,500+),
+a genuine new piece of information, and the market has already begun a
+real, still-developing repricing (+3.27% through the latest completed
+session, delayed by one session rather than an instant same-day pop). The
+evidence needed to judge whether that repricing is proportionate to the
+actual economic magnitude does not yet exist (preorders begin Oct 16,
+2026) — held at `EVIDENCE_GAP`, not promoted on narrative alone.
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
 recorded. PATH and MDB are closed at `NO_DEMONSTRATED_EDGE`; DOCU is closed
 at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending its named falsifiers
 (next ARR prints, FY2027 year-end total ARR disclosure); XOM is closed at
-`NO_DEMONSTRATED_EDGE`; SPXC, SOLS, and PCG remain registered but
-untriaged. AVGO remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`,
-pending its named falsifiers/revisit triggers.
+`NO_DEMONSTRATED_EDGE`; AAPL is held at `EVIDENCE_GAP` pending the Oct 16
+iPhone Duo preorder signal or Apple's Q4 FY2026 earnings call; SPXC, SOLS,
+and PCG remain registered but untriaged. AVGO remains closed at
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
+triggers.
 
 ---
 
