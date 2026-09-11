@@ -59,7 +59,17 @@ generally) is currently strong.
 
 ---
 
-## XOM — `SURFACE_WITH_EVIDENCE_GAP`
+## XOM — resolved: `NO_DEMONSTRATED_EDGE`
+
+Resolved in `PILOT3_XOM_RELATIVE_DISLOCATION_RESOLUTION_001.md` (2026-09-11)
+once the required completed-session evidence existed. XOM did not lag CVX
+or XLE on any completed session between 2026-09-04 (baseline) and
+2026-09-10 (latest completed session) — it led both, with the gap widening
+by the final session. The pre-registered lag never materialized. Per the
+governing work order's own instruction, this is recorded as a successful
+Pilot 3 discovery-system outcome, not a failed candidate.
+
+### XOM — original registration (superseded by the resolution above)
 
 **Not underwritten.** The Agent World thesis depends materially on the U.S.
 equity market's **first cash-session reaction** following a weekend
@@ -117,7 +127,7 @@ work.
 
 | Candidate | Source | Candidates surfaced | Initial Agent World state | Atlas disposition | New/useful? | Survived Atlas triage? |
 |---|---|---|---|---|---|---|
-| XOM | Agent World | 1 | WATCH | `SURFACE_WITH_EVIDENCE_GAP` | Too early to say — thesis is evidence-dependent, not yet evaluable | Not yet — awaiting required market evidence |
+| XOM | Agent World | 1 | WATCH | `NO_DEMONSTRATED_EDGE` (resolved 2026-09-11) | No — the pre-registered lag never materialized once completed-session evidence existed; a correctly rejected candidate | No — XOM led both CVX and XLE on every completed session in the observation window |
 | SMH | Agent World | 1 | WATCH | `REFERENCE_PEER_TAPE` | N/A — reference instrument, not a candidate | N/A |
 | AVGO | Agent World | 1 | WATCH | `ADVANCE_TO_PRIMARY_EVIDENCE_TRIAGE` | See triage record for the survived/useful finding | See triage record |
 | AAPL | Agent World | 1 | CALENDAR | `CALENDAR_HOLD` | Too early — calendar event not yet occurred | Not yet |

@@ -312,12 +312,24 @@ does not support. No Gate-B-certified `FRESH` price could be obtained
 specific historical close, reported as a limitation rather than engineered
 around).
 
+XOM's relative-dislocation resolution
+(`pilot3/PILOT3_XOM_RELATIVE_DISLOCATION_RESOLUTION_001.md`) returned
+`NO_DEMONSTRATED_EDGE` once the required completed-session evidence
+existed: over the observation window (2026-09-04 baseline through
+2026-09-10, the latest completed session), XOM led both CVX and XLE on
+every session, with the gap widening rather than narrowing — the
+pre-registered lag never materialized. Per the governing work order's own
+instruction, this is recorded as a successful Pilot 3 discovery-system
+outcome (Agent World correctly surfaced a coherent hypothesis; Atlas's
+discipline of waiting for completed-session evidence rather than
+front-running it is what let this be resolved cleanly).
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
 recorded. PATH and MDB are closed at `NO_DEMONSTRATED_EDGE`; DOCU is closed
 at `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending its named falsifiers
-(next ARR prints, FY2027 year-end total ARR disclosure); SPXC, SOLS, and
-PCG remain registered but untriaged. XOM still awaiting next completed
-U.S. session. AVGO remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`,
+(next ARR prints, FY2027 year-end total ARR disclosure); XOM is closed at
+`NO_DEMONSTRATED_EDGE`; SPXC, SOLS, and PCG remain registered but
+untriaged. AVGO remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`,
 pending its named falsifiers/revisit triggers.
 
 ---

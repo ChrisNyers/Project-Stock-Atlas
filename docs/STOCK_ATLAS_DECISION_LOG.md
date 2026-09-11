@@ -788,3 +788,59 @@ unchanged.
 **Explicitly not done:** no Stage 7 comparison, no Stage 8 decision, no
 capital allocated, no triage of SPXC/SOLS/PCG, no advance of XOM, no
 Batch 003.
+
+---
+
+## PILOT3_XOM_RELATIVE_DISLOCATION_RESULT (2026-09-11)
+
+**Record:** `docs/pilot3/PILOT3_XOM_RELATIVE_DISLOCATION_RESOLUTION_001.md`
+
+XOM's registered evidence gap (`SURFACE_WITH_EVIDENCE_GAP`, held since
+Batch 001 registration pending the required first completed U.S. session
+following a weekend geopolitical/oil-supply escalation) was resolved once
+that evidence existed. The pre-registered discovery question -- unchanged
+after seeing the outcome, per standing discipline -- was: does XOM
+materially lag the change in oil economics after the market has had an
+opportunity to price the new information?
+
+**Completed-session evidence (2026-09-04 baseline through 2026-09-10,
+latest completed session):** XOM +3.61% cumulative, CVX +1.99%, XLE +1.36%.
+XOM led both peers on every single completed session in the window, and
+the gap widened (not narrowed) by the final session. USO (a provider-
+sourced WTI-tracking proxy, used because the current provider stack has no
+primary WTI/Brent series -- a disclosed infrastructure gap, not routed
+around) rose +11.57% over the same window; all three equities
+under-reacted to the commodity move relative to itself, uniformly and as
+expected for integrated-major economics -- not as an XOM-specific lag.
+
+**Finding:** the pre-registered lag never materialized. There was no
+relative dislocation for a candidate variant to explain. Secondary
+evidence reviewed (ceasefire-negotiation coverage, a partial pullback in
+the oil proxy on the following, uncertified session) further supports a
+temporary-event-trade reading over a durable one, reinforcing rather than
+being needed to reach the disposition.
+
+**Disposition: `NO_DEMONSTRATED_EDGE`.** Per the governing work order's own
+explicit instruction, this is recorded as a successful Pilot 3
+discovery-system outcome, not a failed candidate: Agent World surfaced a
+coherent, evidence-testable hypothesis at the moment the news broke, and
+Atlas's discipline of waiting for completed-session evidence rather than
+front-running it is what allowed the hypothesis to be cleanly falsified
+rather than acted on prematurely.
+
+**Fresh-price note:** Gate B's `bind_price_snapshot` correctly returned
+`STALE` for the live intraday quote (market open at decision time) for the
+same disclosed reason found in the DOCU deep underwriting -- the binder has
+no capability to bind a specific historical completed-session close. Per
+this work order's explicit instruction not to use intraday prices, the
+already-attested 2026-09-10 completed-session close was used directly; no
+new binding capability was added.
+
+**Batch 001/002 controls unchanged:** AVGO `BLOCKED_BY_MATERIAL_UNCERTAINTY`,
+SMH `REFERENCE_PEER_TAPE`, AAPL/JPM `CALENDAR_HOLD`, NVDA `REFERENCE_ONLY`;
+PATH `NO_DEMONSTRATED_EDGE`, MDB `NO_DEMONSTRATED_EDGE`, DOCU
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, SPXC `SURFACE_WITH_EVIDENCE_GAP`, SOLS
+`EVENT_DRIVEN_HOLD`, PCG `SURFACE_WITH_EVIDENCE_GAP`.
+
+**Explicitly not done:** no deep underwriting of XOM, no triage of
+SPXC/SOLS/PCG, no Stage 7 or Stage 8, no capital allocated, no Batch 003.
