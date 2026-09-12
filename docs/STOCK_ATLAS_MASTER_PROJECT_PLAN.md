@@ -224,7 +224,7 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **ACTIVE — BATCH 001 IN PROGRESS**
+> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 CHARTERED, NOT YET POPULATED**
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -408,16 +408,42 @@ record did not close `NO_DEMONSTRATED_EDGE`, but the load-bearing margin
 question resolved less favorably under scrutiny, so it was not advanced
 either.
 
+A Red Team review of Pilot 3's discovery-to-triage process
+(`pilot3/PILOT3_BATCH_003_CHARTER.md`) returned
+**`CONTINUE_WITH_NARROW_FIX`**: discovery is producing plausible,
+falsifiable ideas and underwriting is successfully rejecting false
+positives (zero Stage 7 survivors across twelve candidates is not itself
+treated as a failure), but discovery over-samples post-event/familiar-
+theme setups, and some candidates receive substantial work before the
+original hook is cheaply disproven. Two, and only two, narrow process
+fixes were adopted, **prospective only, beginning with Batch 003** — no
+prior record is rewritten: **`PILOT3_HOOK_RECONSTRUCTION_AT_TRIAGE`**
+(when a hook depends on acceleration, margin change, bookings/RPO,
+mix, or FCF improvement, triage must reconstruct that metric across the
+last 4 reporting periods, sequential and YoY, before the full variant is
+written — and must stop or block if the hook has already peaked, reversed,
+or flattened, absent an independent source of edge) and
+**`PILOT3_PRICED_IN_ONE_LINER`** (before advancing to deep underwriting,
+triage must state "for this to be mispriced, the market must currently be
+assuming ______" — if it cannot be stated credibly, no clear variant has
+been demonstrated). Batch 003 is chartered to test a different discovery
+pond (capital-allocation/balance-sheet change, neglected/lower-attention
+securities, competitor/industry read-through, quiet regulatory/structural
+change — not post-earnings selloffs, mega-cap themes, or generic AI
+exposure), targeting 4–6 candidates, **but remains unpopulated** — no
+Batch 003 candidate has been registered.
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
 recorded. PATH, MDB, XOM, and PCG are closed at `NO_DEMONSTRATED_EDGE`;
-DOCU, SPXC, and now SOLS are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`
+DOCU, SPXC, and SOLS are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`
 pending their respective named falsifiers (SOLS's most load-bearing:
 whether Q3 2026 RAS segment margin continues worsening, stabilizes, or
 reverses); AAPL is held at `EVIDENCE_GAP` pending the Oct 16 iPhone Duo
 preorder signal or Apple's Q4 FY2026 earnings call; JPM remains a
 calendar hold pending the September 16 FOMC decision. AVGO remains closed
 at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named
-falsifiers/revisit triggers.
+falsifiers/revisit triggers. Batch 003 is chartered but not populated —
+no candidate has been sourced or registered under it.
 
 ---
 

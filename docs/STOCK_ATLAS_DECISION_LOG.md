@@ -1236,3 +1236,71 @@ registered. No Stage 7, no Stage 8, no capital allocated, no control-layer
 or facade change.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+## PILOT3_NARROW_DISCOVERY_FIX_AND_BATCH003_CHARTER_RESULT (2026-09-12)
+
+**Red Team verdict:** `CONTINUE_WITH_NARROW_FIX`. Pilot 3 discovery is
+producing plausible, falsifiable ideas and underwriting is successfully
+rejecting false positives; zero Stage 7 survivors across twelve Batch
+001/002 candidates is not treated as a failure by itself. Two specific
+weaknesses are named: discovery over-samples post-event/familiar-theme
+setups, and some candidates receive substantial work before the original
+hook is cheaply disproven. No other finding is adopted as a process
+change.
+
+**Decision `PILOT3_HOOK_RECONSTRUCTION_AT_TRIAGE`:** when a discovery
+hook depends materially on acceleration, margin change, bookings/RPO,
+segment/product mix, FCF improvement, or new-product penetration, triage
+must first reconstruct that metric across the last 4 reporting periods
+(sequential and YoY trend, one mix line if relevant) before the full
+candidate variant is written. If the hook has already peaked, reversed,
+or flattened materially, triage must stop or block unless an independent
+source of edge remains. No historical-data engine is built — a
+human-readable, four-period check using the same primary-source tools
+already used throughout this pilot.
+
+**Decision `PILOT3_PRICED_IN_ONE_LINER`:** before any candidate advances
+from triage to deep underwriting, triage must state: "for this to be
+mispriced, the market must currently be assuming ______." If this cannot
+be stated credibly from evidence gathered, no clear variant has been
+demonstrated, and the candidate does not advance on that basis alone. No
+pricing engine is built — a one-sentence variant-clarity gate.
+
+**Both fixes are prospective only, beginning with Batch 003.** No prior
+Pilot 3 record (AVGO, PATH, MDB, SPXC, SOLS, PCG, DOCU, XOM, AAPL, JPM,
+SMH, NVDA, or the underlying `PILOT3_RECORD_001.md`) is modified,
+annotated, or reopened.
+
+**Batch 003 charter recorded** (`pilot3/PILOT3_BATCH_003_CHARTER.md`):
+targets a different discovery pond — capital-allocation/balance-sheet
+change, neglected/lower-attention securities, competitor/industry
+read-through, and quiet regulatory/structural change — explicitly
+avoiding post-earnings selloffs, mega-cap thematic names, "beat and raise
+but stock fell," one-line cheapness, and generic AI exposure. Target size
+4–6 candidates, quality over quantity, no market-cap rule. A required
+per-candidate discovery-record template is defined (source, hook,
+economic rationale, 4-period reconstruction where applicable, priced-in
+one-liner, tentative variant, market-could-be-right alternative, cheapest
+falsification test, evidence gap, initial disposition —
+`SURFACE_FOR_TRIAGE` / `SURFACE_WITH_EVIDENCE_GAP` / `IGNORE` only, no
+funding or ranking). Cheap-falsification discipline is restated as a
+general principle (kill weak hooks sooner; deep-underwrite only
+survivors). A false-negative-awareness learning note is recorded for a
+future Loop C / outcome-learning process (not built now). Shadow
+sentiment is restated as unchanged: recorded separately if observed,
+never used to promote/block/fund, no sentiment score.
+
+**Current interpretation recorded:** Pilot 3 is demonstrating strong
+false-positive control but has not yet demonstrated repeatable discovery
+of missed investable alpha. Batch 003 tests whether a more diverse,
+under-the-surface discovery source can produce a candidate that survives
+to Stage 7 without weakening underwriting standards — the underwriting
+bar itself is unchanged by this charter.
+
+**Batch 003 remains unpopulated** — no candidate created, sourced, or
+registered by this record. No prior record modified. No scoring, ranking,
+sentiment-promotion, or new discovery/pricing engine built. No Stage 7,
+no Stage 8, no advance of JPM or AAPL, no change to the control layer,
+facade, or core architecture.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
