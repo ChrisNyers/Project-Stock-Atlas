@@ -1304,3 +1304,60 @@ no Stage 8, no advance of JPM or AAPL, no change to the control layer,
 facade, or core architecture.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+## PILOT3_BATCH003_REGISTRATION_AND_NHP_TRIAGE_RESULT (2026-09-12)
+
+**Batch 003 registered** (`pilot3/PILOT3_BATCH_003_REGISTRATION.md`),
+source `GROK_SCOUT_UNDER_SURFACE_DISCOVERY`, as-of 2026-09-12: NHP
+(National Healthcare Properties, Inc., CIK 0001561032, Nasdaq Global
+Market MIC XNMS), UCB (United Community Banks, Inc., CIK 0000857855,
+NYSE MIC XNYS), NNBR (NN, Inc., CIK 0000918541, Nasdaq MIC XNGS), SAIA
+(Saia, Inc., CIK 0001177702, Nasdaq MIC XNGS), and TCS (Tecsys Inc.,
+Toronto Stock Exchange, MIC XTSE — not SEC-registered, not researched
+beyond identity per instruction). Two real ticker collisions were
+identified and resolved explicitly rather than assumed: UCB also names a
+Belgian pharmaceutical company (UCB SA, Euronext Brussels) and a stale
+former-ticker artifact (UCBI, Nasdaq); TCS also names Tata Consultancy
+Services (India) and, on certain German venues, Axon Enterprise. Scout's
+characterization of NHP as the "best research-use-of-time candidate" was
+explicitly disregarded as a ranking input. Only NHP was triaged in this
+record; UCB, NNBR, SAIA, and TCS remain registered at
+`SURFACE_FOR_TRIAGE` only.
+
+**NHP primary-evidence triage** (`pilot3/PILOT3_NHP_PRIMARY_EVIDENCE_TRIAGE_001.md`)
+— the first record governed by the two Batch 003 narrow fixes — returned
+**`NO_DEMONSTRATED_EDGE`**. The discovery hook (OMF portfolio-sale
+proceeds reducing debt beyond the sold properties' own collateral, plus
+a full preferred-stock redemption, improving the capital stack for
+common shareholders) was tested via the mandatory `PILOT3_HOOK_
+RECONSTRUCTION_AT_TRIAGE` 4/5-period reconstruction of FFO/share,
+Normalized FFO/share, and net leverage across Q2 2025 through Q2 2026.
+The reconstruction found net leverage improved sharply (9.6x to 4.9x)
+and Normalized FFO per diluted share fell 18.2% year-over-year, both in
+the same quarter (Q2 2026) — before either the OMF sale or the preferred
+redemptions had actually occurred. Independent XBRL verification found
+the true driver: a ~156%-dilutive common equity offering (44,275,000
+Class A shares, ~$531.3M gross proceeds, closed April 23, 2026), not the
+asset sale or preferred redemption, funded the revolver paydown and
+produced the leverage improvement, while mechanically explaining the
+per-share FFO decline. The `PILOT3_PRICED_IN_ONE_LINER` gate was applied
+and could be stated credibly, but the stated one-liner's premise was not
+supported by the evidence gathered. Direct completed-session price
+review found the market's reaction to the September 10 first-tranche
+closing was negative (-1.87% over two sessions), not positive, and that
+the bulk of the leverage-improvement news had already been rewarded in
+an August 5-7 rally (+11.2%) five weeks before Scout's discovery date.
+Closed `NO_DEMONSTRATED_EDGE`, framed as a successful discovery-system
+outcome: the narrow fixes killed a plausible-sounding hook cheaply, on
+primary evidence, before a full deep-underwriting variant was written
+around it.
+
+**Confirmed unchanged:** PATH/MDB/XOM/PCG `NO_DEMONSTRATED_EDGE`;
+DOCU/SPXC/SOLS `BLOCKED_BY_MATERIAL_UNCERTAINTY`; AVGO
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`; AAPL `EVIDENCE_GAP`; JPM
+`CALENDAR_HOLD` (not advanced); SMH `REFERENCE_PEER_TAPE`; NVDA
+`REFERENCE_ONLY`. No deep underwriting of NHP. No triage of UCB, NNBR,
+SAIA, or TCS. No research of TCS. No Stage 7, no Stage 8, no capital
+allocated, no control-layer or facade change.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**

@@ -224,7 +224,7 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 CHARTERED, NOT YET POPULATED**
+> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP TRIAGED)**
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -430,20 +430,47 @@ been demonstrated). Batch 003 is chartered to test a different discovery
 pond (capital-allocation/balance-sheet change, neglected/lower-attention
 securities, competitor/industry read-through, quiet regulatory/structural
 change — not post-earnings selloffs, mega-cap themes, or generic AI
-exposure), targeting 4–6 candidates, **but remains unpopulated** — no
-Batch 003 candidate has been registered.
+exposure), targeting 4–6 candidates.
+
+**Batch 003 registration** (`pilot3/PILOT3_BATCH_003_REGISTRATION.md`),
+source `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` (as-of 2026-09-12): five
+candidates registered — NHP, UCB, NNBR, SAIA, and TCS (TSX) — with
+canonical identity verified for each, including two real ticker
+collisions resolved explicitly (UCB vs. Belgian pharmaceutical UCB SA;
+TCS vs. Tata Consultancy Services and a German-venue Axon Enterprise
+listing, resolved to Tecsys Inc., TSX, without researching the company
+further, per instruction). Only NHP received primary-evidence triage.
+Scout's characterization of NHP as the "best research-use-of-time
+candidate" was explicitly disregarded as a ranking input.
+
+**NHP's primary-evidence triage** (`pilot3/PILOT3_NHP_PRIMARY_EVIDENCE_TRIAGE_001.md`),
+the first record governed by the two new narrow fixes, returned
+`NO_DEMONSTRATED_EDGE`: the discovery hook (an outpatient-medical
+portfolio sale paying down debt beyond the sold properties' own
+collateral, plus a full preferred-stock redemption, improving the
+capital stack for common shareholders) was tested via the mandatory
+4-period hook reconstruction and found directly contradicted, not merely
+unresolved — a ~156%-dilutive common equity raise ($531.3M gross, closed
+April 23, 2026), not the asset sale or preferred redemption, was the
+primary-sourced driver of the year's leverage improvement (9.6x→4.9x net
+leverage), and Normalized FFO per diluted share fell 18.2% year-over-year
+in the same quarter. The market's own reaction to the September 10
+first-tranche closing was negative, not positive. Treated as a
+successful discovery-system outcome — the narrow fixes killed a
+plausible-sounding hook cheaply, before a full variant was written.
 
 **Current active next action:** none authorized in Pilot 3 beyond what is
-recorded. PATH, MDB, XOM, and PCG are closed at `NO_DEMONSTRATED_EDGE`;
-DOCU, SPXC, and SOLS are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`
-pending their respective named falsifiers (SOLS's most load-bearing:
-whether Q3 2026 RAS segment margin continues worsening, stabilizes, or
-reverses); AAPL is held at `EVIDENCE_GAP` pending the Oct 16 iPhone Duo
-preorder signal or Apple's Q4 FY2026 earnings call; JPM remains a
-calendar hold pending the September 16 FOMC decision. AVGO remains closed
-at `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named
-falsifiers/revisit triggers. Batch 003 is chartered but not populated —
-no candidate has been sourced or registered under it.
+recorded. PATH, MDB, XOM, PCG, and now NHP are closed at
+`NO_DEMONSTRATED_EDGE`; DOCU, SPXC, and SOLS are closed at
+`BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their respective named
+falsifiers (SOLS's most load-bearing: whether Q3 2026 RAS segment margin
+continues worsening, stabilizes, or reverses); AAPL is held at
+`EVIDENCE_GAP` pending the Oct 16 iPhone Duo preorder signal or Apple's
+Q4 FY2026 earnings call; JPM remains a calendar hold pending the
+September 16 FOMC decision. AVGO remains closed at
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
+triggers. UCB, NNBR, SAIA, and TCS remain registered only
+(`SURFACE_FOR_TRIAGE`) — not triaged, pending a future work order.
 
 ---
 
