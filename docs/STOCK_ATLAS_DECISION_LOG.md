@@ -1917,3 +1917,37 @@ charter).
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT3_TO_PILOT5_RENUMBERING_CORRECTION (2026-09-14)
+
+**Correction to the entry above** (`PILOT3_FORMAL_CLOSEOUT_AND_PILOT4_TRANSITION_RESULT`),
+**appended, not rewritten**, per this project's standing discipline
+against altering already-recorded decision-log history.
+
+**What happened:** the prior entry, and the Master Project Plan /
+closeout record it summarized, labeled the newly chartered forced-flow/
+ownership-dislocation experiment **"Pilot 4."** `docs/pilot4/` already
+contains a separate, complete, frozen pilot dated September 2, 2026 —
+the COST/PH/AMGN incumbent-substitution test that established the
+"two-bar rule" (cash-initiation ≠ incumbent-substitution,
+`pilot4/PILOT4_HEALTH_LEARNING_001.md`,
+`PILOT4_STAGE7_FINAL_RECORD_001.md`, `PILOT4_STAGE8_HUMAN_DECISION_001.md`)
+— substantively unrelated to forced-flow/ownership-dislocation
+discovery. This was a genuine numbering collision, introduced without
+first checking the repository for prior use of the number.
+
+**Correction:** the new experiment is renumbered **Pilot 5**. The verdict
+identifier is corrected to `CLOSE_PILOT3_ADVANCE_TO_PILOT5`.
+`docs/pilot3/PILOT3_CLOSEOUT_AND_PILOT4_TRANSITION.md` was replaced with
+`docs/pilot3/PILOT3_CLOSEOUT_AND_PILOT5_TRANSITION.md` (same content,
+numbering only, plus a disambiguation note); the Master Project Plan's
+Pilot 3 status block and its chartered-pilot section were corrected the
+same way, with disambiguation notes added in both places. **This is a
+numbering correction only — no substantive conclusion, learning
+objective, governance content, or experiment design from the prior
+entry changed.** The frozen `docs/pilot4/` materials are, and remain,
+completely untouched — verified zero-diff.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

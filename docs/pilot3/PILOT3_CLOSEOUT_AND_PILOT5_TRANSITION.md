@@ -1,7 +1,7 @@
-# PILOT 3 FORMAL CLOSEOUT + PILOT 4 TRANSITION
+# PILOT 3 FORMAL CLOSEOUT + PILOT 5 TRANSITION
 
 > **PAPER / SHADOW ONLY — NO REAL PORTFOLIO ACTION**
-> Closeout and transition controls only. No Pilot 4 candidates. No new
+> Closeout and transition controls only. No Pilot 5 candidates. No new
 > architecture, fields, engines, scoring, governance, or workflow
 > layers. No frozen company record is rewritten by this document.
 
@@ -11,11 +11,20 @@
 | Governed by | Two Red Team reviews (Batch 002 closeout; Batch 003 narrow-fix review) |
 | Prior state | Pilot 3 `ACTIVE` — Batch 003 fully triaged (NNBR `BLOCKED_BY_MATERIAL_UNCERTAINTY`; all other Batch 003 candidates `NO_DEMONSTRATED_EDGE`) |
 
+**Numbering note:** The next experiment is numbered **Pilot 5**, not
+Pilot 4. `docs/pilot4/` already holds a separate, complete, frozen
+pilot (September 2, 2026 — the COST/PH/AMGN incumbent-substitution test
+and its "two-bar rule"), unrelated to forced-flow/ownership-dislocation
+discovery. This document originally, in error, labeled the new
+experiment "Pilot 4"; it has been corrected to Pilot 5, numbering only —
+no substantive conclusion, learning objective, or governance content
+changed. The frozen Pilot 4 materials are untouched.
+
 ---
 
 ## 1. Formal Pilot 3 verdict
 
-> ## `CLOSE_PILOT3_ADVANCE_TO_PILOT4`
+> ## `CLOSE_PILOT3_ADVANCE_TO_PILOT5`
 
 **Pilot 3 is complete.** No further Pilot 3 batch will be created. This
 does not rewrite or reopen any frozen Pilot 3 company record (NHP, UCB,
@@ -139,7 +148,7 @@ document.**
 
 ---
 
-## 6. Quiet-change learning — carried forward as a Pilot 4 question only
+## 6. Quiet-change learning — carried forward as a Pilot 5 question only
 
 > What economically important change is occurring before it becomes the
 > headline?
@@ -175,18 +184,18 @@ is created by this question.**
 
 ---
 
-## 9. Recognition / half-life question — carried forward as a temporary Pilot 4 learning observation only
+## 9. Recognition / half-life question — carried forward as a temporary Pilot 5 learning observation only
 
-During Pilot 4, ask qualitatively: *"Has the tape already paid the
+During Pilot 5, ask qualitatively: *"Has the tape already paid the
 thesis?"* and *"Is enough opportunity still available to justify further
 research?"* Where useful, the opportunity may be described as **before
 recognition**, **during recognition**, or **after recognition** — but
-only as a temporary Pilot 4 learning observation. **No permanent
+only as a temporary Pilot 5 learning observation. **No permanent
 canonical field is created.**
 
 ---
 
-## 10. Pilot 4 new information family
+## 10. Pilot 5 new information family
 
 Under the standing **One-New-Information-Family-Per-Pilot Guardrail**
 (`STOCK_ATLAS_MASTER_PROJECT_PLAN.md`, Governance Classification), Pilot
@@ -202,7 +211,7 @@ pressure. **No permanent taxonomy is established by this list.**
 
 ---
 
-## 11. Pilot 4 primary learning objective
+## 11. Pilot 5 primary learning objective
 
 > Can forced-flow / ownership dislocation uncover a security whose
 > price is temporarily disconnected from underlying economics, early
@@ -211,9 +220,9 @@ pressure. **No permanent taxonomy is established by this list.**
 
 ---
 
-## 12. Pilot 4 questions
+## 12. Pilot 5 questions
 
-Pilot 4 should ask:
+Pilot 5 should ask:
 
 - Is the selling/buying pressure genuinely non-fundamental?
 - Why must the affected holder transact?
@@ -241,7 +250,7 @@ Sentiment remains:
 If naturally observed, it may help Atlas learn about attention,
 crowding, recognition, or narrative movement. **It cannot promote,
 reject, rank, size, or allocate.** **No formal sentiment implementation
-is authorized in Pilot 4.**
+is authorized in Pilot 5.**
 
 ---
 
@@ -299,14 +308,14 @@ it.)
 Kept as future hypotheses only, per the Governance Classification's
 Roadmap Hypotheses tier: capital-cycle / capacity; formal sentiment/
 news/trend testing; credit-vs-equity divergence; statistical / ML
-learning; CX / Claude Design work beginning late Pilot 4. **None are
+learning; CX / Claude Design work beginning late Pilot 5. **None are
 activated by this document.**
 
 ---
 
-## 19. Confirmation — no Pilot 4 candidates created
+## 19. Confirmation — no Pilot 5 candidates created
 
-**No Pilot 4 candidate has been surfaced, registered, or researched by
+**No Pilot 5 candidate has been surfaced, registered, or researched by
 this document.** No forced-flow/ownership-dislocation research has
 begun. This document establishes only the learning objective and
 boundaries recorded in §10-§12 above.
@@ -315,7 +324,7 @@ boundaries recorded in §10-§12 above.
 
 ## What this record does not do
 
-No Pilot 4 candidates. No new architecture, fields, engines, scoring,
+No Pilot 5 candidates. No new architecture, fields, engines, scoring,
 governance, or workflow layers. No expansion of the two narrow fixes.
 No formal sentiment implementation. No optimizer. No new provenance
 system. No permanent canonical field for recognition/half-life. No

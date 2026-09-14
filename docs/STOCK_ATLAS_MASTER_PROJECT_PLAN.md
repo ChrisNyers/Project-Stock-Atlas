@@ -326,8 +326,16 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **CLOSED — `CLOSE_PILOT3_ADVANCE_TO_PILOT4`** (see
-> `pilot3/PILOT3_CLOSEOUT_AND_PILOT4_TRANSITION.md`)
+> ### Status: **CLOSED — `CLOSE_PILOT3_ADVANCE_TO_PILOT5`** (see
+> `pilot3/PILOT3_CLOSEOUT_AND_PILOT5_TRANSITION.md`)
+>
+> **Numbering note:** the next experiment is **Pilot 5**, not Pilot 4.
+> `docs/pilot4/` already holds a separate, complete, frozen pilot
+> (September 2, 2026 — the COST/PH/AMGN incumbent-substitution test and
+> its "two-bar rule"), unrelated to forced-flow/ownership-dislocation
+> discovery. An earlier draft of this closeout mislabeled the new
+> experiment "Pilot 4"; corrected here — numbering only, no substantive
+> change. The frozen Pilot 4 materials are untouched.
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -692,8 +700,8 @@ cover the name, but trading liquidity is genuinely thin) as a Pilot 3
 learning observation.
 
 **Pilot 3 formal closeout**
-(`pilot3/PILOT3_CLOSEOUT_AND_PILOT4_TRANSITION.md`) recorded, following
-two Red Team reviews. **Verdict: `CLOSE_PILOT3_ADVANCE_TO_PILOT4`. No
+(`pilot3/PILOT3_CLOSEOUT_AND_PILOT5_TRANSITION.md`) recorded, following
+two Red Team reviews. **Verdict: `CLOSE_PILOT3_ADVANCE_TO_PILOT5`. No
 further Pilot 3 batch will be created.** Pilot 3 proved: broader
 discovery mechanisms beyond headline/event setups; improved Scout
 opportunity quality without source privilege; Hook Reconstruction can
@@ -720,18 +728,23 @@ AAPL `EVIDENCE_GAP`; JPM `CALENDAR_HOLD`; AVGO
 `BLOCKED_BY_MATERIAL_UNCERTAINTY`; SMH `REFERENCE_PEER_TAPE`; NVDA
 `REFERENCE_ONLY`. No Batch 003 or prior candidate is authorized to
 advance further without an explicit new work order. **Current active
-next action: none — Pilot 3 is closed; Pilot 4 (below) is chartered but
-no Pilot 4 candidate has been created.**
+next action: none — Pilot 3 is closed; Pilot 5 (below) is chartered but
+no Pilot 5 candidate has been created.**
 
 ---
 
-## Pilot 4 — FORCED_FLOW / OWNERSHIP_DISLOCATION
+## Pilot 5 — FORCED_FLOW / OWNERSHIP_DISLOCATION
 
 > ### Status: **CHARTERED, NOT ACTIVE — no candidates created**
 
-Full charter in `pilot3/PILOT3_CLOSEOUT_AND_PILOT4_TRANSITION.md`
+**Numbering note:** this is Pilot 5, not Pilot 4 — `docs/pilot4/`
+already holds a separate, complete, frozen, unrelated pilot (September
+2, 2026, COST/PH/AMGN incumbent-substitution test). See the numbering
+note in the Pilot 3 status block above.
+
+Full charter in `pilot3/PILOT3_CLOSEOUT_AND_PILOT5_TRANSITION.md`
 §10-§19. Under the standing One-New-Information-Family-Per-Pilot
-Guardrail, Pilot 4 tests one new, experimental discovery family:
+Guardrail, Pilot 5 tests one new, experimental discovery family:
 **`FORCED_FLOW / OWNERSHIP_DISLOCATION`** (index inclusion/exclusion,
 spin-off selling, mandate-driven selling, forced deleveraging, holder
 transition, fund/redemption pressure, lockup effects, tax-related
@@ -755,7 +768,7 @@ sufficient — no new provenance system); the best-expression question
 another company, supplier/customer/competitor, sector/factor beta, SPY,
 commodities, Treasury/Cash, or Do Nothing? — no optimizer); the
 recognition/half-life question (before/during/after recognition — a
-temporary Pilot 4 learning observation, not a permanent canonical
+temporary Pilot 5 learning observation, not a permanent canonical
 field). Sentiment remains `SHADOW_ONLY` — no formal sentiment
 implementation. Beta (including SPY) remains a live, legitimate capital
 alternative — no separate beta engine. Infrastructure restraint carried
@@ -763,7 +776,7 @@ forward explicitly: no XTSE support, second market-data vendor,
 sentiment provider, valuation engine, ownership-data infrastructure, or
 ML/statistical tooling unless an actual decision problem earns it.
 
-**No Pilot 4 candidate has been surfaced, registered, or researched.**
+**No Pilot 5 candidate has been surfaced, registered, or researched.**
 No forced-flow research has begun.
 
 ---
