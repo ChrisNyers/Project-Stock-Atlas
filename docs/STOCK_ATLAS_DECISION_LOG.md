@@ -1765,3 +1765,78 @@ NNBR remains `BLOCKED_BY_MATERIAL_UNCERTAINTY`; TCS remains
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT3_TCS_PRIMARY_EVIDENCE_TRIAGE_RESULT (2026-09-14)
+
+**Candidate:** TCS — Tecsys Inc. (`PILOT3_TCS_PRIMARY_EVIDENCE_TRIAGE_001.md`).
+**Discovery type:** `NEGLECTED / INSTALLED_BASE_EXPANSION`. Fifth and
+final Batch 003 candidate — **Batch 003 discovery/triage is now
+complete.**
+
+**Result: `NO_DEMONSTRATED_EDGE`.** Every headline fact in Scout's hook
+(total revenue ~C$50.0M, SaaS revenue ~C$22.7M, total SaaS growth ~18%,
+Elite SaaS growth ~24%, ARR ~C$93.7M, RPO ~C$259.2M, Adjusted EBITDA
+~C$6.9M, FY2027 Elite SaaS guidance raised to 21-23%, NCIB activity,
+C$0.09 dividend) was verified precisely against primary sources
+(Q1 FY2027 earnings release, interim financial statements and MD&A,
+investor presentation, Note 7 remaining-performance-obligation
+disclosure) — a materially different starting point than NHP, UCB, or
+SAIA, whose hooks required significant reframing. The aggregate
+installed-base-expansion mechanism strengthened under the mandatory
+hook reconstruction: Elite SaaS ARR net retention reached 111% (LTM),
+climbing from ~102% several quarters earlier, and Elite ARR growth
+itself accelerated from ~18.6% to 24% YoY, masked in the blended
+total-SaaS figure by shrinking non-Elite legacy attrition.
+
+**Promotion failed on a different dimension than a broken hook.**
+Scout's specifically named customer expansions (Prisma Health, UT
+Southwestern, a cancer center) could not be corroborated in any primary
+Tecsys disclosure reviewed. FY2027 guidance (Elite SaaS growth, total
+SaaS growth, total revenue growth, and Adjusted EBITDA margin, all
+raised) was announced the same day (September 10, 2026) as the hook's
+underlying Q1 results, meaning management had already incorporated the
+installed-base-expansion evidence into its own forward guidance before
+this triage began. The market's own reaction (~+11% cumulative over the
+following days, concentrated in one high-volume session on T+1)
+indicated the story had already begun to be priced, not overlooked, by
+the evidence date. The cheapest-falsification test came back split:
+strong on margin/cash-conversion improvement (Adjusted EBITDA margin
+roughly doubled YoY for the same quarter; operating cash flow swung
+~C$9.7M favorably), weak on "not already captured in guidance."
+
+**A secondary, genuine negative finding**: Professional Services
+Backlog fell 37-38% YoY, with management explicitly guiding to a near-
+term professional-services revenue decline in Q2 FY2027 — a real,
+disclosed headwind the original hook did not surface. Note 7 also
+showed nearly half of SaaS RPO does not convert to revenue until Fiscal
+2029 or later, qualifying the "RPO growth" half of the hook without
+contradicting it (RPO is confirmed SaaS-only, not conflated with
+services backlog).
+
+**Gate B could not be attempted for this security at all** — `XTSE` is
+not a MIC supported by the live session calendar, and the configured
+TwelveData plan does not cover TSX-listed names. This was disclosed
+plainly as a genuine data-availability limitation, not worked around; a
+coarse valuation checkpoint was instead built from the company's own
+disclosed market capitalization (C$482M as of July 31, 2026) and
+clearly-labeled uncertified secondary price data, showing a full,
+growth-company multiple (~17.6x EV/EBITDA, ~4.45x EV/ARR), not a
+depressed one.
+
+**Neglect classification: `NEGLECT_PARTIAL`** — six sell-side analysts
+cover the name (not conventionally "neglected"), but trading liquidity
+is genuinely thin (a few hundred to a few thousand shares/day on
+non-event days), a real mechanism by which price discovery could still
+lag available information. **Uncertainty classification:
+`POTENTIAL_SOURCE_OF_EDGE`** — whether the expansion mechanism continues
+accelerating beyond the just-raised guidance is evidence-gatherable, not
+currently working against the thesis.
+
+**No deep underwriting of TCS.** NHP, UCB, SAIA remain
+`NO_DEMONSTRATED_EDGE`; NNBR remains `BLOCKED_BY_MATERIAL_UNCERTAINTY`.
+No Batch 003 candidate advances further without an explicit new work
+order. No Batch 004 started.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

@@ -326,7 +326,7 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB, SAIA CLOSED; NNBR DEEP-UNDERWRITTEN AND BLOCKED; TCS UNTOUCHED)**
+> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 FULLY TRIAGED (NHP, UCB, SAIA, TCS CLOSED; NNBR DEEP-UNDERWRITTEN AND BLOCKED)**
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -659,20 +659,53 @@ Saia's own disclosures, not the read-through. Classified
 `READ_THROUGH_PARTIAL` — a genuine but non-transferable industry
 pricing-discipline signal — as a Pilot 3 learning observation.
 
+**TCS primary-evidence triage**
+(`pilot3/PILOT3_TCS_PRIMARY_EVIDENCE_TRIAGE_001.md`) closed
+**`NO_DEMONSTRATED_EDGE`** — the fifth and final Batch 003 candidate,
+completing the batch. Every headline fact in Scout's `NEGLECTED /
+INSTALLED_BASE_EXPANSION` hook (revenue, SaaS revenue/growth, Elite SaaS
+growth, ARR, RPO, Adjusted EBITDA, raised FY2027 guidance, NCIB,
+dividend) verified precisely against primary sources — a notably
+different starting point than NHP, UCB, or SAIA — and the aggregate
+installed-base-expansion mechanism strengthened under the mandatory hook
+reconstruction: Elite SaaS ARR net retention reached 111% (LTM),
+climbing from ~102% several quarters earlier, and Elite ARR growth
+itself accelerated to 24% YoY beneath a merely-stable blended total-SaaS
+figure (masked by shrinking non-Elite attrition). Promotion failed on a
+different dimension than a broken hook: Scout's specifically named
+customer expansions (Prisma Health, UT Southwestern, a cancer center)
+could not be corroborated in any primary Tecsys disclosure reviewed;
+FY2027 guidance was raised the same day (September 10, 2026) as the
+hook's underlying Q1 results, meaning the evidence is already reflected
+in management's own forward guidance; and the market's own reaction
+(~+11% over the following days, concentrated in one high-volume session)
+indicated the story had already begun to be priced by the evidence date.
+Gate B could not be attempted for this security at all — `XTSE` is not a
+MIC supported by the live session calendar, and the configured
+TwelveData plan does not cover TSX-listed names — disclosed plainly as a
+genuine data-availability limitation rather than worked around; a
+coarse valuation was built instead from the company's own disclosed
+market capitalization and uncertified secondary price data, labeled as
+such throughout. Classified `NEGLECT_PARTIAL` (six sell-side analysts
+cover the name, but trading liquidity is genuinely thin) as a Pilot 3
+learning observation.
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
-recorded. PATH, MDB, XOM, PCG, NHP, UCB, and now SAIA are closed at
-`NO_DEMONSTRATED_EDGE`; DOCU, SPXC, SOLS, and NNBR are closed at
-`BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their respective named
-falsifiers (SOLS's most load-bearing: whether Q3 2026 RAS segment margin
-continues worsening, stabilizes, or reverses; NNBR's: whether capex
-actually ramps toward the guided $35-40M run-rate and free cash flow
-proves durable beyond one quarter); AAPL is held at `EVIDENCE_GAP`
-pending the Oct 16 iPhone Duo preorder signal or Apple's Q4 FY2026
-earnings call; JPM remains a calendar hold pending the September 16
-FOMC decision. AVGO remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`,
-pending its named falsifiers/revisit triggers. TCS remains registered
-only (`SURFACE_FOR_TRIAGE`) — not triaged, not researched, pending a
-future work order.
+recorded. Batch 003 discovery/triage is complete: PATH, MDB, XOM, PCG,
+NHP, UCB, SAIA, and TCS are closed at `NO_DEMONSTRATED_EDGE`; DOCU,
+SPXC, SOLS, and NNBR are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`
+pending their respective named falsifiers (SOLS's most load-bearing:
+whether Q3 2026 RAS segment margin continues worsening, stabilizes, or
+reverses; NNBR's: whether capex actually ramps toward the guided
+$35-40M run-rate and free cash flow proves durable beyond one quarter);
+AAPL is held at `EVIDENCE_GAP` pending the Oct 16 iPhone Duo preorder
+signal or Apple's Q4 FY2026 earnings call; JPM remains a calendar hold
+pending the September 16 FOMC decision. AVGO remains closed at
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
+triggers. No Batch 003 candidate is authorized to advance further
+without an explicit new work order (NNBR's own blocking uncertainty
+would need to be resolved first, and no deep underwriting is authorized
+for any other Batch 003 candidate); Batch 004 has not been chartered.
 
 ---
 

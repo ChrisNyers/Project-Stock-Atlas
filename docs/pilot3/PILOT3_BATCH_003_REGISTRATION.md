@@ -2,11 +2,10 @@
 
 > **PAPER / SHADOW ONLY — NO REAL PORTFOLIO ACTION**
 > Registers five Scout-surfaced candidates under the rules chartered in
-> `PILOT3_BATCH_003_CHARTER.md`. NHP, UCB, NNBR, and SAIA have each since
-> received full primary-evidence triage in their own dedicated records
-> (cross-referenced below); NNBR additionally received deep underwriting.
-> **TCS remains registered only** — not triaged, not researched beyond
-> canonical identity, per every work order to date.
+> `PILOT3_BATCH_003_CHARTER.md`. **All five candidates (NHP, UCB, NNBR,
+> SAIA, TCS) have now received full primary-evidence triage** in their
+> own dedicated records (cross-referenced below); NNBR additionally
+> received deep underwriting. Batch 003 discovery/triage is complete.
 
 | | |
 |---|---|
@@ -45,7 +44,7 @@ from the discovery source's own confidence claim.
 | UCB | United Community Banks, Inc. | SEC CIK `0000857855` | UCB | NYSE, MIC `XNYS` | `NO_DEMONSTRATED_EDGE` (see triage record) |
 | NNBR | NN, Inc. | SEC CIK `0000918541` | NNBR | Nasdaq Global Select, MIC `XNGS` | `BLOCKED_BY_MATERIAL_UNCERTAINTY` — deep underwriting closed (see `PILOT3_NNBR_DEEP_UNDERWRITING_001.md`) |
 | SAIA | Saia, Inc. | SEC CIK `0001177702` | SAIA | Nasdaq Global Select, MIC `XNGS` | `NO_DEMONSTRATED_EDGE` — see `PILOT3_SAIA_PRIMARY_EVIDENCE_TRIAGE_001.md` |
-| TCS | Tecsys Inc. | Canadian issuer — no SEC EDGAR CIK identified; not researched further per instruction | TCS | Toronto Stock Exchange, MIC `XTSE` (also cross-listed NEO, MIC `NEOE`) | `SURFACE_FOR_TRIAGE` — registered only, **identity only, not researched** |
+| TCS | Tecsys Inc. | Canadian issuer — no SEC EDGAR CIK identified | TCS | Toronto Stock Exchange, MIC `XTSE` (also cross-listed NEO, MIC `NEOE`) | `NO_DEMONSTRATED_EDGE` — see `PILOT3_TCS_PRIMARY_EVIDENCE_TRIAGE_001.md` |
 
 **Only NHP receives primary-evidence triage in this record.** UCB, NNBR,
 SAIA, and TCS are registered with canonical identity only — no
@@ -212,19 +211,29 @@ through. Classified `READ_THROUGH_PARTIAL` as a Pilot 3 learning
 observation — a genuine industry pricing-discipline signal exists but
 does not transfer with the specificity Scout's hook required.
 
-## TCS — remains registered, not triaged, not researched
+## TCS — full primary-evidence triage
 
-No discovery-hook detail, economic rationale, hook reconstruction,
-priced-in one-liner, candidate variant, market-could-be-right
-alternative, cheapest-falsification test, or evidence-gap assessment is
-recorded for this candidate in this record — no work order governing
-this registration has yet provided discovery-hook detail for it, and
-four successive work orders have explicitly instructed that it not be
-triaged or researched at all beyond the canonical-identity collision
-resolution above. **Initial disposition: `SURFACE_FOR_TRIAGE`**, pending
-a future work order that provides the discovery-hook detail needed to
-apply the required Batch 003 discovery-record template (§7 of the
-charter).
+Recorded separately in `PILOT3_TCS_PRIMARY_EVIDENCE_TRIAGE_001.md`.
+Disposition: **`NO_DEMONSTRATED_EDGE`**. Every headline fact in Scout's
+hook (revenue, SaaS revenue/growth, Elite SaaS growth, ARR, RPO,
+Adjusted EBITDA, raised FY2027 guidance, NCIB, dividend) verified
+precisely against primary sources, and the aggregate installed-base-
+expansion mechanism (Elite SaaS ARR net retention 111% LTM, climbing;
+Elite ARR accelerating to 24% YoY beneath a merely-stable blended total-
+SaaS figure) strengthened under the mandatory hook reconstruction —
+unlike NHP, UCB, or SAIA. Promotion failed on a different dimension:
+Scout's specifically named customer expansions (Prisma Health, UT
+Southwestern, a cancer center) could not be corroborated in any primary
+Tecsys disclosure; FY2027 guidance was raised the same day as the
+hook's underlying Q1 results, meaning the evidence is already reflected
+in management's own forward guidance; and the market's own reaction
+(~+11% over the following days) indicates the story has already begun
+to be priced. Gate B could not be attempted at all for this security
+(XTSE unsupported by the live session calendar; TwelveData's plan does
+not cover TSX-listed names) — disclosed as a genuine limitation, not
+worked around. Classified `NEGLECT_PARTIAL` (six analysts cover the
+name, but trading liquidity is genuinely thin) as a Pilot 3 learning
+observation. **Batch 003 is now fully triaged.**
 
 ---
 
@@ -245,7 +254,7 @@ promotion/blocking/funding logic — none arose in this record.
 | UCB | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the earnings-quality half of the hook nets to roughly zero on management's own bridge once an unrelated acquisition and unguided future growth are excluded; the credit-risk-reduction half is real but the market's own flat-to-negative reaction does not indicate it is under-recognized |
 | NNBR | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `BLOCKED_BY_MATERIAL_UNCERTAINTY` (deep underwriting) | Yes at triage (growth acceleration, margin expansion, mix shift, data-center revenue all corroborated and strengthened) and yes on the resolved Series D reconciliation (71.7% retired, not ~15%); deep underwriting then found the win pipeline is broader than triage knew (three ~$155M-TTM growth programs, a ~5x segment margin gap) but blocked promotion on capex execution never reaching guided run-rate across 8 quarters and free cash flow durability unproven |
 | SAIA | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` (`READ_THROUGH`) | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the ODFL-August-data read-through failed the cheapest-falsification test: SAIA's own Q3 guidance was already better-than-normal-seasonality a month before the hook, SAIA discloses its own monthly volume data contemporaneously with ODFL's release, ODFL's cited pricing metric was not new information, and the cost items most likely to drive SAIA's Q3 outcome are SAIA-specific and unrelated to ODFL's pricing environment. Classified `READ_THROUGH_PARTIAL` |
-| TCS | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged (not researched) | — |
+| TCS | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` (`NEGLECTED / INSTALLED_BASE_EXPANSION`) | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | Facts verified exactly; the aggregate installed-base-expansion mechanism (111% Elite SaaS net retention, Elite ARR accelerating to 24% YoY) strengthened under reconstruction — but Scout's named customer expansions (Prisma Health, UT Southwestern) could not be corroborated in any primary source, FY2027 guidance was raised the same day on the same results, and the market had already reacted ~+11% by the evidence date, leaving no demonstrated unpriced edge |
 
 No discovery score. This log records outcomes only.
 
@@ -253,7 +262,8 @@ No discovery score. This log records outcomes only.
 
 ## What this record does not do
 
-No triage or research of TCS. No Stage 7 or Stage 8. No capital
+No deep underwriting of TCS or any Batch 003 candidate beyond NNBR's
+already-recorded deep underwriting. No Stage 7 or Stage 8. No capital
 allocated. No architecture change. No scoring, ranking, or new engine.
 Batch 001 and Batch 002 are untouched. No advance of JPM or AAPL. No
 Batch 004.
