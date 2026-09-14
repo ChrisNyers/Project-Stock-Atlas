@@ -1840,3 +1840,80 @@ order. No Batch 004 started.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT3_FORMAL_CLOSEOUT_AND_PILOT4_TRANSITION_RESULT (2026-09-14)
+
+**Record:** `pilot3/PILOT3_CLOSEOUT_AND_PILOT4_TRANSITION.md`.
+**Verdict: `CLOSE_PILOT3_ADVANCE_TO_PILOT4`**, following two Red Team
+reviews. Pilot 3 is complete; no further Pilot 3 batch will be created.
+No frozen Pilot 3 company record is rewritten.
+
+**What Pilot 3 proved** (recorded in full in the closeout record):
+broader discovery mechanisms beyond headline/event setups; improved
+Scout opportunity quality without source privilege; Hook Reconstruction
+can cheaply falsify weak hooks (NHP's hidden dilutive raise, UCB's
+near-zero-net EPS bridge, SAIA's redundant read-through) without
+mechanically rejecting all candidates (NNBR's operating hook and TCS's
+installed-base mechanism both strengthened under reconstruction); the
+Priced-In One-Liner improves expectations-gap discipline (passed at
+NNBR, failed at SAIA and TCS); Atlas can distinguish company
+improvement from common-share value creation and productive from
+thesis-blocking uncertainty, both demonstrated within the single NNBR
+deep-underwriting record; competitor read-through requires a valid
+economic transmission mechanism (SAIA, the pilot's core read-through
+learning test); real business mechanisms may already be reflected in
+expectations and price (TCS, guidance raised and market already reacted
+on the same evidence); research intensity can be allocated selectively
+(NHP/UCB/SAIA closed at triage without deep underwriting); Atlas
+repeatedly added decision-relevant information beyond the original
+discovery hook in every closed record.
+
+**What Pilot 3 did not prove, recorded explicitly and not softened:** no
+Pilot 3 candidate reached Stage 7 capital comparison; discovery has not
+yet demonstrated repeatable investable alpha; Atlas has not yet
+demonstrated repeatable discovery before market recognition;
+false-negative calibration remains unproven; opportunity half-life
+remains poorly understood; Atlas has not yet demonstrated the
+originally surfaced security is consistently the best expression of a
+valid thesis.
+
+**The two narrow fixes (Hook Reconstruction at Triage; Priced-In
+One-Liner) are carried forward unchanged** — no expansion, no
+additional generic triage gate.
+
+**Pilot 4 chartered, not active.** New information family under the
+standing One-New-Information-Family-Per-Pilot Guardrail:
+`FORCED_FLOW / OWNERSHIP_DISLOCATION` (experimental only, no permanent
+taxonomy). Primary learning objective: can forced-flow/ownership
+dislocation uncover a security whose price is temporarily disconnected
+from underlying economics, early enough for Atlas to validate the
+opportunity and reach Stage 7 without lowering evidence or variant
+standards? Four research questions carried forward with no new
+architecture: quiet-change, original-source-vs-echo (existing
+provenance discipline sufficient, no new system), best-expression (no
+optimizer), and recognition/half-life (temporary learning observation,
+no permanent field). Sentiment remains `SHADOW_ONLY`, no formal
+implementation. Beta/SPY remain a live capital alternative, no separate
+engine. Scout closeout feedback recorded (prefer changes not yet
+obvious stories; identify original source; surface why the market might
+be wrong; consider whether the surfaced ticker is the best expression;
+bring the strongest contradictory fact — no Scout ranking or capital
+authority). Roadmap hypotheses (capital-cycle/capacity, formal
+sentiment/news/trend testing, credit-vs-equity divergence, statistical/
+ML learning, late-Pilot-4 CX/Claude Design work) preserved, not
+activated. Infrastructure restraint recorded: no XTSE support, second
+market-data vendor, sentiment provider, valuation engine, ownership-data
+infrastructure, or ML/statistical tooling unless an actual decision
+problem earns it.
+
+**No Pilot 4 candidate created. No forced-flow research begun. No new
+architecture, fields, engines, scoring, governance, or workflow layers
+added.** Master Project Plan updated: Pilot 3 status set to `CLOSED`;
+new Pilot 4 section added (`CHARTERED, NOT ACTIVE`). No architecture
+document created — the closeout lives in a Pilot 3 record, consistent
+with this pilot's existing document pattern (e.g., the Batch 003
+charter).
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

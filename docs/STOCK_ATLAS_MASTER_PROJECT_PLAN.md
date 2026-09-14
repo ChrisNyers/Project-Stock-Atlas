@@ -326,7 +326,8 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 FULLY TRIAGED (NHP, UCB, SAIA, TCS CLOSED; NNBR DEEP-UNDERWRITTEN AND BLOCKED)**
+> ### Status: **CLOSED — `CLOSE_PILOT3_ADVANCE_TO_PILOT4`** (see
+> `pilot3/PILOT3_CLOSEOUT_AND_PILOT4_TRANSITION.md`)
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -690,22 +691,80 @@ such throughout. Classified `NEGLECT_PARTIAL` (six sell-side analysts
 cover the name, but trading liquidity is genuinely thin) as a Pilot 3
 learning observation.
 
-**Current active next action:** none authorized in Pilot 3 beyond what is
-recorded. Batch 003 discovery/triage is complete: PATH, MDB, XOM, PCG,
-NHP, UCB, SAIA, and TCS are closed at `NO_DEMONSTRATED_EDGE`; DOCU,
-SPXC, SOLS, and NNBR are closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`
-pending their respective named falsifiers (SOLS's most load-bearing:
-whether Q3 2026 RAS segment margin continues worsening, stabilizes, or
-reverses; NNBR's: whether capex actually ramps toward the guided
-$35-40M run-rate and free cash flow proves durable beyond one quarter);
-AAPL is held at `EVIDENCE_GAP` pending the Oct 16 iPhone Duo preorder
-signal or Apple's Q4 FY2026 earnings call; JPM remains a calendar hold
-pending the September 16 FOMC decision. AVGO remains closed at
-`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
-triggers. No Batch 003 candidate is authorized to advance further
-without an explicit new work order (NNBR's own blocking uncertainty
-would need to be resolved first, and no deep underwriting is authorized
-for any other Batch 003 candidate); Batch 004 has not been chartered.
+**Pilot 3 formal closeout**
+(`pilot3/PILOT3_CLOSEOUT_AND_PILOT4_TRANSITION.md`) recorded, following
+two Red Team reviews. **Verdict: `CLOSE_PILOT3_ADVANCE_TO_PILOT4`. No
+further Pilot 3 batch will be created.** Pilot 3 proved: broader
+discovery mechanisms beyond headline/event setups; improved Scout
+opportunity quality without source privilege; Hook Reconstruction can
+cheaply falsify weak hooks (NHP, UCB, SAIA) without mechanically
+rejecting all candidates (NNBR, TCS both strengthened under
+reconstruction); the Priced-In One-Liner improves expectations-gap
+discipline; Atlas can distinguish company improvement from common-share
+value creation and productive from thesis-blocking uncertainty (both
+demonstrated within the single NNBR record); competitor read-through
+requires a valid economic transmission mechanism (SAIA); real business
+mechanisms may already be reflected in price (TCS); research intensity
+can be allocated selectively; and Atlas repeatedly added
+decision-relevant information beyond the original discovery hook.
+**Recorded explicitly, not softened**: no Pilot 3 candidate reached
+Stage 7; discovery has not yet demonstrated repeatable investable alpha
+or repeatable discovery before market recognition; false-negative
+calibration remains unproven; opportunity half-life remains poorly
+understood; Atlas has not yet demonstrated the originally surfaced
+security is consistently the best expression of a valid thesis. All
+Pilot 3 company records remain frozen exactly as committed: PATH, MDB,
+XOM, PCG, NHP, UCB, SAIA, and TCS closed at `NO_DEMONSTRATED_EDGE`;
+DOCU, SPXC, SOLS, and NNBR closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`;
+AAPL `EVIDENCE_GAP`; JPM `CALENDAR_HOLD`; AVGO
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`; SMH `REFERENCE_PEER_TAPE`; NVDA
+`REFERENCE_ONLY`. No Batch 003 or prior candidate is authorized to
+advance further without an explicit new work order. **Current active
+next action: none — Pilot 3 is closed; Pilot 4 (below) is chartered but
+no Pilot 4 candidate has been created.**
+
+---
+
+## Pilot 4 — FORCED_FLOW / OWNERSHIP_DISLOCATION
+
+> ### Status: **CHARTERED, NOT ACTIVE — no candidates created**
+
+Full charter in `pilot3/PILOT3_CLOSEOUT_AND_PILOT4_TRANSITION.md`
+§10-§19. Under the standing One-New-Information-Family-Per-Pilot
+Guardrail, Pilot 4 tests one new, experimental discovery family:
+**`FORCED_FLOW / OWNERSHIP_DISLOCATION`** (index inclusion/exclusion,
+spin-off selling, mandate-driven selling, forced deleveraging, holder
+transition, fund/redemption pressure, lockup effects, tax-related
+selling, other non-fundamental ownership or flow pressure — no
+permanent taxonomy established).
+
+**Primary learning objective:** Can forced-flow / ownership dislocation
+uncover a security whose price is temporarily disconnected from
+underlying economics, early enough that Atlas can validate the
+opportunity and reach Stage 7 capital comparison without lowering
+evidence or variant standards?
+
+**Carried forward from Pilot 3, unchanged:** Hook Reconstruction at
+Triage and the Priced-In One-Liner (no expansion, no new generic triage
+gate). **Carried forward as research questions only, no new
+architecture:** the quiet-change question (what economically important
+change is occurring before it becomes the headline?); the original-
+source-vs-echo question (existing provenance discipline remains
+sufficient — no new provenance system); the best-expression question
+(is the surfaced security the best way to capture the thesis, versus
+another company, supplier/customer/competitor, sector/factor beta, SPY,
+commodities, Treasury/Cash, or Do Nothing? — no optimizer); the
+recognition/half-life question (before/during/after recognition — a
+temporary Pilot 4 learning observation, not a permanent canonical
+field). Sentiment remains `SHADOW_ONLY` — no formal sentiment
+implementation. Beta (including SPY) remains a live, legitimate capital
+alternative — no separate beta engine. Infrastructure restraint carried
+forward explicitly: no XTSE support, second market-data vendor,
+sentiment provider, valuation engine, ownership-data infrastructure, or
+ML/statistical tooling unless an actual decision problem earns it.
+
+**No Pilot 4 candidate has been surfaced, registered, or researched.**
+No forced-flow research has begun.
 
 ---
 
