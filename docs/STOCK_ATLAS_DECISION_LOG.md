@@ -1951,3 +1951,76 @@ completely untouched — verified zero-diff.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT5_FORCED_FLOW_SOURCING_DESIGN_RESULT (2026-09-14)
+
+**Record:** `pilot5/PILOT5_FORCED_FLOW_SOURCING_DESIGN.md`. Defines the
+lean sourcing approach for Pilot 5's `FORCED_FLOW / OWNERSHIP_DISLOCATION`
+experiment — where and how to look, not what to find. No candidates
+created, no company underwriting performed, no architecture change, no
+permanent fields, no scoring, no new engine, no sentiment activation, no
+Batch 001 started.
+
+**Discovery principle**: begin with who may be compelled to transact,
+why, when, and in what size — not which stock has recently fallen.
+Search for the constraint first; identify affected securities only
+afterward.
+
+**Three search lenses (not a permanent taxonomy)**: (A) shareholder
+mismatch/distributed securities (spin-offs, merger/restructuring
+distributions, bankruptcy-emergence ownership); (B) mechanical
+benchmark/mandate flow (index additions/deletions/reconstitutions,
+mandate eligibility changes); (C) holder-specific forced or highly
+constrained selling (fund liquidation/redemption, concentrated-holder
+exit, lockups, tax-related selling, forced deleveraging). Quality
+governs over diversity — three high-quality situations preferred over
+three diversified-but-weak ones; no category is forced.
+
+**Primary public source classes** recorded: corporate filings (SEC
+filings, IR releases, spin-off registration filings, proxy/merger
+materials, prospectuses, ownership filings), index/benchmark sources
+(provider announcements, methodology/reconstitution notices), holder/
+fund sources (liquidation notices, 13D/13G amendments), and corporate-
+action sources. Secondary news/search/AI may help discover events, but
+every opportunity is traced back to original evidence where possible.
+
+**14 initial opportunity questions** recorded across seven dimensions
+(constraint, size, timing, economics, recognition, expression,
+falsification) — questions only, not converted to permanent fields or
+scores. **Flow-magnitude approach**: a simple, judgment-based comparison
+of estimated constrained shares versus ordinary trading liquidity — no
+proprietary flow score created. **Fundamental-separation discipline**:
+the ideal setup is ownership/flow changing materially while economics
+changed little; skepticism required where earnings, leverage,
+competitive position, or guidance genuinely deteriorated at the same
+time — forced selling is not automatically mispricing.
+
+**Original-source discipline, best-expression question, and discovery-
+clock approach** all carried forward from the Pilot 5 charter unchanged
+— no new provenance system, no optimizer, no timing engine.
+
+**Scout search posture** defined as a qualitative instruction (find
+situations where identifiable investors may be compelled to transact
+for non-fundamental reasons; begin with the constraint; trace to
+original evidence; estimate flow-vs-liquidity materiality; state the
+cheapest falsification; explain why the market may not have fully
+absorbed the distortion) rather than a stock-count request. Scout does
+not rank, size, allocate, or promote — Atlas validates, unchanged.
+**Human/manual sourcing remains live** (Chris, network observations,
+manual research, ChatGPT/Grok/other technology) — "many sources
+discover, Atlas validates, human allocates" unchanged. Technology
+principle restated: use any tool that materially improves discovery,
+validation, or decision quality; do not convert useful tools into new
+Atlas architecture absent a repeated, demonstrated need.
+
+**First-batch concept recorded for context only** (~3 high-quality
+situations, not a large basket, not required to all survive triage) —
+**not executed by this record.**
+
+**No candidates created. No architecture change. Frozen control layer,
+facade files, and docs/pilot4/ (the unrelated, frozen pilot) verified
+untouched.**
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

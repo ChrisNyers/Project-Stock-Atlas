@@ -735,7 +735,18 @@ no Pilot 5 candidate has been created.**
 
 ## Pilot 5 — FORCED_FLOW / OWNERSHIP_DISLOCATION
 
-> ### Status: **CHARTERED, NOT ACTIVE — no candidates created**
+> ### Status: **SOURCING DESIGN RECORDED — no candidates created, no
+> batch started**
+
+**Sourcing design**: `pilot5/PILOT5_FORCED_FLOW_SOURCING_DESIGN.md`
+defines where and how to look (three search lenses — shareholder
+mismatch/distributed securities, mechanical benchmark/mandate flow,
+holder-specific forced selling — quality before category diversity;
+primary public source classes; 14 initial opportunity questions across
+constraint/size/timing/economics/recognition/expression/falsification;
+a judgment-based, non-scored flow-magnitude comparison; the Scout search
+posture; and the human/manual sourcing role). **No candidates were
+created; no Batch 001 was started; no architecture was added.**
 
 **Numbering note:** this is Pilot 5, not Pilot 4 — `docs/pilot4/`
 already holds a separate, complete, frozen, unrelated pilot (September
