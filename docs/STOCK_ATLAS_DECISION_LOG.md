@@ -1361,3 +1361,76 @@ SAIA, or TCS. No research of TCS. No Stage 7, no Stage 8, no capital
 allocated, no control-layer or facade change.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+## PILOT3_UCB_PRIMARY_EVIDENCE_TRIAGE_RESULT (2026-09-14)
+
+**UCB primary-evidence triage** (`pilot3/PILOT3_UCB_PRIMARY_EVIDENCE_TRIAGE_001.md`)
+— the second record governed by the two Batch 003 narrow fixes — returned
+**`NO_DEMONSTRATED_EDGE`**. Canonical identity re-confirmed (United
+Community Banks, Inc., NYSE, MIC XNYS, CIK 0000857855); the prior
+collision resolution against UCB SA (Belgian pharmaceutical) and the
+stale UCBI ticker artifact held with no new ambiguity.
+
+The discovery hook (Navitas exit, HTM-to-AFS securities repositioning,
+debt paydown, and expanded buyback collectively improving earnings
+quality and risk profile more than the market credits) was tested via
+`PILOT3_HOOK_RECONSTRUCTION_AT_TRIAGE`: a clean 4-quarter reconstruction
+(Q3 2025-Q2 2026) of NIM, loan yield, deposit cost, CET1, tangible book
+value per share, operating EPS, and operating ROTCE, followed by
+management's own EPS restructuring bridge from the September 8 investor
+presentation. The bridge showed the Navitas-exit (-$0.07/quarter) and
+securities-reset reinvestment (+$0.06/quarter) pieces -- the two pieces
+that are actually Scout's hook -- net to roughly zero (-$0.01/quarter),
+failing the cheapest-falsification test explicitly specified in the work
+order. The touted overall EPS improvement ($0.74 to $0.78 baseline) was
+driven instead by an unrelated small acquisition (Peach State
+Bancshares, +$0.02/quarter, ~2-3% of UCB's balance sheet, explicitly
+isolated per instruction) and unguided future "core bank growth"
+(+$0.02-0.04/quarter, management-dependent, not contractual) -- neither
+named in Scout's hook.
+
+The tangible-book-value bridge found a real, immediate ~$1.95/share
+(~8.4%) TBV hit (Q2 2026 $23.31 to Q3 2026E pro forma ~$21.36), erasing
+roughly three quarters of the steady TBV growth shown in the
+reconstruction; no company-disclosed earnback period exists, and this
+record's own coarse, explicitly-labeled illustration (~1 year, using
+total company earnings, not the restructuring's own roughly-zero
+contribution) is not treated as proof the transaction pays for its own
+damage. The credit-risk-reduction half of the hook was well corroborated
+by primary evidence: Navitas accounted for roughly 50% of total net
+charge-offs despite being a minority of the loan book, and a ~$38
+million ALLL release accompanied the sale.
+
+Applying `PILOT3_PRICED_IN_ONE_LINER`, a credible one-liner could be
+stated but relied on the same unguided growth assumption the bridge
+could not verify. Direct completed-session price review found the
+market's reaction to the September 8 announcement was flat-to-mildly-
+negative (-0.98% from the pre-announcement close through the latest
+completed session), not a rally -- no evidence the market is
+under-crediting an improvement. A reverse-engineered valuation
+checkpoint (~1.51x P/TBV pre-restructuring, ~1.65x pro forma -- mechanically
+richer, not cheaper, immediately after the TBV cut; ~11-12x P/E; ~2.8%
+dividend yield; ~13% ROTCE; 13%+ CET1 throughout) was unremarkable for a
+well-capitalized regional bank. A same-day Gate B bind correctly
+returned STALE (market open at decision time); per instruction this was
+not forced, and the last confirmed completed-session close ($35.29,
+2026-09-11) was used instead with the limitation stated plainly.
+
+Closed `NO_DEMONSTRATED_EDGE`, framed as a second successful
+discovery-system outcome for the narrow-fix discipline: the hook
+reconstruction and priced-in one-liner tested a plausible, well-
+evidenced, multi-part restructuring hook against management's own
+numbers and found the specific "earnings quality" claim does not survive
+its own bridge, before any deep-underwriting variant was built around
+it.
+
+**Confirmed unchanged:** NHP `NO_DEMONSTRATED_EDGE`; NNBR, SAIA, TCS
+remain registered only (`SURFACE_FOR_TRIAGE`), not triaged; PATH/MDB/XOM/PCG
+`NO_DEMONSTRATED_EDGE`; DOCU/SPXC/SOLS `BLOCKED_BY_MATERIAL_UNCERTAINTY`;
+AVGO `BLOCKED_BY_MATERIAL_UNCERTAINTY`; AAPL `EVIDENCE_GAP`; JPM
+`CALENDAR_HOLD` (not advanced); SMH `REFERENCE_PEER_TAPE`; NVDA
+`REFERENCE_ONLY`. No deep underwriting of UCB. No triage of NNBR, SAIA,
+or TCS. No Batch 004. No Stage 7, no Stage 8, no capital allocated, no
+control-layer or facade change.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**

@@ -40,8 +40,8 @@ from the discovery source's own confidence claim.
 
 | Candidate | Legal name | CIK / canonical identifier | Ticker | Exchange / MIC | Initial state |
 |---|---|---|---|---|---|
-| NHP | National Healthcare Properties, Inc. | SEC CIK `0001561032` | NHP | Nasdaq Global Market, MIC `XNMS` | `SURFACE_FOR_TRIAGE` → **triaged this record, see below** |
-| UCB | United Community Banks, Inc. | SEC CIK `0000857855` | UCB | NYSE, MIC `XNYS` | `SURFACE_FOR_TRIAGE` — registered only |
+| NHP | National Healthcare Properties, Inc. | SEC CIK `0001561032` | NHP | Nasdaq Global Market, MIC `XNMS` | `NO_DEMONSTRATED_EDGE` (see triage record) |
+| UCB | United Community Banks, Inc. | SEC CIK `0000857855` | UCB | NYSE, MIC `XNYS` | `NO_DEMONSTRATED_EDGE` (see triage record) |
 | NNBR | NN, Inc. | SEC CIK `0000918541` | NNBR | Nasdaq Global Select, MIC `XNGS` | `SURFACE_FOR_TRIAGE` — registered only |
 | SAIA | Saia, Inc. | SEC CIK `0001177702` | SAIA | Nasdaq Global Select, MIC `XNGS` | `SURFACE_FOR_TRIAGE` — registered only |
 | TCS | Tecsys Inc. | Canadian issuer — no SEC EDGAR CIK identified; not researched further per instruction | TCS | Toronto Stock Exchange, MIC `XTSE` (also cross-listed NEO, MIC `NEOE`) | `SURFACE_FOR_TRIAGE` — registered only, **identity only, not researched** |
@@ -120,17 +120,38 @@ evidence, before a full variant was written around it.
 
 ---
 
-## UCB, NNBR, SAIA — registered, not triaged
+## UCB — full primary-evidence triage
+
+Recorded separately in `PILOT3_UCB_PRIMARY_EVIDENCE_TRIAGE_001.md`.
+Disposition: **`NO_DEMONSTRATED_EDGE`**. Scout's hook (Navitas exit +
+HTM-to-AFS securities repositioning + debt paydown + expanded buyback
+collectively improving earnings quality and risk profile more than the
+market credits) was tested via the mandatory hook reconstruction and
+restructuring bridge: management's own EPS walkforward shows the
+Navitas-exit (−$0.07/quarter) and securities-reset reinvestment
+(+$0.06/quarter) pieces net to roughly zero, with the touted overall
+EPS improvement driven instead by an unrelated small acquisition (Peach
+State, +$0.02) and unguided future "core bank growth" (+$0.02–0.04) —
+neither named in the hook. The credit-risk-reduction half of the hook
+(Navitas responsible for ~50% of total net charge-offs) was well
+corroborated, but the market's own reaction to the September 8
+announcement was flat-to-mildly-negative, not a sign of an
+under-recognized positive, and post-restructuring valuation (~1.5–1.65x
+tangible book, ~11–12x P/E, ~13% ROTCE) is unremarkable for a
+well-capitalized regional bank. Closed `NO_DEMONSTRATED_EDGE`.
+
+## NNBR, SAIA, TCS — remain registered, not triaged
 
 No discovery-hook detail, economic rationale, hook reconstruction,
 priced-in one-liner, candidate variant, market-could-be-right
 alternative, cheapest-falsification test, or evidence-gap assessment is
-recorded for these three candidates in this record — the work order
-governing this registration provided discovery-hook detail for NHP only
-and explicitly instructed that the other four not be triaged. **Initial
-disposition for all three: `SURFACE_FOR_TRIAGE`**, pending a future work
-order that provides the discovery-hook detail needed to apply the
-required Batch 003 discovery-record template (§7 of the charter).
+recorded for these three candidates in this record — no work order
+governing this registration has yet provided discovery-hook detail for
+them, and two successive work orders have explicitly instructed that
+they not be triaged. **Initial disposition for all three:
+`SURFACE_FOR_TRIAGE`**, pending a future work order that provides the
+discovery-hook detail needed to apply the required Batch 003
+discovery-record template (§7 of the charter).
 
 ---
 
@@ -157,7 +178,7 @@ promotion/blocking/funding logic — none arose in this record.
 | Candidate | Source | Initial state | Atlas disposition | Survived primary-evidence triage? |
 |---|---|---|---|---|
 | NHP | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the specific discovery mechanism (debt paydown + preferred redemption improving the common capital stack) was directly contradicted by a primary-sourced, dilutive equity raise the discovery layer did not surface, and by the Normalized FFO/share decline it produced |
-| UCB | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged | — |
+| UCB | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the earnings-quality half of the hook nets to roughly zero on management's own bridge once an unrelated acquisition and unguided future growth are excluded; the credit-risk-reduction half is real but the market's own flat-to-negative reaction does not indicate it is under-recognized |
 | NNBR | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged | — |
 | SAIA | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged | — |
 | TCS | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged (not researched) | — |

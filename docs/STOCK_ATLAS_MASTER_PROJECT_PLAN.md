@@ -224,7 +224,7 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP TRIAGED)**
+> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB TRIAGED)**
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -459,8 +459,27 @@ first-tranche closing was negative, not positive. Treated as a
 successful discovery-system outcome — the narrow fixes killed a
 plausible-sounding hook cheaply, before a full variant was written.
 
+**UCB's primary-evidence triage**
+(`pilot3/PILOT3_UCB_PRIMARY_EVIDENCE_TRIAGE_001.md`), the second record
+governed by the two narrow fixes, returned `NO_DEMONSTRATED_EDGE`: the
+discovery hook (Navitas exit + HTM-to-AFS securities repositioning +
+debt paydown + expanded buyback collectively improving earnings quality
+and risk profile more than the market credits) was tested against
+management's own EPS walkforward, which showed the Navitas-exit
+(−$0.07/quarter) and securities-reset reinvestment (+$0.06/quarter)
+pieces net to roughly zero — the touted overall EPS improvement came
+instead from an unrelated small acquisition (Peach State, +$0.02) and
+unguided future "core bank growth" (+$0.02–0.04), neither named in the
+hook. The credit-risk-reduction half of the hook (Navitas responsible
+for ~50% of total net charge-offs) was well corroborated, but the
+market's reaction to the September 8 announcement was flat-to-mildly-
+negative, and post-restructuring valuation (~1.5–1.65x tangible book,
+~11–12x P/E, ~13% ROTCE) was unremarkable for a well-capitalized
+regional bank. Treated as a second successful discovery-system outcome
+for the new narrow-fix discipline.
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
-recorded. PATH, MDB, XOM, PCG, and now NHP are closed at
+recorded. PATH, MDB, XOM, PCG, NHP, and now UCB are closed at
 `NO_DEMONSTRATED_EDGE`; DOCU, SPXC, and SOLS are closed at
 `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their respective named
 falsifiers (SOLS's most load-bearing: whether Q3 2026 RAS segment margin
@@ -469,7 +488,7 @@ continues worsening, stabilizes, or reverses); AAPL is held at
 Q4 FY2026 earnings call; JPM remains a calendar hold pending the
 September 16 FOMC decision. AVGO remains closed at
 `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
-triggers. UCB, NNBR, SAIA, and TCS remain registered only
+triggers. NNBR, SAIA, and TCS remain registered only
 (`SURFACE_FOR_TRIAGE`) — not triaged, pending a future work order.
 
 ---
