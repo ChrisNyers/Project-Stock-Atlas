@@ -2024,3 +2024,78 @@ untouched.**
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT5_DISCOVERY_SCAN_001_AND_VYLR_TRIAGE_RESULT (2026-09-14)
+
+**Records:** `pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`,
+`pilot5/PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md`. Source:
+`GROK_SCOUT_FORCED_FLOW_DISCOVERY`.
+
+**Registration**: three situations registered without ranking — VYLR
+(Corteva → Vylor spin-off), 646A/Crasus (Resonac → Crasus), MSGR (MSG
+Sports → Rangers). Scout's "best research-use-of-time candidate: VYLR"
+claim explicitly disregarded as a ranking input, per the standing
+Discovery Source Neutrality rule. Only VYLR received forced-flow
+triage.
+
+**VYLR result: `PROMOTE_TO_FUNDAMENTAL_UNDERWRITING`** — Pilot 5's
+first candidate, and the first test of the pilot's primary learning
+objective. Canonical identity confirmed (Vylor Inc., CIK `0002128626`,
+formerly Seed External Spinco Inc., clean CIK, no ticker collision);
+the "VYLR" ticker itself was found to be secondary-sourced (blank in
+the most recent primary SEC filing) — a sourcing-tier distinction
+stated plainly rather than assumed.
+
+Corporate-action mechanics (when-issued trading beginning the session
+before the record date, regular-way beginning on the distribution
+date, cash-in-lieu of fractional shares) confirmed directly from
+Vylor's Form 10-12B/A information statement (downloaded directly at
+22.1MB after standard fetch tooling exceeded its size limit, then
+locally text-extracted). The specific dates (record date ~September
+24, 2026; distribution ~October 1, 2026; 1:1 ratio; ticker VYLR)
+were corroborated by a same-day secondary news report but explicitly
+flagged as not yet confirmed by any Corteva- or Vylor-filed SEC 8-K as
+of the evidence date (verified via SEC full-text search, zero
+results).
+
+Confirmed Corteva (CTVA) is an S&P 500 constituent since 2019 — the
+structural fact underlying the entire forced-flow mechanism — and
+located the issuer's own primary-sourced risk-factor language: "a
+portion of Vylor common stock is held by index funds tied to stock
+indices. If we are not included in these indices at the time of
+spin-off, these index funds may be required to sell Vylor common
+stock." No S&P Dow Jones Indices (or other index-provider) announcement
+on Vylor's treatment was found in either direction.
+
+Cheapest-falsification test run first, per instruction: none of the
+four named kill conditions were satisfied on the evidence gathered.
+Fundamental-separation check found no contemporaneous deterioration in
+the Seed segment (Corteva's most recent guidance was raised, not cut;
+Seed H1 2026 operating EBITDA up 11% YoY; the September 10 PFAS
+settlement traces to legacy Crop Protection/DuPont/Chemours liability,
+unrelated to Vylor). A coarse, explicitly labeled order-of-magnitude
+estimate of constrained supply was built from confirmed CTVA shares
+outstanding (~667.2M) and general, widely-cited passive-ownership
+research; a security-specific, verified 13F/ETF-holdings breakdown
+could not be obtained with free/public tooling — disclosed as a genuine
+evidence gap. VYLR liquidity itself cannot yet be assessed (trading has
+not begun; a TwelveData symbol search returned zero results).
+
+Promotion is named explicitly as meaning only that the forced-flow
+mechanism is credible enough to justify examining Vylor's underlying
+economics and valuation next — not that VYLR is attractive. The
+still-unannounced index-inclusion decision and the unresolved
+constrained-vs-discretionary quantification are named as the specific,
+evidence-gatherable focus for the next stage, mirroring how this
+project's prior pilot named and carried forward NNBR's Series D
+uncertainty rather than treating an open question as an automatic
+block.
+
+**646A/Crasus and MSGR remain `SURFACE_FOR_TRIAGE`, completely
+untouched** — no identity check, no primary-evidence review, no
+research performed on either. **No fundamental/deep underwriting of
+Vylor performed. No Stage 7 or Stage 8 action. No Discovery Scan 002.**
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

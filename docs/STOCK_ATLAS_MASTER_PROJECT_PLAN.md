@@ -735,8 +735,49 @@ no Pilot 5 candidate has been created.**
 
 ## Pilot 5 — FORCED_FLOW / OWNERSHIP_DISLOCATION
 
-> ### Status: **SOURCING DESIGN RECORDED — no candidates created, no
-> batch started**
+> ### Status: **ACTIVE — DISCOVERY SCAN 001 REGISTERED; VYLR TRIAGED
+> (`PROMOTE_TO_FUNDAMENTAL_UNDERWRITING`); CRASUS, MSGR UNTOUCHED**
+
+**Discovery Scan 001** (`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`),
+source `GROK_SCOUT_FORCED_FLOW_DISCOVERY`: three situations registered
+without ranking (Scout's own "best research-use-of-time" claim for VYLR
+explicitly disregarded, per Discovery Source Neutrality) — VYLR
+(Corteva → Vylor spin-off shareholder/index mismatch), 646A/Crasus
+(Resonac → Crasus cross-border mismatch), MSGR (MSG Sports → Rangers
+shareholder-preference mismatch). **Only VYLR received forced-flow
+triage.**
+
+**VYLR forced-flow triage**
+(`pilot5/PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md`) closed
+**`PROMOTE_TO_FUNDAMENTAL_UNDERWRITING`** — Pilot 5's first candidate.
+Confirmed Corteva (CTVA) is an S&P 500 constituent; located and quoted
+Vylor's own primary-sourced (Form 10-12B/A) risk-factor language that
+index funds "may be required to sell Vylor common stock" if not
+included in tracked indices at spin-off; confirmed the corporate-action
+mechanics (WI trading beginning the session before the record date,
+regular-way beginning on the distribution date) directly from the
+primary information statement, with the specific dates themselves
+(record date ~Sept 24, 2026; distribution ~Oct 1, 2026; 1:1 ratio;
+ticker VYLR) flagged as secondary-sourced and not yet SEC-confirmed as
+of the evidence date. The mandatory cheapest-falsification test found
+none of its four kill conditions satisfied (no index-inclusion
+announcement exists in either direction; institutional ownership is
+high; the mandate-mismatch mechanism is structural, not speculative;
+supply-vs-liquidity could not be shown trivial because VYLR liquidity
+does not yet exist). The fundamental-separation check was clean:
+Corteva's most recent guidance was raised, not cut, with the Seed
+segment's H1 2026 operating EBITDA up 11% YoY. A precise, primary-
+sourced quantification of the constrained-versus-discretionary holder
+split could not be achieved with free/public tooling — disclosed as a
+genuine evidence gap, not filled by inference — and, together with the
+still-unannounced index-inclusion decision, is named as the specific
+focus for the next stage of work, mirroring how NNBR's Series D
+uncertainty was named and carried forward in Pilot 3 rather than
+treated as an automatic block.
+
+**646A/Crasus and MSGR remain `SURFACE_FOR_TRIAGE`** — no canonical-
+identity check, no primary-evidence review, no research of any kind
+performed on either.
 
 **Sourcing design**: `pilot5/PILOT5_FORCED_FLOW_SOURCING_DESIGN.md`
 defines where and how to look (three search lenses — shareholder
