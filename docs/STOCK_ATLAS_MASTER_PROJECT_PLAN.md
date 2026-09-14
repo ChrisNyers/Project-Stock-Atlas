@@ -326,7 +326,7 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB, NNBR TRIAGED; NNBR CLEARED TO PROCEED)**
+> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB CLOSED; NNBR DEEP-UNDERWRITTEN AND BLOCKED)**
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -611,23 +611,45 @@ placement and exchange combined is confirmed at ~57.1%; the exchange
 ratio itself retired preferred at roughly fair-to-premium value, not a
 discount. Uncertainty classification updated to
 **`RESOLVED_SUPPORTS_THESIS`**; progression decision
-**`PROCEED_TO_DEEP_UNDERWRITING`** — deep underwriting itself has not
-begun.
+**`PROCEED_TO_DEEP_UNDERWRITING`** — deep underwriting itself had not
+begun as of that record.
+
+**NNBR deep underwriting**
+(`pilot3/PILOT3_NNBR_DEEP_UNDERWRITING_001.md`) closed
+**`BLOCKED_BY_MATERIAL_UNCERTAINTY`**. The operating transition proved
+broader and more economically significant than triage established:
+three separately-guided growth programs (Data Center & Electric Grid
+~$80M TTM/goal $120M, Defense & Electronics ~$60M TTM/goal $90M, Medical
+Products ~$15M TTM/goal $40M) totaling ~30% of revenue, not the
+~15-16% data-center-only estimate triage had; a ~5x segment operating-
+margin gap (Power Solutions 15.1% vs. Mobile Solutions 3.0%, FY2025)
+quantifying the mix shift as economically transformative, not merely
+descriptive; and a favorable, evidence-based reconciliation of the
+preferred-cleanup trade (a coarse estimate that the retired 71.7% of
+Series D, left compounding, could plausibly have grown past $150M within
+3-4 years). The disposition is blocked on one specific, named,
+evidence-gatherable gap: capex has not, in any of the eight quarters
+reconstructed, approached the guided $35-40M annual run-rate needed to
+build capacity for the win pipeline, and free cash flow (this record's
+own calculation) was positive in exactly one of the last nine quarters
+reconstructed. Growth and a favorable capital-structure resolution were
+both found real but were explicitly not treated as sufficient on their
+own, per instruction.
 
 **Current active next action:** none authorized in Pilot 3 beyond what is
 recorded. PATH, MDB, XOM, PCG, NHP, and UCB are closed at
-`NO_DEMONSTRATED_EDGE`; DOCU, SPXC, and SOLS are closed at
+`NO_DEMONSTRATED_EDGE`; DOCU, SPXC, SOLS, and now NNBR are closed at
 `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their respective named
 falsifiers (SOLS's most load-bearing: whether Q3 2026 RAS segment margin
-continues worsening, stabilizes, or reverses); NNBR is
-`PROMOTE_TO_DEEP_UNDERWRITING`, its Series D uncertainty resolved and
-cleared to proceed, but deep underwriting itself has not begun; AAPL
-is held at `EVIDENCE_GAP` pending the Oct 16 iPhone Duo preorder signal
-or Apple's Q4 FY2026 earnings call; JPM remains a calendar hold pending
-the September 16 FOMC decision. AVGO remains closed at
-`BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
-triggers. SAIA and TCS remain registered only (`SURFACE_FOR_TRIAGE`) —
-not triaged, pending a future work order.
+continues worsening, stabilizes, or reverses; NNBR's: whether capex
+actually ramps toward the guided $35-40M run-rate and free cash flow
+proves durable beyond one quarter); AAPL is held at `EVIDENCE_GAP`
+pending the Oct 16 iPhone Duo preorder signal or Apple's Q4 FY2026
+earnings call; JPM remains a calendar hold pending the September 16
+FOMC decision. AVGO remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`,
+pending its named falsifiers/revisit triggers. SAIA and TCS remain
+registered only (`SURFACE_FOR_TRIAGE`) — not triaged, pending a future
+work order.
 
 ---
 

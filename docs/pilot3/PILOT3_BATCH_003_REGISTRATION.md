@@ -42,7 +42,7 @@ from the discovery source's own confidence claim.
 |---|---|---|---|---|---|
 | NHP | National Healthcare Properties, Inc. | SEC CIK `0001561032` | NHP | Nasdaq Global Market, MIC `XNMS` | `NO_DEMONSTRATED_EDGE` (see triage record) |
 | UCB | United Community Banks, Inc. | SEC CIK `0000857855` | UCB | NYSE, MIC `XNYS` | `NO_DEMONSTRATED_EDGE` (see triage record) |
-| NNBR | NN, Inc. | SEC CIK `0000918541` | NNBR | Nasdaq Global Select, MIC `XNGS` | `PROMOTE_TO_DEEP_UNDERWRITING` — Series D reconciliation `RESOLVED_SUPPORTS_THESIS`, `PROCEED_TO_DEEP_UNDERWRITING` (see triage record addendum) |
+| NNBR | NN, Inc. | SEC CIK `0000918541` | NNBR | Nasdaq Global Select, MIC `XNGS` | `BLOCKED_BY_MATERIAL_UNCERTAINTY` — deep underwriting closed (see `PILOT3_NNBR_DEEP_UNDERWRITING_001.md`) |
 | SAIA | Saia, Inc. | SEC CIK `0001177702` | SAIA | Nasdaq Global Select, MIC `XNGS` | `SURFACE_FOR_TRIAGE` — registered only |
 | TCS | Tecsys Inc. | Canadian issuer — no SEC EDGAR CIK identified; not researched further per instruction | TCS | Toronto Stock Exchange, MIC `XTSE` (also cross-listed NEO, MIC `NEOE`) | `SURFACE_FOR_TRIAGE` — registered only, **identity only, not researched** |
 
@@ -140,7 +140,24 @@ under-recognized positive, and post-restructuring valuation (~1.5–1.65x
 tangible book, ~11–12x P/E, ~13% ROTCE) is unremarkable for a
 well-capitalized regional bank. Closed `NO_DEMONSTRATED_EDGE`.
 
-## NNBR — full primary-evidence triage, then Series D resolution
+## NNBR — full primary-evidence triage, then Series D resolution, then deep underwriting
+
+**Deep underwriting closed** `BLOCKED_BY_MATERIAL_UNCERTAINTY`
+(`PILOT3_NNBR_DEEP_UNDERWRITING_001.md`). Three separately-guided growth
+programs (Data Center & Electric Grid, Defense & Electronics, Medical
+Products — combined ~$155M TTM, ~30% of revenue) and a ~5x segment
+operating-margin gap (Power Solutions 15.1% vs. Mobile Solutions 3.0%,
+FY2025) confirmed the mix shift as economically, not merely
+descriptively, significant, and the resolved Series D trade was found
+to be a credible, non-cheap de-risking. The disposition is blocked on
+one specific, named gap: capex has not approached the guided $35-40M
+annual run-rate in any of the eight quarters reconstructed, and free
+cash flow (this record's own calculation) was positive in only one of
+the last nine quarters — the load-bearing precondition for converting
+the win pipeline into the ~$32.7M of incremental Adjusted EBITDA needed
+merely to restore pre-dilution per-share economics is not yet evidenced.
+
+## NNBR — full primary-evidence triage, then Series D resolution (superseded summary retained below)
 
 Triage recorded separately in `PILOT3_NNBR_PRIMARY_EVIDENCE_TRIAGE_001.md`
 — **`PROMOTE_TO_DEEP_UNDERWRITING`**. Unlike NHP and UCB, the mandatory
@@ -168,8 +185,9 @@ and exchange combined is confirmed at ~57.1%; the exchange ratio itself
 retired preferred at roughly fair-to-premium value, not a discount — a
 genuine de-risking trade, not a cheap one. Uncertainty classification
 updated to **`RESOLVED_SUPPORTS_THESIS`**; progression decision
-**`PROCEED_TO_DEEP_UNDERWRITING`**. Deep underwriting itself has not
-begun.
+**`PROCEED_TO_DEEP_UNDERWRITING`**. Deep underwriting has since been
+performed and closed `BLOCKED_BY_MATERIAL_UNCERTAINTY` — see the
+dedicated section above.
 
 ## SAIA, TCS — remain registered, not triaged
 
@@ -210,7 +228,7 @@ promotion/blocking/funding logic — none arose in this record.
 |---|---|---|---|---|
 | NHP | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the specific discovery mechanism (debt paydown + preferred redemption improving the common capital stack) was directly contradicted by a primary-sourced, dilutive equity raise the discovery layer did not surface, and by the Normalized FFO/share decline it produced |
 | UCB | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the earnings-quality half of the hook nets to roughly zero on management's own bridge once an unrelated acquisition and unguided future growth are excluded; the credit-risk-reduction half is real but the market's own flat-to-negative reaction does not indicate it is under-recognized |
-| NNBR | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `PROMOTE_TO_DEEP_UNDERWRITING` | Yes, on the operating half of the hook (growth acceleration, margin expansion, mix shift, data-center revenue all corroborated and strengthened under reconstruction); the capital-structure half was initially thesis-blocking, then resolved (`RESOLVED_SUPPORTS_THESIS`) via the primary Exchange Agreement — 71.7% of the Series D preferred retired, not ~15% as the worst case implied, at the cost of confirmed ~57.1% common dilution |
+| NNBR | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `BLOCKED_BY_MATERIAL_UNCERTAINTY` (deep underwriting) | Yes at triage (growth acceleration, margin expansion, mix shift, data-center revenue all corroborated and strengthened) and yes on the resolved Series D reconciliation (71.7% retired, not ~15%); deep underwriting then found the win pipeline is broader than triage knew (three ~$155M-TTM growth programs, a ~5x segment margin gap) but blocked promotion on capex execution never reaching guided run-rate across 8 quarters and free cash flow durability unproven |
 | SAIA | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged | — |
 | TCS | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged (not researched) | — |
 

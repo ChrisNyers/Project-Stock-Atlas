@@ -1655,3 +1655,51 @@ for the four rules, per instruction. No frozen Pilot 1, Pilot 2, or
 completed Pilot 3 company record was modified.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+## PILOT3_NNBR_DEEP_UNDERWRITING_RESULT (2026-09-14)
+
+**Candidate:** NNBR — NN, Inc. (`PILOT3_NNBR_DEEP_UNDERWRITING_001.md`).
+**Prior state:** `PROMOTE_TO_DEEP_UNDERWRITING`, Series D uncertainty
+`RESOLVED_SUPPORTS_THESIS`, progression `PROCEED_TO_DEEP_UNDERWRITING`
+(`PILOT3_NNBR_PRIMARY_EVIDENCE_TRIAGE_001.md` addendum).
+
+**Result: `BLOCKED_BY_MATERIAL_UNCERTAINTY`.** Eight-quarter operating
+reconstruction (Q3 2024–Q2 2026, primary-sourced earnings-release 8-Ks
+and XBRL) confirmed and broadened the triage findings: three separately
+guided growth programs — Data Center & Electric Grid (~$80M TTM, $120M
+near-term goal), Defense & Electronics (~$60M TTM, $90M goal), Medical
+Products (~$15M TTM, $40M goal) — combine to ~$155M TTM, ~30% of
+revenue, versus the ~15-16% data-center-only estimate available at
+triage. A newly reconstructed segment split (Power Solutions vs. Mobile
+Solutions) found a ~5x FY2025 operating-margin gap (15.1% vs. 3.0%),
+quantifying the mix shift as economically transformative rather than
+merely descriptive. The resolved Series D trade was evaluated on
+dilution-earnback terms, not leverage improvement alone: restoring
+pre-dilution per-share Adjusted EBITDA (~$1.09/share) on the diluted
+82.58M-share base requires TTM Adjusted EBITDA to rise from ~$57.3M to
+~$90.0M (+~$32.7M, matching the ~57% dilution mathematically); a coarse,
+labeled counterfactual estimated the retired 71.7% of Series D, left
+compounding at 14.5%+, could plausibly have exceeded $150M within 3-4
+years, supporting the transaction as a credible de-risking trade.
+
+**The specific, named blocking uncertainty:** capex has not approached
+the guided $35-40M annual run-rate in any of the eight quarters
+reconstructed (H1 2026 annualizes to ~$17.1M), and free cash flow (this
+record's own OCF-minus-capex calculation, disclosed as differing
+somewhat from the company's own non-GAAP FCF figure) was positive in
+only one of the last nine quarters reconstructed. This capacity/cash-
+flow gap is the load-bearing precondition for converting the ~$90-110M
+FY2026 win-pipeline guidance into the incremental EBITDA the dilution-
+earnback math requires — not yet evidenced in actuals. Growth and a
+favorable capital-structure resolution were both confirmed real and
+explicitly not treated as sufficient on their own, per instruction.
+Market-reaction evidence (no rally on the incrementally positive
+September 9 disclosure) was found consistent with, not contradictory
+to, this blocked disposition.
+
+**No Stage 7 or Stage 8 action.** NHP, UCB remain `NO_DEMONSTRATED_EDGE`;
+SAIA, TCS remain `SURFACE_FOR_TRIAGE`, not triaged; no Batch 004 started.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
