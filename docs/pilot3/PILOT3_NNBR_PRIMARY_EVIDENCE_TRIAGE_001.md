@@ -604,3 +604,162 @@ Stage 8. No capital allocated. No scoring, ranking, or new engine. No
 advance of JPM or AAPL. No Batch 004.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## Addendum — Series D reconciliation resolved (2026-09-15)
+
+**This record is frozen above this line. Nothing above is rewritten.
+This addendum only appends a resolution finding**, per the historical-
+integrity/append-only discipline this pilot has followed since the SOLS
+record (`PILOT3_SOLS_POST_MERGER_PRIMARY_EVIDENCE_TRIAGE_001.md`
+addendum).
+
+**Primary source located and reviewed:** the actual Series D Preferred
+Stock **Exchange Agreement**, filed as an exhibit to the Q2 2026 10-Q
+(`nn-exchangeagreement.htm`, accession `0000918541-26-000064`) — the
+legal document itself, not press-release shorthand, per instruction.
+
+### The reconciliation, resolved plainly
+
+- **Pre-transaction:** Holder (identified in the agreement as **NHTV
+  Nevada Holdings LP**) held **65,000 shares** of Series D Preferred
+  Stock — confirmed directly from the agreement's own recital, matching
+  this record's own carrying-value cross-check (§4, above).
+- **The Exchange:** **9,850 shares** exchanged for **5,500,000** newly
+  issued common shares — as previously found.
+- **The Redemption (the piece this record could not previously locate):**
+  a **separate, concurrent cash redemption of 36,750 additional Series D
+  shares**, exercised via a Notice of Redemption under the original
+  Certificate of Designation (filed March 22, 2021). The exact per-share
+  cash redemption price is not stated in the Exchange Agreement itself
+  (it resides in the Certificate of Designation formula, not re-derived
+  here) — a residual, minor, non-blocking evidence gap.
+- **Remaining after both actions:** **65,000 − 9,850 − 36,750 = 18,400
+  shares** — confirmed arithmetic, directly from the agreement.
+- **Independent cross-check, primary-sourced:** NN, Inc.'s special-
+  meeting proxy statement (DEF 14A, filed 2026-08-28, accession
+  `0000918541-26-000083`) states **"As of August 5, 2026, we had
+  90,000,000 authorized shares of common stock of which 82,580,864
+  shares were issued and outstanding."** Working forward from the
+  pre-transaction base (52,574,000 shares at June 30, 2026, per XBRL)
+  plus the 24,509,804-share private placement plus the 5,500,000
+  Series D exchange shares reconciles to 82,583,804 — within a few
+  thousand shares of the proxy's own 82,580,864 figure (the small
+  residual is consistent with ordinary RSU vesting/withholding activity
+  in the interim, not a sign of any additional, unaccounted-for Series D
+  issuance). **This independently confirms no Series D shares beyond the
+  9,850/5.5M exchange were converted into common stock by August 5,
+  2026** — the 36,750-share piece was genuinely a cash redemption, not a
+  second, hidden stock conversion this record had missed.
+- **The same proxy explicitly states:** *"We do not currently have any
+  definitive agreements or arrangements to issue any of the [additional
+  authorized] shares"* — directly refuting this record's earlier
+  speculative hypothesis that the proxy's requested doubling of
+  authorized shares (90M→180M) was earmarked for a further, pending
+  Series D conversion. **That hypothesis is retracted**; the share-
+  authorization increase is generic capital-raising/M&A flexibility
+  language, unconnected to Series D.
+
+### The "$89 million paid off" figure — reconciled, not merely asserted
+
+Using this record's own carrying-value-per-share estimate (§4:
+$122.1M ÷ 65,000 shares ≈ **$1,878.5/share** average accreted value),
+**46,600 shares addressed (9,850 exchanged + 36,750 redeemed) × ~$1,878.5
+≈ $87.5 million** — within roughly $1.5 million of the earnings
+release's "**approximately $89 million**" headline. **This is a clean,
+credible reconciliation**, not a forced one: the earnings release's
+figure describes the combined liquidation-preference-plus-accrued-
+dividend value of both the Exchange and the Redemption together, not
+just one piece of it.
+
+### The December 31, 2026 discount — confirmed, precisely
+
+Section 5.4 of the Exchange Agreement provides that if the Company
+achieves a **"Final Redemption"** of the entire remaining Series D
+balance **by December 31, 2026**, the aggregate redemption price payable
+is **reduced by $5.0 million (not below zero)** — this is the discount
+the original work order asked this record to verify, now confirmed
+directly from the primary legal document.
+
+### The remaining 18,400 shares — real, temporarily lighter burden
+
+Section 5.3 of the Exchange Agreement sets a **"Rate Adjustment
+Period"** running from the August 5, 2026 closing date through its first
+anniversary (August 2027): during this window, **both the cash and PIK
+dividend rates on the remaining shares are reduced to 10.0% per
+annum** (down from the pre-transaction 14.5%+ and rising trajectory).
+After the Rate Adjustment Period, rates **revert to 15.0% and 17.0% per
+annum** respectively, with a further **+2.5%/year step-up beginning
+March 22, 2028** if the balance is still outstanding. **No shareholder
+vote or Nasdaq approval was required for this transaction** — the
+agreement states this explicitly — confirming the special-meeting proxy
+(above) is unrelated to Series D.
+
+### Common-equity economics — recalculated on resolved facts
+
+- **New shares created:** 24,509,804 (private placement) + 5,500,000
+  (Series D exchange) = **30,009,804**, against a pre-transaction base
+  of 52,574,000 — **≈57.1% dilution**, confirmed, matching this record's
+  original estimate exactly.
+- **Preferred obligation eliminated:** 46,600 of 65,000 shares —
+  **≈71.7%** of the pre-transaction Series D balance, its full 14.5%+
+  compounding coupon extinguished on the retired portion. **This is
+  materially more complete than this record's original, appropriately
+  cautious ~15% reading** — the worst-case interpretation named in the
+  original triage did not materialize.
+- **Preferred obligation remaining:** 18,400 shares (~28.3%), carrying
+  value roughly **$34.6 million** (18,400 × ~$1,878.5), temporarily
+  accruing at the reduced 10.0% rate (~$3.5 million/year) through August
+  2027, reverting to 15–17% (~$5.2–5.9 million/year) thereafter absent
+  further redemption — with a real, quantified $5.0 million incentive to
+  eliminate it entirely by year-end 2026.
+- **Was this economically attractive for today's common holders, or
+  merely a shift in difficulty? Answered directly, not by leverage
+  improvement alone:** the exchange ratio (9,850 preferred shares for
+  5,500,000 common shares) implies each preferred share was valued at
+  roughly **558 common shares** — at the $3.06 private-placement price,
+  ≈$1,707/share; at the $3.90 closing price on the Exchange's effective
+  date, ≈$2,176/share — **both at or above** the ~$1,878.5/share average
+  carrying value used above. **This record does not find that common
+  holders received a bargain in the exchange ratio itself** — the
+  preferred was retired at roughly fair value to a premium, not at a
+  discount, funded by real, substantial (57.1%) dilution. **The genuine
+  economic benefit is not "cheap retirement," it is de-risking**:
+  replacing an escalating, compounding, senior-to-common claim with
+  fixed, already-issued, pari passu common shares removes a structurally
+  worsening overhang in exchange for a one-time, now-capped dilution —
+  a real trade-off, not a one-sided win, and not evaluated here merely
+  on whether leverage or CET1-style metrics improved.
+
+### Updated uncertainty classification
+
+> ## `RESOLVED_SUPPORTS_THESIS`
+
+The factual ambiguity is fully resolved via the primary Exchange
+Agreement and independently cross-checked via the special-meeting proxy's
+share-count disclosure. The resolved facts are **more favorable to the
+promotion thesis than the unresolved ambiguity implied**: 71.7% of the
+punitive, compounding preferred balance is confirmed retired (not the
+feared ~15%), the residual 28.3% carries a temporarily reduced coupon and
+a concrete, dated ($5.0M) incentive for full elimination by year-end, and
+no hidden, additional dilutive conversion exists beyond what was already
+known. This does not mean the transaction was cheap for common — it was
+not — but it means the specific, named blocking question (how much of
+the preferred overhang genuinely remains, and on what terms) no longer
+blocks proceeding.
+
+### NNBR progression decision
+
+> ## `PROCEED_TO_DEEP_UNDERWRITING`
+
+Per instruction, deep underwriting itself is **not** performed by this
+addendum. The resolved Series D economics (§ above), the confirmed
+57.1% dilution, the remaining $34.6M/18,400-share balance and its
+December 31, 2026 discount incentive, and the exchange-ratio finding
+(retirement at fair-to-premium value, not a discount) are named as the
+specific, load-bearing inputs the next work order's deep-underwriting
+stage must carry forward and weigh against the operating momentum this
+record already found intact (§5–§8, above).
+
+**Capital status: NO REAL PORTFOLIO ACTION.**

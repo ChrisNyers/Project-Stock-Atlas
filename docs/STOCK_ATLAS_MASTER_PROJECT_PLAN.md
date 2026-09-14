@@ -20,6 +20,108 @@ progress toward it; evidence of edge is.
 
 ---
 
+## Governance Classification
+
+This section **consolidates** decisions already accepted and acted on
+elsewhere in this document and in the Decision Log — it creates no new
+governance layer, no new document, and no new architecture. Its purpose
+is to state plainly, in one place, which rules are permanent, which are
+controls currently under test within a specific pilot, and which are
+unproven hypotheses for a possible future pilot. Where a rule is already
+stated in full elsewhere in this plan, it is cross-referenced here rather
+than restated.
+
+### Permanent Governance
+
+- **Human capital allocation authority** — Stage 7 emits no
+  `PortfolioAction`; Stage 8 is human; human allocation authority is
+  unchanged. See "Architecture (frozen)," immediately below.
+- **Fail-closed evidence discipline** — a provider may never be the
+  authority on whether its own observation is fresh; ambiguity fails
+  closed rather than resolving in the direction of a trade. See the Gate
+  B live-price-binding record and the control-layer merge record
+  referenced throughout this plan.
+- **Provenance over privilege** — source state is logged, never treated
+  as underwriting privilege. First stated in Pilot 3 (`preserve
+  provenance, remove privilege`) and applied identically to every
+  discovery source since (Agent World, the manual-discovery bridge,
+  Scout).
+- **Immutable frozen records** — completed Pilot 1 and Pilot 2 records,
+  closed Pilot 3 company records, and prior Decision Log entries are not
+  rewritten once committed. Corrections are appended, never substituted.
+- **Live-alternatives / real-decision-time-data requirement** — see "Live
+  Capital," below: no real-capital step proceeds on stale or
+  provider-self-reported freshness.
+- **Discovery Source Neutrality.** Stock Atlas is multi-source by design.
+  No discovery source — including Grok Scout or Agent World — may own
+  Atlas's workflow, canonical state, validation standards, ranking,
+  sizing, or capital-allocation authority. Every discovery source submits
+  candidates into the same Atlas validation process, with no
+  underwriting advantage over any other source. Atlas must remain fully
+  operable if any individual source disappears. **Core test before
+  adding anything source-specific to core architecture: would this
+  change still improve Atlas if that source disappeared tomorrow? If
+  not, it does not belong in core architecture.**
+- **Mandatory Scout Feedback Governance.** The direction of learning is
+  fixed: Scout surfaces candidates → Atlas tests them against primary
+  evidence → Atlas's findings feed back to improve Scout's future
+  surfacing. **Atlas never changes its validation standards to
+  accommodate Scout.** Scout-improvement feedback should emphasize
+  change rather than names, tentative expectations gaps, second-order or
+  non-price discovery, the cheapest falsification test, the strongest
+  contradictory fact found, why the market might be wrong, and lessons
+  from prior failed hooks and false positives (e.g., NHP's and UCB's
+  Batch 003 triages). Scout may not rank, size, allocate, self-promote a
+  candidate to a later Atlas stage, or alter Atlas's standards.
+- **One-New-Information-Family-Per-Pilot Guardrail.** Default: introduce
+  no more than one new information family per pilot, unless prior
+  evidence clearly earns more. Before adding a lane, ask: (1) does it
+  surface opportunities Atlas would otherwise miss; (2) does it improve
+  timing or decision quality; (3) is its incremental value worth the
+  added complexity? If the answer to any is not clearly yes, do not add
+  it.
+- **Experiment-First Rule for new discovery / information lanes.** Every
+  new lane begins as an experiment, not a permanent feature. It is
+  tested for unique discovery value, timing value, variant-quality
+  improvement, risk-control improvement, false-positive/false-negative
+  impact, and the role it is actually best suited for. It is retained
+  only if it materially improves decision quality relative to the
+  complexity it adds — this is the same evidence-earned-complexity
+  discipline the two guardrails above exist to enforce.
+
+### Pilot Controls (under test, scoped to a specific pilot — not automatically permanent)
+
+- **Pilot 3 Hook Reconstruction at Triage**
+  (`PILOT3_HOOK_RECONSTRUCTION_AT_TRIAGE`) and **Priced-In One-Liner**
+  (`PILOT3_PRICED_IN_ONE_LINER`) — see `pilot3/PILOT3_BATCH_003_CHARTER.md`
+  and the Pilot 3 section below. Adopted prospectively for Batch 003
+  only; not applied retroactively; not yet evaluated for permanence.
+- **Current shadow-sentiment treatment** — sentiment observations, where
+  encountered, are recorded separately and never used to promote, block,
+  fund, or score a candidate. In force for Pilot 3; formal sentiment
+  testing remains a roadmap hypothesis, below, not a committed pilot.
+- **Batch-specific stop conditions** — e.g., "do not triage SAIA or TCS,"
+  "do not start Batch 004" — apply to the work order that issued them,
+  not as standing architecture.
+
+### Roadmap Hypotheses (unproven; may change based on evidence; never binding architecture until promoted)
+
+- Forced-flow / source-ownership testing — see "Future Pilot Candidates,"
+  below (source-blind capital allocation across Chris/Karen, an outside
+  investor, research, or the existing basket).
+- Formal sentiment / news / trend testing — see "Parked / Future
+  Research," below.
+- Capital-cycle / capacity testing; credit-equity divergence; statistical
+  / ML testing — not yet scoped to any active pilot.
+- Late-Pilot-4 CX / Claude Design work — not yet scoped.
+
+**Consolidation note:** this section restates no substantive rule
+differently from where it was first accepted — it only classifies
+permanence and cross-references. Nothing above changes human capital
+authority, the frozen-record rule, or any completed Pilot 1/2/3 record.
+
+---
+
 ## Architecture (frozen)
 
 ```
@@ -224,7 +326,7 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB, NNBR TRIAGED)**
+> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB, NNBR TRIAGED; NNBR CLEARED TO PROCEED)**
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -489,15 +591,28 @@ expanded to 13.9% in the most recent quarter, new-business-wins guidance
 was raised at every update for a year (to a $90–110M FY2026 midpoint of
 $100M), Data Center & Electric Grid revenue (~$80M TTM) was confirmed as
 fact, and the auto/non-auto sales-mix shift (65%/35% in 2023 to 40%/60%
-by Q2 2026) is real and substantially already executed. What remains
-unresolved, and is named as **thesis-blocking**, is a capital-structure
-reconciliation: a $75M dilutive private placement (24.5M shares) plus a
-Series D preferred exchange (5.5M more shares) together diluted common
-shares outstanding by roughly 57%, and the record could not reconcile
-whether the "9,850 shares of Series D exchanged" figure represents the
-bulk of the preferred cleanup or only ~15% of it (leaving ~85% of the
-overhang, still compounding at 14.5%+, outstanding) — the central
-question for deep underwriting.
+by Q2 2026) is real and substantially already executed. A capital-
+structure reconciliation was named **thesis-blocking**: whether the
+"9,850 shares of Series D exchanged" figure represented the bulk of the
+preferred cleanup or left most of it intact.
+
+**Resolved by addendum to the same record**
+(`pilot3/PILOT3_NNBR_PRIMARY_EVIDENCE_TRIAGE_001.md`): the actual Series
+D Exchange Agreement (a 10-Q exhibit, not press-release shorthand) shows
+a separate, previously unlocated 36,750-share **cash** redemption
+occurred concurrently with the 9,850-share stock exchange — together
+retiring **71.7%** of the 65,000-share pre-transaction Series D balance
+(reconciling cleanly to the earnings release's "~$89 million paid off"
+figure), not the ~15% the worst-case reading implied. The remaining
+18,400 shares (~28.3%, ~$34.6M) carry a temporarily reduced 10.0% rate
+through August 2027 and a confirmed $5.0 million discount if fully
+redeemed by December 31, 2026. Common dilution from the private
+placement and exchange combined is confirmed at ~57.1%; the exchange
+ratio itself retired preferred at roughly fair-to-premium value, not a
+discount. Uncertainty classification updated to
+**`RESOLVED_SUPPORTS_THESIS`**; progression decision
+**`PROCEED_TO_DEEP_UNDERWRITING`** — deep underwriting itself has not
+begun.
 
 **Current active next action:** none authorized in Pilot 3 beyond what is
 recorded. PATH, MDB, XOM, PCG, NHP, and UCB are closed at
@@ -505,7 +620,8 @@ recorded. PATH, MDB, XOM, PCG, NHP, and UCB are closed at
 `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their respective named
 falsifiers (SOLS's most load-bearing: whether Q3 2026 RAS segment margin
 continues worsening, stabilizes, or reverses); NNBR is
-`PROMOTE_TO_DEEP_UNDERWRITING` but deep underwriting has not begun; AAPL
+`PROMOTE_TO_DEEP_UNDERWRITING`, its Series D uncertainty resolved and
+cleared to proceed, but deep underwriting itself has not begun; AAPL
 is held at `EVIDENCE_GAP` pending the Oct 16 iPhone Duo preorder signal
 or Apple's Q4 FY2026 earnings call; JPM remains a calendar hold pending
 the September 16 FOMC decision. AVGO remains closed at

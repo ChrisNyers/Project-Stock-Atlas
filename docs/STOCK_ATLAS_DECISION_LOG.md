@@ -1513,3 +1513,145 @@ TCS. No Batch 004. No Stage 7, no Stage 8, no capital allocated, no
 control-layer or facade change.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+## PILOT3_NNBR_SERIES_D_RECONCILIATION_RESULT (2026-09-15)
+
+**Resolved the `THESIS_BLOCKING_UNCERTAINTY` identified in the committed
+NNBR triage record** (`pilot3/PILOT3_NNBR_PRIMARY_EVIDENCE_TRIAGE_001.md`),
+by addendum to that same record, per the append-only historical-
+integrity discipline established for SOLS.
+
+**Primary evidence located:** the actual Series D Preferred Stock
+Exchange Agreement, filed as an exhibit to the Q2 2026 10-Q
+(`nn-exchangeagreement.htm`), rather than relying on press-release
+shorthand. Cross-checked independently against NN, Inc.'s special-
+meeting proxy statement (DEF 14A, filed 2026-08-28), which discloses
+82,580,864 total shares outstanding as of August 5, 2026.
+
+**Reconciliation, resolved:** pre-transaction Series D balance was
+65,000 shares (Holder: NHTV Nevada Holdings LP). The August 5, 2026
+transaction comprised two concurrent, conditioned pieces: (1) an
+Exchange of 9,850 shares for 5,500,000 new common shares (previously
+known), and (2) a separate, previously unlocated cash Redemption of
+36,750 additional shares exercised under the original Certificate of
+Designation. Together, 46,600 of 65,000 shares (71.7%) were retired,
+reconciling cleanly (within ~$1.5M) to the earnings release's "~$89
+million paid off" headline using this record's own ~$1,878.5/share
+average carrying-value estimate. The remaining 18,400 shares (~28.3%,
+~$34.6 million carrying value) are confirmed to carry a temporarily
+reduced 10.0% dividend rate through August 2027 (Exchange Agreement
+Section 5.3), reverting to 15.0%/17.0% thereafter with a further 2.5%/
+year step-up from March 2028, and a confirmed $5.0 million discount to
+the aggregate redemption price (Section 5.4) if the Company achieves a
+"Final Redemption" of the full remaining balance by December 31, 2026 --
+the discount the original triage record's governing work order asked to
+be verified. No shareholder vote or Nasdaq approval was required for the
+transaction, and the proxy statement explicitly disclaims any definitive
+arrangement to issue its proposed additional authorized shares for
+Series D purposes -- a speculative hypothesis in this record's own
+diligence process that is accordingly retracted.
+
+**Common-equity economics:** confirmed ~57.1% dilution from the private
+placement and exchange combined (30,009,804 new shares against a
+52,574,000-share pre-transaction base), reconciling to the proxy's own
+82,580,864 share count within ordinary RSU-activity rounding. The
+exchange ratio (9,850 preferred shares for 5,500,000 common shares)
+values each preferred share at or above its own carrying value (roughly
+$1,707-2,176/share against a ~$1,878.5/share carrying-value estimate,
+depending on reference price) -- common holders did not receive a
+discount in the exchange itself. The transaction is characterized as a
+genuine de-risking trade (an escalating, compounding, senior-to-common
+claim substantially retired in exchange for fixed, already-issued,
+pari passu common dilution), not a cheap one, per the work order's
+explicit instruction not to answer based on leverage improvement alone.
+
+**Uncertainty classification:** `RESOLVED_SUPPORTS_THESIS` -- the
+resolved facts (71.7% retired, not the feared ~15%; a real, dated
+discount incentive for full cleanup; no hidden additional dilution) are
+more favorable than the unresolved ambiguity implied, though the
+transaction was not without real cost to common.
+
+**Progression decision:** `PROCEED_TO_DEEP_UNDERWRITING`. Deep
+underwriting itself was not performed by this record; the resolved
+Series D economics, the confirmed dilution, and the exchange-ratio
+finding are named as load-bearing inputs for that future work order.
+
+**Confirmed unchanged:** NHP and UCB remain `NO_DEMONSTRATED_EDGE`; SAIA
+and TCS remain registered only (`SURFACE_FOR_TRIAGE`), not triaged;
+PATH/MDB/XOM/PCG `NO_DEMONSTRATED_EDGE`; DOCU/SPXC/SOLS
+`BLOCKED_BY_MATERIAL_UNCERTAINTY`; AVGO `BLOCKED_BY_MATERIAL_UNCERTAINTY`;
+AAPL `EVIDENCE_GAP`; JPM `CALENDAR_HOLD` (not advanced); SMH
+`REFERENCE_PEER_TAPE`; NVDA `REFERENCE_ONLY`. No deep underwriting of
+NNBR performed. No triage of SAIA or TCS. No Batch 004.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+## PILOT3_GOVERNANCE_CONSOLIDATION_RESULT (2026-09-15)
+
+**Consolidated, not expanded, governance** into the existing Master
+Project Plan via a new "Governance Classification" section placed
+immediately after the Governing Mission. No new governance document was
+created; no new architecture was introduced; nothing in this
+consolidation changes human capital allocation authority (Stage 7 emits
+no `PortfolioAction`; Stage 8 remains human) or any completed Pilot 1,
+Pilot 2, or Pilot 3 record.
+
+**Four previously accepted governance rules consolidated into Permanent
+Governance, in full, for the first time as standing, named rules** (they
+had been applied in practice -- e.g., "preserve provenance, remove
+privilege" since Pilot 3's inception, Scout's ranking claims already
+being disregarded in the NHP and UCB triage records -- but not
+previously stated as a consolidated, named set):
+
+- **Discovery Source Neutrality** -- no discovery source, including Grok
+  Scout or Agent World, may own Atlas's workflow, canonical state,
+  validation standards, ranking, sizing, or capital-allocation authority;
+  every source submits into the same validation process; Atlas must
+  remain fully operable if any single source disappears; core test:
+  would a proposed change still improve Atlas if that source vanished
+  tomorrow?
+- **Mandatory Scout Feedback Governance** -- learning flows one
+  direction only (Scout surfaces, Atlas tests, Atlas's findings improve
+  Scout's future surfacing); Atlas never relaxes its validation standards
+  to accommodate Scout; Scout feedback should emphasize change over
+  names, tentative expectations gaps, second-order/non-price discovery,
+  cheapest falsification, the strongest contradictory fact, why the
+  market might be wrong, and lessons from prior false positives; Scout
+  may not rank, size, allocate, self-promote, or alter Atlas's standards.
+- **One-New-Information-Family-Per-Pilot Guardrail** -- no more than one
+  new information family introduced per pilot by default, gated by
+  whether it surfaces otherwise-missed opportunities, improves timing or
+  decision quality, and is worth its added complexity.
+- **Experiment-First Rule for new discovery/information lanes** -- every
+  new lane begins as an experiment tested for unique discovery value,
+  timing value, variant-quality improvement, risk-control improvement,
+  and false-positive/false-negative impact, and is retained only if it
+  materially improves decision quality relative to its complexity.
+
+**Governance Classification structure added** to the Master Project
+Plan, cross-referencing rather than duplicating existing language:
+
+- **Permanent Governance:** human capital allocation authority
+  (Architecture, frozen), fail-closed evidence discipline (Gate B /
+  control-layer records), provenance over privilege (Pilot 3, since
+  inception), immutable frozen records, the live-alternatives/real-
+  decision-time-data requirement (Live Capital section), plus the four
+  rules above.
+- **Pilot Controls (under test, not automatically permanent):** Pilot 3
+  Hook Reconstruction at Triage and Priced-In One-Liner
+  (`PILOT3_BATCH_003_CHARTER.md`), current shadow-sentiment treatment,
+  batch-specific stop conditions.
+- **Roadmap Hypotheses (unproven, evidence-gated, never binding until
+  promoted):** forced-flow/source-ownership testing (cross-referencing
+  the existing "Future Pilot Candidates" section), formal sentiment/news/
+  trend testing, capital-cycle/capacity testing, credit-equity
+  divergence, statistical/ML testing, late-Pilot-4 CX/Claude Design work
+  (cross-referencing "Parked / Future Research").
+
+**No new standalone governance document was created.** The consolidation
+lives entirely within the existing Master Project Plan (a single new
+section) and this single Decision Log entry -- not four separate entries
+for the four rules, per instruction. No frozen Pilot 1, Pilot 2, or
+completed Pilot 3 company record was modified.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
