@@ -2,10 +2,11 @@
 
 > **PAPER / SHADOW ONLY — NO REAL PORTFOLIO ACTION**
 > Registers five Scout-surfaced candidates under the rules chartered in
-> `PILOT3_BATCH_003_CHARTER.md`. Only NHP receives primary-evidence
-> triage in this record (`PILOT3_NHP_PRIMARY_EVIDENCE_TRIAGE_001.md`).
-> UCB, NNBR, SAIA, and TCS are registered only — not triaged, not
-> researched beyond canonical identity.
+> `PILOT3_BATCH_003_CHARTER.md`. NHP, UCB, NNBR, and SAIA have each since
+> received full primary-evidence triage in their own dedicated records
+> (cross-referenced below); NNBR additionally received deep underwriting.
+> **TCS remains registered only** — not triaged, not researched beyond
+> canonical identity, per every work order to date.
 
 | | |
 |---|---|
@@ -43,7 +44,7 @@ from the discovery source's own confidence claim.
 | NHP | National Healthcare Properties, Inc. | SEC CIK `0001561032` | NHP | Nasdaq Global Market, MIC `XNMS` | `NO_DEMONSTRATED_EDGE` (see triage record) |
 | UCB | United Community Banks, Inc. | SEC CIK `0000857855` | UCB | NYSE, MIC `XNYS` | `NO_DEMONSTRATED_EDGE` (see triage record) |
 | NNBR | NN, Inc. | SEC CIK `0000918541` | NNBR | Nasdaq Global Select, MIC `XNGS` | `BLOCKED_BY_MATERIAL_UNCERTAINTY` — deep underwriting closed (see `PILOT3_NNBR_DEEP_UNDERWRITING_001.md`) |
-| SAIA | Saia, Inc. | SEC CIK `0001177702` | SAIA | Nasdaq Global Select, MIC `XNGS` | `SURFACE_FOR_TRIAGE` — registered only |
+| SAIA | Saia, Inc. | SEC CIK `0001177702` | SAIA | Nasdaq Global Select, MIC `XNGS` | `NO_DEMONSTRATED_EDGE` — see `PILOT3_SAIA_PRIMARY_EVIDENCE_TRIAGE_001.md` |
 | TCS | Tecsys Inc. | Canadian issuer — no SEC EDGAR CIK identified; not researched further per instruction | TCS | Toronto Stock Exchange, MIC `XTSE` (also cross-listed NEO, MIC `NEOE`) | `SURFACE_FOR_TRIAGE` — registered only, **identity only, not researched** |
 
 **Only NHP receives primary-evidence triage in this record.** UCB, NNBR,
@@ -189,27 +190,41 @@ updated to **`RESOLVED_SUPPORTS_THESIS`**; progression decision
 performed and closed `BLOCKED_BY_MATERIAL_UNCERTAINTY` — see the
 dedicated section above.
 
-## SAIA, TCS — remain registered, not triaged
+## SAIA — full primary-evidence triage (read-through discovery type)
+
+Recorded separately in `PILOT3_SAIA_PRIMARY_EVIDENCE_TRIAGE_001.md`.
+Disposition: **`NO_DEMONSTRATED_EDGE`**. Scout's hook (ODFL's August 2026
+LTL pricing data suggesting industry pricing is firmer than feared,
+softening SAIA's guided Q3 operating-ratio pressure) failed the
+mandatory cheapest-falsification test on four grounds: SAIA's own Q3
+guidance (100bps sequential OR degradation, already better than the
+150-200bps historical norm) was public more than a month before the
+hook; SAIA discloses its own monthly shipment/tonnage data via SEC
+filing, filed the same calendar day as ODFL's release; ODFL's cited
+ex-fuel pricing metric was not new information (it sat inside a stable,
+year-long range); and the cost items most likely to drive SAIA's actual
+Q3 outcome (new-terminal drag, stacked wage increases, purchased-
+transportation inflation +47.3% YoY) are SAIA-specific and unrelated to
+ODFL's pricing environment. Direct market-reaction evidence (SAIA rose
+on the Sept 3 release day; ODFL did not) confirmed the market's own
+repricing is better explained by SAIA's own data than by the read-
+through. Classified `READ_THROUGH_PARTIAL` as a Pilot 3 learning
+observation — a genuine industry pricing-discipline signal exists but
+does not transfer with the specificity Scout's hook required.
+
+## TCS — remains registered, not triaged, not researched
 
 No discovery-hook detail, economic rationale, hook reconstruction,
 priced-in one-liner, candidate variant, market-could-be-right
 alternative, cheapest-falsification test, or evidence-gap assessment is
-recorded for these two candidates in this record — no work order
-governing this registration has yet provided discovery-hook detail for
-them, and three successive work orders have explicitly instructed that
-they not be triaged. **Initial disposition for both:
-`SURFACE_FOR_TRIAGE`**, pending a future work order that provides the
-discovery-hook detail needed to apply the required Batch 003
-discovery-record template (§7 of the charter).
-
----
-
-## TCS — registered, not triaged, not researched
-
-Same as above, with the additional, explicit instruction that TCS not be
-researched at all beyond the canonical-identity collision resolution
-above. **Initial disposition: `SURFACE_FOR_TRIAGE`**, pending a future
-work order.
+recorded for this candidate in this record — no work order governing
+this registration has yet provided discovery-hook detail for it, and
+four successive work orders have explicitly instructed that it not be
+triaged or researched at all beyond the canonical-identity collision
+resolution above. **Initial disposition: `SURFACE_FOR_TRIAGE`**, pending
+a future work order that provides the discovery-hook detail needed to
+apply the required Batch 003 discovery-record template (§7 of the
+charter).
 
 ---
 
@@ -229,7 +244,7 @@ promotion/blocking/funding logic — none arose in this record.
 | NHP | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the specific discovery mechanism (debt paydown + preferred redemption improving the common capital stack) was directly contradicted by a primary-sourced, dilutive equity raise the discovery layer did not surface, and by the Normalized FFO/share decline it produced |
 | UCB | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the earnings-quality half of the hook nets to roughly zero on management's own bridge once an unrelated acquisition and unguided future growth are excluded; the credit-risk-reduction half is real but the market's own flat-to-negative reaction does not indicate it is under-recognized |
 | NNBR | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | `BLOCKED_BY_MATERIAL_UNCERTAINTY` (deep underwriting) | Yes at triage (growth acceleration, margin expansion, mix shift, data-center revenue all corroborated and strengthened) and yes on the resolved Series D reconciliation (71.7% retired, not ~15%); deep underwriting then found the win pipeline is broader than triage knew (three ~$155M-TTM growth programs, a ~5x segment margin gap) but blocked promotion on capex execution never reaching guided run-rate across 8 quarters and free cash flow durability unproven |
-| SAIA | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged | — |
+| SAIA | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` (`READ_THROUGH`) | `SURFACE_FOR_TRIAGE` | `NO_DEMONSTRATED_EDGE` | No — the ODFL-August-data read-through failed the cheapest-falsification test: SAIA's own Q3 guidance was already better-than-normal-seasonality a month before the hook, SAIA discloses its own monthly volume data contemporaneously with ODFL's release, ODFL's cited pricing metric was not new information, and the cost items most likely to drive SAIA's Q3 outcome are SAIA-specific and unrelated to ODFL's pricing environment. Classified `READ_THROUGH_PARTIAL` |
 | TCS | `GROK_SCOUT_UNDER_SURFACE_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged (not researched) | — |
 
 No discovery score. This log records outcomes only.
@@ -238,9 +253,9 @@ No discovery score. This log records outcomes only.
 
 ## What this record does not do
 
-No deep underwriting of NHP. No triage of UCB, NNBR, SAIA, or TCS. No
-research of TCS. No Stage 7 or Stage 8. No capital allocated. No
-architecture change. No scoring, ranking, or new engine. Batch 001 and
-Batch 002 are untouched. No advance of JPM or AAPL.
+No triage or research of TCS. No Stage 7 or Stage 8. No capital
+allocated. No architecture change. No scoring, ranking, or new engine.
+Batch 001 and Batch 002 are untouched. No advance of JPM or AAPL. No
+Batch 004.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**

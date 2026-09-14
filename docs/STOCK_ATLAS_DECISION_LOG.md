@@ -1703,3 +1703,65 @@ SAIA, TCS remain `SURFACE_FOR_TRIAGE`, not triaged; no Batch 004 started.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT3_SAIA_PRIMARY_EVIDENCE_TRIAGE_RESULT (2026-09-14)
+
+**Candidate:** SAIA — Saia, Inc. (`PILOT3_SAIA_PRIMARY_EVIDENCE_TRIAGE_001.md`).
+**Discovery type:** `READ_THROUGH` (Old Dominion Freight Line → Saia) —
+the first Batch 003 candidate testing this pilot's core competitor-
+read-through learning question directly.
+
+**Result: `NO_DEMONSTRATED_EDGE`.** Scout's hook (ODFL's September 3,
+2026 August LTL operating-statistics release signaling firmer industry
+pricing, softening Saia's guided Q3 operating-ratio pressure) was tested
+against primary evidence from both companies: Saia's Q2 2026 earnings
+release, its issuer-filed earnings-call transcript (treated as primary
+evidence per instruction), its own July/August 2026 shipment-and-tonnage
+data (filed via 8-K the same calendar day as ODFL's release), four
+prior quarters of both companies' operating metrics, and ODFL's own
+four-quarter comparative trend.
+
+**The cheapest-falsification test (run first, per instruction) found
+no**, on four independent grounds: (1) Saia's own Q3 guidance — "around
+100 basis points of sequential degradation," already better than its
+own stated 150-200bps historical norm — was public on July 30, 2026,
+over a month before the Scout hook; (2) Saia discloses its own monthly
+volume data via SEC filing, filed the same day as ODFL's release,
+making the read-through largely redundant for the volume question; (3)
+ODFL's cited ex-fuel revenue/cwt (+4.8% August QTD) sat inside its own
+stable, year-long 4.4%-5.5% range — not new information, and its
+"August news" was more a volume-stabilization story (tons/day easing
+from -10.7% to -0.9% over four quarters) than a pricing-acceleration
+one; (4) the specific cost items most likely to determine Saia's actual
+Q3 outcome — new-terminal drag ("low-90s" OR on 2023-2024 cohorts),
+two stacked wage increases, and purchased-transportation costs up
+47.3% YoY — are Saia-specific and structurally unrelated to ODFL's
+pricing environment. The two companies' volume trajectories were found
+to be moving in opposite directions for company-specific reasons (ODFL
+deliberately shedding volume to hold price; Saia aggressively adding
+network capacity and taking on heavier, lower-cwt-yield freight),
+limiting quantitative transfer even though a qualitative industry
+pricing-discipline signal is real and corroborated by Saia's own
+contract-renewal (10.7%) and GRI (7.1%) data.
+
+**Market-reaction evidence directly tested the read-through's practical
+relevance**: on September 3, 2026 — when both companies released their
+own data — Saia's stock rose (+4.2%, extending to +7.8% over two
+sessions) while ODFL's did not, indicating the market's own repricing
+traces to Saia's disclosed data, not to an ODFL-driven read-through.
+Saia had separately fallen ~11% on its own July 30 earnings day despite
+a headline year-over-year operating-ratio improvement, consistent with
+the market weighing the same cost items this record identifies.
+
+**Read-through classification: `READ_THROUGH_PARTIAL`** — a genuine
+industry pricing-discipline signal exists but does not transfer with
+the specificity Scout's hook required, a Pilot 3 learning observation,
+not a permanent scoring field.
+
+**No deep underwriting of SAIA.** NHP, UCB remain `NO_DEMONSTRATED_EDGE`;
+NNBR remains `BLOCKED_BY_MATERIAL_UNCERTAINTY`; TCS remains
+`SURFACE_FOR_TRIAGE`, not triaged or researched. No Batch 004 started.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

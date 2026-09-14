@@ -326,7 +326,7 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB CLOSED; NNBR DEEP-UNDERWRITTEN AND BLOCKED)**
+> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB, SAIA CLOSED; NNBR DEEP-UNDERWRITTEN AND BLOCKED; TCS UNTOUCHED)**
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -636,9 +636,32 @@ reconstructed. Growth and a favorable capital-structure resolution were
 both found real but were explicitly not treated as sufficient on their
 own, per instruction.
 
+**SAIA primary-evidence triage**
+(`pilot3/PILOT3_SAIA_PRIMARY_EVIDENCE_TRIAGE_001.md`) closed
+**`NO_DEMONSTRATED_EDGE`** — the first Batch 003 candidate governed by a
+**read-through** discovery type (Old Dominion Freight Line's August LTL
+pricing data as a signal for Saia's Q3 setup), and the pilot's core test
+of whether competitor read-throughs validly transfer economic
+information. The read-through failed the mandatory cheapest-
+falsification test on four grounds: Saia's own Q3 operating-ratio
+guidance (100bps sequential degradation, already better than the
+150-200bps historical norm) was public more than a month before the
+hook; Saia discloses its own monthly shipment/tonnage data via SEC
+filing, filed the same calendar day as ODFL's release; ODFL's cited
+ex-fuel pricing metric sat inside a stable, year-long range rather than
+representing new information; and the cost items most likely to drive
+Saia's actual Q3 outcome (new-terminal drag, stacked wage increases,
+purchased-transportation costs up 47.3% YoY) are Saia-specific and
+unrelated to ODFL's pricing environment. Direct market-reaction evidence
+confirmed this: Saia rose on the day both companies released their own
+data while ODFL did not, indicating the market's reaction traced to
+Saia's own disclosures, not the read-through. Classified
+`READ_THROUGH_PARTIAL` — a genuine but non-transferable industry
+pricing-discipline signal — as a Pilot 3 learning observation.
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
-recorded. PATH, MDB, XOM, PCG, NHP, and UCB are closed at
-`NO_DEMONSTRATED_EDGE`; DOCU, SPXC, SOLS, and now NNBR are closed at
+recorded. PATH, MDB, XOM, PCG, NHP, UCB, and now SAIA are closed at
+`NO_DEMONSTRATED_EDGE`; DOCU, SPXC, SOLS, and NNBR are closed at
 `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their respective named
 falsifiers (SOLS's most load-bearing: whether Q3 2026 RAS segment margin
 continues worsening, stabilizes, or reverses; NNBR's: whether capex
@@ -647,9 +670,9 @@ proves durable beyond one quarter); AAPL is held at `EVIDENCE_GAP`
 pending the Oct 16 iPhone Duo preorder signal or Apple's Q4 FY2026
 earnings call; JPM remains a calendar hold pending the September 16
 FOMC decision. AVGO remains closed at `BLOCKED_BY_MATERIAL_UNCERTAINTY`,
-pending its named falsifiers/revisit triggers. SAIA and TCS remain
-registered only (`SURFACE_FOR_TRIAGE`) — not triaged, pending a future
-work order.
+pending its named falsifiers/revisit triggers. TCS remains registered
+only (`SURFACE_FOR_TRIAGE`) — not triaged, not researched, pending a
+future work order.
 
 ---
 
