@@ -1434,3 +1434,82 @@ or TCS. No Batch 004. No Stage 7, no Stage 8, no capital allocated, no
 control-layer or facade change.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+## PILOT3_NNBR_PRIMARY_EVIDENCE_TRIAGE_RESULT (2026-09-14)
+
+**NNBR primary-evidence triage** (`pilot3/PILOT3_NNBR_PRIMARY_EVIDENCE_TRIAGE_001.md`)
+— the third record governed by the two Batch 003 narrow fixes — returned
+**`PROMOTE_TO_DEEP_UNDERWRITING`**, the first Batch 003 candidate to
+survive triage. Canonical identity confirmed without ambiguity (NN, Inc.,
+Nasdaq Global Select, MIC XNGS, CIK 0000918541).
+
+Applying `PILOT3_HOOK_RECONSTRUCTION_AT_TRIAGE`, reconstructed revenue,
+Adjusted EBITDA, EBITDA margin, new-business-wins guidance, capex, and
+Data Center & Electric Grid revenue across five reporting points (Q3
+2025 through the September 9, 2026 investor-conference update). Unlike
+NHP and UCB, the reconstruction did not kill the operating thesis: it
+strengthened it. Revenue growth accelerated for three consecutive
+quarters (-8.5% to -1.7% to +12.1% to +19.3% YoY); Adjusted EBITDA margin
+expanded to 13.9% in Q2 2026; new-business-wins guidance was raised at
+every quarterly update over a year ($70-80M initial to $80-90M to
+$80-100M to $90-110M, midpoint now $100M); Data Center & Electric Grid
+revenue (~$80M TTM) and ~60 new CNC machine centers at the Wuxi plant
+for AI data-center supply chains were both confirmed as fact from the
+primary investor presentation; and the auto/non-auto sales mix shift
+(65%/35% in 2023 to 40%/60% by Q2 2026) was confirmed as already
+substantially executed, not merely underway -- the strongest single
+piece of evidence that faster-growing end markets are producing net
+company growth rather than merely offsetting legacy weakness.
+
+The refinancing/preferred-cleanup half of the hook did not reconstruct
+as cleanly. A $75.0 million common-stock private placement (24,509,804
+shares at $3.06/share, closed July 1-2, 2026) funded a Series D
+Preferred Stock redemption/exchange (9,850 shares exchanged for
+5,500,000 new common shares, closed August 5, 2026, with the Q2 2026
+earnings release separately stating "approximately $89 million of the
+preferred stock" was paid off). The record could not reconcile the
+9,850-share figure against the pre-transaction Series D balance
+(65,000 shares outstanding, $122.1 million carrying value including
+$75.5 million of accumulated/deemed dividends, at a 14.5% compounding
+coupon after step-ups from an initial 10%) and the "$89 million paid
+off" headline -- implying, if the 9,850-share figure is the complete
+picture, that roughly 85% of the Series D overhang (by share count) may
+remain outstanding and still compounding. Combined common shares
+outstanding increased by roughly 57% (52.574 million pre-transaction to
+approximately 82.6 million pro forma) from the private placement and
+preferred exchange together.
+
+Applying `PILOT3_PRICED_IN_ONE_LINER`, a credible one-liner was stated
+and -- unlike NHP and UCB -- was not contradicted by the evidence
+gathered: the operating momentum is real and the capital-structure
+question remains genuinely open rather than resolved unfavorably. A
+same-day Gate B bind correctly returned STALE (market open at decision
+time) and was not forced; the last confirmed completed-session close
+($3.58, 2026-09-11) was used for a coarse, explicitly-labeled valuation
+checkpoint (~6x EV/EBITDA, ~$296M market cap post-dilution). Direct
+completed-session price review found a strong (+24% over two weeks)
+positive reaction to the August 5 news that has since partially reversed
+(-13% off the peak), with no fresh rally on the September 9
+investor-conference update -- evidence the market has already engaged
+with, not ignored, the story, without proving it has been fully priced.
+
+The unresolved Series D reconciliation was classified `THESIS_BLOCKING_
+UNCERTAINTY`, not `POTENTIAL_SOURCE_OF_EDGE`: the entire promotion thesis
+depends on knowing how much of the preferred's dilutive, compounding
+claim actually remains, since continued heavy dilution and coupon
+accrual could absorb most or all of the confirmed operating improvement's
+per-share benefit. Closed `PROMOTE_TO_DEEP_UNDERWRITING`, with the
+preferred-structure reconciliation named as the central deep-underwriting
+task.
+
+**Confirmed unchanged:** NHP `NO_DEMONSTRATED_EDGE`; UCB
+`NO_DEMONSTRATED_EDGE`; SAIA and TCS remain registered only
+(`SURFACE_FOR_TRIAGE`), not triaged; PATH/MDB/XOM/PCG
+`NO_DEMONSTRATED_EDGE`; DOCU/SPXC/SOLS `BLOCKED_BY_MATERIAL_UNCERTAINTY`;
+AVGO `BLOCKED_BY_MATERIAL_UNCERTAINTY`; AAPL `EVIDENCE_GAP`; JPM
+`CALENDAR_HOLD` (not advanced); SMH `REFERENCE_PEER_TAPE`; NVDA
+`REFERENCE_ONLY`. No deep underwriting of NNBR. No triage of SAIA or
+TCS. No Batch 004. No Stage 7, no Stage 8, no capital allocated, no
+control-layer or facade change.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**

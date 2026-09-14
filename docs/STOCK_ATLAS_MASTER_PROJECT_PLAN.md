@@ -224,7 +224,7 @@ Pilot 2 must distinguish:
 
 ## Pilot 3 — OPPORTUNITY DISCOVERY SHADOW TEST
 
-> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB TRIAGED)**
+> ### Status: **ACTIVE — BATCH 002 CLOSED; BATCH 003 REGISTERED (NHP, UCB, NNBR TRIAGED)**
 
 Builds on the compact historical record
 [`pilot3/PILOT3_RECORD_001.md`](pilot3/PILOT3_RECORD_001.md) (2026-09-02, not
@@ -478,18 +478,40 @@ negative, and post-restructuring valuation (~1.5–1.65x tangible book,
 regional bank. Treated as a second successful discovery-system outcome
 for the new narrow-fix discipline.
 
+**NNBR's primary-evidence triage**
+(`pilot3/PILOT3_NNBR_PRIMARY_EVIDENCE_TRIAGE_001.md`), the third record
+governed by the two narrow fixes, returned
+**`PROMOTE_TO_DEEP_UNDERWRITING`** — the first Batch 003 candidate to
+survive triage. Unlike NHP and UCB, the mandatory hook reconstruction did
+not kill the operating thesis: revenue growth accelerated for three
+consecutive quarters (−8.5%→−1.7%→+12.1%→+19.3% YoY), EBITDA margin
+expanded to 13.9% in the most recent quarter, new-business-wins guidance
+was raised at every update for a year (to a $90–110M FY2026 midpoint of
+$100M), Data Center & Electric Grid revenue (~$80M TTM) was confirmed as
+fact, and the auto/non-auto sales-mix shift (65%/35% in 2023 to 40%/60%
+by Q2 2026) is real and substantially already executed. What remains
+unresolved, and is named as **thesis-blocking**, is a capital-structure
+reconciliation: a $75M dilutive private placement (24.5M shares) plus a
+Series D preferred exchange (5.5M more shares) together diluted common
+shares outstanding by roughly 57%, and the record could not reconcile
+whether the "9,850 shares of Series D exchanged" figure represents the
+bulk of the preferred cleanup or only ~15% of it (leaving ~85% of the
+overhang, still compounding at 14.5%+, outstanding) — the central
+question for deep underwriting.
+
 **Current active next action:** none authorized in Pilot 3 beyond what is
-recorded. PATH, MDB, XOM, PCG, NHP, and now UCB are closed at
+recorded. PATH, MDB, XOM, PCG, NHP, and UCB are closed at
 `NO_DEMONSTRATED_EDGE`; DOCU, SPXC, and SOLS are closed at
 `BLOCKED_BY_MATERIAL_UNCERTAINTY` pending their respective named
 falsifiers (SOLS's most load-bearing: whether Q3 2026 RAS segment margin
-continues worsening, stabilizes, or reverses); AAPL is held at
-`EVIDENCE_GAP` pending the Oct 16 iPhone Duo preorder signal or Apple's
-Q4 FY2026 earnings call; JPM remains a calendar hold pending the
-September 16 FOMC decision. AVGO remains closed at
+continues worsening, stabilizes, or reverses); NNBR is
+`PROMOTE_TO_DEEP_UNDERWRITING` but deep underwriting has not begun; AAPL
+is held at `EVIDENCE_GAP` pending the Oct 16 iPhone Duo preorder signal
+or Apple's Q4 FY2026 earnings call; JPM remains a calendar hold pending
+the September 16 FOMC decision. AVGO remains closed at
 `BLOCKED_BY_MATERIAL_UNCERTAINTY`, pending its named falsifiers/revisit
-triggers. NNBR, SAIA, and TCS remain registered only
-(`SURFACE_FOR_TRIAGE`) — not triaged, pending a future work order.
+triggers. SAIA and TCS remain registered only (`SURFACE_FOR_TRIAGE`) —
+not triaged, pending a future work order.
 
 ---
 
