@@ -3,10 +3,11 @@
 > **PAPER / SHADOW ONLY — NO REAL PORTFOLIO ACTION**
 > Registers three Scout-surfaced forced-flow situations under the
 > sourcing design chartered in
-> `pilot5/PILOT5_FORCED_FLOW_SOURCING_DESIGN.md`. Only VYLR receives
-> forced-flow triage in this record
-> (`PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md`). 646A/Crasus and MSGR/MSG
-> Rangers are registered as surfaced only — not triaged, not researched.
+> `pilot5/PILOT5_FORCED_FLOW_SOURCING_DESIGN.md`. VYLR and 646A/Crasus
+> have each received forced-flow triage
+> (`PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md`,
+> `PILOT5_CRASUS_646A_FORCED_FLOW_TRIAGE_001.md`). MSGR/MSG Rangers
+> remains registered as surfaced only — not triaged, not researched.
 
 | | |
 |---|---|
@@ -33,15 +34,15 @@ are registered without ranking one another.**
 
 | Candidate | Mechanism class | One-line hook (as surfaced by Scout) | Initial state |
 |---|---|---|---|
-| VYLR | Shareholder mismatch / distributed securities | Corteva → Vylor shareholder/index/mandate mismatch at spin-off | `SURFACE_FOR_TRIAGE` → triaged in this scan (see below) |
-| 646A (Resonac) → Crasus | Shareholder mismatch / distributed securities, cross-border | Resonac → Crasus cross-border/shareholder mismatch | `SURFACE_FOR_TRIAGE` — registered only |
+| VYLR | Shareholder mismatch / distributed securities | Corteva → Vylor shareholder/index/mandate mismatch at spin-off | `SURFACE_FOR_TRIAGE` → triaged (see below) |
+| 646A (Resonac) → Crasus | Shareholder mismatch / distributed securities, cross-border | Resonac → Crasus cross-border/shareholder mismatch | `SURFACE_FOR_TRIAGE` → triaged (see below) |
 | MSGR (MSG Sports → Rangers) | Holder-specific / shareholder-preference mismatch | MSG Sports → Rangers shareholder-preference mismatch | `SURFACE_FOR_TRIAGE` — registered only |
 
-**Only VYLR receives forced-flow triage in this record**, per explicit
-instruction. **646A/Crasus and MSGR are registered with the one-line
-hook Scout supplied only — no canonical-identity verification, no
-primary-evidence review, no economic detail was gathered for either,
-and none is implied by their inclusion in this table.**
+**VYLR and 646A/Crasus have each received forced-flow triage** in
+separate records. **MSGR is registered with the one-line hook Scout
+supplied only** — no canonical-identity verification, no primary-
+evidence review, no economic detail was gathered, and none is implied
+by its inclusion in this table.
 
 ---
 
@@ -65,11 +66,30 @@ final disposition's reasoning.
 
 ---
 
-## 646A / Crasus — registered, not triaged
+## 646A / Crasus — forced-flow triage complete
 
-No canonical-identity check, no primary-evidence review, no economic
-rationale is recorded for this candidate. **Initial disposition:
-`SURFACE_FOR_TRIAGE`**, unchanged, pending a future work order.
+Triage recorded separately in
+`PILOT5_CRASUS_646A_FORCED_FLOW_TRIAGE_001.md` — closed
+**`NO_DEMONSTRATED_FORCED_FLOW_EDGE`**. Confirmed the full transaction
+mechanics from Resonac's own primary IR documents (>80% of Crasus
+distributed at a 1:1 ratio, Resonac retaining <20%, listing Sep 29,
+distribution Oct 1, 2026, direct listing with no new capital raised).
+Found the spin-off is a **tax-qualified partial spin-off under Japanese
+law** — refuting a Japan-domestic-tax-driven forced-selling narrative
+for the majority of the shareholder base. Identified the Nikkei 225's
+own July 2025 rule change (temporary index inclusion from the ex-rights
+date, mechanical removal the business day after listing) as the most
+concrete confirmed forced-seller mechanism, but could not quantify its
+magnitude pre-listing, and found TOPIX treatment unconfirmed either
+way. The fundamental-separation check found a genuine, current,
+issuer-acknowledged headwind — Crasus's own operating profit fell 51%
+YoY (2024→2025), its 2026 guidance is explicitly "under review" due to
+a Middle East-linked naphtha-supply disruption, and Japan's ethylene
+industry hit record-low utilization in early 2026 — which independently
+explains potential post-listing price weakness without requiring any
+ownership-dislocation story. See that record for the full mechanism-by-
+mechanism analysis, the cheapest-falsification result, and the
+comparative learning against Vylor.
 
 ---
 
@@ -94,8 +114,8 @@ is kept out of promotion/blocking/funding logic.
 
 | Candidate | Source | Initial state | Atlas disposition | Notes |
 |---|---|---|---|---|
-| VYLR | `GROK_SCOUT_FORCED_FLOW_DISCOVERY` | `SURFACE_FOR_TRIAGE` | see `PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md` | Only candidate triaged this scan |
-| 646A / Crasus | `GROK_SCOUT_FORCED_FLOW_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged | Untouched per instruction |
+| VYLR | `GROK_SCOUT_FORCED_FLOW_DISCOVERY` | `SURFACE_FOR_TRIAGE` | see `PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md` | `PROMOTE_TO_FUNDAMENTAL_UNDERWRITING` → `READY_FOR_WI_PRICE_TEST` |
+| 646A / Crasus | `GROK_SCOUT_FORCED_FLOW_DISCOVERY` | `SURFACE_FOR_TRIAGE` | see `PILOT5_CRASUS_646A_FORCED_FLOW_TRIAGE_001.md` | `NO_DEMONSTRATED_FORCED_FLOW_EDGE` |
 | MSGR | `GROK_SCOUT_FORCED_FLOW_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged | Untouched per instruction |
 
 No discovery score. This log records outcomes only.
@@ -105,9 +125,8 @@ No discovery score. This log records outcomes only.
 ## What this record does not do
 
 No canonical-identity verification, primary-evidence review, or
-economic research on 646A/Crasus or MSGR. No deep/fundamental
-underwriting of VYLR. No Stage 7 or Stage 8. No capital allocated. No
-architecture change. No scoring, ranking, or new engine. No Discovery
-Scan 002.
+economic research on MSGR. No deep/fundamental underwriting of VYLR or
+Crasus. No Stage 7 or Stage 8. No capital allocated. No architecture
+change. No scoring, ranking, or new engine. No Discovery Scan 002.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**

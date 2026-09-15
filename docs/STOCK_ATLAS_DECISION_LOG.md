@@ -2191,3 +2191,110 @@ would distinguish them.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT5_CRASUS_646A_FORCED_FLOW_TRIAGE_RESULT
+
+| | |
+|---|---|
+| Date | 2026-09-14 |
+| Status | **CLOSED — `NO_DEMONSTRATED_FORCED_FLOW_EDGE`** |
+| Context | Pilot 5 Discovery Scan 001, situation 2 of 3 |
+
+### Decision
+
+Forced-flow triage of Crasus Chemical Inc. (TSE 646A, pending listing),
+Resonac Holdings Corporation's (TSE 4004) petrochemical-business
+spin-off, closed **`NO_DEMONSTRATED_FORCED_FLOW_EDGE`**. Full record:
+`pilot5/PILOT5_CRASUS_646A_FORCED_FLOW_TRIAGE_001.md`.
+
+**Transaction mechanics** confirmed from Resonac's own July 6, 2026
+primary IR documents (news release + explanatory material, both PDFs
+extracted via `pdftotext` after WebFetch's binary-PDF ceiling made
+direct extraction unreliable — same workaround pattern established for
+TCS in Pilot 3): more than 80% of Crasus shares distributed to Resonac
+shareholders at a 1:1 ratio via in-kind dividend, Resonac retaining
+less than 20%; listing (Sept 29, 2026) preceding the distribution's
+effective date (Oct 1, 2026); a direct listing (TSE Itayose call-
+auction price discovery) raising no new capital.
+
+**Mechanism-by-mechanism finding (load-bearing):** the spin-off is
+confirmed a **tax-qualified partial spin-off under Japanese law** —
+Resonac shareholders face no deemed-dividend taxation and capital-gains
+tax is merely deferred, not triggered — directly refuting a
+Japan-domestic-tax-driven forced-selling narrative for the majority of
+the shareholder base. U.S. federal tax treatment was not addressed by
+either primary document (disclosed evidence gap); a separate,
+non-tax, U.S. securities-law mechanism (Crasus shares "have not been,
+and will not be, registered under the U.S. Securities Act of 1933")
+was identified as a more concrete potential constraint on U.S. holders,
+but its actual operational effect (non-delivery vs. cash-out) could not
+be confirmed. The most concrete confirmed forced-seller mechanism found
+was the **Nikkei 225's own July 2025 methodology revision**: a spun-off
+entity is temporarily included in the index from the ex-rights date and
+mechanically removed the business day after listing — Nikkei Inc.'s
+own reporting confirms Crasus specifically will be included on its
+Sept 29 listing date and removed Sept 30, forcing Nikkei-225-tracking
+passive funds to exit within roughly one trading day regardless of
+fundamental view. This mechanism's magnitude could not be quantified
+pre-listing (Crasus has no market price yet, and Nikkei 225 is a
+price-weighted index with capping factors not available to Atlas).
+TOPIX treatment of the new Standard Market listing remained an
+unresolved evidence gap (JPX's own methodology page returned HTTP 403;
+no dated confirmation found either way). Sector/mandate mismatch
+(semiconductor-materials shareholder base inheriting a basic
+petrochemical company) was found plausible but unconfirmed at the
+specific-holder level.
+
+**Fundamental-separation check — more consequential here than at Vylor,
+as the sourcing design's own caution about basic-petrochemical
+cyclicality anticipated.** Crasus's own May 15, 2026 pre-listing
+disclosure (original, issuer-sourced) showed operating profit falling
+51% year-over-year (¥8.6B→¥4.2B, 2024→2025), ROE falling from 7.8% to
+4.7%, ROIC from 4.5% to 2.4%, and 2026 operating-profit guidance
+explicitly placed "under review" due to a Middle East-conflict-linked
+naphtha-supply disruption making customer demand and business-plan
+impact "unpredictable" — in the issuer's own words. This sits against a
+backdrop of Japan's ethylene industry hitting record-low utilization
+(68.6% in March, 67.3% in April 2026, per Japan Petrochemical Industry
+Association data via Argus Media/Hydrocarbon Processing) and a
+disclosed structural industry contraction (4 of Japan's 12 ethylene
+plants to close by ~2030). This independently and sufficiently explains
+potential post-listing price weakness without requiring any
+ownership-dislocation story.
+
+**Cheapest falsification result:** of five proposed kill conditions,
+two were affirmatively satisfied by primary evidence (Japan-domestic
+tax treatment; sector mismatch unconfirmed at the holder level), one
+was genuinely mixed (index treatment — Nikkei 225 real, TOPIX
+unconfirmed), and the fundamental-separation confound independently
+undermines the thesis's cleanliness. The forced-flow hypothesis was not
+cleanly killed outright but did not clear the bar for promotion to
+fundamental underwriting.
+
+**Discovery-clock result:** Crasus's transaction terms have been
+publicly disclosed in full detail since July 6, 2026 — over two months
+before Scout's Sept 14, 2026 discovery — and a Japan special-situations
+research platform had already published a dedicated primer and an
+"expert call transcript" on Crasus dated Sept 8, 2026, six days before
+Scout's surfacing. This is materially later in the security's own
+recognition cycle than Vylor, which Atlas engaged before any price
+discovery had begun.
+
+**Pilot 5 comparative learning (Crasus vs. Vylor, learning only, no
+capital ranking):** Vylor was found cleaner on every tested axis — the
+more identifiable constrained seller (issuer's own risk-factor language
+naming index funds directly, versus Crasus's index-provider-sourced but
+issuer-silent mechanism), the cleaner fundamental separation (Corteva's
+guidance raised vs. Crasus's guidance withdrawn), and the earlier
+discovery relative to price discovery. This asymmetric result is
+recorded as a genuine, useful Pilot 5 finding, not softened for
+experimental symmetry between the two candidates.
+
+**Vylor unchanged at `READY_FOR_WI_PRICE_TEST`. MSG Rangers (MSGR)
+unchanged at `SURFACE_FOR_TRIAGE`, completely untouched. No deep or
+fundamental underwriting of Crasus. No Stage 7. No capital allocated.
+No new Pilot 5 discovery scan.**
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

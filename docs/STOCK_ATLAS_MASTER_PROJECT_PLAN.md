@@ -736,7 +736,8 @@ no Pilot 5 candidate has been created.**
 ## Pilot 5 — FORCED_FLOW / OWNERSHIP_DISLOCATION
 
 > ### Status: **ACTIVE — VYLR FUNDAMENTALLY UNDERWRITTEN
-> (`READY_FOR_WI_PRICE_TEST`, pre-WI trading); CRASUS, MSGR UNTOUCHED**
+> (`READY_FOR_WI_PRICE_TEST`, pre-WI trading); CRASUS TRIAGED
+> (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`); MSGR UNTOUCHED**
 
 **Discovery Scan 001** (`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`),
 source `GROK_SCOUT_FORCED_FLOW_DISCOVERY`: three situations registered
@@ -744,8 +745,8 @@ without ranking (Scout's own "best research-use-of-time" claim for VYLR
 explicitly disregarded, per Discovery Source Neutrality) — VYLR
 (Corteva → Vylor spin-off shareholder/index mismatch), 646A/Crasus
 (Resonac → Crasus cross-border mismatch), MSGR (MSG Sports → Rangers
-shareholder-preference mismatch). **Only VYLR received forced-flow
-triage.**
+shareholder-preference mismatch). **VYLR and 646A/Crasus have each
+received forced-flow triage; MSGR remains untouched.**
 
 **VYLR forced-flow triage**
 (`pilot5/PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md`) closed
@@ -806,9 +807,43 @@ strong-execution scenarios) plus a required-return attractiveness
 threshold, explicitly distinguishing this from a price target or Stage
 7 decision.
 
-**646A/Crasus and MSGR remain `SURFACE_FOR_TRIAGE`** — no canonical-
-identity check, no primary-evidence review, no research of any kind
-performed on either.
+**Crasus (646A) forced-flow triage**
+(`pilot5/PILOT5_CRASUS_646A_FORCED_FLOW_TRIAGE_001.md`) closed
+**`NO_DEMONSTRATED_FORCED_FLOW_EDGE`**. Confirmed the full spin-off
+mechanics from Resonac's own primary IR documents (>80% of Crasus
+Chemical Inc. distributed to Resonac Holdings shareholders at a 1:1
+ratio, Resonac retaining <20%, listing Sept 29 and distribution Oct 1,
+2026, a direct listing raising no new capital). Found the transaction
+is a **tax-qualified partial spin-off under Japanese law** — Japanese
+shareholders face no deemed-dividend taxation, refuting the
+domestic-tax-driven forced-selling narrative for the majority of the
+holder base. Identified the Nikkei 225's own July 2025 methodology
+revision (temporary index inclusion from the ex-rights date, mechanical
+removal the business day after listing — Crasus specifically confirmed
+by Nikkei Inc.'s own reporting to be included on its Sept 29 listing
+date and removed Sept 30) as the most concrete confirmed forced-seller
+mechanism, though its magnitude could not be quantified pre-listing and
+TOPIX treatment remained an unresolved evidence gap. The
+fundamental-separation check — more consequential here than at Vylor,
+as anticipated by the sourcing design's own caution about basic-
+petrochemical cyclicality — found a genuine, current, issuer-
+acknowledged headwind: Crasus's own May 2026 release disclosed
+operating profit fell 51% YoY (¥8.6B→¥4.2B, 2024→2025), ROE/ROIC each
+roughly halved, and 2026 guidance was explicitly placed "under review"
+due to a Middle East-linked naphtha-supply disruption, against a
+backdrop of Japan's ethylene industry hitting record-low utilization
+(68.6%/67.3%) in early 2026. This independently explains potential
+post-listing weakness without requiring any ownership-dislocation
+story, and two of the cheapest-falsification test's five kill
+conditions were affirmatively satisfied by primary evidence. The
+required Pilot 5 comparative-learning exercise found Vylor cleaner on
+every axis (more identifiable constrained seller, cleaner fundamental
+separation, earlier discovery relative to price discovery) — a useful,
+honest contrast rather than a forced symmetry between the two
+candidates.
+
+**MSGR remains `SURFACE_FOR_TRIAGE`** — no canonical-identity check, no
+primary-evidence review, no research of any kind performed.
 
 **Sourcing design**: `pilot5/PILOT5_FORCED_FLOW_SOURCING_DESIGN.md`
 defines where and how to look (three search lenses — shareholder
