@@ -2298,3 +2298,124 @@ No new Pilot 5 discovery scan.**
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT5_MSGR_FORCED_FLOW_TRIAGE_RESULT
+
+| | |
+|---|---|
+| Date | 2026-09-15 |
+| Status | **CLOSED — `NO_DEMONSTRATED_FORCED_FLOW_EDGE`** |
+| Context | Pilot 5 Discovery Scan 001, situation 3 of 3 (final — scan now fully triaged) |
+
+### Decision
+
+Forced-flow triage of MSGS Spinco, Inc. (CIK `0002132873`, to be
+renamed MSG Rangers Corp., expected NYSE ticker MSGR), Madison Square
+Garden Sports Corp.'s (NYSE MSGS, to be renamed MSG Knickerbockers
+Corp., expected ticker MSGK) proposed spin-off of its New York Rangers
+business, closed **`NO_DEMONSTRATED_FORCED_FLOW_EDGE`**. Full record:
+`pilot5/PILOT5_MSGR_FORCED_FLOW_TRIAGE_001.md`.
+
+**Transaction status** confirmed from the primary Form 10-12B/A,
+Amendment No. 1 (filed Sept 3, 2026, 12 days before this triage) and
+its Exhibit 99.1 Information Statement (2.09MB HTML, downloaded and
+locally text-extracted via the same workaround pattern established for
+Vylor/TCS/Crasus): 1-for-2 distribution ratio and MSGR/MSGK tickers
+both confirmed matching Scout exactly. **Board approval of the
+Distribution itself, league (NHL) approval, a final tax opinion (only
+a draft, bracketed-placeholder Exhibit 8.1 from Sullivan & Cromwell LLP
+exists), and Form 10 effectiveness all remain unsatisfied conditions**,
+and the record date and distribution date remain genuinely blank in
+the issuer's own most current filing — independently confirming
+Scout's own caveat that terms were not yet final.
+
+**Mechanism-by-mechanism finding (load-bearing):** the issuer's own
+selling-pressure risk-factor language, quoted verbatim from the primary
+filing and appearing in mirror-image form for both RemainCo and
+SpinCo, is explicitly **preference-framed** ("stockholders sell their
+shares because they are not interested in holding an investment,"
+not "may be required to sell") — a meaningful, original-source
+distinction from Vylor's compulsion-framed index-fund risk factor.
+No index-treatment discussion exists anywhere in MSGR's own ~780,000-
+character information statement. Atlas nonetheless identified a real,
+previously-unstated structural mechanism beyond Scout's framing: MSGS
+is a confirmed S&P SmallCap 600 member (since Aug 1, 2023), and S&P
+Dow Jones Indices' own published methodology requires a spun-off
+entity to independently qualify for index addition, including a
+positive-earnings screen over the trailing four quarters — a screen
+MSGR would very plausibly fail given its own disclosed net losses in
+both FY2025 and FY2026. This is a materially weaker dynamic than
+Vylor's or Crasus's index-removal mechanisms, since it describes a
+stub never being added to an index rather than being mechanically
+forced out of one it briefly held. Sector/mandate mismatch (EGC-averse
+and controlled-company-averse institutional mandates) and stub-size
+dynamics were both found plausible but unconfirmed at the specific-
+holder level, consistent with the instruction not to assume a
+mismatch or manufacture forced selling from position size alone.
+
+**Fundamental-separation check** found a genuine confound: operating
+loss of approximately $30.5 million (FY2026) and $23.3 million
+(FY2025); net loss of $26.4 million (FY2026) and $23.0 million
+(FY2025), both years unprofitable and worsening; revenue itself
+playoff-sensitive ($401.5M in FY2024 versus $337.3M in FY2026); and
+the issuer's own direct words — "We are likely not to be profitable in
+the near term unless the Rangers make an extended playoff run." A
+concrete, already-realized related-party finding: Rangers local media
+rights revenue fell from $39.1 million (FY2025) to $35.3 million
+(FY2026) after related-party MSG Networks' 2025 debt restructuring (a
+~$510 million lender write-off) forced an 18% cut to the local
+telecast rights fee, with no annual escalator.
+
+**Franchise-value-vs-public-equity test:** the widely-reported
+Knicks/Rangers "sum-of-the-parts" valuation gap (MSG Sports' combined
+public equity value of roughly $9.6-9.8 billion against a combined
+third-party sports-valuation estimate of $13.5-13.75 billion — Knicks
+~$9.75-9.85B post-2026-championship, Rangers ~$3.65-4.0B) is real and
+already the dominant, broadly-covered investment narrative for this
+transaction, not an Atlas discovery. Whether that gap accrues cleanly
+to minority MSGR public shareholders was found **not established**,
+given the Dolan Family Group's permanent 100% Class B ownership,
+controlled-company status, and the absence of any identified sale or
+capital-return catalyst.
+
+**Cheapest falsification result:** three of five proposed kill
+conditions were satisfied or largely satisfied by primary evidence
+(team preference confirmed discretionary; natural sports-specialist/
+event-driven buyer interest already visible; standalone Rangers
+fundamentals independently explain likely weakness), and the one real,
+newly-identified index mechanism (S&P non-addition) is structurally
+weaker than either Vylor's or Crasus's mechanisms. The forced-flow
+hypothesis does not survive as a clean, well-isolated thesis.
+
+**Discovery-clock result:** a nuanced, distinct finding from the other
+two Discovery Scan 001 situations — Atlas is engaging before the
+transaction has closed and before any MSGR price discovery exists
+(closer to Vylor's position), but the underlying sum-of-the-parts
+economic thesis has already been publicly known and actively covered
+by dedicated sports-finance and event-driven media for four months
+(since the May 18, 2026 announcement), meaning being early relative to
+price discovery is not the same as being early relative to thesis
+recognition.
+
+**Three-way Pilot 5 comparative learning (Vylor / Crasus / MSGR,
+learning only, no capital ranking):** each of the two non-promoted
+situations failed for a genuinely different reason — Crasus on a
+fundamental confound (record-low petrochemical-cycle utilization,
+withdrawn guidance) despite a real, dated index mechanism; MSGR on
+mechanism purity (preference-framed, not compulsion-framed language;
+a non-addition rather than forced-removal index dynamic) compounded by
+a fundamental confound of its own (playoff-dependent losses) and prior
+public recognition of its core thesis. This asymmetry across all three
+outcomes is recorded as a genuine, useful Pilot 5 finding rather than
+smoothed into a single generic conclusion.
+
+**Discovery Scan 001 is now fully triaged: Vylor
+(`READY_FOR_WI_PRICE_TEST`), Crasus (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`),
+and MSGR (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`) each carry a recorded
+disposition. Vylor and Crasus records unchanged and untouched by this
+turn. No deep or fundamental underwriting of MSGR. No Stage 7. No new
+Pilot 5 discovery scan.**
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

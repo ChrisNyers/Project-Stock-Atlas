@@ -735,9 +735,10 @@ no Pilot 5 candidate has been created.**
 
 ## Pilot 5 — FORCED_FLOW / OWNERSHIP_DISLOCATION
 
-> ### Status: **ACTIVE — VYLR FUNDAMENTALLY UNDERWRITTEN
-> (`READY_FOR_WI_PRICE_TEST`, pre-WI trading); CRASUS TRIAGED
-> (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`); MSGR UNTOUCHED**
+> ### Status: **ACTIVE — DISCOVERY SCAN 001 FULLY TRIAGED. VYLR
+> FUNDAMENTALLY UNDERWRITTEN (`READY_FOR_WI_PRICE_TEST`, pre-WI
+> trading); CRASUS (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`); MSGR
+> (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`)**
 
 **Discovery Scan 001** (`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`),
 source `GROK_SCOUT_FORCED_FLOW_DISCOVERY`: three situations registered
@@ -745,8 +746,8 @@ without ranking (Scout's own "best research-use-of-time" claim for VYLR
 explicitly disregarded, per Discovery Source Neutrality) — VYLR
 (Corteva → Vylor spin-off shareholder/index mismatch), 646A/Crasus
 (Resonac → Crasus cross-border mismatch), MSGR (MSG Sports → Rangers
-shareholder-preference mismatch). **VYLR and 646A/Crasus have each
-received forced-flow triage; MSGR remains untouched.**
+shareholder-preference mismatch). **All three situations have now
+received forced-flow triage — Discovery Scan 001 is fully closed.**
 
 **VYLR forced-flow triage**
 (`pilot5/PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md`) closed
@@ -842,8 +843,41 @@ separation, earlier discovery relative to price discovery) — a useful,
 honest contrast rather than a forced symmetry between the two
 candidates.
 
-**MSGR remains `SURFACE_FOR_TRIAGE`** — no canonical-identity check, no
-primary-evidence review, no research of any kind performed.
+**MSG Rangers (MSGR) forced-flow triage**
+(`pilot5/PILOT5_MSGR_FORCED_FLOW_TRIAGE_001.md`) closed
+**`NO_DEMONSTRATED_FORCED_FLOW_EDGE`**. Confirmed the current
+transaction status directly from MSGS Spinco, Inc.'s (CIK `0002132873`)
+primary Form 10-12B/A, Amendment No. 1 (Sept 3, 2026): 1-for-2
+distribution ratio and MSGR/MSGK tickers matched Scout exactly, while
+board approval, league approval, a final tax opinion, and Form 10
+effectiveness all remain unsatisfied conditions with record/
+distribution dates still genuinely blank. The issuer's own
+selling-pressure risk-factor language — quoted verbatim from the
+primary filing — was found to be explicitly preference-framed ("not
+interested in holding"), not compulsion-framed, distinguishing it from
+Vylor's compulsion-framed index-fund language. Atlas identified a real,
+previously-unstated mechanism beyond Scout's own framing: MSGR would
+likely fail the S&P SmallCap 600's positive-earnings screen for
+independent index addition, given its own disclosed net losses in both
+FY2025 and FY2026 — a materially weaker dynamic than Vylor's or
+Crasus's index-removal mechanisms, since it describes a stub never
+being added rather than a holding being forced out. The
+fundamental-separation check found a genuine confound of its own kind:
+two consecutive years of operating and net losses, profitability
+explicitly conditioned by the issuer on "an extended playoff run," and
+an already-realized 18% cut to Rangers local media revenue traced to
+related-party MSG Networks' 2025 debt restructuring. The
+franchise-value-vs-public-equity test found the widely-reported
+Knicks/Rangers sum-of-the-parts valuation gap (~29% discount) real but
+not established to accrue cleanly to minority MSGR holders, given the
+Dolan Family Group's permanent Class B voting control and the absence
+of any sale catalyst. The three-way Pilot 5 comparison found each
+non-promoted situation failed for a different reason — Crasus on
+fundamentals, MSGR on mechanism purity and prior thesis recognition —
+a useful, non-redundant finding preserved without softening.
+
+**Discovery Scan 001 is now fully triaged — all three surfaced
+situations carry a recorded Atlas disposition.**
 
 **Sourcing design**: `pilot5/PILOT5_FORCED_FLOW_SOURCING_DESIGN.md`
 defines where and how to look (three search lenses — shareholder

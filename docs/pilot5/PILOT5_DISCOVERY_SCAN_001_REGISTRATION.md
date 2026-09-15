@@ -3,11 +3,12 @@
 > **PAPER / SHADOW ONLY — NO REAL PORTFOLIO ACTION**
 > Registers three Scout-surfaced forced-flow situations under the
 > sourcing design chartered in
-> `pilot5/PILOT5_FORCED_FLOW_SOURCING_DESIGN.md`. VYLR and 646A/Crasus
-> have each received forced-flow triage
+> `pilot5/PILOT5_FORCED_FLOW_SOURCING_DESIGN.md`. **All three have now
+> received forced-flow triage**
 > (`PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md`,
-> `PILOT5_CRASUS_646A_FORCED_FLOW_TRIAGE_001.md`). MSGR/MSG Rangers
-> remains registered as surfaced only — not triaged, not researched.
+> `PILOT5_CRASUS_646A_FORCED_FLOW_TRIAGE_001.md`,
+> `PILOT5_MSGR_FORCED_FLOW_TRIAGE_001.md`). Discovery Scan 001 is fully
+> closed as of this record.
 
 | | |
 |---|---|
@@ -36,13 +37,10 @@ are registered without ranking one another.**
 |---|---|---|---|
 | VYLR | Shareholder mismatch / distributed securities | Corteva → Vylor shareholder/index/mandate mismatch at spin-off | `SURFACE_FOR_TRIAGE` → triaged (see below) |
 | 646A (Resonac) → Crasus | Shareholder mismatch / distributed securities, cross-border | Resonac → Crasus cross-border/shareholder mismatch | `SURFACE_FOR_TRIAGE` → triaged (see below) |
-| MSGR (MSG Sports → Rangers) | Holder-specific / shareholder-preference mismatch | MSG Sports → Rangers shareholder-preference mismatch | `SURFACE_FOR_TRIAGE` — registered only |
+| MSGR (MSG Sports → Rangers) | Holder-specific / shareholder-preference mismatch | MSG Sports → Rangers shareholder-preference mismatch | `SURFACE_FOR_TRIAGE` → triaged (see below) |
 
-**VYLR and 646A/Crasus have each received forced-flow triage** in
-separate records. **MSGR is registered with the one-line hook Scout
-supplied only** — no canonical-identity verification, no primary-
-evidence review, no economic detail was gathered, and none is implied
-by its inclusion in this table.
+**All three situations have each received forced-flow triage** in
+separate records — Discovery Scan 001 is fully closed.
 
 ---
 
@@ -93,11 +91,32 @@ comparative learning against Vylor.
 
 ---
 
-## MSG Rangers / MSGR — registered, not triaged
+## MSG Rangers / MSGR — forced-flow triage complete
 
-No canonical-identity check, no primary-evidence review, no economic
-rationale is recorded for this candidate. **Initial disposition:
-`SURFACE_FOR_TRIAGE`**, unchanged, pending a future work order.
+Triage recorded separately in `PILOT5_MSGR_FORCED_FLOW_TRIAGE_001.md`
+— closed **`NO_DEMONSTRATED_FORCED_FLOW_EDGE`**. Confirmed the current
+transaction status from MSGS Spinco, Inc.'s (CIK `0002132873`) primary
+Form 10-12B/A, Amendment No. 1 (Sept 3, 2026): 1-for-2 distribution
+ratio, tickers MSGR/MSGK, all confirmed matching Scout; board approval,
+league approval, a final tax opinion, and Form 10 effectiveness all
+remain unsatisfied conditions, and the record/distribution dates remain
+genuinely blank. The issuer's own selling-pressure risk-factor language
+was quoted verbatim and found to be explicitly preference-framed ("not
+interested in holding"), not compulsion-framed, refuting the more
+binding reading of Scout's hypothesis. Atlas identified a real but
+previously-unstated mechanism beyond Scout's framing: MSGR would likely
+fail the S&P SmallCap 600's positive-earnings screen for independent
+index addition, given its own disclosed net losses in FY2025 and
+FY2026 — a materially weaker dynamic than Vylor's or Crasus's
+index-removal mechanisms, since it describes a stub never being added
+rather than being forced out. The fundamental-separation check found a
+genuine confound: two consecutive years of operating and net losses,
+profitability explicitly conditioned on "an extended playoff run," and
+an already-realized 18% cut to Rangers local media revenue tied to
+related-party MSG Networks' 2025 debt restructuring. See that record
+for the full mechanism-by-mechanism analysis, the franchise-value-vs-
+public-equity discussion, the cheapest-falsification result, and the
+three-way comparative learning against Vylor and Crasus.
 
 ---
 
@@ -116,7 +135,7 @@ is kept out of promotion/blocking/funding logic.
 |---|---|---|---|---|
 | VYLR | `GROK_SCOUT_FORCED_FLOW_DISCOVERY` | `SURFACE_FOR_TRIAGE` | see `PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md` | `PROMOTE_TO_FUNDAMENTAL_UNDERWRITING` → `READY_FOR_WI_PRICE_TEST` |
 | 646A / Crasus | `GROK_SCOUT_FORCED_FLOW_DISCOVERY` | `SURFACE_FOR_TRIAGE` | see `PILOT5_CRASUS_646A_FORCED_FLOW_TRIAGE_001.md` | `NO_DEMONSTRATED_FORCED_FLOW_EDGE` |
-| MSGR | `GROK_SCOUT_FORCED_FLOW_DISCOVERY` | `SURFACE_FOR_TRIAGE` | not yet triaged | Untouched per instruction |
+| MSGR | `GROK_SCOUT_FORCED_FLOW_DISCOVERY` | `SURFACE_FOR_TRIAGE` | see `PILOT5_MSGR_FORCED_FLOW_TRIAGE_001.md` | `NO_DEMONSTRATED_FORCED_FLOW_EDGE` |
 
 No discovery score. This log records outcomes only.
 
@@ -124,9 +143,8 @@ No discovery score. This log records outcomes only.
 
 ## What this record does not do
 
-No canonical-identity verification, primary-evidence review, or
-economic research on MSGR. No deep/fundamental underwriting of VYLR or
-Crasus. No Stage 7 or Stage 8. No capital allocated. No architecture
-change. No scoring, ranking, or new engine. No Discovery Scan 002.
+No deep/fundamental underwriting of VYLR, Crasus, or MSGR. No Stage 7
+or Stage 8. No capital allocated. No architecture change. No scoring,
+ranking, or new engine. No Discovery Scan 002.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
