@@ -735,10 +735,12 @@ no Pilot 5 candidate has been created.**
 
 ## Pilot 5 — FORCED_FLOW / OWNERSHIP_DISLOCATION
 
-> ### Status: **ACTIVE — DISCOVERY SCAN 001 FULLY TRIAGED. VYLR
-> FUNDAMENTALLY UNDERWRITTEN (`READY_FOR_WI_PRICE_TEST`, pre-WI
-> trading); CRASUS (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`); MSGR
-> (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`)**
+> ### Status: **ACTIVE — DISCOVERY SCAN 001 FULLY TRIAGED AND RED-TEAM
+> CHECKPOINTED. VYLR FUNDAMENTALLY UNDERWRITTEN
+> (`READY_FOR_WI_PRICE_TEST`, pre-WI trading); CRASUS
+> (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`); MSGR
+> (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`). Scan 002:
+> `WAIT_FOR_VYLOR_WI_PRICE_TEST`.**
 
 **Discovery Scan 001** (`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`),
 source `GROK_SCOUT_FORCED_FLOW_DISCOVERY`: three situations registered
@@ -928,8 +930,69 @@ forward explicitly: no XTSE support, second market-data vendor,
 sentiment provider, valuation engine, ownership-data infrastructure, or
 ML/statistical tooling unless an actual decision problem earns it.
 
-**No Pilot 5 candidate has been surfaced, registered, or researched.**
-No forced-flow research has begun.
+**Discovery Scan 001 Red Team checkpoint** (record only, September 15,
+2026 — full detail in
+`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`'s "Red Team
+Checkpoint" section): reviewed all three closed dispositions without
+reopening any of them.
+
+- **Vylor** — preserved `READY_FOR_WI_PRICE_TEST`. Conclusion: Vylor
+  remains the clean live Pilot 5 test fixture, but the forced-flow
+  mechanism should **not** yet be described as demonstrated — the
+  issuer's index-selling language plus CTVA's confirmed S&P 500
+  membership establish a plausible structural constraint, not a
+  measured forced book. Exact constrained supply remains unknown.
+  Vylor was discovered early relative to trading, but not necessarily
+  early relative to specialist recognition. WI trading is the next
+  falsification point.
+- **Crasus** — preserved `NO_DEMONSTRATED_FORCED_FLOW_EDGE`. Learning:
+  the tax-selling thesis was materially weakened by confirmed Japan
+  tax treatment; fundamental deterioration independently explains
+  potential weakness; dirty fundamental cases are poor forced-flow
+  tests unless a dated mechanical constraint is unusually strong.
+- **MSG Rangers** — preserved `NO_DEMONSTRATED_FORCED_FLOW_EDGE`.
+  Learning: issuer-described selling pressure was primarily preference,
+  not compulsion; preference mismatch should not be treated as forced
+  flow; natural specialist buyers and an already-known sum-of-the-parts
+  framing weaken the dislocation thesis.
+
+**Scan 001 learning**: the scan clarified the **rejection rules** of
+forced-flow discovery more than it demonstrated a profitable
+dislocation. Carried forward as **research questions only, no
+permanent fields or scoring**: who must transact under a rule they do
+not control? By when? Can the likely supply be bounded? Who is able
+and motivated to absorb it? Are the fundamentals quiet enough that the
+tape could plausibly reflect ownership pressure rather than operating
+deterioration?
+
+**Flow quantification**: exact forced-share counts are not required
+for initial triage, but a meaningful bound on potential supply relative
+to liquidity becomes necessary before Atlas can claim a forced-flow
+edge or progress toward capital comparison. **No flow score is
+created.**
+
+**Timing**: early relative to first trading is not the same as early
+relative to specialist recognition. **No timing engine or permanent
+field.**
+
+**Scan 002: `WAIT_FOR_VYLOR_WI_PRICE_TEST`.** Scan 002 does not begin
+before the Vylor WI test unless a material event invalidates the
+current experiment. Current Red Team hypothesis for when Scan 002
+eventually begins: preferentially test genuinely different mechanisms
+— index deletion/reconstitution; fund liquidation or concentrated-
+holder forced exit; lockup/post-reorganization holder mismatch. **These
+remain future search directions only — no candidates created now.**
+
+**Scout feedback: `SCOUT_UPDATE_EARNED`.** Three Pilot 5 lessons earned
+a Scout instruction refinement: (1) distinguish must-sell-in-a-defined-
+window from may-want-to-sell; (2) do not infer tax-driven selling
+without confirming the actual tax treatment; (3) flag material
+fundamental deterioration at the discovery hook rather than framing it
+as a forced-flow opportunity. **The broader Scout operating
+instructions are not rewritten.**
+
+No architecture change. No candidates created. Scan 002 not started.
+Vylor, Crasus, and MSGR company records unmodified by this checkpoint.
 
 ---
 

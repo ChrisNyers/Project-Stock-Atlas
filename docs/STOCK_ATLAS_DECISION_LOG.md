@@ -2419,3 +2419,84 @@ Pilot 5 discovery scan.**
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT5_SCAN001_RED_TEAM_CHECKPOINT
+
+| | |
+|---|---|
+| Date | 2026-09-15 |
+| Status | **RECORDED — checkpoint only, no dispositions changed** |
+| Context | Pilot 5 Discovery Scan 001, post-triage Red Team review |
+
+### Decision
+
+Record-only Red Team checkpoint on Pilot 5 Discovery Scan 001, now that
+all three surfaced situations (Vylor, Crasus, MSGR) carry a closed
+disposition. Full record:
+`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`, "Red Team
+Checkpoint" section. **No architecture changed. No candidates created.
+No new research performed. No frozen record modified.**
+
+**Vylor (`READY_FOR_WI_PRICE_TEST`, preserved unchanged)**: Red Team
+conclusion — Vylor remains the clean live Pilot 5 test fixture, but the
+forced-flow mechanism should **not** yet be described as demonstrated.
+Issuer index-selling language plus CTVA's confirmed S&P 500 membership
+establishes a plausible structural constraint, not a measured forced
+book. Exact constrained supply remains unknown. Vylor was discovered
+early relative to trading, but not necessarily early relative to
+specialist recognition. WI trading is the next falsification point.
+
+**Crasus (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`, preserved unchanged)**:
+the tax-selling thesis was materially weakened by confirmed Japan tax
+treatment; fundamental deterioration independently explains potential
+weakness; dirty fundamental cases are poor forced-flow tests unless a
+dated mechanical constraint is unusually strong.
+
+**MSG Rangers (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`, preserved
+unchanged)**: issuer-described selling pressure was primarily
+preference, not compulsion; preference mismatch should not be treated
+as forced flow; natural specialist buyers and an already-known
+sum-of-the-parts framing weaken the dislocation thesis.
+
+**Scan 001 learning, recorded as research questions only (no permanent
+fields, no scoring)**: Scan 001 clarified the rejection rules of
+forced-flow discovery more than it demonstrated a profitable
+dislocation. Carried forward: who must transact under a rule they do
+not control? By when? Can the likely supply be bounded? Who is able
+and motivated to absorb it? Are the fundamentals quiet enough that the
+tape could plausibly reflect ownership pressure rather than operating
+deterioration?
+
+**Flow quantification (recorded, no flow score created)**: exact
+forced-share counts are not required for initial triage, but a
+meaningful bound on potential supply relative to liquidity becomes
+necessary before Atlas can claim a forced-flow edge or progress toward
+capital comparison.
+
+**Timing (recorded, no timing engine or permanent field)**: early
+relative to first trading is not the same as early relative to
+specialist recognition.
+
+**Scan 002: `WAIT_FOR_VYLOR_WI_PRICE_TEST`.** Scan 002 does not begin
+before the Vylor WI test unless a material event invalidates the
+current experiment. Current Red Team hypothesis for Scan 002, once it
+begins: preferentially test genuinely different mechanisms — index
+deletion/reconstitution; fund liquidation or concentrated-holder forced
+exit; lockup/post-reorganization holder mismatch. These remain future
+search directions only; no candidates are created now.
+
+**Scout feedback: `SCOUT_UPDATE_EARNED`.** Three Pilot 5 lessons earned
+a Scout instruction refinement: (1) distinguish must-sell-in-a-defined-
+window from may-want-to-sell; (2) do not infer tax-driven selling
+without confirming the actual tax treatment; (3) flag material
+fundamental deterioration at the discovery hook rather than framing it
+as a forced-flow opportunity. The broader Scout operating instructions
+are not rewritten.
+
+**Vylor, Crasus, and MSGR triage/underwriting records are unmodified by
+this checkpoint. No Scan 002 started. No new securities researched. No
+architecture change.**
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
