@@ -735,8 +735,8 @@ no Pilot 5 candidate has been created.**
 
 ## Pilot 5 — FORCED_FLOW / OWNERSHIP_DISLOCATION
 
-> ### Status: **ACTIVE — DISCOVERY SCAN 001 REGISTERED; VYLR TRIAGED
-> (`PROMOTE_TO_FUNDAMENTAL_UNDERWRITING`); CRASUS, MSGR UNTOUCHED**
+> ### Status: **ACTIVE — VYLR FUNDAMENTALLY UNDERWRITTEN
+> (`READY_FOR_WI_PRICE_TEST`, pre-WI trading); CRASUS, MSGR UNTOUCHED**
 
 **Discovery Scan 001** (`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`),
 source `GROK_SCOUT_FORCED_FLOW_DISCOVERY`: three situations registered
@@ -774,6 +774,37 @@ still-unannounced index-inclusion decision, is named as the specific
 focus for the next stage of work, mirroring how NNBR's Series D
 uncertainty was named and carried forward in Pilot 3 rather than
 treated as an automatic block.
+
+**VYLR pre-WI fundamental underwriting**
+(`pilot5/PILOT5_VYLR_PRE_WI_FUNDAMENTAL_UNDERWRITING_001.md`) closed
+**`READY_FOR_WI_PRICE_TEST`** — not a buy signal, not Stage 7; it means
+Vylor's fundamentals are attractive/understandable enough to compare
+actual WI/regular-way pricing against a prepared valuation framework
+once trading begins. The prior triage's 65-135M-share constrained-
+supply estimate was explicitly re-labeled `EXPLORATORY_CONTEXT_ONLY`,
+not a decision fact. Built a full pro forma capital structure from the
+primary Form 10-12B/A (downloaded and locally text-extracted at 22.1MB):
+≈$5.48 billion of new debt, of which ≈$3.56 billion funds a cash
+distribution to New Corteva (a debt-funded recapitalization, not
+organic growth capital) versus only ≈$2.44 billion of genuinely
+structural long-term debt; confirmed no retained Corteva ownership
+stake and a small (~$82M) retained pension obligation. Reconstructed
+5-period Seed-segment economics (FY2023-FY2025, H1 2025, H1 2026)
+showing price-led revenue growth (+3% price in both FY2024 and FY2025),
+expanding gross margin (47.4%→53.8%) and EBITDA margin (22.4%→26.6%),
+and rising R&D intensity (8.8%→9.9% of revenue) — margin expansion
+achieved without cutting R&D. Found Seed grew through a 2023-2024
+period when total Corteva revenue declined, suggesting relative
+cyclical resilience. Identified the Pioneer® brand's stated #1 U.S.
+corn/soybean position and confirmed Pioneer Hi-Bred International as
+Vylor's key subsidiary. Named the single largest unresolved variable
+(standalone dis-synergy/stranded costs, acknowledged by the issuer but
+not yet quantified) as the cheapest fact that could most change the
+picture. Classified fundamental quality `SOLID_CYCLICAL_BUSINESS` and
+built a labeled, non-target valuation sensitivity map (downside/base/
+strong-execution scenarios) plus a required-return attractiveness
+threshold, explicitly distinguishing this from a price target or Stage
+7 decision.
 
 **646A/Crasus and MSGR remain `SURFACE_FOR_TRIAGE`** — no canonical-
 identity check, no primary-evidence review, no research of any kind

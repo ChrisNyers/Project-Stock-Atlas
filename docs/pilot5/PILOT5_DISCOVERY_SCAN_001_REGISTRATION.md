@@ -45,11 +45,23 @@ and none is implied by their inclusion in this table.**
 
 ---
 
-## VYLR — forced-flow triage
+## VYLR — forced-flow triage, then pre-WI fundamental underwriting
 
-Recorded separately in `PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md`. See
-that record for canonical identity, corporate-action timeline, index-
-treatment findings, constrained-holder analysis, and final disposition.
+Triage recorded separately in `PILOT5_VYLR_FORCED_FLOW_TRIAGE_001.md` —
+closed `PROMOTE_TO_FUNDAMENTAL_UNDERWRITING`. Fundamental underwriting
+recorded in `PILOT5_VYLR_PRE_WI_FUNDAMENTAL_UNDERWRITING_001.md` —
+closed `READY_FOR_WI_PRICE_TEST`: Vylor's standalone capital structure
+(≈$5.48B new debt, of which a material share funds a $3.56B cash
+distribution to New Corteva, versus ≈$2.44B genuinely structural
+long-term debt), 3-year Seed-segment economics (price-led growth,
+expanding gross/EBITDA margins, rising R&D intensity), and a labeled,
+non-target valuation sensitivity map were all constructed from primary
+sources ahead of when-issued trading. The prior triage's 65-135M-share
+constrained-supply estimate is explicitly carried forward as
+`EXPLORATORY_CONTEXT_ONLY`, not a decision fact. See that record for
+full detail on capital structure, historical economics, competitive
+quality, standalone-cost analysis, valuation sensitivity, and the
+final disposition's reasoning.
 
 ---
 

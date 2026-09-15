@@ -2099,3 +2099,95 @@ Vylor performed. No Stage 7 or Stage 8 action. No Discovery Scan 002.**
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT5_VYLR_PRE_WI_FUNDAMENTAL_UNDERWRITING_RESULT (2026-09-14)
+
+**Record:** `pilot5/PILOT5_VYLR_PRE_WI_FUNDAMENTAL_UNDERWRITING_001.md`.
+Follows the prior forced-flow triage's `PROMOTE_TO_FUNDAMENTAL_
+UNDERWRITING` disposition. The prior triage's coarse ~65-135M-share
+constrained-supply estimate is explicitly re-labeled
+`EXPLORATORY_CONTEXT_ONLY` in this record and used nowhere as a
+decision fact.
+
+**Result: `READY_FOR_WI_PRICE_TEST`** — meaning only that Vylor's
+fundamentals are sufficiently attractive/understandable to compare
+actual when-issued or regular-way pricing against the valuation
+economics prepared here; not a buy signal, not Stage 7.
+
+**Capital structure**, built from Vylor's primary Form 10-12B/A
+information statement (downloaded directly and locally text-extracted
+after its 22.1MB size exceeded standard fetch tooling): Vylor
+distributes 100% to Corteva shareholders (New Corteva retains no
+ownership); pro forma total borrowings ≈$5.579 billion, of which
+≈$3.143 billion is short-term/seasonal (a PHI Bilateral Facility bridge
+expected to be refinanced via new revolvers at spin) and ≈$2.436
+billion is genuinely structural long-term debt (≈$1.28B of exchanged
+legacy EIDP notes at a 4.12% weighted rate plus the $1.1B of new senior
+notes issued August 2026). The single most important capital-structure
+finding: Vylor is incurring ≈$5.476 billion of new debt specifically to
+fund, in part, a ≈$3.560 billion cash distribution to New Corteva — a
+debt-funded recapitalization, not organic growth capital. Pension
+obligation retained by Vylor is small (~$82M of Corteva's $1.3B total).
+Equity-award treatment and the incentive plan's terms are explicitly
+deferred to a future Form 10 amendment — a genuine, disclosed dilution/
+management-incentive evidence gap.
+
+**5-period Seed-segment economics** (FY2023, FY2024, FY2025, H1 2025,
+H1 2026), reconstructed from Corteva's segment MD&A and pro forma
+statements: net sales $9,472M→$9,545M→$9,898M (FY2025 growth +3%
+price/+2% volume/-1% FX — price-led, not FX- or mix-driven); gross
+margin 47.4%→48.9%→53.8%; operating EBITDA $2,117M→$2,219M→$2,636M
+(EBITDA margin 22.4%→23.3%→26.6%, accelerating); R&D $836M→$902M→$979M
+(8.8%→9.9% of revenue, rising alongside margin expansion, not traded
+off against it); capex $303M→$338M→$346M. H1 2026 continued the trend
+(+4% revenue, +11% EBITDA YoY), though H1 margins (~37-40%) were
+flagged explicitly as a seasonal artifact of front-loaded planting-
+season revenue, not a new sustainable run-rate. Seed grew through
+FY2023-2024 while total Corteva revenue declined — evidence of
+relative cyclical resilience, not proof of acyclicality.
+
+**Competitive quality**: confirmed the "flagship Pioneer® brand, the
+number one corn and soybean brand in the United States" and Pioneer
+Hi-Bred International as Vylor's key subsidiary (co-borrower on its
+revolving credit facility). The Bayer agrobacterium/Enlist trait
+litigation ($610M settlement, ~$546M already paid) was found to be
+Seed/trait-technology-specific but substantially resolved and net
+strategically positive (terminated ongoing royalty obligations, opened
+new out-licensing arrangements).
+
+**Standalone-cost analysis (load-bearing, per instruction)**: separated
+TRANSITIONAL costs ($189M one-time separation SG&A; $16M debt-transfer
+fees; the largely-paid Bayer settlement) from STRUCTURAL costs
+(~$169M/year of new estimated interest expense, confirmed from the
+pro forma adjustments; an unquantified further layer of dis-synergies
+the issuer itself acknowledges may "exceed expectations" but does not
+size). This unquantified dis-synergy figure was named as the single
+cheapest fact that could most change the underwriting picture.
+
+**Fundamental quality classification: `SOLID_CYCLICAL_BUSINESS`**
+(case-specific, not a permanent scoring taxonomy) — real, multi-year
+margin expansion and price-led growth with R&D investment maintained,
+falling short of a compounder classification only because standalone
+costs remain unquantified, growth platforms (gene editing, hybrid
+wheat, biofuels) are unproven, and pricing power has not been tested
+through a genuine Seed-specific downturn.
+
+**Valuation sensitivity map** (explicitly labeled illustrative, not
+price targets) built downside/base/strong-execution equity-value bands
+from FY2025 EBITDA and a range of illustrative EV/EBITDA multiples.
+Required-return/attractiveness observation: further capital comparison
+would become warranted if actual price fell meaningfully below the
+downside band without independent fundamental confirmation of that
+degree of deterioration — a threshold, not a target price, and not a
+Stage 7 decision. The three forced-flow/fundamentals interaction
+scenarios (mediocre fundamentals; attractive fundamentals but rich
+valuation; attractive fundamentals with price below reasonable
+economics) were named explicitly, with the observable evidence that
+would distinguish them.
+
+**No capital decision. No Stage 7. 646A/Crasus and MSGR remain
+`SURFACE_FOR_TRIAGE`, completely untouched. No Discovery Scan 002.**
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
