@@ -238,6 +238,65 @@ Only three Pilot 5 lessons earned a Scout instruction refinement:
 
 ---
 
+## Trading-Trigger Update — September 24, 2026 (append-only; supersedes WI schedule)
+
+| | |
+|---|---|
+| Date | September 24, 2026 |
+| Type | Record-only trigger update — no research, no valuation, no price test |
+| Scope | Active next trigger for Vylor / Scan 002 only |
+
+**Superseding corporate-action event (September 24, 2026).** Primary/issuer
+evidence indicates: Vylor's Form 10 registration became effective; the
+previously expected VYLR when-issued (WI) trading period will not occur;
+there will be no Corteva ex-distribution market before the separation;
+Vylor regular-way NYSE trading under `VYLR` is expected to begin
+**October 1, 2026**; and the Vylor distribution is also expected on
+October 1, 2026. This supersedes the earlier expected September 25–30
+WI-trading schedule. **The earlier WI schedule is preserved above and in
+the frozen Vylor records as the historical audit trail; it is not
+rewritten.**
+
+**Vylor.** Historical frozen underwriting disposition remains
+`READY_FOR_WI_PRICE_TEST` (unmodified). **Current active next trigger:
+`WAIT_FOR_VYLOR_REGULAR_WAY_PRICE_TEST`.** No capital decision has
+occurred. No Stage 7 has begun.
+
+**Pilot 5 implication.** The cancellation of the when-issued market
+removes the planned pre-distribution price-discovery test. The first
+observable ownership-transfer / price-dislocation test will occur in
+regular-way VYLR trading beginning on or after October 1, 2026. The
+absence of WI trading may make the October 1 ownership-transfer test
+cleaner, because inherited holders cannot reposition through a prior WI
+market. This does **not** increase or decrease the probability or
+magnitude of forced selling; it changes only the observable test window.
+
+**Discovery-clock implication.** Atlas identified and fundamentally
+underwrote Vylor before trading began, and there will now be no WI
+observation period. Specialist investors have nevertheless had months
+of public spin information. "Before regular-way trading" must therefore
+not be confused with "before specialist recognition," and the absence of
+WI trading is **not** evidence of edge.
+
+**Scan 002: `WAIT_FOR_VYLOR_REGULAR_WAY_PRICE_TEST`** (supersedes
+`WAIT_FOR_VYLOR_WI_PRICE_TEST`). Scan 002 does not begin before the
+Vylor regular-way price test unless a material invalidating event
+occurs. The future-search directions above are unchanged and remain
+search directions only.
+
+**Unchanged dispositions:** Crasus `NO_DEMONSTRATED_FORCED_FLOW_EDGE`;
+MSG Rangers `NO_DEMONSTRATED_FORCED_FLOW_EDGE`.
+
+**Not done by this update:** no Vylor valuation work, no price test, no
+Scan 002, no new securities researched, no candidates created, no
+architecture change, no Scout scan. Vylor triage/underwriting, Crasus,
+and MSGR records, Pilot 4 records, the frozen control layer, and the
+facade are unmodified.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
 ## What this record does not do
 
 No deep/fundamental underwriting of VYLR, Crasus, or MSGR. No Stage 7
