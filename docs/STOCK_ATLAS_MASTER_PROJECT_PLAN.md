@@ -745,6 +745,8 @@ no Pilot 5 candidate has been created.**
 > canceled, see Trading-Trigger Update below). Update 2026-10-01: Vylor regular-way price test
 > complete — `NO_DEMONSTRATED_INVESTABLE_DISLOCATION`; trigger satisfied;
 > Scan 002 not started (needs explicit work order).**
+> **Update 2026-10-01 (later): Discovery Scan 002 registered (CTVA, CBRS);
+> CTVA triaged `PROMOTE_TO_FUNDAMENTAL_UNDERWRITING`; CBRS surfaced only.**
 
 **Discovery Scan 001** (`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`),
 source `GROK_SCOUT_FORCED_FLOW_DISCOVERY`: three situations registered
@@ -1083,6 +1085,46 @@ is satisfied.
 - **Scan 002** is not started; it requires an explicit new work order.
 - Vylor triage/underwriting, Crasus, MSGR, Pilot 4, control layer, and
   facade records are unmodified. **No Stage 7. No capital decision.**
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### Pilot 5 — Discovery Scan 002 Registration + CTVA Triage (2026-10-01; append-only)
+
+**Discovery Scan 002 registered** (`pilot5/PILOT5_DISCOVERY_SCAN_002_REGISTRATION.md`),
+source `GROK_SCOUT_FORCED_FLOW_DISCOVERY`, without ranking: **CTVA** (index
+migration) and **CBRS** (IPO lockup / float eligibility; **surfaced only —
+not researched or triaged**). Scan 001 dispositions unchanged (VYLR
+`NO_DEMONSTRATED_INVESTABLE_DISLOCATION`; Crasus and MSGR
+`NO_DEMONSTRATED_FORCED_FLOW_EDGE`).
+
+**CTVA triage** (`pilot5/PILOT5_CTVA_INDEX_FLOW_TRIAGE_001.md`):
+**`PROMOTE_TO_FUNDAMENTAL_UNDERWRITING`** — mechanism only; no price evidence
+of dislocation yet.
+
+- **Mechanics (S&P DJI release, Oct 1, 2026):** CTVA is deleted from the S&P
+  500 and added to the S&P MidCap 400 effective prior to the Oct 6 open
+  (executed at the **Oct 5 close**); CTVA remains in the S&P 500 until then.
+  Vylor was added to the S&P 500 on Oct 1.
+- **Migration, not one-way selling:** S&P 500 passive funds sell, MidCap 400
+  passive funds buy. Estimated net passive sale ≈53–93M shares (≈8–14% of
+  ≈667M; ≈12–21 days of average volume). **An estimate from aggregate
+  ratios, not a forced-share count**; the sign is better supported than the
+  magnitude.
+- **Ex-spin pricing:** CTVA's −83.8% on Oct 1 is mechanical. Against a
+  residual reference ($77.65 − VYLR $68.26 = $9.39), CTVA's $12.57 close was
+  ≈34% above, and one CTVA + one VYLR rose 4.1%. The earlier $12.75
+  intraday figure was not used.
+- **Fundamentals (Scout flags verified):** PFAS $455M (Sept 10; Corteva ≈25%);
+  S&P A− → BBB+ (Sept 17); the "state AG lawsuit" is a Sept 28 FTC/states
+  **settlement** ($35M, 10-year loyalty-program remedy, court approval
+  pending); pricing pressure unquantified. All pre-date the spin; none
+  independently explains an index-window decline.
+- **Missing observations:** Oct 2 session; Oct 5 session and closing auction;
+  Oct 6 open. Price evidence uncertified (Gate B blocked).
+- No deep underwriting performed, no Stage 7, no capital decision. Frozen
+  records unmodified.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
