@@ -742,7 +742,9 @@ no Pilot 5 candidate has been created.**
 > (`NO_DEMONSTRATED_FORCED_FLOW_EDGE`). Scan 002:
 > `WAIT_FOR_VYLOR_REGULAR_WAY_PRICE_TEST` (updated 2026-09-24 event;
 > supersedes the earlier `WAIT_FOR_VYLOR_WI_PRICE_TEST` — WI market
-> canceled, see Trading-Trigger Update below).**
+> canceled, see Trading-Trigger Update below). Update 2026-10-01: Vylor regular-way price test
+> complete — `NO_DEMONSTRATED_INVESTABLE_DISLOCATION`; trigger satisfied;
+> Scan 002 not started (needs explicit work order).**
 
 **Discovery Scan 001** (`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`),
 source `GROK_SCOUT_FORCED_FLOW_DISCOVERY`: three situations registered
@@ -1046,6 +1048,41 @@ Scan 002, no new securities researched, no candidates created, no
 architecture change, no Scout scan. Vylor triage/underwriting, Crasus,
 and MSGR records, Pilot 4 records, the frozen control layer, and the
 facade are unmodified.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### Pilot 5 — Vylor October 1 Regular-Way Price Test (2026-10-01; append-only)
+
+**Result:** `NO_DEMONSTRATED_INVESTABLE_DISLOCATION` (record:
+`pilot5/PILOT5_VYLR_REGULAR_WAY_PRICE_TEST_001.md`). The Vylor regular-way
+price test is complete; the trigger `WAIT_FOR_VYLOR_REGULAR_WAY_PRICE_TEST`
+is satisfied.
+
+- **Event confirmed:** distribution completed Oct 1, 2026 (1:1); NYSE `VYLR`.
+  Shares outstanding ≈667M (derived, not primary-confirmed). Debt-exchange
+  offers expired Sept 30 with ≈$1.44B tendered; final settlement and
+  post-close capitalization not located.
+- **Price evidence is UNCERTIFIED.** `TWELVEDATA_API_KEY` (and Alpaca/Tiingo)
+  absent; Gate B binding is BLOCKED for VYLR. Public aggregators agree:
+  open 66.00, low 65.00, high ≈75, close 68.26, volume ≈15.0M.
+- **Against the frozen map:** market cap ≈$45.5B; EV ≈$46.9B (≈17.8x
+  FY2025 EBITDA on the frozen structural net-debt convention). Close was
+  ≈5% above the top of the strong-execution band ($57–65) and ≈2.4–2.7x the
+  downside band ($25–28). The §17 entry threshold was never approached
+  (session low $65.00). Scenario B (valuation remains rich).
+- **Forced-flow:** not demonstrated. Vylor was added to the S&P 500 on Oct 1
+  replacing Corteva, so the index mechanism the triage left unresolved
+  resolved against the thesis. Volume ≈2.2% of shares outstanding. The
+  65–135M estimate remains exploratory context only.
+- **Untested:** sector/benchmark mismatch selling (GICS Materials → Consumer
+  Staples effective Oct 6; other indexes), standalone costs, dilution.
+- **Observation, not a candidate:** Corteva moves S&P 500 → S&P MidCap 400
+  before the Oct 6 open. Not researched; no candidate created.
+- **Scan 002** is not started; it requires an explicit new work order.
+- Vylor triage/underwriting, Crasus, MSGR, Pilot 4, control layer, and
+  facade records are unmodified. **No Stage 7. No capital decision.**
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
