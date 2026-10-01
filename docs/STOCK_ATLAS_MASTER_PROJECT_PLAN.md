@@ -1169,6 +1169,44 @@ Stage 7.
 
 ---
 
+### Pilot 5 — CTVA October 2 Legal Checkpoint (2026-10-01; append-only)
+
+**CTVA October 2 legal checkpoint — status
+`LEGAL_OUTCOME_PENDING_VERIFICATION`** (checked Thu Oct 1, 2026, ~7:30 PM EDT).
+
+- **The hearing has not yet occurred.** Marion Superior Court 1 set the TRO
+  hearing for 9 a.m. Fri Oct 2 (Indiana Lawyer, Oct 1). At the time of this
+  checkpoint it is about 13½ hours away, so **no order, docket entry, or
+  hearing outcome exists to verify.** The complaint and docket were not
+  retrievable (no authoritative court record; Oregon and Maryland AG releases
+  and Corteva's Oct 1 8-K and press release say nothing on a hearing result).
+- **Not an outcome:** the Indiana action is a filed complaint plus a
+  **requested** TRO/preliminary injunction (freeze assets; bar dividends and
+  buybacks; bar Vylor from selling or pledging seed assets; unwind the
+  separation). These are allegations and requests, not orders.
+- **Conflation guard:** search summaries state that "the court denied a
+  TRO." That refers to the **separate federal D.S.C. denial of California's
+  motion on Sept 30**, which cleared the Oct 1 separation; it is **not** an
+  Indiana ruling. It is not counted.
+- **New issuer disclosure:** Corteva's Oct 1 8-K (Item 8.01, press release)
+  contains only generic "legal proceedings may be instituted" risk language;
+  no lawsuit, TRO, or PFAS statement. No other relevant filing located.
+- **Comparison with the frozen invalidation conditions:** no adverse TRO or
+  injunction, dividend/buyback restriction, or new quantified liability is
+  **established** by any authoritative source, and none is **ruled out**.
+  Silence is not treated as favorable. Index-transition mechanics
+  (CTVA S&P 500 deletion and MidCap 400 addition effective before the Oct 6
+  open, executed at the Oct 5 close) are unchanged by any located notice.
+- **Preserved without modification:** underwriting commit `529286a`, its
+  assumptions, sensitivity ranges, and the ≈$10.40 further-review threshold.
+  No Oct 2 or Oct 5 market observation was made. **Next step:** re-run this
+  checkpoint after the hearing, before the Oct 5 test.
+- No Stage 7, no capital decision, no new discovery scan, no CBRS research.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
 ## Future Pilot Candidates — NOT ACTIVE
 
 **Do not assign numbers yet.** Future pilot questions are selected from actual
