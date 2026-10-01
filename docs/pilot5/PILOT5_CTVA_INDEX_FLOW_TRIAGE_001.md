@@ -184,8 +184,8 @@ peer comparisons (Materials, crop-protection names) were not retrieved.
 CTVA may simply be a lower-quality stub whose fair value is below the Oct 1
 price: a crop-protection-only business with a downgraded rating, a 10-year
 FTC conduct remedy that exposes branded products to generics, retained PFAS
-and pension liabilities, and pro forma EBITDA of roughly a third of
-Corteva's former total. CTVA also already trades ≈34% above its
+and pension liabilities, and pro forma 2025 crop-protection EBITDA of
+only $1.35B (secondary source). CTVA also already trades ≈34% above its
 VYLR-implied residual, so an index-fund sale that pulls it down toward the
 residual could be a correction, not a dislocation. Combined holder value
 rose on Oct 1. Passive sales of 8–14% of shares could also be fully absorbed
