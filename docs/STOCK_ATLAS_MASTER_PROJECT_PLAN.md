@@ -746,7 +746,9 @@ no Pilot 5 candidate has been created.**
 > complete — `NO_DEMONSTRATED_INVESTABLE_DISLOCATION`; trigger satisfied;
 > Scan 002 not started (needs explicit work order).**
 > **Update 2026-10-01 (later): Discovery Scan 002 registered (CTVA, CBRS);
-> CTVA triaged `PROMOTE_TO_FUNDAMENTAL_UNDERWRITING`; CBRS surfaced only.**
+> CTVA triaged `PROMOTE_TO_FUNDAMENTAL_UNDERWRITING`; CBRS surfaced only.
+> Update 2026-10-01 (evening): CTVA underwritten pre-event —
+> `READY_FOR_POST_INDEX_EVENT_PRICE_TEST`.**
 
 **Discovery Scan 001** (`pilot5/PILOT5_DISCOVERY_SCAN_001_REGISTRATION.md`),
 source `GROK_SCOUT_FORCED_FLOW_DISCOVERY`: three situations registered
@@ -1125,6 +1127,43 @@ of dislocation yet.
   Oct 6 open. Price evidence uncertified (Gate B blocked).
 - No deep underwriting performed, no Stage 7, no capital decision. Frozen
   records unmodified.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### Pilot 5 — CTVA Pre-Event Fundamental Underwriting (2026-10-01; append-only)
+
+**CTVA pre-event fundamental underwriting**
+(`pilot5/PILOT5_CTVA_PRE_EVENT_FUNDAMENTAL_UNDERWRITING_001.md`):
+**`READY_FOR_POST_INDEX_EVENT_PRICE_TEST`** — a framework fixed before the
+Oct 5 close, not a finding of dislocation, not a buy recommendation, not
+Stage 7.
+
+- **Correction to the Scan 002 triage (append-only; triage record not
+  rewritten):** "all items pre-date the spin" holds for the four Scout flags
+  but not for the **Oct 1 Indiana-led state-court fraudulent-transfer suit**
+  (Corteva, Vylor, EIDP; ~$39–40B asset-transfer allegation, "tens of
+  billions" PFAS claim, unwinding/TRO relief; TRO hearing Oct 2). Allegations
+  only; Corteva calls them speculative. The earlier California-led federal
+  TRO was denied. Vylor is also a defendant.
+- **$9.39 residual not used.** Valuation built from CTVA's own evidence:
+  FY2025 Crop Protection segment EBITDA $1,350M (stand-alone ≈ $1.2B);
+  primary pro forma balance sheet (cash $3,058M; debt $1,013M; pension
+  $1,215M; 667.2M shares).
+- **Frozen sensitivities (unweighted, ex-new-tail):** downside ≈ $10.4–12.0;
+  base ≈ $15.9–18.7; strong ≈ $23.0–26.3 per share. The Oct 1 close of
+  $12.57 (uncertified, known at writing — disclosed) sits just above the
+  downside band.
+- **Case-specific threshold for continued investigation:** certified price at
+  or below ≈ $10.4 (≈17% below the Oct 1 close) with no unboundable-tail
+  event; each $1B of incremental liability ≈ −$1.50/share; each −$100M EBITDA
+  ≈ −$1.05 to −$1.61/share.
+- **Flow bracket is fragile:** ≈25–95M shares depending on passive-share
+  assumptions; not a forced-flow number.
+- **Invalidation triggers, observable evidence, cheapest falsification and
+  missing evidence recorded before the Oct 5 close.** Price data uncertified
+  (Gate B blocked). CBRS surfaced only. No Stage 7, no capital decision.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
