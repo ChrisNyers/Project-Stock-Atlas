@@ -1285,6 +1285,72 @@ price test was not run.
 
 ---
 
+### Pilot 5 — Post-CTVA Checkpoint Review (2026-10-05; append-only)
+
+**Post-CTVA Pilot 5 checkpoint review (2026-10-05; record-only).** No CBRS
+research, no Scan 003, no Stage 7, no capital decision, no architecture,
+scoring, field, or governance change.
+
+| Case | Mechanism tested | Cheapest falsification | Disposition | What weakened or killed it |
+|---|---|---|---|---|
+| VYLR | Spin-off: S&P 500 funds mismatched to a new stub | Is there an identifiable pool compelled not to hold VYLR? | `NO_DEMONSTRATED_INVESTABLE_DISLOCATION` | S&P added VYLR to the S&P 500 on Oct 1, removing the index mechanism; volume ≈2% of shares; price closed above the frozen strong band |
+| Crasus (646A) | Cross-border spin: tax, sector, Nikkei 225 removal | Is a large, non-fundamental seller pool constrained? | `NO_DEMONSTRATED_FORCED_FLOW_EDGE` | Japan tax treatment refuted the dominant mechanism; fundamentals independently explained weakness; the Nikkei removal was real but unquantified |
+| MSGR | Holder-preference mismatch; possible S&P non-addition | Is there a compelled holder pool? | `NO_DEMONSTRATED_FORCED_FLOW_EDGE` | Issuer language was preference, not compulsion; natural buyers existed; stand-alone losses explained weakness |
+| CTVA | S&P 500 → MidCap 400 migration, executed Oct 5 close | Is the net mechanical imbalance large enough to misprice? | `NO_DEMONSTRATED_INVESTABLE_DISLOCATION` | Mechanism confirmed and volume ≈26x average, but price rose into the close and never approached the ≈$10.40 threshold; weakness came before the event |
+
+**Repeated patterns the evidence supports:** (1) *must-sell weaker than first
+assumed* (Crasus, MSGR, VYLR: tax, preference, and index treatment each
+softened on primary text); (2) *natural buyers or offsetting flow* (MSGR
+specialists; CTVA's MidCap 400 buyers); (3) *mechanism existed without an
+investable dislocation* (CTVA; VYLR priced above the strong band); (4)
+*fundamentals contaminated the flow thesis* (Crasus, MSGR, CTVA's legal tail);
+(5) *event already recognized or anticipated* (MSGR; CTVA's pre-event
+weakness). *Price never reached an independent value threshold* applies to the
+two cases that were price-tested (VYLR, CTVA). Not supported: a claim that
+discovery arrived too late. No larger taxonomy is asserted.
+
+**CBRS (Scout one-liner only: IPO lockup / float-eligibility expansion).**
+Different in kind in three ways: lockup expiry is a *dated window*; the
+forced party, if any, is an *eligible* seller, not a compelled one; float
+expansion could create *index-driven buying* rather than selling. But it
+looks weakest where earlier cases failed: eligibility to sell is not
+compelled selling (the MSGR and Crasus failure); a scheduled public date
+invites the anticipation seen in CTVA; and no forced-seller population is
+identifiable from the description. The new question it could ask (does
+scheduled supply or float-driven demand misprice a name after a public date?)
+is better preserved as a research question than spent on a triage.
+
+**Disposition: `CLOSE_PILOT5_INSUFFICIENT_EVIDENCE_OF_REPEATABLE_EDGE`.**
+Recorded as the checkpoint decision; a formal pilot closeout, if wanted, is a
+separate work order, and the Pilot 5 status banner is not rewritten here.
+CBRS stays `SURFACE_FOR_TRIAGE`, untouched. **Proved:** Atlas can find
+documented mechanical events early and reject weak ones quickly with primary
+evidence. **Not proved:** that any forced-flow case yields an investable
+edge. Only VYLR and CTVA received post-event price tests; Crasus and MSGR
+closed at triage with no post-event price observation; prices were uncertified;
+no closing-auction data; no post-event drift beyond Oct 5 was measured.
+
+**Learnings.** (1) Documented is not priced: mechanisms were confirmed and the
+price effect was absent or spent. (2) "Must sell" usually turned into "may
+sell" once primary text arrived. (3) Pre-registered thresholds and fail-fast
+triage produced honest negatives; early relative to trading is not early
+relative to recognition. **Improved in Atlas:** discovery-source neutrality
+and Scout feedback, the triage kill-condition questions, ex-spin price
+basis, pre-event baseline freezing, and separating legal tails. **Forced flow:**
+lower-priority opportunistic family; no active scanning; a case enters triage
+only if surfaced with a documented compelled seller, a dated window, a
+boundable supply, and clean fundamentals. A learning assessment, not a
+permanent rule.
+
+**Question worth preserving:** for a strictly one-directional, dated
+forced-flow event with fund-level holdings data and clean fundamentals, how
+large and how persistent is the price effect from event day through about ten
+sessions, net of pre-event drift? (Pilot 5 never measured this window.)
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
 ## Future Pilot Candidates — NOT ACTIVE
 
 **Do not assign numbers yet.** Future pilot questions are selected from actual
