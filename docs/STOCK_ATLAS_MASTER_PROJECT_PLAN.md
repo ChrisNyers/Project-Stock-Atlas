@@ -735,6 +735,13 @@ no Pilot 5 candidate has been created.**
 
 ## Pilot 5 — FORCED_FLOW / OWNERSHIP_DISLOCATION
 
+> ### Status: **FORMALLY CLOSED (2026-10-05) —
+> `CLOSE_PILOT5_INSUFFICIENT_EVIDENCE_OF_REPEATABLE_EDGE`** (see the
+> Formal Closeout entry at the end of this section).
+>
+> *Historical status line below, as last updated before closeout; preserved
+> unchanged and superseded by the line above:*
+>
 > ### Status: **ACTIVE — DISCOVERY SCAN 001 FULLY TRIAGED AND RED-TEAM
 > CHECKPOINTED. VYLR FUNDAMENTALLY UNDERWRITTEN
 > (`READY_FOR_WI_PRICE_TEST`, pre-WI trading); CRASUS
@@ -1346,6 +1353,43 @@ permanent rule.
 forced-flow event with fund-level holdings data and clean fundamentals, how
 large and how persistent is the price effect from event day through about ten
 sessions, net of pre-event drift? (Pilot 5 never measured this window.)
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### Pilot 5 — Formal Closeout (2026-10-05; append-only)
+
+**Pilot 5 formally closed (2026-10-05): `CLOSE_PILOT5_INSUFFICIENT_EVIDENCE_OF_REPEATABLE_EDGE`.**
+Closeout of the post-CTVA checkpoint (`63b1e34`). Record-only: no new
+research, no new pilot, no architecture, scoring, control, or field change.
+
+**Historical dispositions, preserved exactly:**
+- VYLR: `NO_DEMONSTRATED_INVESTABLE_DISLOCATION` (historical underwriting
+  state `READY_FOR_WI_PRICE_TEST`)
+- Crasus (646A): `NO_DEMONSTRATED_FORCED_FLOW_EDGE`
+- MSGR: `NO_DEMONSTRATED_FORCED_FLOW_EDGE`
+- CTVA: `NO_DEMONSTRATED_INVESTABLE_DISLOCATION`
+- CBRS: **surfaced only** — unresearched, not triaged, not promoted, not an
+  active Pilot 5 task, and not deleted.
+
+**Conclusion.**
+- Atlas found and falsified forced-flow / ownership-dislocation hypotheses
+  quickly and with primary-source evidence.
+- Primary-source validation repeatedly weakened "must-sell" assumptions.
+- Confirmed mechanical events did not establish investable price/value
+  dislocations. VYLR and CTVA both failed their frozen price thresholds.
+- **A documented mechanical event does not imply a meaningful price
+  dislocation.**
+- Pilot 5 did not demonstrate repeatable alpha from this information family.
+- Forced flow remains a **lower-priority opportunistic research family, not an
+  active scanning lane.**
+
+**Open research question (preserved for future research only; not started):**
+for a strictly one-directional, dated forced-flow event with identifiable
+compelled holders, boundable supply, and relatively clean fundamentals, how
+large and persistent is the price effect from event day through approximately
+ten sessions, net of pre-event drift?
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
