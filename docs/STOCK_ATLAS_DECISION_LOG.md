@@ -2745,3 +2745,59 @@ Stage 7.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT5_CTVA_OCT5_LEGAL_RECHECK
+
+| | |
+|---|---|
+| Date | 2026-10-05 (intraday, before the close) |
+| Status | **RECORDED — `LEGAL_OUTCOME_PENDING_VERIFICATION`; Oct 5 observation not yet performed** |
+| Context | Oct 2 Indiana TRO hearing outcome unverified; underwriting `529286a` preserved |
+
+### Decision
+
+**CTVA October 5 legal re-check (interim, ~2:10 PM EDT Mon Oct 5) — status
+`LEGAL_OUTCOME_PENDING_VERIFICATION`.** The Oct 5 index-flow observation was
+**not** performed: the session had not closed when this was written, and the
+price test was not run.
+
+- **No authoritative record of the Oct 2 hearing outcome was found.** Checked:
+  the filed complaint (primary), Indiana, Oregon, Maryland and Vermont AG
+  releases, Corteva's and Vylor's Oct 1 8-Ks and Corteva's EDGAR 8-K list,
+  and trade/legal press (Indiana Lawyer, IBJ, Agri-Pulse, Insurance Journal,
+  Hoosier Ag Today [blocked]). Every source either predates the hearing or
+  repeats that it was scheduled. No order, docket entry, continuance notice,
+  or issuer disclosure about it surfaced. **Silence is not treated as a
+  denial or as a favorable outcome.** Corteva's EDGAR list showed no 8-K after
+  Oct 1.
+- **Primary document obtained:** complaint filed **Oct 1, 2026, 10:48 AM**,
+  Cause No. **49D01-2610-CE-054574**, Marion Superior Court 1, Indiana
+  Commercial Court; plaintiffs Indiana, Guam and 14 states; defendants
+  EIDP, Corteva, Vylor. **Prayer (requested relief only):** avoid the Vylor
+  transfers to the extent needed to satisfy plaintiffs' claims; declare Vylor
+  must satisfy claims against Old DuPont/Corteva; TRO/preliminary/permanent
+  injunctions barring Old DuPont and Corteva from disposing of proceeds "for
+  less than reasonably equivalent value," **including distributions to
+  shareholders**, and barring Vylor from distributing, transferring,
+  capitalizing or disposing of transferred property; constructive trust.
+  These are **requests and allegations, not orders.** The complaint values
+  the retained crop-protection business at ≈$14B and alleges PFAS liabilities
+  "well into the tens of billions"; it states the $4B Chemours/DuPont/Corteva
+  PFAS cost-sharing is "nearing exhaustion" and that Corteva bears 29% of
+  the $2B contributed by it and New DuPont. Plaintiffs' figures, not Atlas
+  facts.
+- **Conflation guard:** press repeating "court denied TRO" refers to the
+  federal D.S.C. denial (Sept 29–30), not the Indiana hearing.
+- **Frozen invalidation conditions:** no adverse order is established, and
+  none is ruled out, so the price test is **not** shown to remain eligible
+  and **not** shown to be blocked. Underwriting `529286a`, ranges, and the
+  ≈$10.40 threshold are unchanged. Index mechanics unchanged (CTVA S&P 500
+  deletion and MidCap 400 addition effective before the Oct 6 open, executed
+  at the Oct 5 close).
+- **Next:** after the Oct 5 close, re-check for an Indiana order, then run
+  the index-flow observation. No Stage 7, no capital decision, CBRS
+  untouched.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
