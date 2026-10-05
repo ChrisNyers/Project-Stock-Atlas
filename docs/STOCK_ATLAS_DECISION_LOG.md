@@ -2801,3 +2801,41 @@ price test was not run.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## PILOT5_CTVA_OCT5_INDEX_EVENT_PRICE_TEST
+
+| | |
+|---|---|
+| Date | 2026-10-05 |
+| Status | **RECORDED — `NO_DEMONSTRATED_INVESTABLE_DISLOCATION`** |
+| Context | Pilot 5 Scan 002, CTVA; frozen baseline `529286a` unchanged |
+
+### Decision
+
+**CTVA October 5 index-event price test**
+(`pilot5/PILOT5_CTVA_OCT5_INDEX_EVENT_PRICE_TEST_001.md`):
+**`NO_DEMONSTRATED_INVESTABLE_DISLOCATION`.**
+
+- **Legal:** `LEGAL_OUTCOME_PENDING_VERIFICATION`. No authoritative record of
+  the Oct 2 Indiana TRO hearing outcome exists in any source checked; no
+  invalidating order established; silence not read as favorable. Corteva's
+  Oct 5 8-K (separation completion) places PFAS MOU liabilities with
+  RemainCo/Corteva, as underwritten. Requested relief remains requests.
+- **Oct 5 (uncertified, aggregator):** O 11.81 / H 12.63 / L 11.74 / C
+  **12.39** (+3.9%); volume ≈183M shares (≈27% of shares, ≈26x average).
+  Oct 2: −5.2% on 78.7M shares against rising markets. No closing-auction
+  data available.
+- **Versus frozen map (`529286a`, unchanged):** close 19% above the ≈$10.40
+  threshold, 3% above the downside band; session low $11.74 was 12.9% above
+  the threshold. Price rose into the close; weakness came before the event.
+- **Flow:** observed — exceptional volume, price up at the close;
+  inferred, not verified — much volume is index crossing, Oct 2 weakness may
+  be anticipation. Net-sale direction remains plausible but unconfirmed; the
+  25–95M bracket was not certified.
+- **Learning:** a documented index migration is not a dislocation; dirty
+  fundamentals plus a live legal tail make a poor forced-flow test.
+- No Stage 7, no capital decision, CBRS untouched.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
