@@ -5,6 +5,10 @@ rewritten.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
+**Current state pointer (2026-10-05): `CONTROLLED LIVE PILOT AUTHORIZED — CYCLE 1
+NOT YET STARTED`.** Gate B Closure Review: `COMPLETE — PASS / GATE B CLOSED`.
+See "Gate B Closure Verdict" under Live Capital. Pilot 5 is formally closed.
+
 ---
 
 ## Governing Mission
@@ -163,7 +167,7 @@ decision defect.
 | Phases 4A.5.1 – 4A.5.2A (SEC, identity, period, market data) | COMPLETE | `59911d2` |
 | Pilots 1–4 manual methodology + doctrine | COMPLETE | `bf03986` |
 | v0.2 control-layer merge + capital-decision facade | ACCEPTED (Final Code Red Team) | `8dba996` |
-| Gate B live data binding (B1–B5) | CLOSED — awaiting Gate B Red Team review | `4c71d06` |
+| Gate B live data binding (B1–B5) | CLOSED — Gate B Closure Review `COMPLETE — PASS / GATE B CLOSED` (verdict 2026-10-05). *Historical, 2026-09-03: "CLOSED — awaiting Gate B Red Team review"* | `4c71d06` |
 | Stage 8 allocation-rationale fields | COMPLETE | `22f7077` |
 | Records-scope clarification | COMPLETE | `acfd446` |
 
@@ -1451,8 +1455,58 @@ present:
 Whether Pilot 2 completion is sufficient to move to a controlled live sleeve
 **will be decided after Pilot 2, based on its evidence.**
 
-Gate B remains open pending its Red Team review (`4c71d06`); the ELIGIBLE
-branch has never been exercised on live data.
+*Historical, superseded 2026-10-05:* ~~Gate B remains open pending its Red Team
+review (`4c71d06`)~~ — see the verdict below. The ELIGIBLE branch has never
+been exercised on live data (per repo records; not addressed by the verdict
+summary received).
+
+### Gate B Closure Verdict (2026-10-05; append-only)
+
+**Independent Red Team verdict recorded (dated 2026-10-05): `PASS — GATE B CLOSED`.**
+Reviewed freeze: `4c71d06afe0853389beb4a77ec2708656c3fc708` (parent
+`8dba996d01ef32a77cbd772c3d77fcf82d6e293f`). Audit record named by the
+human: `Gate_B_Closure_Verdict_4c71d06.md`. Recorded on the human's
+instruction; **the audit file itself was not available to the recorder and is
+not in this repo**, so reviewer identity, per-requirement notes, and the
+reviewer's own hash-verification detail are not reproduced and none are
+inferred. The verdict is recorded as received and is not reinterpreted.
+
+**Verdict content as provided:**
+- Gate B is **CLOSED**; overall `PASS — GATE B CLOSED`.
+- **B1–B5: PASS** on retained evidence (real-provider price binding;
+  security/class identity binding; authoritative latest-session/calendar
+  binding; live FX binding; integrated production-adapter replay).
+- **No Critical or Material findings remain open.**
+- **Controlled Live Pilot is authorized under Human Stage 8.**
+- **No automated execution is authorized.**
+- **No investment alpha is established.**
+- Limitation: the **missing current `TWELVEDATA_API_KEY`** blocks a live cycle
+  that requires a provider bind, but **does not reopen Gate B**.
+
+**Recorder's own check (not the reviewer's):** the retained Gate B package at
+`Documents/Project-Stock-Atlas/Stock_Atlas_GateB_4c71d06_*` hashes to the
+values quoted on 2026-09-03 (ZIP `19c9f773…7451`, manifest `af54d4ab…732a`),
+and four key files (`live_price_binding.py`, `live_session_calendar.py`,
+`tests/test_gate_b_live_binding.py`, `GATE_B_LIVE_DATA_BINDING.md`) match the
+manifest at commit `4c71d06`.
+
+**Current environment, unchanged by this record:** `TWELVEDATA_API_KEY` is
+absent; the suite shows **244 passed, 25 skipped, 1 warning**. The 25 skips
+are the Gate B live-binding tests; they are **BLOCKED, not current passes**.
+The absent key blocks any live cycle needing a bind; it does not reopen Gate
+B. No credential was added or requested in source control.
+
+**Current state pointers (supersede the lines labeled historical):**
+- Gate B Closure Review: **`COMPLETE — PASS / GATE B CLOSED`**
+- Controlled Live Pilot: **`AUTHORIZED TO BEGIN UNDER HUMAN STAGE 8`**
+- Project state: **`CONTROLLED LIVE PILOT AUTHORIZED — CYCLE 1 NOT YET STARTED`**
+  No Cycle 0 or Cycle 1 evidence exists in the repo and none was created; no
+  candidate has begun. The "Live Capital" prerequisites list (real portfolio
+  snapshot, exposure/capacity controls, funding pocket, complete Stage 8
+  rationale fields, human Stage 8 authority, current decision-time data) is
+  unchanged and is not asserted satisfied by this record.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
 
