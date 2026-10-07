@@ -3049,3 +3049,33 @@ READY`.** Authorization unchanged; Cycle 1 not started; no candidate, no Stage
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_CYCLE0_CORRECTION_001
+
+| | |
+|---|---|
+| Date | 2026-10-07 |
+| Status | **RECORDED — baseline corrected; holding values outstanding; Cycle 1 not ready** |
+| Context | Corrects `CONTROLLED_LIVE_PILOT_CYCLE0_BASELINE` (`e19f604`) |
+
+### Decision
+
+**Cycle 0 Correction 001 (2026-10-07).** Chris's clarifications supersede the
+original freeze (`CYCLE0_BASELINE_001.md`, history preserved): stocks
+**$624,905.93 exact**; 28-name list complete; defensive **≈$59,000 across
+T-bills and money market**; identified value **≈$683,905.93** (the ≈$750,000
+estimate is superseded; no residual invented); funding = **new outside
+capital, available now, $25,000–$50,000, T+1 deployable**; ADD-ONLY; use the
+specific contemplated increment per cycle. **Validation under the frozen
+contracts:** snapshot and funding pocket now **PASS** (the T+2 failure is
+resolved, not overridden); the Stage-7 funding check still fails closed until
+tax/liquidity/execution are attested `VERIFIED`. **Open:** the 28 individual
+market values are not in the repo or any record available to the recorder
+(only the sum and WSO's $2,247.24); not reconstructed. They must sum to exactly
+$624,905.93 when supplied. **Status: `CONTROLLED LIVE PILOT — CYCLE 0 BASELINE
+CORRECTED, HOLDING VALUES OUTSTANDING — CYCLE 1 NOT READY`.** No candidate, no
+Stage 7, no architecture change.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

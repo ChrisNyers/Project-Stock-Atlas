@@ -13,6 +13,8 @@
 | Gate B | `COMPLETE — PASS / GATE B CLOSED` (see Master Plan, "Gate B Closure Verdict") |
 | Governing policy | Phase 2 Calibration & Investor Policy v1.0, retained outside the repo at `OneDrive/Stock Atlas/Stock_Atlas_Phase2_Calibration_Investor_Policy_v1.0.md` — **SHA-256 `d20019fd06d8f9b40fbdebf3f25844ccd1eab41750565dba3d475fbf65deb104`** (9,433 bytes) |
 
+> **Superseded in part by "Correction 001 (2026-10-07)" at the end of this file.** The ≈$750,000 denominator, the ≈$691,000 stock figure, "T-bills only", and the T+2 funding pocket below are the original freeze and are preserved as history; the corrected values govern.
+
 ---
 
 ## 1. Frozen baseline (as supplied)
@@ -77,5 +79,61 @@ At a $750,000 base with new outside capital, post-trade portfolio weights corres
 > (Authorization unchanged: `AUTHORIZED TO BEGIN UNDER HUMAN STAGE 8`.)
 
 The status `CYCLE 0 COMPLETE / CYCLE 1 READY` was **not** granted because the baseline does not validate (§4). Cycle 1 has not started. The `TWELVEDATA_API_KEY` remains absent and will block any price bind in Cycle 1; it does not affect this baseline.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## Correction 001 (2026-10-07) — append-only
+
+Chris clarified the remaining baseline items. These **supersede** the original
+values where they differ; the original sections above are not rewritten.
+
+| Item | Corrected, governing value |
+|---|---|
+| Stocks | **$624,905.93 exact** (sum of the exact per-holding market values Chris supplied). The rounded ≈$691,000 is superseded. |
+| Holdings list | **Complete: 28 names** (AVGO, AAPL, MSFT, ABBV, JPM, COST, NEE, ALL, HD, MRK, CVX, RTX, PAYX, MS, C, LLY, GS, WEC, ETN, FAST, OKE, TROW, PFE, IBM, GD, COR, KMB, WSO) in the one taxable account. WSO = 8 sh × $280.905 reference = $2,247.24 (≈ 0.33% of the identified value). |
+| Defensive balance | **≈ $59,000 across T-bills AND money market** (split not supplied). It is not "T-bills only". |
+| Identified portfolio value | **≈ $683,905.93** = $624,905.93 + ≈$59,000. Weights: stocks ≈ 91.37%, defensive ≈ 8.63%. The ≈$750,000 figure was a rough estimate and is **superseded**. **No residual position was invented** to reconcile to it. |
+| Funding pocket | **New outside capital, available now, $25,000–$50,000, deployable T+1.** Existing holdings and existing T-bills/money market are **not** the funding source. |
+| Policy | **ADD-ONLY**; no trims; no recycle. Reserves N/A; concentration overrides NONE (unchanged). |
+| Cycle 1 sizing rule | Use the **specific contemplated increment** within $25,000–$50,000 for any actual decision; do not assume the full $50,000. |
+
+**Validation (existing frozen contracts, run 2026-10-07, script outside the repo, no control changed)**
+
+| Check | Result |
+|---|---|
+| `PortfolioSnapshot` at $683,905.93, ADD-ONLY, trims off | **PASS** |
+| Funding pocket at $25,000 and at $50,000, T+1 deployable | **PASS** — deployable amount equals the full amount; the earlier T+2 "no deployable capacity" failure is **resolved** by the clarification (it was not overridden) |
+| Stage-7 funding check with tax/liquidity/execution `UNVERIFIED` and no human acceptance | **FAIL-CLOSED**, as designed; passes when attested `VERIFIED` (or with explicit human acceptance at Stage 7; final persistence still needs `VERIFIED`) |
+| Dollar capacity on this base, new outside capital: 1% ≈ $6,908; 2% ≈ $13,957 (STARTER ceiling); 3% ≈ $21,152; 5% ≈ $35,995; 10% ≈ $75,990 | informational |
+| Pocket as share of base | $25,000 ≈ 3.66%; $50,000 ≈ 7.31%. One new name cannot absorb the whole pocket as a STARTER (≈ $13,957 max). Sizing remains Chris's Stage 8 decision. |
+
+**One item remains open: the 28 per-holding values.** Chris's message says the
+exact values were originally supplied, and gives their exact sum. **The
+individual values are not in this repo, in the retained project files, or in
+any session record available to the recorder** — only the sum and WSO's value
+were present in this workstream. They were **not** reconstructed, estimated
+from prices, or allocated from the total. Until they are entered, the frozen
+`Holding` table (value, weight, account per name) cannot be built, and
+per-name exposure and common-driver tests cannot run, so the baseline is **not**
+declared complete. **Acceptance check when supplied:** the 28 values must sum to
+**exactly $624,905.93** (WSO = $2,247.24); a mismatch is reported, not
+adjusted. Account sub-type and per-holding identity keys remain `UNVERIFIED`
+(identity binding, not research).
+
+**Remaining case-by-case (`UNVERIFIED` until material; fail closed):** tax
+lots/basis and tax implications; liquidity and execution (per candidate,
+human-attested); per-holding dominant-driver overlap; ETF look-through;
+Treasury/Cash yield reference and duration basis (the defensive balance is
+T-bills + money market); candidate-specific capacity; account sub-type.
+
+**Status after Correction 001:**
+
+> **`CONTROLLED LIVE PILOT — CYCLE 0 BASELINE CORRECTED, HOLDING VALUES OUTSTANDING — CYCLE 1 NOT READY`**
+> (Authorization unchanged. Cycle 1 not started. No candidate, no Stage 7.)
+
+`CYCLE 0 COMPLETE / CYCLE 1 READY` will apply once the 28 values are entered and
+reconcile to $624,905.93.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
