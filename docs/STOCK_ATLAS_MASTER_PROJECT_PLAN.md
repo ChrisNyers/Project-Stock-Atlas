@@ -14,6 +14,8 @@ See "Gate B Closure Verdict" under Live Capital. Pilot 5 is formally closed.
 Cycle 1 not ready.
 **Update 2026-10-07 (holdings completion): `CONTROLLED LIVE PILOT — CYCLE 0 COMPLETE / CYCLE 1
 READY`.**
+**Update 2026-10-07 (Cycle 1 opened): `CONTROLLED LIVE PILOT — CYCLE 1 STARTED / MCD PRE-ATLAS
+STANCE FROZEN / UNDERWRITING NOT BEGUN`** (`controlled_live_pilot/CYCLE1_MCD_PRE_ATLAS_STANCE_001.md`).
 
 ---
 
@@ -1573,6 +1575,25 @@ case-by-case. Attribution clarified in the record (human actor: Chris; no text
 rewritten). **Status: `CONTROLLED LIVE PILOT — CYCLE 0 COMPLETE / CYCLE 1
 READY`.** Cycle 1 not started; no candidate; no Stage 7. A Stage 7 live price
 bind still needs a valid `TWELVEDATA_API_KEY` outside source control.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+### Controlled Live Pilot — Cycle 1 MCD Pre-Atlas Stance (2026-10-07; append-only)
+
+**Cycle 1 opened (2026-10-07).** The human operator (Chris) selected McDonald's
+(MCD) and froze his pre-Atlas stance before any underwriting, Stage 7 analysis
+or recommendation work: *neutral research stance; would research, would not buy
+on current knowledge; would consider a $10,000–$15,000 starter funded with new
+outside capital only if underwriting shows attractive risk/reward and a
+meaningful advantage versus SPY, Treasury/Cash and Do Nothing; primary concern
+is valuation; likely action without Atlas: research further, no purchase yet.*
+Verbatim text and context checks:
+`controlled_live_pilot/CYCLE1_MCD_PRE_ATLAS_STANCE_001.md`. Not to be revised
+after the analysis. MCD is not among the 28 Cycle 0 holdings. No underwriting,
+Stage 7, research or recommendation was performed. **Status: `CONTROLLED LIVE
+PILOT — CYCLE 1 STARTED / MCD PRE-ATLAS STANCE FROZEN / UNDERWRITING NOT
+BEGUN`.** Stage 7 live price bind still needs a valid `TWELVEDATA_API_KEY`
+outside source control. Human Stage 8 remains sole capital authority.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 

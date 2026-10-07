@@ -3108,3 +3108,28 @@ bind still needs a valid `TWELVEDATA_API_KEY` outside source control.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_CYCLE1_MCD_PRE_ATLAS_STANCE_001
+
+| | |
+|---|---|
+| Date | 2026-10-07 |
+| Status | **RECORDED — frozen; underwriting not begun** |
+| Context | Follows `CONTROLLED_LIVE_PILOT_CYCLE0_CORRECTION_002` (`0e14638`) |
+
+### Decision
+
+**Cycle 1 pre-Atlas stance frozen (2026-10-07).** Candidate MCD selected by the
+human operator (not Atlas/Scout). Stance recorded verbatim in
+`controlled_live_pilot/CYCLE1_MCD_PRE_ATLAS_STANCE_001.md`: neutral research;
+would not buy on current knowledge; would consider a $10,000–$15,000 starter
+with new outside capital only on attractive risk/reward and a meaningful
+advantage versus SPY, Treasury/Cash and Do Nothing; primary concern valuation;
+likely action without Atlas: research further, no purchase yet. Not to be
+revised after analysis. No underwriting, Stage 7, research or recommendation
+performed. Human Stage 8 remains sole capital authority; no automated
+execution.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
