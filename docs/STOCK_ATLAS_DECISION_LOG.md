@@ -3133,3 +3133,28 @@ execution.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_CYCLE1_MCD_UNDERWRITING_001
+
+| | |
+|---|---|
+| Date | 2026-10-07 |
+| Status | **RECORDED — `CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`** |
+| Context | Follows `CONTROLLED_LIVE_PILOT_CYCLE1_MCD_PRE_ATLAS_STANCE_001` (`0a923e2`, unchanged) |
+
+### Decision
+
+**MCD underwriting disposition: `CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`.**
+Detail in `controlled_live_pilot/CYCLE1_MCD_UNDERWRITING_001.md`. Primary-source
+build (SEC filings, Treasury yields); prices uncertified (no
+`TWELVEDATA_API_KEY`). Cheapest-falsification tests (valuation, business,
+balance sheet, return vs alternatives) did not kill the case; no variant was
+demonstrated and advantage vs SPY is unproven. Three specific evidence items
+remain (Q3 2026 results; NEXT partnering schedule/2027–28 framework; Stage 7
+price bind). Proposed pre-registered interpretation thresholds are recorded.
+No Stage 7, no Stage 8, no sizing recommendation, no other candidate. Human
+Stage 8 remains sole capital authority.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

@@ -16,6 +16,8 @@ Cycle 1 not ready.
 READY`.**
 **Update 2026-10-07 (Cycle 1 opened): `CONTROLLED LIVE PILOT — CYCLE 1 STARTED / MCD PRE-ATLAS
 STANCE FROZEN / UNDERWRITING NOT BEGUN`** (`controlled_live_pilot/CYCLE1_MCD_PRE_ATLAS_STANCE_001.md`).
+**Update 2026-10-07 (MCD underwriting): `CONTROLLED LIVE PILOT — CYCLE 1 / MCD UNDERWRITING COMPLETE —
+CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`** (`controlled_live_pilot/CYCLE1_MCD_UNDERWRITING_001.md`).
 
 ---
 
@@ -1594,6 +1596,27 @@ Stage 7, research or recommendation was performed. **Status: `CONTROLLED LIVE
 PILOT — CYCLE 1 STARTED / MCD PRE-ATLAS STANCE FROZEN / UNDERWRITING NOT
 BEGUN`.** Stage 7 live price bind still needs a valid `TWELVEDATA_API_KEY`
 outside source control. Human Stage 8 remains sole capital authority.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+### Controlled Live Pilot — Cycle 1 MCD Underwriting (2026-10-07; append-only)
+
+**MCD underwriting disposition: `CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`.**
+Record: `controlled_live_pilot/CYCLE1_MCD_UNDERWRITING_001.md`. Built from SEC
+primary filings (FY2025 10-K, Q2 2026 10-Q, 2026-09-23 8-K Investor Day release)
+and U.S. Treasury primary yield data; price series uncertified (no
+`TWELVEDATA_API_KEY`). No cheapest-falsification test killed the case: trailing
+P/E ≈18.9x (vs ≈25.5x at 2023–25 year-ends), FCF yield ≈4.7%, dividend yield
+≈3.2%, 10-yr Treasury 5.27%, 3-mo 4.21%; scenario IRR −2.7% / +2.0% / +8.9% /
++15.4% (severe / downside / base / strong). No variant demonstrated (≥5% EPS
+CAGR through flat U.S. traffic is management-claim-based; advantage vs SPY not
+demonstrated). Evidence still required: Q3 2026 results (date to be confirmed),
+NEXT partnering P&L/cash schedule and 2027–28 framework, and the Stage 7 price
+bind (blocked pending a valid `TWELVEDATA_API_KEY` outside source control).
+Pre-registered interpretation thresholds are proposed in the record. The frozen
+pre-Atlas stance (`0a923e2`) is unchanged. No Stage 7, no Stage 8, no other
+candidate. **Status: `CONTROLLED LIVE PILOT — CYCLE 1 / MCD UNDERWRITING COMPLETE —
+CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`.**
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
