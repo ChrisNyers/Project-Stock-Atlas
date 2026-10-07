@@ -3079,3 +3079,32 @@ Stage 7, no architecture change.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_CYCLE0_CORRECTION_002
+
+| | |
+|---|---|
+| Date | 2026-10-07 |
+| Status | **RECORDED — Cycle 0 complete; Cycle 1 ready (not started)** |
+| Context | Completes `CONTROLLED_LIVE_PILOT_CYCLE0_CORRECTION_001` (`4dfd2a7`) |
+
+### Decision
+
+**Cycle 0 Correction 002 (2026-10-07): holdings completion.** The 28
+per-holding market values (supplied by the human operator; arithmetic checked
+by the recorder) sum **exactly** to **$624,905.93**; defensive ≈$59,000
+(T-bills + money market); identified value ≈$683,905.93. `PortfolioSnapshot`
+builds with all 28 holdings (ADD-ONLY), the $25,000–$50,000 T+1 funding pocket
+passes, and per-name exposure now computes — overlap/capacity checks are no
+longer blocked by missing holdings. Existing name-level exposure (informational,
+frozen Policy §3): AVGO 20.82% and AAPL 14.68% MAXIMUM/EXCEPTION; MSFT 9.65% and
+ABBV 9.03% REVIEW; no trims under ADD-ONLY. Tax, liquidity, execution, overlap,
+yield reference, capacity, account sub-type and SEC identity keys stay
+case-by-case. Attribution clarified in the record (human actor: Chris; no text
+rewritten). **Status: `CONTROLLED LIVE PILOT — CYCLE 0 COMPLETE / CYCLE 1
+READY`.** Cycle 1 not started; no candidate; no Stage 7. A Stage 7 live price
+bind still needs a valid `TWELVEDATA_API_KEY` outside source control.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

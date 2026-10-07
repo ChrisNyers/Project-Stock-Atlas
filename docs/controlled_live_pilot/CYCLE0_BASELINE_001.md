@@ -137,3 +137,95 @@ T-bills + money market); candidate-specific capacity; account sub-type.
 reconcile to $624,905.93.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## Correction 002 (2026-10-07) — holdings completion, append-only
+
+**Provenance.** The 28 per-holding market values below were supplied in the
+human operator's Cycle 0 work order of 2026-10-07, stated to come from Chris's
+original holdings data. The recorder checked arithmetic only; the values were
+not re-derived from prices or any brokerage source.
+
+**Attribution correction (audit clarity).** The human actor in this pilot is
+**Chris** (repo author Chris Nyers), the sole Human Stage 8 authority. Where
+earlier appended text says "Chris" supplied inputs or "Chris's" Stage 8 call, it
+means him. The work order asked for a change from one rendering of the name to
+another, but both appeared identical in the instruction, so **no wording was
+changed and no earlier text was rewritten**; if a different name or form was
+intended, the correction needs the exact intended text.
+
+**Exact per-holding market values (one taxable brokerage account)**
+
+| Ticker | Value | % of identified | Ticker | Value | % of identified |
+|---|---:|---:|---|---:|---:|
+| AVGO | $142,388.77 | 20.82% | PAYX | $12,464.89 | 1.82% |
+| AAPL | $100,399.74 | 14.68% | MS | $10,730.18 | 1.57% |
+| MSFT | $66,022.86 | 9.65% | C | $10,232.73 | 1.50% |
+| ABBV | $61,742.23 | 9.03% | LLY | $10,822.60 | 1.58% |
+| JPM | $21,657.24 | 3.17% | GS | $6,162.52 | 0.90% |
+| COST | $31,278.89 | 4.57% | WEC | $4,451.36 | 0.65% |
+| NEE | $17,306.71 | 2.53% | ETN | $859.48 | 0.13% |
+| ALL | $20,937.56 | 3.06% | FAST | $2,205.04 | 0.32% |
+| HD | $18,234.88 | 2.67% | OKE | $1,834.04 | 0.27% |
+| MRK | $19,277.98 | 2.82% | TROW | $2,072.80 | 0.30% |
+| CVX | $11,890.78 | 1.74% | PFE | $5,517.13 | 0.81% |
+| RTX | $11,213.93 | 1.64% | IBM | $1,540.91 | 0.23% |
+| GD | $9,800.25 | 1.43% | COR | $11,820.47 | 1.73% |
+| KMB | $9,792.72 | 1.43% | WSO | $2,247.24 | 0.33% |
+
+**TOTAL (28 names): $624,905.93.** Defensive balance ≈ $59,000 (T-bills and
+money market; carried in the denominator, not as `Holding` entries). **Identified
+portfolio value ≈ $683,905.93** (stocks ≈ 91.37%, defensive ≈ 8.63%). The 28-name
+list is complete for this account.
+
+**Reconciliation and validation (existing frozen contracts; script outside the repo, no control changed)**
+
+| Check | Result |
+|---|---|
+| 28 names, all unique | **PASS** |
+| Per-name values sum to exactly $624,905.93 (decimal arithmetic) | **PASS** |
+| WSO = 8 × $280.905 = $2,247.24 | **PASS** |
+| Stock weights + defensive weight = 100% of identified value | **PASS** (1.000000) |
+| `PortfolioSnapshot` builds with 28 `Holding` entries, ADD-ONLY, trims off | **PASS** |
+| Funding pocket $50,000, T+1 deployable (and $25,000, earlier run) | **PASS** — fully deployable, reserve N/A |
+| Per-name exposure computes from holdings (`effective_name_exposure`) | **PASS** — overlap/capacity checks are no longer blocked for lack of holdings values |
+| Stage-7 funding check with tax/liquidity/execution `UNVERIFIED` | fails closed unless attested `VERIFIED` or human-accepted — **this is a Cycle 1 decision-time item, not a Cycle 0 prerequisite**, and is allowed to remain case-by-case |
+
+**Informational — existing name-level exposure under the frozen Policy §3
+(TARGET ≤8%, REVIEW >8–12%, MAXIMUM/EXCEPTION >12%; no ETF holdings, so effective =
+direct):** AVGO 20.82% and AAPL 14.68% are in MAXIMUM/EXCEPTION; MSFT 9.65% and
+ABBV 9.03% are in REVIEW; every other name is ≤8%. The Policy states that crossing a
+threshold through appreciation does not force a sale, and this pilot is ADD-ONLY
+(no trims) regardless. Candidate-level capacity and common-driver exposure are
+computed per candidate, with driver assignment human-authored at that time; none was
+assigned here. Top-5 names = 58.76% of identified value.
+
+**Identity keys.** Each `Holding` was built with a ticker-keyed placeholder
+(`UNBOUND-TICKER:<symbol>`) for the validation only. SEC-based identity binding is
+**deferred and case-by-case**; it becomes material if a candidate matches or overlaps
+a holding (class-substitution guard), and fails closed until bound.
+
+**Remaining case-by-case (legitimately `UNVERIFIED` until material):** tax lots and
+basis, tax implications; liquidity and execution (per candidate, human-attested);
+per-holding dominant-driver overlap; ETF look-through; Treasury/Cash yield reference
+and duration basis (T-bills + money market); candidate-specific capacity; account
+sub-type; per-holding SEC identity keys. A funded Stage 8 decision still needs
+tax, liquidity, and execution `VERIFIED` and fails closed otherwise.
+
+**Does Cycle 0 now satisfy every prerequisite before candidate selection?** Yes:
+account scope, denominator, per-name holdings, defensive allocation, funding pocket
+(deployable), funding policy, reserves (N/A), and overrides (NONE) are all
+recorded and validate under the existing frozen contracts.
+
+**Status after Correction 002:**
+
+> **`CONTROLLED LIVE PILOT — CYCLE 0 COMPLETE / CYCLE 1 READY`**
+
+Cycle 1 has **not** started; no candidate selected; no Stage 7 run. **Known
+limitation, unchanged:** `TWELVEDATA_API_KEY` is absent, so a Cycle 1 Stage 7
+live price bind cannot run until a valid key is configured outside source control;
+this does not affect Cycle 0 or reopen Gate B.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
