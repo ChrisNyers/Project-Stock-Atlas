@@ -1613,6 +1613,9 @@ CAGR through flat U.S. traffic is management-claim-based; advantage vs SPY not
 demonstrated). Evidence still required: Q3 2026 results (date to be confirmed),
 NEXT partnering P&L/cash schedule and 2027–28 framework, and the Stage 7 price
 bind (blocked pending a valid `TWELVEDATA_API_KEY` outside source control).
+**Addendum 2026-10-07:** official IR calendar sets the Q3 2026 earnings call for
+11/04/26 (supersedes the unverified 10/28); no year-by-year partnering schedule or
+EPS framework in primary filings; IR slides PDF not yet read; disposition unchanged.
 Pre-registered interpretation thresholds are proposed in the record. The frozen
 pre-Atlas stance (`0a923e2`) is unchanged. No Stage 7, no Stage 8, no other
 candidate. **Status: `CONTROLLED LIVE PILOT — CYCLE 1 / MCD UNDERWRITING COMPLETE —
