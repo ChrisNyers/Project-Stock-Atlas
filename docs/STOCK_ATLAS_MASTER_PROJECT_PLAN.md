@@ -8,6 +8,8 @@ rewritten.
 **Current state pointer (2026-10-05): `CONTROLLED LIVE PILOT AUTHORIZED — CYCLE 1
 NOT YET STARTED`.** Gate B Closure Review: `COMPLETE — PASS / GATE B CLOSED`.
 See "Gate B Closure Verdict" under Live Capital. Pilot 5 is formally closed.
+**Update 2026-10-07:** Cycle 0 baseline frozen with two open items — Cycle 1 not ready
+(`controlled_live_pilot/CYCLE0_BASELINE_001.md`).
 
 ---
 
@@ -1505,6 +1507,29 @@ B. No credential was added or requested in source control.
   snapshot, exposure/capacity controls, funding pocket, complete Stage 8
   rationale fields, human Stage 8 authority, current decision-time data) is
   unchanged and is not asserted satisfied by this record.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+### Controlled Live Pilot — Cycle 0 Baseline (2026-10-07; append-only)
+
+**Cycle 0 baseline frozen with two open items (2026-10-07).** Record:
+`controlled_live_pilot/CYCLE0_BASELINE_001.md`. Chris-supplied, intentionally
+approximate: one taxable brokerage account; ≈$750,000 governing denominator
+(≈$691,000 stocks + ≈$59,000 T-bills); 28 tickers listed (only WSO valued,
+≈$2,247.24); funding pocket = new outside capital, $25,000–$50,000, T+2;
+existing cash and recycle/trim barred; **ADD-ONLY**; liquidity and
+distribution reserves N/A; concentration overrides NONE; Investor Policy v1.0
+referenced by SHA-256 `d20019fd…b104`. No credentials or account identifiers
+stored. Tax, liquidity, execution, overlap, yield reference and capacity left
+`UNVERIFIED` until material (a funded decision still requires them `VERIFIED`).
+
+**Validation against the existing contracts: not fully validated.** The
+snapshot builds and reconciles, but the T+2 pocket computes to $0 deployable
+under the frozen `t_plus_1_deployable` rule (fail-closed, not overridden), and
+27 of 28 holding values were not supplied (not invented). **Status:
+`CONTROLLED LIVE PILOT — CYCLE 0 BASELINE FROZEN, TWO OPEN ITEMS — CYCLE 1 NOT
+READY`.** Authorization unchanged; Cycle 1 not started; no candidate, no Stage
+7, no architecture change.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
