@@ -3158,3 +3158,27 @@ Stage 8 remains sole capital authority.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_CYCLE1_MCD_EVIDENCE_CHECK_001
+
+| | |
+|---|---|
+| Date | 2026-10-07 |
+| Status | **RECORDED — disposition unchanged: `CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`** |
+| Context | Addendum 001 to `controlled_live_pilot/CYCLE1_MCD_UNDERWRITING_001.md` |
+
+### Decision
+
+Narrow primary-source check on the Sept 23, 2026 Investor Day / NEXT partnering
+program. SEC filings and the press release publish aggregate amounts only
+(~$8.5B through 2036, ~$5B through 2030) and no year-by-year schedule, no
+operating-income/EPS framework and no margin-to-earnings bridge; none was
+inferred. The official IR *Select Slides* PDF was not retrieved (download
+requires user permission) and remains unread. Official IR calendar lists the
+**Q3 2026 earnings call on 11/04/26**, superseding the unverified 10/28 date.
+Valuation cases, pre-registered thresholds and the pre-Atlas stance are
+unchanged. No Stage 7, no Stage 8, no new candidate.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

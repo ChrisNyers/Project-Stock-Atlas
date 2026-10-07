@@ -160,3 +160,31 @@ Subjective probability weights 10/20/45/25 (Atlas judgment, wide error bars) giv
 5. **The decision is not urgent.** Do Nothing/T-bills cost little to hold for three weeks; waiting for the Q3 print is cheap.
 
 **Capital status: NO REAL PORTFOLIO ACTION.** Human Stage 8 remains sole capital authority. Cycle 1 candidate: MCD. No other candidate was researched.
+
+---
+
+## Addendum 001 — Targeted primary-source evidence check (2026-10-07; append-only)
+
+Scope: narrow check requested after the disposition. The valuation cases, the
+frozen pre-Atlas stance (`0a923e2`) and the registered thresholds are unchanged.
+
+**Sources checked:** SEC EDGAR filing list for CIK 0000063908 (latest 8-K = 2026-09-23, Items 7.01/9.01, release only; no slide, transcript or schedule exhibit; no later 8-K); official IR page *Events & Presentations* (lists "Investor Day Press Release" and "2026 Investor Day Select Slides (14 MB)"); official IR events calendar (`mcdonalds2017tf.q4web.com/events-calendar`); the Q2 2026 10-Q.
+
+**FACT (primary — 8-K Ex. 99.1, 10-Q):**
+- ~$8.5B total NEXT partnering support through 2036, ~$5B through 2030, "through a combination of rent relief and capital support." Capex 2027–30: ~$3B/yr baseline plus $1.5–2B *cumulative* partnering capital. ~250 bps gross restaurant-level efficiency ≈ ~$100K/yr cash flow per average U.S. restaurant; ~4-year franchisee payback after partnering. Targets: op margin low-to-mid 50% by 2030, G&A ~1.9% of Systemwide sales, FCF conversion mid-to-high 80%, unit contribution ~2.5% (2027) → ~2% (2030).
+- **Not published in any SEC filing or the press release:** a year-by-year rent-relief schedule; the rent-relief vs capital split; corporate capital contribution timing by year; remodel/restaurant-investment timing or counts; any operating-income or EPS expectation; any 2027–28 earnings framework; any explicit bridge from the 2030 margin target to earnings-dollar growth.
+- 10-Q: "Accelerating the Organization" restructuring runs through 2027 ($795M incurred since 2023; ~$250M expected in 2026) — a GAAP-EPS item, not a NEXT item.
+
+**MANAGEMENT CLAIM (secondary transcript, unverified against the primary slides/webcast):** rent relief/capital amortized in the P&L over ~10 years; margin path driven by comps, G&A to 1.9%, and franchised mix ~95% → ~98% by 2028; no EPS algorithm stated; Q3 U.S. comps "slightly negative".
+
+**INFERENCE (unchanged, still labeled):** rent relief through 2030 ≈ $3.0–3.5B (= $5B − $1.5–2B capital) and ~2.5% of FY2025 operating income by 2030 if amortized over ~10 years. No schedule was published and none is inferred here.
+
+**Not read:** the official *2026 Investor Day Select Slides* PDF. Access from this session returned a file-download response, so the file was not retrieved; downloading it requires explicit user permission. The slides may or may not contain the items above — **UNKNOWN until read**.
+
+**Q3 2026 earnings date (official IR calendar):** *McDonald's Q3 2026 Earnings Conference Call — 11/04/26* (listed as "Upcoming, Quarterly Earnings"). This **supersedes** the October 28 date in §9, which came from a secondary source and is **not** supported by the official calendar. No SEC filing announces the date; the IR calendar entry is the official source. Time of day not captured.
+
+**Effect on prior assumptions:** (1) the Q3 evidence date moves from 10-28 (unverified) to 11-04 (official IR calendar); (2) no valuation case, probability weight, threshold or disposition changes; (3) threshold item "partnering economics consistent with ≥~4% EPS growth in 2027–28" is currently **untestable** on primary evidence (no published framework) — it remains open, not met.
+
+**Thresholds preserved unchanged (pre-registered judgment thresholds, not permanent methodology):** Promotion evidence — Q3 U.S. comp ≥ −1.0%; evidence of U.S. comps turning positive in September/Q4; FY2026 outlook unchanged; partnering economics consistent with roughly ≥4% EPS growth in 2027–28. Negative evidence — Q3 U.S. comp < −2.0%, or a material FY2026 outlook cut.
+
+**Disposition: unchanged — `CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`.** No Stage 7, no Stage 8, no new candidate. **Capital status: NO REAL PORTFOLIO ACTION.**
