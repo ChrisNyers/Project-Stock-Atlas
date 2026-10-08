@@ -18,6 +18,8 @@ READY`.**
 STANCE FROZEN / UNDERWRITING NOT BEGUN`** (`controlled_live_pilot/CYCLE1_MCD_PRE_ATLAS_STANCE_001.md`).
 **Update 2026-10-07 (MCD underwriting): `CONTROLLED LIVE PILOT — CYCLE 1 / MCD UNDERWRITING COMPLETE —
 CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`** (`controlled_live_pilot/CYCLE1_MCD_UNDERWRITING_001.md`).
+**Update 2026-10-07 (slides review): `CONTROLLED LIVE PILOT — CYCLE 1 / MCD PARKED UNTIL 2026-11-04 Q3
+EARNINGS — CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`.**
 
 ---
 
@@ -1615,7 +1617,10 @@ NEXT partnering P&L/cash schedule and 2027–28 framework, and the Stage 7 price
 bind (blocked pending a valid `TWELVEDATA_API_KEY` outside source control).
 **Addendum 2026-10-07:** official IR calendar sets the Q3 2026 earnings call for
 11/04/26 (supersedes the unverified 10/28); no year-by-year partnering schedule or
-EPS framework in primary filings; IR slides PDF not yet read; disposition unchanged.
+EPS framework in primary filings. **Addendum 002 (2026-10-07):** official Investor Day
+Select Slides reviewed — no annual partnering schedule, no rent-relief/capital split, no
+remodel counts, no 2027–28 OI/EPS framework, no numeric margin-to-earnings bridge;
+disposition unchanged; **MCD parked until the official 2026-11-04 Q3 release**.
 Pre-registered interpretation thresholds are proposed in the record. The frozen
 pre-Atlas stance (`0a923e2`) is unchanged. No Stage 7, no Stage 8, no other
 candidate. **Status: `CONTROLLED LIVE PILOT — CYCLE 1 / MCD UNDERWRITING COMPLETE —

@@ -3182,3 +3182,29 @@ unchanged. No Stage 7, no Stage 8, no new candidate.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_CYCLE1_MCD_SLIDES_REVIEW_001
+
+| | |
+|---|---|
+| Date | 2026-10-07 |
+| Status | **RECORDED — MCD PARKED until 2026-11-04 Q3 earnings; disposition `CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE` unchanged** |
+| Context | Addendum 002 to `controlled_live_pilot/CYCLE1_MCD_UNDERWRITING_001.md` |
+
+### Decision
+
+Official 2026 Investor Day Select Slides (22 slides, company IR site) reviewed
+with user permission; no copy stored in the repo. The slides show only the
+aggregate partnering totals (~$5B 2027–30; ~$8.5B through 2036), no annual
+schedule, no rent-relief/capital split (mix "will vary by market and be
+flexible"), no remodel counts or timing, no 2027–28 operating-income or EPS
+framework and no numeric bridge from the 2030 margin target to earnings growth.
+New primary fact: ~4-year franchisee payback and ~5–6-year McDonald's payback on
+Restaurant NEXT investments. The ≥4% EPS-growth threshold remains untestable.
+No assumption, valuation case or threshold changed. MCD parked until the
+officially scheduled Q3 2026 earnings release (2026-11-04). No Stage 7, no
+Stage 8, no new candidate.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

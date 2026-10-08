@@ -188,3 +188,38 @@ frozen pre-Atlas stance (`0a923e2`) and the registered thresholds are unchanged.
 **Thresholds preserved unchanged (pre-registered judgment thresholds, not permanent methodology):** Promotion evidence — Q3 U.S. comp ≥ −1.0%; evidence of U.S. comps turning positive in September/Q4; FY2026 outlook unchanged; partnering economics consistent with roughly ≥4% EPS growth in 2027–28. Negative evidence — Q3 U.S. comp < −2.0%, or a material FY2026 outlook cut.
 
 **Disposition: unchanged — `CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`.** No Stage 7, no Stage 8, no new candidate. **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## Addendum 002 — Official Investor Day "Select Slides" review (2026-10-07; append-only)
+
+Scope: answer only the seven unresolved primary-source questions. Source: the
+official 22-slide PDF *2026 Investor Day Select Slides* (company IR site,
+`corporate.mcdonalds.com`, ~14 MB; fetched with the user's permission and read
+in the browser pane — **no copy is stored in the repo**). Most slides are
+charts/graphics, so they were read visually as well as by text extraction. The
+slides are a **selection**, not the full deck; the Investor Day webcast replay
+was **not** reviewed. Frozen valuation cases, thresholds and the pre-Atlas
+stance are unchanged.
+
+| Question | Answer from the slides |
+|---|---|
+| Year-by-year rent-relief schedule? | **No.** Slide 10 shows only two totals: **~$5B for 2027–2030** and **~$8.5B through 2036**. |
+| Split between rent relief and capital support? | **No stated split.** Slide 10 footnote: support "will be through a mix of rent relief and capital support. The mix and level of support will vary by market and be flexible and targeted to the realities franchisees face locally." |
+| Corporate capital timing by year? | **No.** Slide 15: capex **2027E–2030E ~$3.0B annually**, **plus cumulative ~$1.5B–$2B capital partnering** to accelerate NEXT deployment (a four-year cumulative range, not annual); FX as of 9/23/2026. |
+| Remodel timing / counts? | **No counts, no timing schedule.** Slide 8: incremental investment **~$800K per U.S. restaurant, ~$650–700K IOM**, "investments will be phased over time." Slide 13 gives **new-unit** growth (nearly 4.5% in 2027E, 3.5–3.0% 2028E–2030E; "more than 550 combined U.S. and IOM gross openings annually through to 2030") — not remodels. (The 2026E bar is cropped in my render; not read.) |
+| 2027–28 operating-income or EPS framework? | **No.** The only EPS language is qualitative (slide 21: deliver durable comparable sales growth, "support strong EPS growth", reinforce position as a high-quality long-term compounder). No EPS or operating-income dollars or growth rate for any year. |
+| Bridge from the 2030 margin target to earnings growth? | **No numeric bridge.** Slide 18: adjusted operating margin **46.9% (2025)**, **mid-to-high 40s (2026E)**, **low-to-mid 50s (2030E)**. Component levers are shown separately without a quantified contribution each: refranchising **~95% (2026) → ~98% (2028E)** (slide 16); G&A **~2.2% (2026E) → ~1.9% (2030E)** of Systemwide sales (slide 17); non-comp sales **~2.5% (2026E, 2027E) moderating to ~2% by 2030** (slide 12); FCF conversion **low-to-mid 80s (2026E) → mid-to-high 80s (2030E)** (slide 19). |
+| Anything making the ≥4% EPS-growth threshold testable? | **No.** With no EPS/OI framework, no annual partnering schedule and no quantified bridge, the 2027–28 EPS-growth condition cannot be tested from the slides. It stays open. |
+
+**FACT (primary, slides):** ~250 bps gross restaurant-level efficiency ≈ ~$100K gross annual cash flow for an average U.S. restaurant, with the note that "a portion" will be reinvested in NEXT initiatives but "the majority will benefit the restaurant's bottom line over time" (slide 7); average unit volumes $4M+ (U.S.) / $4.5M+ (IOM) and average franchisee cash flow ~$500K (U.S.) / ~$400K (IOM) (slide 6); **payback ~4 years for franchisees after partnering and ~5–6 years for McDonald's on Restaurant NEXT investments** (slide 11); commitment to the current investment-grade rating and to return excess FCF through dividends and repurchases "over time" (slide 20). The **~5–6-year corporate payback** is new primary evidence not stated in the earlier release or transcript: the program is a mid-single-digit-year, not a quick, return for the parent.
+
+**MANAGEMENT CLAIM:** all of the above targets are forward-looking company estimates. The ~10-year P&L amortization of rent relief, and "support strong EPS growth" quantification, remain **transcript-only/unquantified** — they do **not** appear on the slides.
+
+**INFERENCE (still inference):** the arithmetic that rent relief ≈ ~$5B − ~$1.5–2B ≈ ~$3.0–3.5B through 2030 assumes all non-capital partnering is rent relief. The slide's own footnote (mix and level vary by market, flexible) means the split could differ, so this is softer than previously stated; it is not a published figure. No annual P&L or cash schedule is inferred.
+
+**Effect on prior assumptions:** none invalidated. The slides contain no number that contradicts the valuation cases (5% base EPS CAGR, 19x exit) or the thresholds. The one qualitative addition — a ~5–6-year corporate payback — is consistent with, and slightly reinforces, the "cash cost precedes benefit" risk in §6; it is not used to change any case.
+
+**Thresholds preserved unchanged (pre-registered judgment thresholds, not permanent methodology):** Promotion evidence — Q3 U.S. comp ≥ −1.0%; evidence of U.S. comps turning positive in September/Q4; FY2026 outlook unchanged; partnering economics consistent with roughly ≥4% EPS growth in 2027–28. Negative evidence — Q3 U.S. comp < −2.0%, or a material FY2026 outlook cut.
+
+**Disposition: unchanged — `CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`. MCD is PARKED until the officially scheduled Q3 2026 earnings release/call on 2026-11-04** (official IR calendar). No Stage 7, no Stage 8, no new candidate, no sizing. **Capital status: NO REAL PORTFOLIO ACTION.**
