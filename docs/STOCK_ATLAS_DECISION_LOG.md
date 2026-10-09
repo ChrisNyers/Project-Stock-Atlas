@@ -3208,3 +3208,28 @@ Stage 8, no new candidate.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_CYCLE2_RPM_PRE_ATLAS_STANCE_001
+
+| | |
+|---|---|
+| Date | 2026-10-09 |
+| Status | **RECORDED — frozen; underwriting not begun** |
+| Context | Follows `CONTROLLED_LIVE_PILOT_CYCLE1_MCD_SLIDES_REVIEW_001` (`45593af`); MCD remains parked until 2026-11-04 |
+
+### Decision
+
+**Cycle 2 pre-Atlas stance frozen (2026-10-09).** Candidate RPM selected by the
+human operator (not Atlas/Scout). Stance recorded verbatim in
+`controlled_live_pilot/CYCLE2_RPM_PRE_ATLAS_STANCE_001.md`: neutral research; no
+buy view; research whether the construction slowdown is temporary or cyclical,
+whether the business is fundamentally healthy, and whether valuation reflects
+those risks; main concern a broader demand downturn vs a short-lived project
+delay; likely action without Atlas: research only, no capital decision
+contemplated. Not to be revised after analysis. No underwriting, Stage 7,
+research or recommendation performed. Human Stage 8 remains sole capital
+authority; no automated execution.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

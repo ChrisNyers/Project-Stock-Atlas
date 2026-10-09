@@ -20,6 +20,9 @@ STANCE FROZEN / UNDERWRITING NOT BEGUN`** (`controlled_live_pilot/CYCLE1_MCD_PRE
 CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`** (`controlled_live_pilot/CYCLE1_MCD_UNDERWRITING_001.md`).
 **Update 2026-10-07 (slides review): `CONTROLLED LIVE PILOT — CYCLE 1 / MCD PARKED UNTIL 2026-11-04 Q3
 EARNINGS — CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`.**
+**Update 2026-10-09 (Cycle 2 opened): `CONTROLLED LIVE PILOT — CYCLE 2 STARTED / RPM PRE-ATLAS STANCE FROZEN /
+UNDERWRITING NOT BEGUN` (MCD remains PARKED until 2026-11-04)**
+(`controlled_live_pilot/CYCLE2_RPM_PRE_ATLAS_STANCE_001.md`).
 
 ---
 
@@ -1625,6 +1628,27 @@ Pre-registered interpretation thresholds are proposed in the record. The frozen
 pre-Atlas stance (`0a923e2`) is unchanged. No Stage 7, no Stage 8, no other
 candidate. **Status: `CONTROLLED LIVE PILOT — CYCLE 1 / MCD UNDERWRITING COMPLETE —
 CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`.**
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+### Controlled Live Pilot — Cycle 2 RPM Pre-Atlas Stance (2026-10-09; append-only)
+
+**Cycle 2 opened (2026-10-09).** The human operator (Chris) selected RPM
+International (RPM) and froze his pre-Atlas stance before any underwriting or
+Stage 7 work: *neutral research stance; no buy view; goal is to research whether
+the construction slowdown is temporary or cyclical, whether the business remains
+fundamentally healthy, and whether valuation reflects those risks; main concern
+is whether the slowdown is the start of a broader demand downturn rather than a
+short-lived project delay; likely action without Atlas: research only, no
+capital decision contemplated.* Verbatim text:
+`controlled_live_pilot/CYCLE2_RPM_PRE_ATLAS_STANCE_001.md`. Not to be revised
+after the analysis. RPM is not among the 28 Cycle 0 holdings; no amount or
+funding was stated or assumed. MCD (Cycle 1) remains parked until 2026-11-04.
+No underwriting, Stage 7, research or recommendation was performed. **Status:
+`CONTROLLED LIVE PILOT — CYCLE 2 STARTED / RPM PRE-ATLAS STANCE FROZEN /
+UNDERWRITING NOT BEGUN`.** Stage 7 live price bind still needs a valid
+`TWELVEDATA_API_KEY` outside source control. Human Stage 8 remains sole capital
+authority.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
