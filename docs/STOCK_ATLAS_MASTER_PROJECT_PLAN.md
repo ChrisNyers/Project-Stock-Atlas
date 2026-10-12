@@ -23,6 +23,9 @@ EARNINGS — CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`.**
 **Update 2026-10-09 (Cycle 2 opened): `CONTROLLED LIVE PILOT — CYCLE 2 STARTED / RPM PRE-ATLAS STANCE FROZEN /
 UNDERWRITING NOT BEGUN` (MCD remains PARKED until 2026-11-04)**
 (`controlled_live_pilot/CYCLE2_RPM_PRE_ATLAS_STANCE_001.md`).
+**Update 2026-10-12 (RPM underwriting): `CONTROLLED LIVE PILOT — CYCLE 2 / RPM UNDERWRITING COMPLETE — CONTINUE
+UNDERWRITING FOR SPECIFIC EVIDENCE` (MCD remains PARKED until 2026-11-04)**
+(`controlled_live_pilot/CYCLE2_RPM_UNDERWRITING_001.md`).
 
 ---
 
@@ -1649,6 +1652,29 @@ No underwriting, Stage 7, research or recommendation was performed. **Status:
 UNDERWRITING NOT BEGUN`.** Stage 7 live price bind still needs a valid
 `TWELVEDATA_API_KEY` outside source control. Human Stage 8 remains sole capital
 authority.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+### Controlled Live Pilot — Cycle 2 RPM Underwriting (2026-10-12; append-only)
+
+**RPM underwriting disposition: `CONTINUE UNDERWRITING FOR SPECIFIC EVIDENCE`.**
+Record: `controlled_live_pilot/CYCLE2_RPM_UNDERWRITING_001.md`. Built from RPM's
+FY2026 10-K, Q1 FY2027 10-Q and 8-K releases (primary), Census construction
+spending (context), and secondary call/trade-press sources, all labeled; prices
+uncertified (no `TWELVEDATA_API_KEY`). The "slowdown" is one segment in one
+quarter: CPG organic −1.7% (after +5.7%) with healthcare/education delays,
+a polyol supply shortage and a shrinking WTI/Tremco backlog; PCG +7.9% and
+Consumer +5.2% organic; company adj. EBITDA/EPS at records; FY27 guidance cut to
+mid-single-digit. Temporary-vs-cyclical is **mixed and unresolved**. Valuation
+≈17.3x adj. TTM EPS (lowest year-end multiple in five years), FCF yield ≈5.7%;
+cases −3.4% / +10.3% / +18.4% IRR (downside / base / upside; weighted ≈8.9%).
+No variant demonstrated; advantage vs SPY not demonstrated. Evidence required:
+the 2026-11-09 Investor Day, primary leading-indicator/transcript reads and the
+Q2 FY27 CPG result (date unverified), and the Stage 7 price bind (blocked pending
+a valid `TWELVEDATA_API_KEY` outside source control). No sizing, no Stage 7, no
+Stage 8. Frozen pre-Atlas stance (`1cd8270`) unchanged. **Status: `CONTROLLED
+LIVE PILOT — CYCLE 2 / RPM UNDERWRITING COMPLETE — CONTINUE UNDERWRITING FOR
+SPECIFIC EVIDENCE`.**
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 

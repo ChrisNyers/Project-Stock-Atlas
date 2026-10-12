@@ -3233,3 +3233,28 @@ authority; no automated execution.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_CYCLE2_RPM_UNDERWRITING_001
+
+| | |
+|---|---|
+| Date | 2026-10-12 |
+| Status | **RECORDED — `CONTINUE UNDERWRITING FOR SPECIFIC EVIDENCE`** |
+| Context | Follows `CONTROLLED_LIVE_PILOT_CYCLE2_RPM_PRE_ATLAS_STANCE_001` (`1cd8270`, unchanged); MCD remains parked until 2026-11-04 |
+
+### Decision
+
+**RPM underwriting disposition: `CONTINUE UNDERWRITING FOR SPECIFIC EVIDENCE`.**
+Detail in `controlled_live_pilot/CYCLE2_RPM_UNDERWRITING_001.md`. Primary SEC
+filings and releases for company facts; Census spending as context; call and
+indicator reads labeled secondary; prices uncertified. The slowdown is CPG-only
+(−1.7% organic vs +7.9% PCG and +5.2% Consumer); temporary-vs-cyclical is mixed
+and unresolved; stress-case EPS impact ≈5%. Valuation ≈17.3x adjusted TTM EPS;
+no variant demonstrated and advantage vs SPY unproven. Evidence required: Nov 9
+Investor Day, primary transcript/indicator reads and Q2 FY27 CPG result, and
+the Stage 7 price bind (blocked). No Stage 7, no Stage 8, no sizing, no new
+candidate. Human Stage 8 remains sole capital authority.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
