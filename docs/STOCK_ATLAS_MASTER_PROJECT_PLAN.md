@@ -26,6 +26,8 @@ UNDERWRITING NOT BEGUN` (MCD remains PARKED until 2026-11-04)**
 **Update 2026-10-12 (RPM underwriting): `CONTROLLED LIVE PILOT — CYCLE 2 / RPM UNDERWRITING COMPLETE — CONTINUE
 UNDERWRITING FOR SPECIFIC EVIDENCE` (MCD remains PARKED until 2026-11-04)**
 (`controlled_live_pilot/CYCLE2_RPM_UNDERWRITING_001.md`).
+**Update 2026-10-12 (RPM challenge accepted): `CONTROLLED LIVE PILOT — CYCLE 2 / RPM PARKED UNTIL 2026-11-09
+INVESTOR DAY` (MCD PARKED until 2026-11-04).**
 
 ---
 
@@ -1675,6 +1677,21 @@ a valid `TWELVEDATA_API_KEY` outside source control). No sizing, no Stage 7, no
 Stage 8. Frozen pre-Atlas stance (`1cd8270`) unchanged. **Status: `CONTROLLED
 LIVE PILOT — CYCLE 2 / RPM UNDERWRITING COMPLETE — CONTINUE UNDERWRITING FOR
 SPECIFIC EVIDENCE`.**
+
+**RPM challenge accepted (2026-10-12 addendum).** Disposition changed to `PARK —
+WAIT FOR SPECIFIC EVIDENCE / 2026-11-09 INVESTOR DAY`. The earlier statement that
+the multiple "already discounts a downturn" is superseded by: RPM has materially
+de-rated versus its recent valuation history, but the evidence does not
+establish that the current valuation fully compensates for a cyclical downturn.
+The numeric promotion/rejection thresholds are exploratory only (not binding
+pilot controls). Revisit questions: CPG stabilizing/recovering/deteriorating;
+primary support for polyol disruption materiality and resolution; backlog/order
+commentary direction; pricing vs raw-material inflation; whether the Nov 9
+Investor Day changes the margin, restructuring, capital-allocation or earnings
+framework. No further transcript/AIA/Dodge/litigation/debt/construction research
+before Nov 9 absent new company-specific information. Pre-Atlas stance
+(`1cd8270`) unchanged. **Status: `CONTROLLED LIVE PILOT — CYCLE 2 / RPM PARKED
+UNTIL 2026-11-09 INVESTOR DAY`.**
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 

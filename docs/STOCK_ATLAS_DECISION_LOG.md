@@ -3258,3 +3258,28 @@ candidate. Human Stage 8 remains sole capital authority.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_CYCLE2_RPM_PARK_001
+
+| | |
+|---|---|
+| Date | 2026-10-12 |
+| Status | **RECORDED — `PARK — WAIT FOR SPECIFIC EVIDENCE / 2026-11-09 INVESTOR DAY`** |
+| Context | Addendum 001 to `controlled_live_pilot/CYCLE2_RPM_UNDERWRITING_001.md` (underwriting commit `0e32587`) |
+
+### Decision
+
+Human challenge accepted. Disposition amended from `CONTINUE UNDERWRITING FOR
+SPECIFIC EVIDENCE` to `PARK — WAIT FOR SPECIFIC EVIDENCE / 2026-11-09 INVESTOR
+DAY`. Supersedes "valuation already discounts a downturn" with: RPM has
+materially de-rated versus its recent valuation history, but the evidence does
+not establish that the current valuation fully compensates for a cyclical
+downturn. Numeric thresholds are exploratory only. Five revisit questions
+preserved; no further transcript, AIA, Dodge, litigation, debt-maturity or
+construction-data research before Nov 9 absent new company-specific
+information. Pre-Atlas stance (`1cd8270`) unchanged. No Stage 7, no Stage 8, no
+sizing, no capital action.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

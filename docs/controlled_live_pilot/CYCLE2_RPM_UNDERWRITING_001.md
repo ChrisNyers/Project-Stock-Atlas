@@ -8,7 +8,7 @@
 | Date | 2026-10-12 |
 | Candidate | RPM International Inc. (RPM), CIK 0000110621, NYSE (XNYS); fiscal year ends May 31 — human-selected |
 | Purpose | Determine whether RPM deserves further capital consideration and whether Atlas materially changes the pre-Atlas view (not a BUY recommendation) |
-| Disposition | **`CONTINUE UNDERWRITING FOR SPECIFIC EVIDENCE`** |
+| Disposition | ~~`CONTINUE UNDERWRITING FOR SPECIFIC EVIDENCE`~~ — **superseded 2026-10-12 by Addendum 001: `PARK — WAIT FOR SPECIFIC EVIDENCE / 2026-11-09 INVESTOR DAY`** |
 | Price basis | **UNCERTIFIED** — `TWELVEDATA_API_KEY` absent. Prices/rates are Yahoo Finance and FRED/Treasury series, research context only, not a Stage 7 bind |
 
 ## 0. Evidence labels
@@ -131,7 +131,7 @@ Subjective weights 25/50/25 (Atlas judgment, wide error bars) → expected IRR �
 9. Litigation outcome ($0.5M accrued vs. up to $152.5M).
 10. Healthcare + education share of *consolidated* sales is inferred (~9%), not disclosed.
 
-## 9. Disposition — **`CONTINUE UNDERWRITING FOR SPECIFIC EVIDENCE`**
+## 9. Disposition — ~~`CONTINUE UNDERWRITING FOR SPECIFIC EVIDENCE`~~ *(superseded by Addendum 001: `PARK — WAIT FOR SPECIFIC EVIDENCE / 2026-11-09 INVESTOR DAY`)*
 
 **Why not `REJECT — INSUFFICIENT INVESTMENT EDGE`:** the business is healthy, the multiple is at a 5-year low, the base case clears the 10-year by ~5 points and the identified risk is bounded (~5% of EPS in a stress case). **Why not `PARK`:** several answers are obtainable now or within weeks rather than only by waiting. **Why not `READY FOR CAPITAL COMPARISON`:** temporary-vs-cyclical is unresolved, no variant is demonstrated, the backlog is unquantified and advantage vs SPY is unproven.
 
@@ -140,15 +140,44 @@ Subjective weights 25/50/25 (Atlas judgment, wide error bars) → expected IRR �
 2. **Primary reads now:** RPM's official Q1 FY27 transcript/slides and the AIA/Dodge primary releases (to replace secondary sources) — one short follow-up; and RPM's Q2 FY27 results (date **UNVERIFIED**; not yet on a company calendar I checked) for CPG organic ≥ 0% and gross-margin recovery.
 3. **Stage 7 binds** (not underwriting evidence): fresh RPM, SPY and Treasury prices — **blocked until a valid `TWELVEDATA_API_KEY` is configured outside source control; no substitute bind was made.**
 
-**Proposed interpretation thresholds (Atlas judgment, set before the evidence; not frozen policy; may be adjusted before Nov 9):** move toward `READY FOR CAPITAL COMPARISON` only if CPG organic growth is guided/reported ≥ 0% for the next quarter, backlog commentary shifts from "shrinking" to "rebuilding" with a number, FY27 adj. EBITDA guidance (mid-single-digit) is maintained, and gross-margin recovery is credible. Move to `REJECT — INSUFFICIENT INVESTMENT EDGE` if CPG organic is ≤ −3% for a second quarter, FY27 guidance is cut below flat, or inflation recovery fails (gross margin < 40.5%).
+**[Addendum 001: these numeric thresholds are exploratory judgments only — not frozen, binding, or permanent pilot controls.] Proposed interpretation thresholds (Atlas judgment, set before the evidence; not frozen policy; may be adjusted before Nov 9):** move toward `READY FOR CAPITAL COMPARISON` only if CPG organic growth is guided/reported ≥ 0% for the next quarter, backlog commentary shifts from "shrinking" to "rebuilding" with a number, FY27 adj. EBITDA guidance (mid-single-digit) is maintained, and gross-margin recovery is credible. Move to `REJECT — INSUFFICIENT INVESTMENT EDGE` if CPG organic is ≤ −3% for a second quarter, FY27 guidance is cut below flat, or inflation recovery fails (gross margin < 40.5%).
 
 ## 10. What Atlas found that the frozen pre-Atlas stance did not contain
 
 1. **The "slowdown" is one segment, one quarter:** CPG organic −1.7% after +5.7%; the other 63% of sales grew ~+6.5% organic, and company EBITDA/EPS still hit records.
 2. **It is partly supply, partly demand:** the polyol shortage and funding/backlog effects are distinct, and the demand piece is corroborated only indirectly (Census spending −0–3%, ABI <50).
 3. **Bounded earnings risk:** a CPG −5% year costs ≈ $0.31 of EPS (~5%); the larger threat is unrecovered inflation (9–11% vs pricing 2.5–3.5%).
-4. **Valuation already discounts a downturn:** 17.3x adjusted TTM is the lowest year-end multiple in five years; at 17.3x only ~3% EPS growth beats the 10-year.
+4. **[Superseded by Addendum 001 — see replacement statement there.]** ~~Valuation already discounts a downturn:~~ 17.3x adjusted TTM is the lowest year-end multiple in five years; at 17.3x only ~3% EPS growth beats the 10-year.
 5. **Quality and legal flags** you didn't state: recurring "adjusted" restructuring, a possible $152.5M litigation outcome, a $400M 2027 maturity.
 6. **Near-dated catalysts exist** (Nov 9 Investor Day), so the decisive evidence is cheap to wait for.
 
 **Capital status: NO REAL PORTFOLIO ACTION.** Human Stage 8 remains sole capital authority. No other candidate was researched.
+
+---
+
+## Addendum 001 — Human challenge accepted; underwriting closed as PARKED (2026-10-12; append-only)
+
+The human operator (Chris) accepted the underwriting as sufficient for the
+present evidence set, with the amendments below. Original text is preserved;
+superseded statements are struck through or tagged above.
+
+**1. Disposition (supersedes §9): `PARK — WAIT FOR SPECIFIC EVIDENCE / 2026-11-09 INVESTOR DAY`.**
+
+**2. Valuation statement (supersedes §10 item 4 and any reading that the multiple "already discounts a downturn").** The supported statement is only: *RPM has materially de-rated versus its recent valuation history, but the evidence does not establish that the current valuation fully compensates for a cyclical downturn.* (Underlying facts unchanged: ≈17.3x adjusted / 18.0x GAAP trailing EPS vs 18.6–24.1x at the prior five May year-ends; prices uncertified.) The variant item V2 in §5 remains an undemonstrated hypothesis, not a finding.
+
+**3. Thresholds.** The numeric promotion/rejection thresholds in §9 are **exploratory judgments only**. They are not frozen, not binding, and not permanent pilot controls.
+
+**4. Preserved revisit questions (the only ones):**
+1. Is CPG weakness stabilizing, recovering, or deteriorating?
+2. Does primary evidence support the claim that the polyol disruption was material and is resolved?
+3. Is backlog/order commentary improving or deteriorating?
+4. Is pricing beginning to recover raw-material inflation?
+5. Does the November 9 Investor Day materially change RPM's medium-term margin, restructuring, capital-allocation, or earnings framework?
+
+**5. Research hold.** No additional transcript, AIA, Dodge, litigation, debt-maturity, or construction-data research before 2026-11-09 unless new company-specific information materially changes the case. The unresolved-question list in §8 is retained as history; items outside the five revisit questions are not being pursued now.
+
+**6. Frozen pre-Atlas stance (`CYCLE2_RPM_PRE_ATLAS_STANCE_001.md`, `1cd8270`) is unchanged.**
+
+**7.** No Stage 7, no Stage 8, no sizing, no capital action. Stage 7 live price bind still requires a valid `TWELVEDATA_API_KEY` outside source control. **Capital status: NO REAL PORTFOLIO ACTION.**
+
+**Status: `CONTROLLED LIVE PILOT — CYCLE 2 / RPM PARKED UNTIL 2026-11-09 INVESTOR DAY`.**
