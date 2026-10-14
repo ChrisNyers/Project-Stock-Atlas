@@ -63,7 +63,7 @@ IMPLICATION use the weakest input source as the grade.
 
 ## Rules enforced by tests
 
-- Sources: HUMAN, SCOUT, SUE, NUTSTUFF, OTHER (needs detail). Recorded as
+- Sources: HUMAN, SCOUT, SUE, NUTSTUFF, LIQN, OTHER (needs detail). Recorded as
   provenance; never used to order, filter or gate.
 - PARKED requires `waiting_on`; a date is optional and flagged *officially
   verified* or not. Dates are never invented.

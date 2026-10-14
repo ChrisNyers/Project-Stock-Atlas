@@ -91,7 +91,7 @@ def test_rejected_only_reopens_to_surfaced_with_reason(lp):
 
 
 # ---- intake / provenance ------------------------------------------------------
-@pytest.mark.parametrize("src", ["HUMAN", "SCOUT", "SUE", "NUTSTUFF"])
+@pytest.mark.parametrize("src", ["HUMAN", "SCOUT", "SUE", "NUTSTUFF", "LIQN"])
 def test_intake_accepts_each_named_source(lp, src):
     _surface(lp, name=f"Co {src}", source=src)
     assert ledger.replay(lp)[f"CO-{src}"]["source"] == src
@@ -117,10 +117,10 @@ def test_intake_requires_why_and_question_and_dedupes(lp):
 
 def test_no_source_privilege_in_ordering(lp):
     # Same state and date, different sources: order must follow id only.
-    for name, src in (("Zeta", "HUMAN"), ("Alpha", "NUTSTUFF"), ("Mid", "SCOUT"), ("Beta", "SUE")):
+    for name, src in (("Zeta", "HUMAN"), ("Alpha", "NUTSTUFF"), ("Mid", "SCOUT"), ("Beta", "SUE"), ("Gamma", "LIQN")):
         _surface(lp, name=name, source=src)
     html = ui.render_board(lp, today=date(2026, 10, 14))
-    pos = [html.index(f'id="c-{n}"') for n in ("ALPHA", "BETA", "MID", "ZETA")]
+    pos = [html.index(f'id="c-{n}"') for n in ("ALPHA", "BETA", "GAMMA", "MID", "ZETA")]
     assert pos == sorted(pos)
 
 
@@ -467,3 +467,53 @@ def test_server_template_flow_and_quick_test_gate(server):
     assert _req(port, "POST", "/state", {"candidate_id": "GATE", "to_state": "UNDERWRITING", "reason": "r"})[0] == 303
     assert _req(port, "POST", "/resolve", {"candidate_id": "GATE", "target_seq": "abc", "status": "RESOLVED", "note": "n"})[0] == 400
     ledger.verify_chain(lp)
+
+
+# ---- LIQN: a named source, with no privilege -----------------------------------
+def test_liqn_is_a_named_source_and_in_ui_and_cli_choices(lp):
+    assert "LIQN" in ledger.SOURCES
+    _surface(lp, name="Liqn Idea", ticker="LQ1", source="LIQN")  # no source_detail needed (only OTHER needs it)
+    assert ledger.replay(lp)["LQ1"]["source"] == "LIQN"
+    assert "<option>LIQN</option>" in ui.render_board(lp)
+
+
+@pytest.mark.parametrize("src", ledger.SOURCES)
+def test_every_source_faces_identical_quick_test_and_falsification_gates(lp, src):
+    detail = {"source_detail": "x"} if src == "OTHER" else {}
+    _surface(lp, name="Gate Co", ticker="GC", source=src, **detail)
+    c = ledger.replay(lp)["GC"]
+    assert not c["grandfathered"] and c["state"] == "SURFACED"
+    with pytest.raises(ledger.LedgerError, match="QUICK_TEST is mandatory"):  # no direct skip
+        ledger.change_state(lp, candidate_id="GC", to_state="UNDERWRITING", reason="r")
+    with pytest.raises(ledger.LedgerError):  # falsification cannot precede QUICK_TEST
+        ledger.record_falsification(lp, candidate_id="GC", test="t", result="SURVIVED", grade="PRIMARY")
+    ledger.change_state(lp, candidate_id="GC", to_state="QUICK_TEST", reason="r")
+    with pytest.raises(ledger.LedgerError, match="falsification"):  # QUICK_TEST alone is not enough
+        ledger.change_state(lp, candidate_id="GC", to_state="UNDERWRITING", reason="r")
+    ledger.record_falsification(lp, candidate_id="GC", test="t", result="FALSIFIED", grade="PRIMARY")
+    with pytest.raises(ledger.LedgerError, match="FALSIFIED"):
+        ledger.change_state(lp, candidate_id="GC", to_state="UNDERWRITING", reason="r")
+    ledger.record_falsification(lp, candidate_id="GC", test="t2", result="SURVIVED", grade="PRIMARY")
+    ledger.change_state(lp, candidate_id="GC", to_state="UNDERWRITING", reason="r")
+    assert ledger.replay(lp)["GC"]["state"] == "UNDERWRITING"
+
+
+@pytest.mark.parametrize("src", ledger.SOURCES)
+def test_every_source_faces_identical_evidence_rules(lp, src):
+    detail = {"source_detail": "x"} if src == "OTHER" else {}
+    _surface(lp, name="Ev Co", ticker="EV", source=src, **detail)
+    for bad in ({"tag": "SOURCE_SAYS_SO"}, {"grade": "TRUSTED_SOURCE"}, {"text": ""}):
+        with pytest.raises(ledger.LedgerError):
+            _ev(lp, "EV", **bad)
+    e = _ev(lp, "EV", direction="FOR")
+    assert ledger.replay(lp)["EV"]["strongest"] == {}  # source does not designate strongest evidence
+    with pytest.raises(ledger.LedgerError):
+        ledger.set_strongest(lp, candidate_id="EV", direction="AGAINST", target_seq=e["seq"])
+
+
+def test_liqn_confers_no_grandfathering_and_no_ordering_in_logic():
+    assert "LIQN" not in ledger.GRANDFATHERED
+    for f in ("ui.py", "ledger.py"):
+        src = (PKG / f).read_text()
+        assert '== "LIQN"' not in src and "'LIQN'" not in src
+        assert src.count('"LIQN"') <= 1  # only the vocabulary tuple names it

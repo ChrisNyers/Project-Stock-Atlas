@@ -3357,3 +3357,24 @@ capital authority.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## OPERATING_MVP_LIQN_SOURCE_001
+
+| | |
+|---|---|
+| Date | 2026-10-14 |
+| Status | **IMPLEMENTED — vocabulary change only** |
+| Context | Preparation for the first external discovery-source experiment (LIQN, read-only) |
+
+### Decision
+
+`LIQN` added as a named candidate source (`HUMAN, SCOUT, SUE, NUTSTUFF, LIQN,
+OTHER`). Source remains provenance only: it confers no ranking, promotion,
+grandfathering or underwriting privilege. A LIQN-sourced candidate must pass
+`SURFACED → QUICK_TEST → UNDERWRITING` with the same cheapest-falsification and
+evidence rules as every other source (test-enforced across every source). No
+other change to the MVP.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
