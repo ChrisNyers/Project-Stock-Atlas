@@ -3307,3 +3307,27 @@ unchanged. No claim of alpha or decision value.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## OPERATING_MVP_V0_1_DISCOVERY_LOOP_AND_UI
+
+| | |
+|---|---|
+| Date | 2026-10-14 |
+| Status | **IMPLEMENTED — workflow support only** |
+| Context | `INTERIM_CHECKPOINT_001` (`2a672cc`); package `operating_mvp/` |
+
+### Decision
+
+Discovery Loop v0.1 and UI v0.1 built as an isolated, stdlib-only package with
+an append-only hash-chained candidate ledger. One state vocabulary; "continue
+underwriting" is a note within `UNDERWRITING`. Source is provenance only and is
+never used to order, filter or gate. `QUICK_TEST` is optional so history is not
+invented (MCD and RPM went SURFACED → UNDERWRITING). `READY_FOR_CAPITAL_
+COMPARISON` is a label that triggers nothing. No ranking, scoring, paid data,
+agents, execution, ML, or new capital control; the package must not import the
+capital facade or control layer (test-enforced). Historical cycle records keep
+their original wording.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

@@ -32,6 +32,8 @@ INVESTOR DAY` (MCD PARKED until 2026-11-04).**
 **Update 2026-10-14 (interim checkpoint): `CONTROLLED LIVE PILOT — INTERIM CHECKPOINT 001 RECORDED / OPERATING MVP (DISCOVERY LOOP v0.1 + UI v0.1) AUTHORIZED AS WORKFLOW SUPPORT` (MCD PARKED until 2026-11-04; RPM PARKED until 2026-11-09).**
 (`controlled_live_pilot/INTERIM_CHECKPOINT_001.md`).
 
+**Update 2026-10-14 (Operating MVP v0.1): `OPERATING MVP v0.1 BUILT — DISCOVERY LOOP + UI AS WORKFLOW SUPPORT; MCD/RPM SEEDED AS PARKED`** (`operating_mvp/`).
+
 ---
 
 ## Governing Mission
@@ -1711,6 +1713,24 @@ as workflow support with the single vocabulary `SURFACED → QUICK TEST →
 UNDERWRITING → PARKED / REJECTED / READY FOR CAPITAL COMPARISON`; no new
 controls, ranking engines, paid data, agents, execution or ML. All validated
 controls unchanged.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### Operating MVP v0.1 — Discovery Loop + UI (2026-10-14; append-only)
+
+First usable increment, workflow support only (`operating_mvp/`, stdlib, no new
+dependencies, loopback server). Append-only hash-chained candidate ledger with
+the single vocabulary `SURFACED → QUICK_TEST → UNDERWRITING → PARKED / REJECTED /
+READY_FOR_CAPITAL_COMPARISON`; intake for HUMAN, SCOUT, SUE, NUTSTUFF and OTHER
+with provenance recorded and no source privilege; board answering attention now /
+why surfaced / rejected / parked-and-waiting / deeper underwriting; MCD (parked
+until 2026-11-04) and RPM (parked until 2026-11-09) backfilled from the frozen
+records. No ranking, scoring, paid data, agents, execution or ML; the package
+does not import the capital facade or control layer (tested). Price evidence
+displays UNCERTIFIED/BLOCKED. Tests: 271 passed, 25 skipped (BLOCKED), 1 warning
+(244 prior + 27 new). Control layer, Gate B and Investor Policy v1.0 unchanged.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
