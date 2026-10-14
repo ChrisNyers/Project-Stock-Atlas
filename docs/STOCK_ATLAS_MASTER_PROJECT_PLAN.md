@@ -29,6 +29,9 @@ UNDERWRITING FOR SPECIFIC EVIDENCE` (MCD remains PARKED until 2026-11-04)**
 **Update 2026-10-12 (RPM challenge accepted): `CONTROLLED LIVE PILOT — CYCLE 2 / RPM PARKED UNTIL 2026-11-09
 INVESTOR DAY` (MCD PARKED until 2026-11-04).**
 
+**Update 2026-10-14 (interim checkpoint): `CONTROLLED LIVE PILOT — INTERIM CHECKPOINT 001 RECORDED / OPERATING MVP (DISCOVERY LOOP v0.1 + UI v0.1) AUTHORIZED AS WORKFLOW SUPPORT` (MCD PARKED until 2026-11-04; RPM PARKED until 2026-11-09).**
+(`controlled_live_pilot/INTERIM_CHECKPOINT_001.md`).
+
 ---
 
 ## Governing Mission
@@ -1692,6 +1695,22 @@ framework. No further transcript/AIA/Dodge/litigation/debt/construction research
 before Nov 9 absent new company-specific information. Pre-Atlas stance
 (`1cd8270`) unchanged. **Status: `CONTROLLED LIVE PILOT — CYCLE 2 / RPM PARKED
 UNTIL 2026-11-09 INVESTOR DAY`.**
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### Controlled Live Pilot — Interim Checkpoint 001 (2026-10-14; append-only)
+
+Process-level checkpoint after Cycles 1 (MCD) and 2 (RPM); **not** a live-pilot
+verdict and no claim of alpha or decision value (no cycle has completed).
+Recorded in `controlled_live_pilot/INTERIM_CHECKPOINT_001.md`: what is working,
+what is creating friction, what must remain unchanged, proposed Operating MVP
+contents, readiness. Human direction: proceed with Discovery Loop v0.1 + UI v0.1
+as workflow support with the single vocabulary `SURFACED → QUICK TEST →
+UNDERWRITING → PARKED / REJECTED / READY FOR CAPITAL COMPARISON`; no new
+controls, ranking engines, paid data, agents, execution or ML. All validated
+controls unchanged.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 

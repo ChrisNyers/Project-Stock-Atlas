@@ -3283,3 +3283,27 @@ sizing, no capital action.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## CONTROLLED_LIVE_PILOT_INTERIM_CHECKPOINT_001
+
+| | |
+|---|---|
+| Date | 2026-10-14 |
+| Status | **RECORDED — interim, process-level; NOT a pilot verdict** |
+| Context | `controlled_live_pilot/INTERIM_CHECKPOINT_001.md` (after Cycle 1 MCD and Cycle 2 RPM) |
+
+### Decision
+
+Process-level checkpoint recorded. Operating MVP (Discovery Loop v0.1 + UI v0.1)
+authorized **as workflow support only**. A single candidate-state vocabulary
+replaces the two disposition label sets used in Cycles 1–2:
+`SURFACED → QUICK TEST → UNDERWRITING → PARKED / REJECTED / READY FOR CAPITAL
+COMPARISON`; "continue underwriting" is remaining in `UNDERWRITING`, not a
+disposition. Historical cycle records keep their original wording (frozen). No
+new controls, ranking engines, paid data, autonomous agents, execution or ML.
+Control layer, Gate B, Investor Policy v1.0 and Human Stage 8 authority
+unchanged. No claim of alpha or decision value.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
