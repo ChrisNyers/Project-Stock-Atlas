@@ -156,47 +156,165 @@ Source is provenance only.<br>Price evidence: <b class="unc">{e(cert)}</b> — {
 </main></body></html>"""
 
 
+TAG_LABEL = {"FACT": "FACT", "MANAGEMENT_CLAIM": "MANAGEMENT CLAIM", "CONTEXT": "CONTEXT",
+             "INFERENCE": "INFERENCE", "VARIANT": "VARIANT", "CAPITAL_IMPLICATION": "CAPITAL IMPLICATION"}
+
+
+def _evid_row(it: dict, strongest: dict) -> str:
+    marks = "".join(f' <span class="tag">★ strongest {d}</span>' for d, q in strongest.items()
+                    if q == it["seq"] and it["status"] == "ACTIVE")
+    cls = ' style="text-decoration:line-through;opacity:.6"' if it["status"] == "RETRACTED" else ""
+    ref = e(it["source_ref"]) if it["source_ref"] else '<i class="mut">no reference</i>'
+    ka = e(it["known_at"]) if it["known_at"] else "n/a"
+    back = " · backfilled" if it["backfilled"] else ""
+    ret = f' — <b>RETRACTED:</b> {e(it["note"])}' if it["status"] == "RETRACTED" else ""
+    return (f'<tr><td{cls}>#{it["seq"]}</td><td{cls}><span class="tag">{e(it["grade"])}</span> '
+            f'<span class="tag">{e(it["direction"])}</span>{marks}</td>'
+            f'<td{cls}>{e(it["text"])}</td><td class="small">{ref}<br>known {ka}{back}{ret}</td></tr>')
+
+
+def _glance(c: dict, today: date) -> str:
+    live_f = [f for f in c["falsifications"] if f["status"] == "ACTIVE"]
+    if live_f:
+        f = live_f[-1]
+        qt = f'<b>{e(f["result"])}</b> ({e(f["date"])}) — {e(f["test"])}'
+    elif c["grandfathered"]:
+        qt = "No QUICK_TEST recorded — grandfathered historical candidate (went SURFACED → UNDERWRITING; history not rewritten)."
+    else:
+        qt = "Not yet run. QUICK_TEST is mandatory before UNDERWRITING."
+
+    def strongest(d):
+        q = c["strongest"].get(d)
+        it = next((i for i in c["evidence"] if i["seq"] == q and i["status"] == "ACTIVE"), None)
+        return (f'#{it["seq"]} <span class="tag">{e(it["grade"])}</span> {e(it["text"])}' if it
+                else '<span class="mut">not designated (human designates; never computed)</span>')
+    open_q = [u for u in c["unresolved"] if u["status"] == "OPEN"]
+    uq = e(open_q[0]["question"]) + (f' <span class="mut">(+{len(open_q) - 1} more)</span>' if len(open_q) > 1 else "") \
+        if open_q else (f'{e(c["revisit_questions"][0])} <span class="mut">(parked revisit question)</span>'
+                        if c["revisit_questions"] else '<span class="mut">none recorded</span>')
+    cat = '<span class="mut">n/a — not parked</span>'
+    if c["state"] == "PARKED":
+        ver = "officially verified" if c["parked_until_verified"] else "NOT officially verified"
+        cat = (f'<b>{e(c["parked_until"] or "no date")}</b> ({ver}) {_due_tag(c, today)}<br>Waiting on: {e(c["waiting_on"])}')
+    rows = [("Current state", f'<b>{e(c["state"])}</b> since {e(c["state_since"])}'),
+            ("Why it surfaced", e(c["why_surfaced"])), ("Survived QUICK_TEST?", qt),
+            ("Strongest evidence FOR", strongest("FOR")), ("Strongest evidence AGAINST", strongest("AGAINST")),
+            ("Unresolved question", uq), ("Next dated catalyst", cat)]
+    return '<div class="card"><table>' + "".join(f"<tr><th style='width:34%'>{k}</th><td>{v}</td></tr>" for k, v in rows) + "</table></div>"
+
+
+def _placeholders(c: dict) -> str:
+    box = lambda t, d: f'<div class="card"><b>{t}</b><div class="small mut">{d}</div></div>'
+    return ('<h2>Capital comparison — placeholders only</h2>'
+            '<p class="small mut">Nothing is computed or fetched here. Stage 7 (human-run, separate) does the comparison; '
+            'this page never invokes it or the capital facade.</p>'
+            + box("SPY", "Not populated. Advantage vs SPY must be demonstrated by evidence before any comparison.")
+            + box("Treasury / Cash", "Not populated. Must be preserved as an alternative at Stage 7.")
+            + box("Do Nothing", "Not populated. Must be preserved as an alternative at Stage 7.")
+            + box("Relevant existing holdings", "Not assigned. Common drivers are human-assigned at Stage 7 "
+                  "(see frozen Cycle 0 baseline and any driver notes in the cycle record)."))
+
+
+def _forms(c: dict) -> str:
+    cid = e(c["candidate_id"])
+    hid = f'<input type="hidden" name="candidate_id" value="{cid}">'
+    allowed = sorted(ledger.TRANSITIONS[c["state"]])
+    sopts = "".join(f"<option>{s}</option>" for s in allowed)
+    mk = lambda opts: "".join(f"<option>{o}</option>" for o in opts)
+    grade = f'<label>Grade *</label><select name="grade">{mk(ledger.GRADES)}</select>'
+    refdate = ('<label>Source / reference</label><input name="source_ref">'
+               '<label>Known at (YYYY-MM-DD, optional)</label><input name="known_at">')
+    active_ev = [i for i in c["evidence"] if i["status"] == "ACTIVE"]
+    targets = "".join(f'<option value="{i["seq"]}">#{i["seq"]} {e(i["direction"])} {e(i["text"][:60])}</option>' for i in active_ev)
+    open_items = ([(u["seq"], "Q: " + u["question"]) for u in c["unresolved"] if u["status"] == "OPEN"]
+                  + [(i["seq"], "E: " + i["text"]) for i in active_ev]
+                  + [(f["seq"], "T: " + f["test"]) for f in c["falsifications"] if f["status"] == "ACTIVE"])
+    ropts = "".join(f'<option value="{q}">#{q} {e(t[:60])}</option>' for q, t in open_items)
+    F = lambda title, action, body, btn: (f'<details><summary>{title}</summary><form method="post" action="{action}">'
+                                          f'{hid}{body}<button>{btn}</button></form></details>')
+    out = ['<h2>Record</h2>']
+    if allowed:
+        out.append(F("Change state", "/state",
+            f'<label>To state</label><select name="to_state">{sopts}</select><label>Reason *</label><textarea name="reason" rows="2" required></textarea>'
+            '<label>If PARKED — waiting on (specific evidence) *</label><input name="waiting_on">'
+            '<label>If PARKED — revisit date (YYYY-MM-DD, optional)</label><input name="parked_until">'
+            '<label><input type="checkbox" name="parked_until_verified" value="1" style="width:auto"> date officially verified (company IR / filing)</label>'
+            '<label>If PARKED — revisit questions (one per line)</label><textarea name="revisit_questions" rows="3"></textarea>', "Record state change"))
+    out.append(F("Record quick-test / falsification result", "/falsify",
+        f'<label>Cheapest test that could kill the idea *</label><textarea name="test" rows="2" required></textarea>'
+        f'<label>Result *</label><select name="result">{mk(ledger.FALSIFICATION_RESULTS)}</select>{grade}{refdate}', "Record result"))
+    out.append(F("Add evidence", "/evidence",
+        f'<label>Tag *</label><select name="tag">{mk(ledger.EVIDENCE_TAGS)}</select><label>Direction *</label><select name="direction">{mk(ledger.DIRECTIONS)}</select>'
+        f'{grade}<label>Text *</label><textarea name="text" rows="3" required></textarea>{refdate}', "Record evidence"))
+    out.append(F("Add unresolved question", "/unresolved", '<textarea name="question" rows="2" required></textarea>', "Record question"))
+    if active_ev:
+        out.append(F("Designate strongest evidence (human choice)", "/strongest",
+            f'<label>Direction</label><select name="direction"><option>FOR</option><option>AGAINST</option></select>'
+            f'<label>Evidence item (must match direction)</label><select name="target_seq">{targets}</select>', "Designate"))
+    if open_items:
+        out.append(F("Resolve a question / retract an entry", "/resolve",
+            f'<label>Item</label><select name="target_seq">{ropts}</select><label>Status</label><select name="status"><option>RESOLVED</option><option>RETRACTED</option></select>'
+            '<label>Note * (what resolved it / why retracted; the original stays in history)</label><textarea name="note" rows="2" required></textarea>', "Record"))
+    out.append(F("Add note (e.g. “continue underwriting”)", "/note", '<textarea name="text" rows="2" required></textarea>', "Record note"))
+    if c["state"] == "READY_FOR_CAPITAL_COMPARISON":
+        out.append('<p class="small mut">READY FOR CAPITAL COMPARISON is a label only. It starts nothing.</p>')
+    return "".join(out)
+
+
 def render_candidate(cid: str, path: Path = ledger.DEFAULT_LEDGER, *, today: date | None = None,
                      error: str = "") -> str | None:
     today = today or date.today()
     c = ledger.replay(path).get(cid)
     if c is None:
         return None
-    allowed = sorted(ledger.TRANSITIONS[c["state"]])
-    opts = "".join(f"<option>{s}</option>" for s in allowed)
     hist = "".join(f'<tr><td>{h["seq"]}</td><td>{e(h["date"])}</td><td>{e(h["type"])}</td>'
                    f'<td>{e(h["summary"])}</td><td>{e(h["reason"])}</td>'
                    f'<td>{"backfilled" if h["backfilled"] else ""}</td></tr>' for h in c["history"])
-    notes = "".join(f'<li>{e(n["date"])} — {e(n["text"])}</li>' for n in c["notes"]) or '<li class="mut">None.</li>'
-    rq = "".join(f"<li>{e(q)}</li>" for q in c["revisit_questions"])
     refs = "".join(f"<li>{_ref(r, True)}</li>" for r in c["refs"]) or '<li class="mut">None.</li>'
-    forms = ""
-    if allowed:
-        forms = f"""<h2>Change state</h2><form method="post" action="/state"><input type="hidden" name="candidate_id" value="{e(cid)}">
-<label>To state</label><select name="to_state">{opts}</select><label>Reason *</label><textarea name="reason" rows="2" required></textarea>
-<label>If PARKED — waiting on (specific evidence) *</label><input name="waiting_on">
-<label>If PARKED — revisit date (YYYY-MM-DD, optional)</label><input name="parked_until">
-<label><input type="checkbox" name="parked_until_verified" value="1" style="width:auto"> date officially verified (company IR / filing)</label>
-<label>If PARKED — revisit questions (one per line)</label><textarea name="revisit_questions" rows="3"></textarea>
-<button>Record state change</button></form>
-<p class="small mut">READY FOR CAPITAL COMPARISON is a label only. It starts nothing; Stage 7 and Stage 8 are separate, human-run steps.</p>"""
-    forms += f"""<h2>Add note</h2><form method="post" action="/note"><input type="hidden" name="candidate_id" value="{e(cid)}">
-<textarea name="text" rows="2" required></textarea><button>Record note</button></form>"""
+    ev_head = "<tr><th>#</th><th>Grade · direction</th><th>Item</th><th>Source · known-at</th></tr>"
+    groups = []
+    for tag in ledger.EVIDENCE_TAGS:
+        items = [i for i in c["evidence"] if i["tag"] == tag]
+        body = (f'<table>{ev_head}{"".join(_evid_row(i, c["strongest"]) for i in items)}</table>' if items
+                else '<p class="mut small">None recorded.</p>')
+        groups.append(f"<h3>{TAG_LABEL[tag]}</h3>{body}")
+    falsif = "".join(
+        f'<tr><td>#{f["seq"]}</td><td><b>{e(f["result"])}</b> <span class="tag">{e(f["grade"])}</span></td><td>{e(f["test"])}</td>'
+        f'<td class="small">{e(f["source_ref"]) or "<i class=mut>no reference</i>"}<br>known {e(f["known_at"]) or "n/a"}'
+        f'{" · backfilled" if f["backfilled"] else ""}{" · RETRACTED: " + e(f["note"]) if f["status"] == "RETRACTED" else ""}</td></tr>'
+        for f in c["falsifications"]) or '<tr><td colspan=4 class="mut small">No test recorded.</td></tr>'
+    unres = "".join(f'<li{" style=opacity:.6" if u["status"] != "OPEN" else ""}>#{u["seq"]} {e(u["question"])}'
+                    f'{" — <b>" + e(u["status"]) + ":</b> " + e(u["note"]) if u["status"] != "OPEN" else ""}</li>'
+                    for u in c["unresolved"]) or '<li class="mut">None recorded.</li>'
+    rq = "".join(f"<li>{e(q)}</li>" for q in c["revisit_questions"])
+    parked_q = f"<h3>Parked — revisit questions</h3><ul>{rq}</ul>" if rq else ""
+    notes = "".join(f'<li>{e(n["date"])} — {e(n["text"])}</li>' for n in c["notes"]) or '<li class="mut">None.</li>'
     err = f'<div class="err">{e(error)}</div>' if error else ""
-    parked = ""
-    if c["state"] == "PARKED":
-        ver = "officially verified" if c["parked_until_verified"] else "NOT officially verified"
-        parked = (f'<h2>Parked</h2><p>Until <b>{e(c["parked_until"] or "no date")}</b> ({ver}) {_due_tag(c, today)}<br>'
-                  f'Waiting on: {e(c["waiting_on"])}</p><b>Revisit questions</b><ul>{rq}</ul>')
+    gf = (' <span class="tag">grandfathered</span>' if c["grandfathered"] else "")
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(cid)} · Atlas</title><style>{CSS}</style></head><body><main>
 <p><a href="/">← Board</a></p><h1>{e(cid)} — {e(c["name"])}</h1>
-<div class="row"><span class="tag">state: {e(c["state"])} since {e(c["state_since"])}</span><span class="tag">source: {e(c["source"])}</span></div>
-{err}<h2>Provenance</h2><p>Source <b>{e(c["source"])}</b>{" — " + e(c["source_detail"]) if c["source_detail"] else ""}; surfaced {e(c["surfaced_on"])}.</p>
-<p><b>Why it surfaced:</b> {e(c["why_surfaced"])}</p><p><b>Investment question:</b> {e(c["investment_question"])}</p>
-{parked}<h2>Records</h2><ul>{refs}</ul><h2>Notes</h2><ul>{notes}</ul>
-<h2>History (append-only)</h2><table><tr><th>#</th><th>Date</th><th>Type</th><th>State / text</th><th>Reason</th><th></th></tr>{hist}</table>
-{forms}</main></body></html>"""
+<div class="row"><span class="tag">state: {e(c["state"])}</span><span class="tag">source: {e(c["source"])}</span>{gf}</div>
+{err}{_glance(c, today)}
+<h2>Underwriting template</h2>
+<h3>Investment question</h3><p>{e(c["investment_question"])}</p>
+<h3>Cheapest falsification and result</h3><table><tr><th>#</th><th>Result</th><th>Test</th><th>Source · known-at</th></tr>{falsif}</table>
+{''.join(groups)}
+<h3>Unresolved questions</h3><ul>{unres}</ul>{parked_q}
+<h3>Current state</h3><p><b>{e(c["state"])}</b> since {e(c["state_since"])}. {e(c["reason"])}</p>
+{_placeholders(c)}
+<h2>Provenance</h2><p>Source <b>{e(c["source"])}</b>{" — " + e(c["source_detail"]) if c["source_detail"] else ""}; surfaced {e(c["surfaced_on"])}.</p>
+<h3>Records</h3><ul>{refs}</ul><h3>Notes</h3><ul>{notes}</ul>
+{_forms(c)}
+<h2>History (append-only)</h2><table><tr><th>#</th><th>Date</th><th>Type</th><th>Summary</th><th>Reason / result</th><th></th></tr>{hist}</table>
+</main></body></html>"""
+
+
+def _int(v) -> int:
+    try:
+        return int(v)
+    except (TypeError, ValueError):
+        raise ledger.LedgerError("invalid item number")
 
 
 # ------------------------------------------------------------------ server
@@ -263,6 +381,27 @@ class Handler(BaseHTTPRequestHandler):
                                     waiting_on=f.get("waiting_on", ""), parked_until=f.get("parked_until", ""),
                                     parked_until_verified=f.get("parked_until_verified") == "1",
                                     revisit_questions=lines(f.get("revisit_questions")))
+                dest = "/c/" + urllib.parse.quote(f.get("candidate_id", ""))
+            elif p == "/falsify":
+                ledger.record_falsification(self.ledger_path, candidate_id=f.get("candidate_id", ""), test=f.get("test", ""),
+                                            result=f.get("result", ""), grade=f.get("grade", ""),
+                                            source_ref=f.get("source_ref", ""), known_at=f.get("known_at", ""))
+                dest = "/c/" + urllib.parse.quote(f.get("candidate_id", ""))
+            elif p == "/evidence":
+                ledger.add_evidence(self.ledger_path, candidate_id=f.get("candidate_id", ""), tag=f.get("tag", ""),
+                                    direction=f.get("direction", ""), grade=f.get("grade", ""), text=f.get("text", ""),
+                                    source_ref=f.get("source_ref", ""), known_at=f.get("known_at", ""))
+                dest = "/c/" + urllib.parse.quote(f.get("candidate_id", ""))
+            elif p == "/unresolved":
+                ledger.add_unresolved(self.ledger_path, candidate_id=f.get("candidate_id", ""), question=f.get("question", ""))
+                dest = "/c/" + urllib.parse.quote(f.get("candidate_id", ""))
+            elif p == "/strongest":
+                ledger.set_strongest(self.ledger_path, candidate_id=f.get("candidate_id", ""),
+                                     direction=f.get("direction", ""), target_seq=_int(f.get("target_seq")))
+                dest = "/c/" + urllib.parse.quote(f.get("candidate_id", ""))
+            elif p == "/resolve":
+                ledger.resolve_item(self.ledger_path, candidate_id=f.get("candidate_id", ""),
+                                    target_seq=_int(f.get("target_seq")), status=f.get("status", ""), note=f.get("note", ""))
                 dest = "/c/" + urllib.parse.quote(f.get("candidate_id", ""))
             elif p == "/note":
                 ledger.add_note(self.ledger_path, candidate_id=f.get("candidate_id", ""), text=f.get("text", ""))

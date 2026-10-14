@@ -8,8 +8,12 @@ capital authority. **NO REAL PORTFOLIO ACTION.**
 
 `SURFACED → QUICK_TEST → UNDERWRITING → PARKED / REJECTED / READY_FOR_CAPITAL_COMPARISON`
 
-"Continue underwriting" = stay in `UNDERWRITING` (add a note). `QUICK_TEST` is
-optional (human may go SURFACED → UNDERWRITING, as Cycles 1–2 did).
+"Continue underwriting" = stay in `UNDERWRITING` (add a note).
+**`QUICK_TEST` is mandatory** for every candidate except the grandfathered MCD
+and RPM (`ledger.GRANDFATHERED`), whose direct SURFACED → UNDERWRITING history is
+preserved unrewritten. A new candidate reaches `UNDERWRITING` only after it has
+been in `QUICK_TEST` and has a recorded cheapest-falsification result that is not
+`FALSIFIED` (including via PARKED).
 `READY_FOR_CAPITAL_COMPARISON` is a label; it starts nothing.
 
 ## Run
@@ -24,13 +28,36 @@ optional (human may go SURFACED → UNDERWRITING, as Cycles 1–2 did).
 .venv/bin/python -m operating_mvp note X "text"
 ```
 
+## Candidate page = the underwriting template
+
+Glance card (state, why surfaced, survived QUICK_TEST?, strongest FOR/AGAINST,
+unresolved question, next dated catalyst) → investment question → cheapest
+falsification + result → six tagged evidence groups (FACT, MANAGEMENT CLAIM,
+CONTEXT, INFERENCE, VARIANT, CAPITAL IMPLICATION) → unresolved questions →
+current state → capital-comparison **placeholders** (SPY, Treasury/Cash, Do
+Nothing, relevant existing holdings; nothing computed; Stage 7 never invoked).
+
+Every evidence item carries `PRIMARY` / `SECONDARY` / `UNCERTIFIED`, a
+direction (FOR / AGAINST / NEUTRAL), an optional reference and a known-at date.
+"Strongest" is a human designation, never computed. Errors are retracted, not
+edited; the original event stays in history. For INFERENCE and CAPITAL
+IMPLICATION use the weakest input source as the grade.
+
+```bash
+.venv/bin/python -m operating_mvp falsify X --test "..." --result SURVIVED --grade PRIMARY --ref "..." --known-at 2026-10-01
+.venv/bin/python -m operating_mvp evidence X --tag FACT --direction AGAINST --grade PRIMARY --text "..." --ref "10-K" --known-at 2026-02-24
+.venv/bin/python -m operating_mvp strongest X AGAINST 12
+.venv/bin/python -m operating_mvp unresolved X "question"
+.venv/bin/python -m operating_mvp resolve X 12 RETRACTED --note "why"
+```
+
 ## Structure
 
 | File | Role |
 |---|---|
 | `ledger.py` | append-only, hash-chained event log; states, transitions, intake, replay |
 | `data/candidate_ledger.jsonl` | the record (MCD, RPM backfilled, flagged `backfilled`) |
-| `seed.py` | one-time backfill of MCD/RPM from the frozen cycle records |
+| `seed.py` | one-time backfill of MCD/RPM history, then their template/evidence entries, from the frozen cycle records (appends only) |
 | `ui.py` | board, candidate page, loopback server; intake / state / note forms |
 | `__main__.py` | CLI |
 

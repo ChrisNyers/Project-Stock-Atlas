@@ -30,6 +30,15 @@ STATES = (
 )
 SOURCES = ("HUMAN", "SCOUT", "SUE", "NUTSTUFF", "OTHER")
 
+EVIDENCE_TAGS = ("FACT", "MANAGEMENT_CLAIM", "CONTEXT", "INFERENCE", "VARIANT", "CAPITAL_IMPLICATION")
+GRADES = ("PRIMARY", "SECONDARY", "UNCERTIFIED")
+DIRECTIONS = ("FOR", "AGAINST", "NEUTRAL")
+FALSIFICATION_RESULTS = ("SURVIVED", "INCONCLUSIVE", "FALSIFIED")
+
+# Candidates created before the Operating MVP checkpoint keep their historical
+# SURFACED -> UNDERWRITING path. Everything else must pass QUICK_TEST first.
+GRANDFATHERED = frozenset({"MCD", "RPM"})
+
 # Workflow edges. SURFACED -> UNDERWRITING is allowed because the human may
 # order underwriting directly (Cycles 1-2 did); QUICK_TEST is optional.
 TRANSITIONS = {
@@ -122,11 +131,13 @@ def replay(path: Path = DEFAULT_LEDGER) -> dict[str, dict]:
                 investment_question=p["investment_question"], surfaced_on=ev["effective_date"],
                 refs=list(p.get("refs", [])), state="SURFACED", state_since=ev["effective_date"],
                 reason="", waiting_on="", parked_until="", parked_until_verified=False,
-                revisit_questions=[], notes=[],
+                revisit_questions=[], notes=[], grandfathered=cid in GRANDFATHERED,
+                quick_test_visited=False, falsifications=[], evidence=[], unresolved=[], strongest={},
             )
         elif ev["event_type"] == "STATE_CHANGE":
             c = cands[cid]
             c.update(state=p["to_state"], state_since=ev["effective_date"], reason=p["reason"])
+            c["quick_test_visited"] = c["quick_test_visited"] or p["to_state"] == "QUICK_TEST"
             if p["to_state"] == "PARKED":
                 c.update(waiting_on=p["waiting_on"], parked_until=p.get("parked_until", ""),
                          parked_until_verified=bool(p.get("parked_until_verified")),
@@ -138,11 +149,31 @@ def replay(path: Path = DEFAULT_LEDGER) -> dict[str, dict]:
         elif ev["event_type"] == "NOTE":
             cands[cid]["notes"].append({"date": ev["effective_date"], "text": p["text"]})
             cands[cid]["refs"] += [r for r in p.get("refs", []) if r not in cands[cid]["refs"]]
+        elif ev["event_type"] == "FALSIFICATION":
+            cands[cid]["falsifications"].append({**p, "seq": ev["seq"], "date": ev["effective_date"],
+                                                 "backfilled": ev["backfilled"], "status": "ACTIVE"})
+        elif ev["event_type"] == "EVIDENCE":
+            cands[cid]["evidence"].append({**p, "seq": ev["seq"], "date": ev["effective_date"],
+                                           "backfilled": ev["backfilled"], "status": "ACTIVE", "note": ""})
+        elif ev["event_type"] == "UNRESOLVED":
+            cands[cid]["unresolved"].append({**p, "seq": ev["seq"], "date": ev["effective_date"],
+                                             "backfilled": ev["backfilled"], "status": "OPEN", "note": ""})
+        elif ev["event_type"] == "RESOLVE":
+            for lst in ("falsifications", "evidence", "unresolved"):
+                for item in cands[cid][lst]:
+                    if item["seq"] == p["target_seq"]:
+                        item["status"], item["note"] = p["status"], p["note"]
+        elif ev["event_type"] == "STRONGEST":
+            cands[cid]["strongest"][p["direction"]] = p["target_seq"]
+        summary = ((f"{p['tag']} {p['direction']} [{p['grade']}]: {p['text']}" if ev["event_type"] == "EVIDENCE" else "")
+                   or p.get("to_state") or p.get("text") or p.get("question") or p.get("test")
+                   or (f"{p['status']} #{p['target_seq']}" if ev["event_type"] == "RESOLVE" else "")
+                   or (f"strongest {p['direction']} = #{p['target_seq']}" if ev["event_type"] == "STRONGEST" else "")
+                   or "SURFACED")
         cands[cid]["history"].append(
             {"seq": ev["seq"], "type": ev["event_type"], "date": ev["effective_date"],
-             "backfilled": ev["backfilled"],
-             "summary": p.get("to_state") or p.get("text") or "SURFACED",
-             "reason": p.get("reason", "")})
+             "backfilled": ev["backfilled"], "summary": summary[:160],
+             "reason": p.get("reason", "") or p.get("result", "") or p.get("note", "")})
     return cands
 
 
@@ -191,6 +222,15 @@ def change_state(path: Path = DEFAULT_LEDGER, *, candidate_id: str, to_state: st
                           f"(allowed: {sorted(TRANSITIONS[c['state']]) or 'none'})")
     if not _clean(reason):
         raise LedgerError("reason is required")
+    if to_state == "UNDERWRITING" and not c["grandfathered"]:
+        if not c["quick_test_visited"]:
+            raise LedgerError("QUICK_TEST is mandatory before UNDERWRITING: move to QUICK_TEST and record "
+                              "a cheapest-falsification result first")
+        live = [f for f in c["falsifications"] if f["status"] == "ACTIVE"]
+        if not live:
+            raise LedgerError("record a cheapest-falsification test and result before UNDERWRITING")
+        if live[-1]["result"] == "FALSIFIED":
+            raise LedgerError("latest falsification result is FALSIFIED: PARK or REJECT, or record a new test")
     payload = {"to_state": to_state, "reason": _clean(reason),
                "refs": [_clean(r) for r in (refs or []) if _clean(r)]}
     if to_state == "PARKED":
@@ -215,3 +255,100 @@ def add_note(path: Path = DEFAULT_LEDGER, *, candidate_id: str, text: str,
     return _append(path, "NOTE", candidate_id, _iso(effective_date or date.today()),
                    {"text": _clean(text), "refs": [_clean(r) for r in (refs or []) if _clean(r)]},
                    backfilled)
+
+
+# ---------------------------------------------------------------- template / evidence
+def _check_candidate(path, candidate_id):
+    c = replay(path).get(candidate_id)
+    if c is None:
+        raise LedgerError(f"unknown candidate {candidate_id!r}")
+    return c
+
+
+def _known_at(v) -> str:
+    return _iso(v) if _clean(str(v or "")) else ""
+
+
+def _grade(g) -> str:
+    g = _clean(g).upper()
+    if g not in GRADES:
+        raise LedgerError(f"grade must be one of {GRADES}")
+    return g
+
+
+def record_falsification(path: Path = DEFAULT_LEDGER, *, candidate_id: str, test: str, result: str,
+                         grade: str, source_ref: str = "", known_at=None, effective_date=None,
+                         backfilled: bool = False) -> dict:
+    """The cheapest test that could kill the idea, and what happened."""
+    c = _check_candidate(path, candidate_id)
+    if c["state"] == "SURFACED":
+        raise LedgerError("move the candidate to QUICK_TEST before recording its falsification result")
+    result = _clean(result).upper()
+    if result not in FALSIFICATION_RESULTS:
+        raise LedgerError(f"result must be one of {FALSIFICATION_RESULTS}")
+    if not _clean(test):
+        raise LedgerError("test is required")
+    return _append(path, "FALSIFICATION", candidate_id, _iso(effective_date or date.today()), {
+        "test": _clean(test), "result": result, "grade": _grade(grade),
+        "source_ref": _clean(source_ref), "known_at": _known_at(known_at)}, backfilled)
+
+
+def add_evidence(path: Path = DEFAULT_LEDGER, *, candidate_id: str, tag: str, direction: str, grade: str,
+                 text: str, source_ref: str = "", known_at=None, effective_date=None,
+                 backfilled: bool = False) -> dict:
+    _check_candidate(path, candidate_id)
+    tag, direction = _clean(tag).upper(), _clean(direction).upper()
+    if tag not in EVIDENCE_TAGS:
+        raise LedgerError(f"tag must be one of {EVIDENCE_TAGS}")
+    if direction not in DIRECTIONS:
+        raise LedgerError(f"direction must be one of {DIRECTIONS}")
+    if not _clean(text):
+        raise LedgerError("text is required")
+    return _append(path, "EVIDENCE", candidate_id, _iso(effective_date or date.today()), {
+        "tag": tag, "direction": direction, "grade": _grade(grade), "text": _clean(text),
+        "source_ref": _clean(source_ref), "known_at": _known_at(known_at)}, backfilled)
+
+
+def add_unresolved(path: Path = DEFAULT_LEDGER, *, candidate_id: str, question: str,
+                   effective_date=None, backfilled: bool = False) -> dict:
+    _check_candidate(path, candidate_id)
+    if not _clean(question):
+        raise LedgerError("question is required")
+    return _append(path, "UNRESOLVED", candidate_id, _iso(effective_date or date.today()),
+                   {"question": _clean(question)}, backfilled)
+
+
+def resolve_item(path: Path = DEFAULT_LEDGER, *, candidate_id: str, target_seq: int, status: str,
+                 note: str, effective_date=None, backfilled: bool = False) -> dict:
+    """Close an unresolved question, or retract an evidence/falsification entry.
+    The original event stays in the ledger; nothing is edited or deleted."""
+    c = _check_candidate(path, candidate_id)
+    status = _clean(status).upper()
+    if status not in ("RESOLVED", "RETRACTED"):
+        raise LedgerError("status must be RESOLVED or RETRACTED")
+    if not _clean(note):
+        raise LedgerError("note is required (what resolved it / why it was retracted)")
+    target = next((i for lst in ("falsifications", "evidence", "unresolved") for i in c[lst]
+                   if i["seq"] == int(target_seq)), None)
+    if target is None:
+        raise LedgerError(f"no item #{target_seq} on {candidate_id}")
+    if target["status"] != ("OPEN" if "question" in target else "ACTIVE"):
+        raise LedgerError(f"item #{target_seq} is already {target['status']}")
+    if status == "RESOLVED" and "question" not in target:
+        raise LedgerError("only unresolved questions can be RESOLVED; retract evidence instead")
+    return _append(path, "RESOLVE", candidate_id, _iso(effective_date or date.today()),
+                   {"target_seq": int(target_seq), "status": status, "note": _clean(note)}, backfilled)
+
+
+def set_strongest(path: Path = DEFAULT_LEDGER, *, candidate_id: str, direction: str, target_seq: int,
+                  effective_date=None, backfilled: bool = False) -> dict:
+    """Human designation of the strongest evidence FOR or AGAINST. Never computed."""
+    c = _check_candidate(path, candidate_id)
+    direction = _clean(direction).upper()
+    if direction not in ("FOR", "AGAINST"):
+        raise LedgerError("direction must be FOR or AGAINST")
+    ev = next((i for i in c["evidence"] if i["seq"] == int(target_seq)), None)
+    if ev is None or ev["status"] != "ACTIVE" or ev["direction"] != direction:
+        raise LedgerError(f"item #{target_seq} must be active evidence marked {direction}")
+    return _append(path, "STRONGEST", candidate_id, _iso(effective_date or date.today()),
+                   {"direction": direction, "target_seq": int(target_seq)}, backfilled)

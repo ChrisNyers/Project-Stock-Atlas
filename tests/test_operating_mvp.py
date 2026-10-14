@@ -30,20 +30,27 @@ def test_single_vocabulary():
                              "READY_FOR_CAPITAL_COMPARISON")
 
 
+def _to_underwriting(lp, cid, result="SURVIVED"):
+    ledger.change_state(lp, candidate_id=cid, to_state="QUICK_TEST", reason="r")
+    ledger.record_falsification(lp, candidate_id=cid, test="t", result=result, grade="PRIMARY")
+    ledger.change_state(lp, candidate_id=cid, to_state="UNDERWRITING", reason="r")
+
+
 def test_surfaced_start_and_allowed_path(lp):
     _surface(lp, ticker="AAA")
     assert ledger.replay(lp)["AAA"]["state"] == "SURFACED"
-    for s in ("QUICK_TEST", "UNDERWRITING", "READY_FOR_CAPITAL_COMPARISON"):
-        ledger.change_state(lp, candidate_id="AAA", to_state=s, reason="r")
-        assert ledger.replay(lp)["AAA"]["state"] == s
+    _to_underwriting(lp, "AAA")
+    assert ledger.replay(lp)["AAA"]["state"] == "UNDERWRITING"
+    ledger.change_state(lp, candidate_id="AAA", to_state="READY_FOR_CAPITAL_COMPARISON", reason="r")
+    assert ledger.replay(lp)["AAA"]["state"] == "READY_FOR_CAPITAL_COMPARISON"
 
 
 def test_disallowed_transitions(lp):
     _surface(lp, ticker="AAA")
     with pytest.raises(ledger.LedgerError):  # cannot skip to READY
         ledger.change_state(lp, candidate_id="AAA", to_state="READY_FOR_CAPITAL_COMPARISON", reason="r")
+    _to_underwriting(lp, "AAA")
     with pytest.raises(ledger.LedgerError):  # UNDERWRITING -> UNDERWRITING is a NOTE, not a state change
-        ledger.change_state(lp, candidate_id="AAA", to_state="UNDERWRITING", reason="r")
         ledger.change_state(lp, candidate_id="AAA", to_state="UNDERWRITING", reason="r")
     with pytest.raises(ledger.LedgerError):
         ledger.change_state(lp, candidate_id="AAA", to_state="BUY", reason="r")
@@ -51,7 +58,7 @@ def test_disallowed_transitions(lp):
 
 def test_continue_underwriting_is_a_note_not_a_state(lp):
     _surface(lp, ticker="AAA")
-    ledger.change_state(lp, candidate_id="AAA", to_state="UNDERWRITING", reason="r")
+    _to_underwriting(lp, "AAA")
     ledger.add_note(lp, candidate_id="AAA", text="continue underwriting: need Q3")
     c = ledger.replay(lp)["AAA"]
     assert c["state"] == "UNDERWRITING" and c["notes"][0]["text"].startswith("continue")
@@ -75,7 +82,7 @@ def test_rejected_only_reopens_to_surfaced_with_reason(lp):
     _surface(lp, ticker="AAA")
     ledger.change_state(lp, candidate_id="AAA", to_state="REJECTED", reason="no edge")
     with pytest.raises(ledger.LedgerError):
-        ledger.change_state(lp, candidate_id="AAA", to_state="UNDERWRITING", reason="r")
+        ledger.change_state(lp, candidate_id="AAA", to_state="QUICK_TEST", reason="r")
     with pytest.raises(ledger.LedgerError):
         _surface(lp, ticker="AAA")  # re-open through a state change, not a duplicate
     ledger.change_state(lp, candidate_id="AAA", to_state="SURFACED", reason="new filing")
@@ -146,7 +153,7 @@ def test_committed_ledger_verifies_and_holds_mcd_rpm_parked():
 
 
 def test_seed_refuses_non_empty_and_reproduces_states(lp):
-    assert seed.seed(lp) == 7
+    assert seed.seed(lp) == 7  # history events only; evidence is seeded separately
     with pytest.raises(ledger.LedgerError):
         seed.seed(lp)
     assert {c["state"] for c in ledger.replay(lp).values()} == {"PARKED"}
@@ -258,3 +265,205 @@ def test_server_intake_and_state_flow(server):
 def test_server_binds_loopback_only():
     src = (PKG / "ui.py").read_text()
     assert '("127.0.0.1", port)' in src and '"0.0.0.0"' not in src
+
+
+# ---- QUICK_TEST mandatory for new candidates ----------------------------------
+def test_new_candidate_cannot_skip_quick_test(lp):
+    _surface(lp, ticker="NEW")
+    with pytest.raises(ledger.LedgerError, match="QUICK_TEST is mandatory"):
+        ledger.change_state(lp, candidate_id="NEW", to_state="UNDERWRITING", reason="r")
+
+
+def test_new_candidate_cannot_bypass_via_parked(lp):
+    _surface(lp, ticker="NEW")
+    ledger.change_state(lp, candidate_id="NEW", to_state="PARKED", reason="r", waiting_on="x")
+    with pytest.raises(ledger.LedgerError, match="QUICK_TEST is mandatory"):
+        ledger.change_state(lp, candidate_id="NEW", to_state="UNDERWRITING", reason="r")
+
+
+def test_quick_test_state_alone_is_not_enough(lp):
+    _surface(lp, ticker="NEW")
+    ledger.change_state(lp, candidate_id="NEW", to_state="QUICK_TEST", reason="r")
+    with pytest.raises(ledger.LedgerError, match="falsification"):
+        ledger.change_state(lp, candidate_id="NEW", to_state="UNDERWRITING", reason="r")
+
+
+def test_falsified_blocks_underwriting_but_inconclusive_and_survived_pass(lp):
+    _surface(lp, ticker="DEAD")
+    with pytest.raises(ledger.LedgerError):  # cannot record before QUICK_TEST
+        ledger.record_falsification(lp, candidate_id="DEAD", test="t", result="SURVIVED", grade="PRIMARY")
+    ledger.change_state(lp, candidate_id="DEAD", to_state="QUICK_TEST", reason="r")
+    ledger.record_falsification(lp, candidate_id="DEAD", test="t", result="FALSIFIED", grade="PRIMARY")
+    with pytest.raises(ledger.LedgerError, match="FALSIFIED"):
+        ledger.change_state(lp, candidate_id="DEAD", to_state="UNDERWRITING", reason="r")
+    ledger.change_state(lp, candidate_id="DEAD", to_state="REJECTED", reason="killed by quick test")
+    _surface(lp, name="Maybe", ticker="MAYBE")
+    _to_underwriting(lp, "MAYBE", result="INCONCLUSIVE")
+    assert ledger.replay(lp)["MAYBE"]["state"] == "UNDERWRITING"
+
+
+def test_retracting_the_only_falsification_reblocks(lp):
+    _surface(lp, ticker="NEW")
+    ledger.change_state(lp, candidate_id="NEW", to_state="QUICK_TEST", reason="r")
+    f = ledger.record_falsification(lp, candidate_id="NEW", test="t", result="SURVIVED", grade="PRIMARY")
+    ledger.resolve_item(lp, candidate_id="NEW", target_seq=f["seq"], status="RETRACTED", note="wrong date")
+    with pytest.raises(ledger.LedgerError):
+        ledger.change_state(lp, candidate_id="NEW", to_state="UNDERWRITING", reason="r")
+
+
+def test_grandfathered_history_is_preserved_in_committed_ledger():
+    events = ledger.read_events()
+    assert events[6]["event_hash"] == "c87cb6c6ce3e5aee339583e3813bc0d4f758cfa1b7991c7f76e99d55293ecc37"  # the original 7 events are byte-for-byte unchanged
+    for cid in ("MCD", "RPM"):
+        c = ledger.replay()[cid]
+        states = [h["summary"] for h in c["history"] if h["type"] in ("SURFACED", "STATE_CHANGE")]
+        assert states == ["SURFACED", "UNDERWRITING", "PARKED"] and c["grandfathered"]
+
+
+def test_only_mcd_rpm_are_grandfathered(lp):
+    assert ledger.GRANDFATHERED == {"MCD", "RPM"}
+    seed.seed(lp)
+    _surface(lp, ticker="ZZZ")
+    assert not ledger.replay(lp)["ZZZ"]["grandfathered"]
+
+
+# ---- evidence ledger ---------------------------------------------------------
+def _ev(lp, cid, **kw):
+    base = dict(candidate_id=cid, tag="FACT", direction="FOR", grade="PRIMARY", text="t")
+    return ledger.add_evidence(lp, **{**base, **kw})
+
+
+def test_evidence_requires_valid_tag_grade_direction_text(lp):
+    _surface(lp, ticker="AAA")
+    for bad in ({"tag": "OPINION"}, {"grade": "TRUSTED"}, {"direction": "UP"}, {"text": " "}, {"known_at": "yesterday"}):
+        with pytest.raises(ledger.LedgerError):
+            _ev(lp, "AAA", **bad)
+    e = _ev(lp, "AAA", source_ref="10-K FY2025", known_at="2026-02-24")
+    item = ledger.replay(lp)["AAA"]["evidence"][0]
+    assert item["seq"] == e["seq"] and item["grade"] == "PRIMARY" and item["known_at"] == "2026-02-24"
+
+
+def test_evidence_reference_and_date_are_optional_but_visible(lp):
+    _surface(lp, ticker="AAA")
+    _ev(lp, "AAA", grade="UNCERTIFIED")
+    assert "no reference" in ui.render_candidate("AAA", lp)
+
+
+def test_strongest_is_human_designated_and_never_computed(lp):
+    _surface(lp, ticker="AAA")
+    h = ui.render_candidate("AAA", lp)
+    assert h.count("not designated") >= 2
+    _ev(lp, "AAA", direction="FOR"); a = _ev(lp, "AAA", direction="AGAINST")
+    assert ledger.replay(lp)["AAA"]["strongest"] == {}  # adding evidence designates nothing
+    with pytest.raises(ledger.LedgerError):
+        ledger.set_strongest(lp, candidate_id="AAA", direction="FOR", target_seq=a["seq"])  # wrong direction
+    ledger.set_strongest(lp, candidate_id="AAA", direction="AGAINST", target_seq=a["seq"])
+    assert "★ strongest AGAINST" in ui.render_candidate("AAA", lp)
+
+
+def test_retraction_keeps_history_and_clears_strongest_display(lp):
+    _surface(lp, ticker="AAA")
+    a = _ev(lp, "AAA", direction="AGAINST", text="wrong date item")
+    ledger.set_strongest(lp, candidate_id="AAA", direction="AGAINST", target_seq=a["seq"])
+    ledger.resolve_item(lp, candidate_id="AAA", target_seq=a["seq"], status="RETRACTED", note="date was unverified")
+    c = ledger.replay(lp)["AAA"]
+    assert c["evidence"][0]["status"] == "RETRACTED" and len(c["history"]) == 4
+    h = ui.render_candidate("AAA", lp)
+    assert "RETRACTED" in h and "★ strongest AGAINST" not in h
+    with pytest.raises(ledger.LedgerError):
+        ledger.resolve_item(lp, candidate_id="AAA", target_seq=a["seq"], status="RETRACTED", note="again")
+    with pytest.raises(ledger.LedgerError):
+        ledger.set_strongest(lp, candidate_id="AAA", direction="AGAINST", target_seq=a["seq"])
+
+
+def test_unresolved_open_resolve_and_evidence_cannot_be_resolved(lp):
+    _surface(lp, ticker="AAA")
+    u = ledger.add_unresolved(lp, candidate_id="AAA", question="what is the backlog?")
+    e = _ev(lp, "AAA")
+    with pytest.raises(ledger.LedgerError):
+        ledger.resolve_item(lp, candidate_id="AAA", target_seq=e["seq"], status="RESOLVED", note="n")
+    with pytest.raises(ledger.LedgerError):
+        ledger.resolve_item(lp, candidate_id="AAA", target_seq=u["seq"], status="RESOLVED", note="")
+    ledger.resolve_item(lp, candidate_id="AAA", target_seq=u["seq"], status="RESOLVED", note="Q3 call: 1.2 book-to-bill")
+    assert ledger.replay(lp)["AAA"]["unresolved"][0]["status"] == "RESOLVED"
+
+
+def test_cannot_touch_another_candidates_items(lp):
+    _surface(lp, ticker="AAA"); _surface(lp, name="Bee", ticker="BBB")
+    e = _ev(lp, "AAA")
+    with pytest.raises(ledger.LedgerError):
+        ledger.resolve_item(lp, candidate_id="BBB", target_seq=e["seq"], status="RETRACTED", note="n")
+
+
+def test_seed_evidence_appends_only_and_is_complete(lp):
+    seed.seed(lp)
+    before = ledger.read_events(lp)
+    n = seed.seed_evidence(lp)
+    after = ledger.read_events(lp)
+    assert after[:len(before)] == before and len(after) == len(before) + n
+    ledger.verify_chain(lp)
+    with pytest.raises(ledger.LedgerError):
+        seed.seed_evidence(lp)
+    for cid in ("MCD", "RPM"):
+        c = ledger.replay(lp)[cid]
+        assert {i["tag"] for i in c["evidence"]} == set(ledger.EVIDENCE_TAGS)
+        assert all(i["grade"] in ledger.GRADES and i["backfilled"] for i in c["evidence"])
+        assert set(c["strongest"]) == {"FOR", "AGAINST"} and c["unresolved"]
+        assert c["state"] == "PARKED"  # state untouched by evidence
+
+
+def test_committed_ledger_has_seeded_template_for_mcd_and_rpm():
+    ledger.verify_chain()
+    for cid in ("MCD", "RPM"):
+        c = ledger.replay()[cid]
+        assert len(c["evidence"]) >= 7 and set(c["strongest"]) == {"FOR", "AGAINST"}
+    assert ledger.replay()["MCD"]["falsifications"][0]["result"] == "SURVIVED"
+    assert ledger.replay()["RPM"]["falsifications"] == []  # no quick test was run; not invented
+
+
+# ---- candidate page ----------------------------------------------------------
+def test_candidate_page_shows_template_glance_and_placeholders():
+    h = ui.render_candidate("MCD", today=date(2026, 10, 14))
+    for needle in ("Why it surfaced", "Survived QUICK_TEST?", "Strongest evidence FOR", "Strongest evidence AGAINST",
+                   "Unresolved question", "Current state", "Next dated catalyst", "2026-11-04", "officially verified",
+                   "Investment question", "Cheapest falsification and result", "MANAGEMENT CLAIM", "CAPITAL IMPLICATION",
+                   "PRIMARY", "UNCERTIFIED", "SECONDARY", "SPY", "Treasury / Cash", "Do Nothing",
+                   "Relevant existing holdings", "placeholders only", "grandfathered"):
+        assert needle in h, needle
+    r = ui.render_candidate("RPM", today=date(2026, 10, 14))
+    assert "No QUICK_TEST recorded" in r and "2026-11-09" in r
+
+
+def test_placeholders_invoke_nothing_and_page_has_no_stage7_action():
+    h = ui.render_candidate("MCD")
+    assert 'action="/stage7' not in h and "capital_decision" not in h
+    src = (PKG / "ui.py").read_text()
+    for word in ("stage7_status", "run_stage7", "compare_capital"):
+        assert word not in src
+
+
+def test_candidate_page_escapes_evidence_text(lp):
+    _surface(lp, ticker="AAA")
+    _ev(lp, "AAA", text="<script>x()</script>", source_ref="<img src=y>")
+    ledger.add_unresolved(lp, candidate_id="AAA", question="<b>q</b>")
+    h = ui.render_candidate("AAA", lp)
+    assert "<script>x" not in h and "<img src=y" not in h and "<b>q</b>" not in h
+
+
+def test_server_template_flow_and_quick_test_gate(server):
+    port, lp = server
+    _req(port, "POST", "/surface", {"name": "Gate", "ticker": "GATE", "source": "SCOUT", "why_surfaced": "w", "investment_question": "q"})
+    st, body, _h = _req(port, "POST", "/state", {"candidate_id": "GATE", "to_state": "UNDERWRITING", "reason": "r"})
+    assert st == 400 and "not an allowed transition" in body or "QUICK_TEST is mandatory" in body
+    _req(port, "POST", "/state", {"candidate_id": "GATE", "to_state": "QUICK_TEST", "reason": "r"})
+    st, _b, _h = _req(port, "POST", "/falsify", {"candidate_id": "GATE", "test": "t", "result": "SURVIVED", "grade": "PRIMARY"})
+    assert st == 303
+    st, _b, _h = _req(port, "POST", "/evidence", {"candidate_id": "GATE", "tag": "FACT", "direction": "FOR", "grade": "PRIMARY",
+                                                   "text": "x", "source_ref": "10-K", "known_at": "2026-01-01"})
+    assert st == 303
+    seq = ledger.replay(lp)["GATE"]["evidence"][0]["seq"]
+    assert _req(port, "POST", "/strongest", {"candidate_id": "GATE", "direction": "FOR", "target_seq": str(seq)})[0] == 303
+    assert _req(port, "POST", "/unresolved", {"candidate_id": "GATE", "question": "open?"})[0] == 303
+    assert _req(port, "POST", "/state", {"candidate_id": "GATE", "to_state": "UNDERWRITING", "reason": "r"})[0] == 303
+    assert _req(port, "POST", "/resolve", {"candidate_id": "GATE", "target_seq": "abc", "status": "RESOLVED", "note": "n"})[0] == 400
+    ledger.verify_chain(lp)

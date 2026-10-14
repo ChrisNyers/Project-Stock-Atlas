@@ -34,6 +34,8 @@ INVESTOR DAY` (MCD PARKED until 2026-11-04).**
 
 **Update 2026-10-14 (Operating MVP v0.1): `OPERATING MVP v0.1 BUILT — DISCOVERY LOOP + UI AS WORKFLOW SUPPORT; MCD/RPM SEEDED AS PARKED`** (`operating_mvp/`).
 
+**Update 2026-10-14 (Operating MVP increment 2): `UNDERWRITING TEMPLATE v0.1 + EVIDENCE LEDGER v0.1 ON THE CANDIDATE PAGE; QUICK_TEST MANDATORY FOR NEW CANDIDATES (MCD/RPM GRANDFATHERED)`** (`operating_mvp/`).
+
 ---
 
 ## Governing Mission
@@ -1731,6 +1733,29 @@ records. No ranking, scoring, paid data, agents, execution or ML; the package
 does not import the capital facade or control layer (tested). Price evidence
 displays UNCERTIFIED/BLOCKED. Tests: 271 passed, 25 skipped (BLOCKED), 1 warning
 (244 prior + 27 new). Control layer, Gate B and Investor Policy v1.0 unchanged.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### Operating MVP v0.1 — increment 2: Underwriting Template + Evidence Ledger (2026-10-14; append-only)
+
+Human correction accepted: `QUICK_TEST` is mandatory before `UNDERWRITING` for
+every candidate created after the checkpoint; MCD and RPM are grandfathered and
+their direct SURFACED → UNDERWRITING history is not rewritten (the original 7
+ledger events are unchanged). A new candidate needs a QUICK_TEST visit plus a
+recorded cheapest-falsification result that is not FALSIFIED, including via
+PARKED. The candidate page now carries one concise template (investment
+question, falsification + result, six tagged evidence groups with PRIMARY /
+SECONDARY / UNCERTIFIED grade, reference and known-at, unresolved questions,
+current state), a glance card (why surfaced, survived QUICK_TEST, strongest
+evidence for/against as human designation, unresolved question, next dated
+catalyst) and capital-comparison placeholders (SPY, Treasury/Cash, Do Nothing,
+relevant existing holdings) that compute and invoke nothing. MCD and RPM
+template/evidence entries were transcribed (backfilled, appended) from their
+frozen cycle records; no new research. No ranking, optimizer, ML, automated
+recommendation, paid feed, execution or Stage 7 integration. Tests: 290 passed,
+25 skipped (BLOCKED), 1 warning.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 

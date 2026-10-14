@@ -3331,3 +3331,29 @@ their original wording.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## OPERATING_MVP_QUICK_TEST_MANDATORY_AND_EVIDENCE_LEDGER
+
+| | |
+|---|---|
+| Date | 2026-10-14 |
+| Status | **IMPLEMENTED — workflow support only** |
+| Context | Amends `OPERATING_MVP_V0_1_DISCOVERY_LOOP_AND_UI` (`d94db95`), which had made QUICK_TEST optional |
+
+### Decision
+
+Supersedes the "QUICK_TEST is optional" decision: for all candidates created
+after the checkpoint, QUICK_TEST (with a non-FALSIFIED cheapest-falsification
+result) is mandatory before UNDERWRITING, to force cheap falsification before
+expensive research. MCD and RPM are the only grandfathered candidates; their
+history is preserved. Underwriting Template v0.1 and Evidence Ledger v0.1 are
+attached to the candidate page as ledger event types (no parallel long-form
+record). Evidence carries PRIMARY / SECONDARY / UNCERTIFIED, reference and
+known-at; "strongest for/against" is a human designation; corrections are
+retractions. Capital-comparison placeholders are display-only. No ranking,
+optimizer, ML, recommendation, paid feed, execution, Stage 7 integration or new
+capital authority.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
