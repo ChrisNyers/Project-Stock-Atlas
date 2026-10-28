@@ -38,6 +38,15 @@ Stage 7 can start only for a candidate a human has moved to `READY_FOR_CAPITAL_C
 Records live in `atlas_ui/data/live/` (canonical) — decisions ledger, `artifacts/`, `inputs/<run>/`,
 `runs_index.jsonl`. Demo uses a fresh temp directory and a copy of the discovery ledger.
 
+## Input rules (review fe268b5 remediation)
+
+- Every field marked **%** is a percent in ONE unit: `1` is 1%, `0.5` is 0.5%, `12` is 12%. Non-finite or out-of-range values are refused.
+- The security decision is chosen explicitly with its evidence basis; **BUY is never defaulted**. Horizon is required.
+- The candidate's **ticker comes from its recorded ledger entry**; a client-supplied ticker that differs is refused.
+- The Treasury yield is **human-attested** (source reference + attestation checkbox); Atlas does not verify it and a recent date is not verification.
+- The portfolio baseline keeps its own valuation date (2026-10-07) and approximate denominator; you acknowledge both per run.
+- A funded Stage 8 additionally passes the **fresh-price checkpoint** (run ≤ 96h, no newer XNYS session, candidate still READY, fresh Gate B rebind). The frozen facade does not check run age; this adapter does.
+
 ## Fail-closed behavior (tested)
 
 Absent key · identity mismatch · wrong venue/MIC · stale session · fixture price in canonical mode ·

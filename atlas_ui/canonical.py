@@ -10,7 +10,7 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 
@@ -41,6 +41,11 @@ class Cycle0:
     doc_path: str
     doc_sha256: str
     label: str = "HUMAN-SUPPLIED BASELINE — APPROXIMATE (defensive ≈ $59,000); not a live account balance"
+
+    @property
+    def effective_at(self) -> datetime:
+        """When the human-supplied valuation applies (the frozen record's date) — NOT the decision time."""
+        return datetime.fromisoformat(self.as_of[:10] + "T00:00:00+00:00")
 
     def weight(self, ticker: str) -> float:
         for t, v in self.holdings:

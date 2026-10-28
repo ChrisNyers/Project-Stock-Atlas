@@ -37,9 +37,9 @@ CAPABILITIES = [
     ("D. Live price + XNYS session (Gate B)", "BLOCKED WITH EXACT REASON",
      "Wired to the verified Gate B path; TWELVEDATA_API_KEY is absent in this environment, so no live observation can be bound. Offline fail-closed paths are tested."),
     ("E. Stage 7 via CapitalDecisionFacade.run_stage7, retained hashed run, side-by-side grid", "FIXTURE-TESTED ONLY",
-     "Runs through the real facade; exercised with a clearly-labelled FIXTURE price provider in DEMO mode and tests. No canonical run exists. MCD is PARKED until 2026-11-04."),
+     "Runs through the real facade; exercised with a clearly-labelled FIXTURE price provider in DEMO mode and tests. No canonical run exists. MCD is PARKED until 2026-11-04. The Treasury reference is HUMAN-ATTESTED (not independently verified by Atlas); security decision is explicit, never defaulted; all % inputs use one unit."),
     ("F. Human Stage 8 (paper only): server-side recheck, non-action, ledger proof", "FIXTURE-TESTED ONLY",
-     "Real facade + DecisionStore; bypass attempts rejected with zero-row proof in tests; no canonical decision exists."),
+     "Real facade + DecisionStore; funded actions also pass an adapter-level fresh-price checkpoint (run age, newer XNYS session, fresh Gate B rebind) because the facade alone does not check run age; rejected paths leave zero rows in tests; no canonical decision exists."),
     ("G1. Decision history (existing append-only ledger) + manual revisit note", "PROVEN WORKING WITH REAL BACKEND",
      "Reads the real ledger; revisit is a linked dated note, the original record is never edited."),
     ("G2. Outcome vs cash/SPY with matched as-of dates; automatic trigger monitoring", "NOT IMPLEMENTED",
@@ -129,7 +129,7 @@ def overview(app: App) -> str:
                  f'<td>{pill(c["state"].replace("_", " ") + until, "wait" if c["state"] == "PARKED" else "no")}</td><td>{s7}</td></tr>')
     body = f"""<div class="view active"><p class="eyebrow">Portfolio and pilot</p><h1>Your investment decision workspace</h1>
 <p class="intro">Canonical portfolio context, your independent judgment, verified Stage 7 results and a deliberate paper decision — through the existing Stock Atlas controls.</p>
-<div class="topstats"><div class="stat"><div class="statlabel">Identified portfolio</div><div class="statvalue">{money(ident)}</div><div class="statsub">HUMAN-SUPPLIED · as of {e(c0.as_of)} · not a live balance</div></div>
+<div class="topstats"><div class="stat"><div class="statlabel">Identified portfolio</div><div class="statvalue">≈ ${ident:,.0f}</div><div class="statsub">APPROXIMATE (defensive ≈ $59K) · HUMAN-SUPPLIED as of {e(c0.as_of)} · {(app.clock() - c0.effective_at).days} days old · not live</div></div>
 <div class="stat"><div class="statlabel">28 stocks</div><div class="statvalue">{money(c0.stocks_total)}</div><div class="statsub">exact, reconciled by the loader</div></div>
 <div class="stat"><div class="statlabel">Defensive (T-bills + MM)</div><div class="statvalue">≈ {money(c0.defensive_approx)}</div><div class="statsub">approximate by design</div></div>
 <div class="stat"><div class="statlabel">Funding pocket</div><div class="statvalue">$25–50K</div><div class="statsub">new outside capital · T+1 · ADD-ONLY</div></div></div>
@@ -214,17 +214,22 @@ def stage7_page(app: App, err="", flash="", market: str = "") -> str:
     rr = "".join(f'<tr><td><a href="/run/{urllib_q(r["run_id"])}">{e(r["run_id"])}</a></td><td>{e(r["ticker"])}</td><td>{status_pill(r["status"])}</td><td class="mono">{r["stage7"]["sha256"][:16]}…</td><td>{pill("VERIFIED" if r["verified"] else "NOT VERIFIED", "ok" if r["verified"] else "danger")}</td></tr>' for r in runs) \
         or '<tr><td colspan="5"><span class="pill wait">NOT RUN / NOT VERIFIED — no retained Stage 7 run</span></td></tr>'
     if ready:
-        opts = "".join(f'<option value="{e(c["candidate_id"])}|{e(c["ticker"] or c["candidate_id"])}">{e(c["candidate_id"])}</option>' for c in ready)
+        opts = "".join(f'<option value="{e(c["candidate_id"])}">{e(c["candidate_id"])} — {e(c["ticker"] or "NO TICKER RECORDED")}</option>' for c in ready)
         F = lambda n, lab, hint="", ph="": f'<div><label class="field">{lab}<span class="fieldhint">{hint}</span></label><input class="text" name="{n}" placeholder="{ph}"></div>'
         T = lambda n, lab, hint="": f'<div class="full"><label class="field">{lab}<span class="fieldhint">{hint}</span></label><textarea name="{n}"></textarea></div>'
         S = lambda n, lab, vals: f'<div><label class="field">{lab}</label><select name="{n}">' + "".join(f"<option>{v}</option>" for v in vals) + "</select></div>"
         form = f"""<form method="post" action="/stage7/run"><div class="inputs"><div><label class="field">Candidate (READY only)</label><select name="cand">{opts}</select></div>
 {F("increment","Increment dollars *","within $25,000–$50,000; weights are recomputed server-side")}
+<div class="full"><div class="callout warn">Every field marked % is a PERCENT: type <b>1</b> for 1%, <b>0.5</b> for 0.5%, <b>12</b> for 12%. There is no other unit and nothing is guessed.</div></div>
+{S("decision","Security decision * (explicit; never defaulted)",["","BUY","HOLD","WATCH","REDUCE","EXIT","REJECT","NO DECISION"])}
+{F("decision_basis","Evidence basis for that decision *","cite the underwriting record, e.g. the evidence-ledger items")}
 {F("horizon_years","Horizon years *")}{F("ret_low","Candidate return band low % *","human-authored, coarse")}{F("ret_high","Candidate return band high % *")}
 {F("req_low","Required-return band low % *")}{F("req_high","Required-return band high % *")}
 {F("spy_low","SPY/beta band low % *","with basis notes below")}{F("spy_high","SPY/beta band high % *")}
 {F("tsy_low","Treasury/Cash band low % *")}{F("tsy_high","Treasury/Cash band high % *")}
-{F("tsy_ref_key","Treasury reference key","e.g. UST-13W")}{F("tsy_ref_value","Treasury reference value (decimal) *","from home.treasury.gov")}{F("tsy_ref_date","Treasury reference date YYYY-MM-DD *")}
+{F("tsy_ref_key","Treasury reference key","e.g. UST-13W")}{F("tsy_ref_value","Treasury reference yield % *","e.g. 3.9 for 3.9%")}{F("tsy_ref_date","Treasury reference date YYYY-MM-DD *")}
+{F("tsy_source_ref","Treasury source reference *","e.g. the home.treasury.gov page you read")}
+<div class="full"><label class="field"><input type="checkbox" name="tsy_attest" value="1" style="width:auto"> I retrieved this rate from the U.S. Treasury primary source on the date shown. <span class="fieldhint">Atlas does NOT verify a typed rate; a recent date is not verification. It is recorded as HUMAN-ATTESTED.</span></label></div>
 {S("tsy_duration","Treasury duration match",["UNVERIFIED","VERIFIED"])}
 {T("spy_notes","SPY basis notes *","one per line")}{T("tsy_notes","Treasury duration/reinvestment notes *","one per line")}
 {T("regime","Observable priced-in regime *")}{T("regime_evidence","Regime evidence *","one per line")}
@@ -232,9 +237,10 @@ def stage7_page(app: App, err="", flash="", market: str = "") -> str:
 {T("band_basis","Return-band basis *","one per line")}{T("provenance","Underwriting provenance *","one per line")}
 {T("uncertainties","Typed uncertainties *","TYPE | description | YES/NO (blocking); one per line")}{T("drivers","Dominant drivers (1–3) *","one per line")}
 {F("revisit_price","Price revisit trigger *")}{F("revisit_date","Time revisit date YYYY-MM-DD *")}{F("revisit_thesis","Thesis revisit trigger")}
-{S("gate","Underwriting gate",["UNVERIFIED","CLEAR","MARGINAL","FAIL"])}{S("capacity","Candidate capacity",["UNVERIFIED","AVAILABLE","CONSTRAINED"])}{F("remaining_capacity","Remaining capacity (decimal weight)")}
+{S("gate","Underwriting gate",["UNVERIFIED","CLEAR","MARGINAL","FAIL"])}{S("capacity","Candidate capacity",["UNVERIFIED","AVAILABLE","CONSTRAINED"])}{F("remaining_capacity","Remaining capacity % of post-trade portfolio")}
 {S("classification","Position classification (human)",["STARTER","OTHER","ADD"])}
 {S("tax","Tax constraint (human-attested)",["UNVERIFIED","VERIFIED"])}{S("liquidity","Liquidity (human-attested)",["UNVERIFIED","VERIFIED"])}{S("execution","Execution (human-attested)",["UNVERIFIED","VERIFIED"])}
+<div class="full"><label class="field"><input type="checkbox" name="baseline_ack" value="1" style="width:auto"> I acknowledge the portfolio baseline is the frozen human-supplied record of 2026-10-07 (holdings are NOT live) and the denominator is approximate (defensive ≈ $59,000). *</label></div>
 <div class="full"><label class="field"><input type="checkbox" name="accept_unverified" value="1" style="width:auto"> Proceed to Stage 7 with UNVERIFIED constraints (a funded Stage 8 will still fail closed)</label></div></div>
 <div class="btn-row" style="margin-top:16px"><button class="btn primary">Bind market data and run Stage 7 via the facade</button></div></form>"""
     else:
@@ -267,7 +273,7 @@ def run_page(app: App, run_id: str, err="", flash="") -> str | None:
     grid = f"""<div class="cols">
 <div class="alt"><b>{e(r.ticker)} (candidate)</b><div class="band">{ret(req["ret_low"], req["ret_high"])}</div><span class="subtle">coarse band over {e(str(req["horizon_years"]))}y · human-authored · not a forecast midpoint</span></div>
 <div class="alt"><b>SPY / beta</b><div class="band">{ret(req["spy_low"], req["spy_high"])}</div><span class="subtle">overlap UNMEASURED — no diversification credit</span></div>
-<div class="alt"><b>Treasury</b><div class="band">{ret(req["tsy_low"], req["tsy_high"])}</div><span class="subtle">ref {e(req["tsy_ref_key"])} = {e(req["tsy_ref_value"])} on {e(req["tsy_ref_date"])}</span></div>
+<div class="alt"><b>Treasury</b><div class="band">{ret(req["tsy_low"], req["tsy_high"])}</div><span class="subtle">ref {e(req["tsy_ref_key"])} = {e(req["tsy_ref_value"])}% on {e(req["tsy_ref_date"])} · <b>HUMAN-ATTESTED, not independently verified</b></span></div>
 <div class="alt"><b>Cash</b><div class="band">—</div><span class="subtle">compared together with Treasury (single frozen alternative)</span></div>
 <div class="alt"><b>Existing holdings / recycle</b><div class="band">Not permitted</div><span class="subtle">ADD-ONLY policy: no trim or recycle comparison. Driver overlap UNASSIGNED; not described as diversification.</span></div>
 <div class="alt"><b>Do Nothing</b><div class="band">—</div><span class="subtle">always preserved</span></div></div>
@@ -292,7 +298,8 @@ def run_page(app: App, run_id: str, err="", flash="") -> str | None:
     unc = "".join(f"<li>{e(l)}</li>" for l in req["uncertainties"].splitlines() if l.strip())
     body = f"""<div class="view active"><p class="eyebrow">Stage 7 run</p><h1>{e(run_id)}</h1><div class="btn-row">{status_pill(r.status)}{pill("mode: " + entry["mode"], "danger" if entry["mode"] == "DEMO" else "ok")}{pill("integrity VERIFIED","ok")}</div>
 <section class="panel" style="margin-top:16px"><h2>Retained artifact</h2><div class="rowlist"><div><strong>Stage 7 SHA-256</strong><span class="mono">{e(entry["stage7"]["sha256"])}</span></div></div>
-<div class="rowlist"><div><strong>Baseline</strong><span class="mono">{e(entry["baseline_doc_sha256"][:24])}… · decision time {e(entry["created_at"])}</span></div></div>
+<div class="rowlist"><div><strong>Baseline</strong><span>valuation as of <b>2026-10-07</b> (human-supplied, not live); evaluated {e(entry["created_at"][:19])} · denominator approximate · <span class="mono">{e(entry["baseline_doc_sha256"][:24])}…</span></span></div></div>
+<div class="rowlist"><div><strong>Priced session</strong><span>{e(entry.get("priced_session", "n/a"))} (XNYS). A funded Stage 8 must pass a fresh-price check against the current session.</span></div></div>
 <div class="rowlist"><div><strong>Gating result</strong><span>{e("; ".join(r.reasons))}</span></div></div>
 <div class="rowlist"><div><strong>Position</strong><span>{"" if pos is None else f"increment {money(pos.proposed_increment_dollars)} · post-trade weight {pos.post_trade_weight:.2%} · {e(pos.classification.value)} · capacity {e(pos.capacity_status.value)}"}</span></div></div>
 <p class="subtle"><a href="/artifact/{urllib_q(run_id)}/stage7.json">stage7.json</a> · <a href="/artifact/{urllib_q(run_id)}/evidence_set.json">evidence_set.json</a> · <a href="/artifact/{urllib_q(run_id)}/scenario_model.json">scenario_model.json</a></p></section>
@@ -438,6 +445,8 @@ def make_handler(app: App):
                     if len(parts) == 4 and parts[3].endswith(".json"):
                         rid, name = urllib.parse.unquote(parts[2]), parts[3]
                         entry = next((x for x in read_index(app.ws.index_path) if x["run_id"] == rid), None)
+                        if entry and not app.svc.verify_entry(entry)[0]:
+                            return self._send(409, "NOT VERIFIED: retained artifact does not match its recorded SHA-256", "text/plain")
                         if entry:
                             ref = entry["stage7"] if name == "stage7.json" else entry["inputs"].get(name[:-5])
                             if ref and Path(ref["artifact_path"]).is_file():
@@ -477,9 +486,7 @@ def make_handler(app: App):
                                          concern=f.get("concern", ""), without_atlas=f.get("without_atlas", ""))
                     return self._redirect("/candidate/" + urllib_q(ev["candidate_id"]))
                 if p == "/stage7/run":
-                    cid, _, ticker = (f.get("cand", "") + "|").partition("|")
-                    ticker = ticker.rstrip("|")
-                    entry = app.svc.run({**f, "candidate_id": cid, "ticker": ticker or cid}, app.clock())
+                    entry = app.svc.run({**f, "candidate_id": f.get("cand") or f.get("candidate_id", "")}, app.clock())
                     return self._redirect("/run/" + urllib_q(entry["run_id"]))
                 if p == "/stage8":
                     res = app.svc.record_stage8(f.get("run_id", ""), f, app.clock())

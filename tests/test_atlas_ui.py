@@ -32,15 +32,16 @@ NOW = datetime.now(timezone.utc)
 def good_req(**over):
     r = dict(cand="DEMOCO", candidate_id="DEMOCO", ticker="DEMOCO", increment="13000", horizon_years="5",
              ret_low="13", ret_high="17", req_low="10", req_high="11", spy_low="7", spy_high="10",
-             tsy_low="3.5", tsy_high="4.5", tsy_ref_key="UST-13W", tsy_ref_value="0.039",
+             tsy_low="3.5", tsy_high="4.5", tsy_ref_key="UST-13W", tsy_ref_value="3.9",
              tsy_ref_date=NOW.date().isoformat(), tsy_duration="VERIFIED",
              spy_notes="coarse SPY range (fixture)", tsy_notes="duration normalized (fixture)",
              regime="priced for modest growth", regime_evidence="fixture", variant="fixture variant",
              variant_evidence="fixture evidence", band_basis="fixture basis", provenance="fixture provenance",
              uncertainties="OPERATING | demand | NO", drivers="fixture driver", revisit_price="+/-25%",
              revisit_date=(NOW + timedelta(days=200)).date().isoformat(), gate="CLEAR", capacity="AVAILABLE",
-             remaining_capacity="0.10", classification="STARTER", tax="VERIFIED", liquidity="VERIFIED",
-             execution="VERIFIED")
+             remaining_capacity="10", classification="STARTER", tax="VERIFIED", liquidity="VERIFIED",
+             execution="VERIFIED", decision="BUY", decision_basis="evidence ledger items #1-#4 (fixture)",
+             tsy_source_ref="home.treasury.gov par curve page (fixture)", tsy_attest="1", baseline_ack="1")
     r.update(over)
     return r
 
@@ -90,7 +91,7 @@ def test_baseline_tamper_fails_closed(tmp_path):
 
 def test_overview_shows_canonical_state_not_the_handoff_snapshot(canon_app):
     h = appmod.overview(canon_app)
-    for needle in ("$683,905.93", "HUMAN-SUPPLIED", "2026-10-07", "NOT RUN / NOT VERIFIED", "PARKED until 2026-11-04",
+    for needle in ("≈ $683,906", "APPROXIMATE", "HUMAN-SUPPLIED", "2026-10-07", "NOT RUN / NOT VERIFIED", "PARKED until 2026-11-04",
                    "PARKED until 2026-11-09", "ABSENT", "BLOCKED", "not</b> the canonical baseline"):
         assert needle in h, needle
     assert "$500,000" not in h.replace("handoff's $500K", "")
@@ -216,6 +217,8 @@ def test_stage7_requires_a_human_ready_candidate_and_complete_inputs(demo_app):
         demo_app.svc.run(good_req(candidate_id="RPM", ticker="RPM"), NOW)
     with pytest.raises(Blocked, match="unknown candidate"):
         demo_app.svc.run(good_req(candidate_id="NOPE", ticker="NOPE"), NOW)
+    with pytest.raises(Blocked, match="unknown candidate"):
+        demo_app.svc.run({k: v for k, v in good_req().items() if k != "candidate_id"}, NOW)
     for field in ("ret_low", "tsy_ref_date", "revisit_date", "increment"):
         with pytest.raises(Blocked):
             demo_app.svc.run(good_req(**{field: ""}), NOW)
@@ -345,7 +348,7 @@ def test_every_page_renders_with_csp_and_no_script(http_app):
 def test_http_flow_stage7_then_crafted_and_real_stage8(http_app):
     app, port = http_app
     form = {k: v for k, v in good_req().items() if k not in ("candidate_id", "ticker")}
-    form["cand"] = "DEMOCO|DEMOCO"
+    form["cand"] = "DEMOCO"
     st, _b, h = req(port, "POST", "/stage7/run", form)
     assert st == 303 and h["Location"].startswith("/run/S7-DEMOCO-")
     run_id = urllib.parse.unquote(h["Location"][5:])
@@ -371,7 +374,7 @@ def test_http_flow_stage7_then_crafted_and_real_stage8(http_app):
 def test_http_stage7_refused_for_parked_candidate(http_app):
     app, port = http_app
     form = {k: v for k, v in good_req().items() if k not in ("candidate_id", "ticker")}
-    form["cand"] = "MCD|MCD"
+    form["cand"] = "MCD"
     st, body, _h = req(port, "POST", "/stage7/run", form)
     assert st == 400 and "PARKED until 2026-11-04" in body and read_index(app.ws.index_path) == []
 

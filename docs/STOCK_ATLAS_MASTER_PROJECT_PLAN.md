@@ -38,6 +38,8 @@ INVESTOR DAY` (MCD PARKED until 2026-11-04).**
 
 **Update 2026-10-28 (UI integration): `DECISION UI INTEGRATED AS PRESENTATION LAYER (atlas_ui/) — READ-ONLY CANONICAL STATE, INTAKE AND HISTORY PROVEN; STAGE 7/8 FIXTURE-TESTED ONLY; LIVE BINDING BLOCKED (NO TWELVEDATA KEY)`** (`atlas_ui/INTEGRATION_REPORT.md`). MCD remains PARKED until 2026-11-04.
 
+**Update 2026-10-28 (UI remediation): `INDEPENDENT REVIEW OF fe268b5 REMEDIATED (F1–F7 + artifact guard) — LIVE STAGE 7 AND FUNDED STAGE 8 REMAIN HELD; NO LIVE CALL, NO FUNDED DECISION`** (`atlas_ui/REMEDIATION_REPORT.md`). MCD and RPM remain PARKED.
+
 ---
 
 ## Governing Mission
@@ -1774,6 +1776,19 @@ the handoff's $500K snapshot (conflict reported, not silently resolved). Immutab
 to the discovery ledger. Live Gate B binding wired but BLOCKED (key absent); funded paths exercised only with a
 labelled FIXTURE provider in an isolated DEMO workspace, which canonical mode refuses. `stock_atlas/` control
 layer unchanged. Tests: 340 passed, 25 skipped (BLOCKED), 1 warning.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### Decision UI remediation (2026-10-28; append-only)
+
+Targeted repairs to the review of `fe268b5`, confined to `atlas_ui/`: one percent unit; explicit security decision
+(no BUY default); candidate-recorded ticker binding; Treasury yield recorded as human-attested, never self-labelled
+verified; baseline valuation date and approximate denominator kept separate from decision time; unique run ids with
+pre-write collision refusal; hash-verified artifact downloads; and an adapter-level fresh-price checkpoint for funded
+Stage 8 actions (investigation: the unchanged facade/store do not check run age). Frozen capital controls byte-identical
+(12 files pinned). Tests: 412 passed, 25 skipped (BLOCKED), 1 warning. No live call, no funded decision.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 

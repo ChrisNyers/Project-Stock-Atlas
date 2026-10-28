@@ -3400,3 +3400,24 @@ No new control, ranking, paid data, agent or execution path; control layer untou
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## DECISION_UI_REMEDIATION_001
+
+| | |
+|---|---|
+| Date | 2026-10-28 |
+| Status | **IMPLEMENTED — presentation/adapter layer only; live Stage 7 and funded Stage 8 still HELD** |
+| Context | Independent review of `fe268b5`; amends `DECISION_UI_INTEGRATION_001` |
+
+### Decision
+
+Findings F1–F7 and the artifact-download guard were repaired inside `atlas_ui/`. A funded Stage 8 now requires an
+adapter-level fresh-price checkpoint (run age ≤ 96h, no newer completed XNYS session, candidate still
+READY_FOR_CAPITAL_COMPARISON, Gate B rebind reproduces the security and session) because the unchanged facade and
+DecisionStore verify a retained run's hash but not its age (characterization test). Treasury inputs are recorded as
+human-attested and UNVERIFIED_BY_ATLAS. No frozen capital control was altered; MCD (2026-11-04) and RPM (2026-11-09)
+remain PARKED and cannot start Stage 7.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
