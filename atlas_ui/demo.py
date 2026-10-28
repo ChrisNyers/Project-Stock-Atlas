@@ -29,18 +29,21 @@ class _R:
 class FixtureProvider:
     """Offline stand-in shaped like the TwelveData adapter. Always labelled FIXTURE-DEMO."""
 
-    def __init__(self, clock=lambda: datetime.now(timezone.utc), price: float = 100.0, mic: str = "XNYS"):
+    def __init__(self, clock=lambda: datetime.now(timezone.utc), price: float = 100.0, mic: str = "XNYS",
+                 provider: str = DEMO_PROVIDER, currency: str = "USD", quote_offset_s: int = 0, name: str = "Demo Co (fixture)",
+                 key: str = DEMO_KEY):
         self._clock, self._price, self._mic = clock, price, mic
+        self._provider, self._currency, self._offset, self._name, self._key = provider, currency, quote_offset_s, name, key
 
     def resolve_symbol(self, symbol):
-        return _R({"state": "AVAILABLE", "security_key": DEMO_KEY})
+        return _R({"state": "AVAILABLE", "security_key": self._key})
 
     def latest_price(self, symbol):
         att = latest_completed_session(self._clock(), mic=self._mic)
-        return _R({"state": "AVAILABLE", "security_key": DEMO_KEY, "provider": DEMO_PROVIDER,
+        return _R({"state": "AVAILABLE", "security_key": self._key, "provider": self._provider,
                    "data": {"price": self._price, "mic_code": self._mic, "is_market_open": False},
-                   "raw": {"currency": "USD", "mic_code": self._mic, "datetime": att.session_date.isoformat(),
-                           "last_quote_at": int(att.session_close_utc.timestamp()), "name": "Demo Co (fixture)"}})
+                   "raw": {"currency": self._currency, "mic_code": self._mic, "datetime": att.session_date.isoformat(),
+                           "last_quote_at": int(att.session_close_utc.timestamp()) + self._offset, "name": self._name}})
 
 
 def seed_demo_workspace(root: Path, canonical_ledger: Path) -> Path:

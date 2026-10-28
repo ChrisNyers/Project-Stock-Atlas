@@ -361,7 +361,9 @@ def test_f6_successful_funded_paper_action_logs_its_fresh_price_check(demo_app):
     out = demo_app.svc.record_stage8(e["run_id"], s8(), NOW)
     assert out["rows_after"] == 1
     chk = [json.loads(l) for l in (demo_app.ws.root / "stage8_price_checks.jsonl").read_text().splitlines()]
-    assert chk[0]["run_id"] == e["run_id"] and chk[0]["provider"] == demo.DEMO_PROVIDER and chk[0]["session"] == e["priced_session"]
+    assert chk[0]["run_id"] == e["run_id"] and chk[0]["result"] == "REPRODUCED" and chk[0]["session"] == e["priced_session"]
+    assert chk[0]["frozen_price_binding"]["price"] == chk[0]["fresh_price_binding"]["price"] == 100.0
+    assert chk[0]["treasury_reattested"]["human_attested"] is True
 
 
 def test_f6_characterization_the_frozen_facade_alone_does_not_check_run_age(tmp_path):

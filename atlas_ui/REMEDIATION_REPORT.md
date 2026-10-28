@@ -26,3 +26,39 @@ F8 (multi-candidate comparison, filings ingestion, outcomes) is deliberately not
 
 ## Not done
 Live Gate B smoke test (needs `TWELVEDATA_API_KEY` supplied locally by you); Playwright not installed, UI checked by hand and over HTTP; F8 features.
+
+
+---
+
+# Addendum — review of `d2df7af` (critical: same-session price change)
+
+**Reproduced first.** The reviewer's case (Stage 7 priced at $100, Stage 8 re-bound at $130, same session and security) was
+accepted by the d2df7af gate because it compared only security, freshness and session date. It is now a failing-then-passing
+regression test.
+
+**Fix (`atlas_ui/service.py`, `_fresh_price_gate` only; no frozen control touched).** A funded INITIATE/ADD must now have a fresh Gate B bind
+that reproduces the **frozen Stage 7 PriceSnapshot evidence exactly** — security key, quoted key, quoted instrument (venue/class label),
+ticker, currency, provider, price, quote timestamp, price and completed-session dates, session status, adjustment basis, price mode,
+freshness, and the XNYS attestation (exchange, calendar, session date). **There is no tolerance**: any difference means *re-run Stage 7*;
+old return ranges are never reused. The Treasury reference must be **re-attested by the human at Stage 8** and must equal the frozen
+value and date exactly and be inside the 96h window. Both sides of every passing check (frozen and fresh bindings, re-attestation) are
+appended to `stage8_price_checks.jsonl`. Non-actions need none of this.
+
+**Tests** (`tests/test_atlas_ui_price_consistency.py`, 19): $100→$130 rejected for INITIATE and ADD with a message naming the field; no tolerance
+(100.01, 99.99, 100.5, 70); identical evidence is accepted and logged; other gates still apply; provider, quote-timestamp (same-session
+re-quote), instrument/class label, venue, currency and security-identity changes rejected; Treasury value/date/source/attestation mismatches and
+omissions rejected; non-USD cannot run; DO NOTHING stays available; every rejection leaves the ledger byte-identical. **Negative mutation shown:**
+removing the price comparison fails 9 tests; removing the Treasury value comparison fails the Treasury test.
+
+**Direct-facade bypass.** A repo-wide AST scan (a test) proves that in production code the only caller of `record_final_decision` is
+`atlas_ui/service.py` and nothing but `capital_decision_facade.py` opens a `DecisionStore`. It cannot prove that an operator will not
+write a script that calls the facade directly with an old run (the characterization test shows the unchanged facade would accept it).
+Closing that is a **formally authorized narrow safety fix to a frozen control** — not made here. Proposal for your decision: an optional
+`max_age_hours` / `price_check_ref` argument on `record_final_decision` that the UI always supplies.
+
+**Open items for your approval (not decided by me):** (1) `MAX_RUN_AGE_HOURS = 96` is an adapter policy borrowed from the frozen reference-data window; the
+primary freshness controls are now session equality and exact price/Treasury reproduction, so the age cap is a conservative secondary bound — keep,
+change or drop; (2) the SPY/beta band is a human assumption, not a market observation, so there is nothing to re-bind — it is carried unchanged from the
+frozen run; (3) FX: only USD is supported, so no FX/reference re-binding exists to check.
+
+**Frozen controls:** the 12 pinned files are byte-identical (test + `git diff --quiet` against `d2df7af` and `4c71d06`).

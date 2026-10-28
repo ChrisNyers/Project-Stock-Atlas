@@ -362,15 +362,21 @@ class Stage7Service:
         return run, versions, entry
 
     # ---------------------------------------------------------------- fresh-price checkpoint
-    MAX_RUN_AGE_HOURS = 96.0  # same window the frozen controls apply to alternative reference data
+    # Adapter policy (pending your approval, see REMEDIATION_REPORT): an upper bound on how old a retained run's
+    # HUMAN-ATTESTED inputs may be at funding time. It reuses the frozen 96h reference-data window; the primary
+    # freshness controls are session equality and exact price equality below.
+    MAX_RUN_AGE_HOURS = 96.0
+    # Frozen Stage 7 PriceSnapshot fields that must be reproduced EXACTLY by the fresh Gate B bind. No tolerance.
+    PRICE_IDENTITY_FIELDS = ("security_key", "quoted_security_key", "quoted_instrument", "ticker", "currency", "provider",
+                             "price", "price_as_of", "price_session_date", "latest_completed_session_date",
+                             "market_session_status", "adjusted", "price_mode", "freshness_status")
 
-    def _fresh_price_gate(self, entry: dict, now: datetime, reject) -> None:
+    def _fresh_price_gate(self, entry: dict, form: dict, now: datetime, reject) -> None:
         """Existing process: Stage 7 -> FRESH-PRICE CHECK -> Human Stage 8.
 
-        The facade/store verify the retained run but never its age, so a funded action must pass this
-        adapter-level checkpoint: the run is recent, no newer XNYS session has completed since it was
-        priced, the candidate is still READY, and a fresh Gate B binding returns the same security for
-        that session. Non-actions are exempt. Any failure leaves the ledger untouched.
+        The facade/store verify a retained run's hash but never its age or whether the market moved, so a funded
+        action must pass this checkpoint. Any failure means "re-run Stage 7"; old return ranges are never reused
+        against a changed market. Non-actions are exempt. A failure leaves the decision ledger untouched.
         """
         cand = ledger.replay(self.ws.candidate_ledger).get(entry["candidate_id"])
         if cand is None or cand["state"] != "READY_FOR_CAPITAL_COMPARISON":
@@ -386,17 +392,50 @@ class Stage7Service:
         if att.session_date.isoformat() != entry["priced_session"]:
             reject(f"STALE price: Stage 7 priced the {entry['priced_session']} session but the latest completed "
                    f"{self.mic} session is {att.session_date}; re-run Stage 7")
+
+        # --- compare a fresh Gate B bind with the FROZEN Stage 7 evidence, field by field
+        evd = json.loads(Path(entry["inputs"]["evidence_set"]["artifact_path"]).read_text(encoding="utf-8"))
+        frozen = evd["price_binding"]["price_binding"]
+        frozen_att = evd["price_binding"]["session_attestation"]
         try:
             ev = self.bind_price(entry["ticker"], now)
         except Blocked as exc:
             reject(f"fresh-price check failed: {exc}")
-        s = ev.snapshot
-        if s.security_key != entry["security_key"] or s.freshness_status != FreshnessStatus.FRESH \
-                or s.price_session_date.isoformat() != entry["priced_session"]:
-            reject("fresh-price check did not reproduce the Stage 7 security/session; re-run Stage 7")
+        fresh = ev.to_dict()["price_binding"]
+        changed = [f"{k}: Stage 7 {frozen.get(k)!r} vs now {fresh.get(k)!r}" for k in self.PRICE_IDENTITY_FIELDS
+                   if frozen.get(k) != fresh.get(k)]
+        for k in ("exchange", "calendar_name", "session_date"):
+            if frozen_att.get(k) != ev.attestation.to_dict().get(k):
+                changed.append(f"session attestation {k}: Stage 7 {frozen_att.get(k)!r} vs now {ev.attestation.to_dict().get(k)!r}")
+        if frozen.get("currency") != "USD":
+            changed.append("non-USD price: FX/reference re-binding is not supported by this UI")
+        if changed:
+            reject("fresh-price check does NOT reproduce the frozen Stage 7 price evidence (" + "; ".join(changed)
+                   + "). The return ranges rest on the old price: re-run Stage 7; nothing was reused")
+
+        # --- Treasury reference: the human re-attests it today; any change or age beyond the window means re-run
+        frozen_t = evd["treasury_evidence"]
+        try:
+            new_val = _pct(form.get("tsy_ref_value"), "Treasury reference yield (re-attested)")
+        except Blocked as exc:
+            reject(f"funded action requires Treasury re-attestation at Stage 8: {exc}")
+        if form.get("tsy_attest") not in ("1", "on") or not (form.get("tsy_source_ref") or "").strip():
+            reject("funded action requires the Treasury reference to be re-attested at Stage 8 (value, date, source, attestation)")
+        try:
+            new_asof = datetime.fromisoformat((form.get("tsy_ref_date") or "").strip() + "T00:00:00+00:00")
+        except ValueError:
+            reject("Treasury re-attestation date must be YYYY-MM-DD")
+        if (now - new_asof).total_seconds() / 3600 > self.MAX_RUN_AGE_HOURS or (new_asof - now).total_seconds() > 86400:
+            reject("Treasury re-attestation is older than the 96h reference window (or future-dated); re-run Stage 7")
+        if abs(new_val - float(frozen_t["yield_decimal"])) > 1e-12 or new_asof.isoformat() != datetime.fromisoformat(frozen_t["as_of"]).isoformat():
+            reject(f"Treasury reference changed since Stage 7 (frozen {float(frozen_t['yield_decimal']) * 100:g}% as of {frozen_t['as_of'][:10]}, "
+                   f"re-attested {new_val * 100:g}% as of {new_asof.date()}); re-run Stage 7")
         with open(self.ws.root / "stage8_price_checks.jsonl", "a", encoding="utf-8") as fh:
             fh.write(json.dumps({"run_id": entry["run_id"], "checked_at": now.isoformat(), "session": att.session_date.isoformat(),
-                                 "security_key": s.security_key, "price": s.price, "provider": s.provider}) + "\n")
+                                 "frozen_price_binding": frozen, "fresh_price_binding": fresh,
+                                 "treasury_reattested": {"yield_decimal": new_val, "as_of": new_asof.isoformat(),
+                                                         "source_ref": form["tsy_source_ref"].strip(), "human_attested": True},
+                                 "result": "REPRODUCED"}, default=str) + "\n")
 
     # ---------------------------------------------------------------- Stage 8 (paper only)
     def ledger_rows(self) -> list[dict]:
@@ -437,7 +476,7 @@ class Stage7Service:
                                   req.get("revisit_thesis") or None)
         funded = action in FUNDING_ACTIONS
         if funded:
-            self._fresh_price_gate(entry, now, reject)
+            self._fresh_price_gate(entry, form, now, reject)
         try:
             rec = self.ws.facade.record_final_decision(
                 run, record_id=f"S8-{run_id}", human_stage8_action=action,

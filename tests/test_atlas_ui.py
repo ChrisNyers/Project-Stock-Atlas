@@ -60,7 +60,8 @@ def canon_app(tmp_path, monkeypatch):
 
 
 def s8(**over):
-    d = dict(action="INITIATE", rationale="paper rationale", confirm="1", why_vs="a", why_size="b", wrong_if="c")
+    d = dict(action="INITIATE", rationale="paper rationale", confirm="1", why_vs="a", why_size="b", wrong_if="c",
+             tsy_ref_value="3.9", tsy_ref_date=NOW.date().isoformat(), tsy_source_ref="home.treasury.gov (fixture)", tsy_attest="1")
     d.update(over)
     return d
 

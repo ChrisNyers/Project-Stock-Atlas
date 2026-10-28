@@ -39,7 +39,7 @@ CAPABILITIES = [
     ("E. Stage 7 via CapitalDecisionFacade.run_stage7, retained hashed run, side-by-side grid", "FIXTURE-TESTED ONLY",
      "Runs through the real facade; exercised with a clearly-labelled FIXTURE price provider in DEMO mode and tests. No canonical run exists. MCD is PARKED until 2026-11-04. The Treasury reference is HUMAN-ATTESTED (not independently verified by Atlas); security decision is explicit, never defaulted; all % inputs use one unit."),
     ("F. Human Stage 8 (paper only): server-side recheck, non-action, ledger proof", "FIXTURE-TESTED ONLY",
-     "Real facade + DecisionStore; funded actions also pass an adapter-level fresh-price checkpoint (run age, newer XNYS session, fresh Gate B rebind) because the facade alone does not check run age; rejected paths leave zero rows in tests; no canonical decision exists."),
+     "Real facade + DecisionStore; funded actions also pass an adapter-level fresh-price checkpoint (run age, newer XNYS session, a fresh Gate B bind that must reproduce the frozen Stage 7 price evidence EXACTLY with no tolerance, and a Treasury re-attestation equal to the frozen one) because the facade alone does not check run age; rejected paths leave zero rows in tests; no canonical decision exists."),
     ("G1. Decision history (existing append-only ledger) + manual revisit note", "PROVEN WORKING WITH REAL BACKEND",
      "Reads the real ledger; revisit is a linked dated note, the original record is never edited."),
     ("G2. Outcome vs cash/SPY with matched as-of dates; automatic trigger monitoring", "NOT IMPLEMENTED",
@@ -292,6 +292,11 @@ def run_page(app: App, run_id: str, err="", flash="") -> str | None:
 <div class="full"><label class="field">Why this vs the alternatives (funded only)</label><textarea name="why_vs"></textarea></div>
 <div><label class="field">Why this size (funded only)</label><textarea name="why_size"></textarea></div><div><label class="field">Allocation is wrong if… (funded only)</label><textarea name="wrong_if"></textarea></div>
 <div><label class="field">Cluster note (if shared drivers)</label><input class="text" name="cluster_note"></div><div><label class="field">Prior record id (linked revisit)</label><input class="text" name="prior_record_id"></div></div>
+<div class="callout warn" style="margin-top:12px"><b>Funded actions only (INITIATE/ADD):</b> re-confirm the Treasury reference from the primary source today. It must equal the Stage 7 reference exactly, or Stage 7 must be re-run. A fresh price bind must also reproduce the frozen Stage 7 price exactly.</div>
+<div class="inputs" style="margin-top:12px"><div><label class="field">Treasury yield % (re-attested)</label><input class="text" name="tsy_ref_value"></div>
+<div><label class="field">Treasury reference date YYYY-MM-DD</label><input class="text" name="tsy_ref_date"></div>
+<div><label class="field">Treasury source reference</label><input class="text" name="tsy_source_ref"></div>
+<div><label class="field"><input type="checkbox" name="tsy_attest" value="1" style="width:auto"> I re-confirmed this from the Treasury primary source today.</label></div></div>
 <div class="callout" style="margin-top:12px">Confirm before submit — candidate <b>{e(r.ticker)}</b>, increment <b>{money(entry["increment_dollars"])}</b>, funding <b>new outside capital</b>, run <span class="mono">{e(run_id)}</span>, Stage 7 SHA-256 <span class="mono">{e(entry["stage7"]["sha256"][:24])}…</span>, constraints <b>{e(r.constraint_state.value)}</b>.
 <br><label><input type="checkbox" name="confirm" value="1" style="width:auto"> This is a PAPER decision. No order will be placed.</label></div>
 <div class="btn-row" style="margin-top:12px"><button class="btn primary">Record paper decision</button></div></form></section>"""

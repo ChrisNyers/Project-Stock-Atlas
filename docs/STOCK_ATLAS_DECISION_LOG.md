@@ -3421,3 +3421,22 @@ remain PARKED and cannot start Stage 7.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## DECISION_UI_REMEDIATION_002
+
+| | |
+|---|---|
+| Date | 2026-10-28 |
+| Status | **IMPLEMENTED — adapter layer only; live Stage 7 / funded Stage 8 still HELD** |
+| Context | Independent review of `d2df7af`; amends `DECISION_UI_REMEDIATION_001` |
+
+### Decision
+
+The Stage 8 fresh-price checkpoint now requires the fresh Gate B bind to reproduce the frozen Stage 7 price evidence exactly
+(no tolerance) and the human to re-attest the Treasury reference equal to the frozen one; any change means re-run Stage 7.
+Open for human approval: the 96h run-age bound, and a narrow authorized facade change to close the direct-facade bypass
+(not made). Frozen capital controls untouched.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
