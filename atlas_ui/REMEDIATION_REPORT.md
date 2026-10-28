@@ -62,3 +62,14 @@ change or drop; (2) the SPY/beta band is a human assumption, not a market observ
 frozen run; (3) FX: only USD is supported, so no FX/reference re-binding exists to check.
 
 **Frozen controls:** the 12 pinned files are byte-identical (test + `git diff --quiet` against `d2df7af` and `4c71d06`).
+
+
+---
+
+# Addendum 2 — frozen-control change 001 (authorized)
+
+Closes the direct-facade bypass in the canonical backend. See `docs/controlled_live_pilot/FROZEN_CONTROL_CHANGE_001.md` (proposal committed
+before implementation, outcome appended). Human decisions applied: (1) 96 h run-age bound retained provisionally and subordinate; (2) funded
+freshness made **mandatory** in `record_final_decision` (omission raises); (3) USD-only, no new provider/FX/agents. The UI now passes its fresh
+Gate B bind and the human's Treasury re-attestation to the facade, so UI and direct callers face the same backend check; the UI's own earlier
+checks remain as an explanatory first layer. The previously accepting direct-facade cases are replayed in `atlas_ui/evidence/`.

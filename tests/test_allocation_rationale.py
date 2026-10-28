@@ -39,6 +39,7 @@ from stock_atlas.models import PortfolioAction, RevisitTriggers
 # Reuse the proven integration fixtures rather than re-deriving them.
 from test_integration_facade import (  # noqa: E402
     NOW,
+    funded_evidence,
     _eligible_run,
     _facade,
     _input_versions,
@@ -68,6 +69,7 @@ def _fund(facade, run, record_id, **kwargs):
         dominant_drivers=("enterprise IT",),
         revisit_triggers=RevisitTriggers("±25% price", NOW + timedelta(days=90)),
         starter_cap_weight=0.10,
+        funded_freshness=funded_evidence(),
         **kwargs,
     )
 
@@ -402,7 +404,7 @@ def test_h_attested_session_binding_still_enforced():
 
     uw = _underwriting("SEC:ELIG", "ELIG", rb=ReturnBand(0.12, 0.18))
     with pytest.raises(ControlFailure, match="attested latest trading session"):
-        validate_price_snapshot(uw, NOW, known_latest_session_date=date(2026, 9, 2))
+        validate_price_snapshot(uw, NOW, known_latest_session_date=date(2026, 9, 3))
 
 
 # ===========================================================================

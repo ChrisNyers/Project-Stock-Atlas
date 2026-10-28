@@ -419,15 +419,22 @@ def test_atlas_ui_has_no_second_capital_writer_and_no_execution_surface():
             assert any(n in line for n in ("no broker", "no real", "not", "never")), line
 
 
-def test_frozen_control_layer_is_untouched_since_the_accepted_baseline():
+def test_frozen_control_layer_changed_only_by_the_authorized_change_record():
+    """stock_atlas/ equals the accepted 4c71d06 EXCEPT pipeline.py, whose only change is the price_basis
+    authorized by docs/controlled_live_pilot/FROZEN_CONTROL_CHANGE_001.md."""
+    git = ["git", "-C", str(REPO), "diff", "4c71d06afe0853389beb4a77ec2708656c3fc708"]
     try:
-        out = subprocess.run(["git", "-C", str(REPO), "diff", "--stat", "4c71d06afe0853389beb4a77ec2708656c3fc708", "--", "stock_atlas"],
-                             capture_output=True, text=True, timeout=20)
+        rest = subprocess.run(git + ["--stat", "--", "stock_atlas", ":!stock_atlas/pipeline.py"], capture_output=True, text=True, timeout=20)
+        pipe = subprocess.run(git + ["-U0", "--", "stock_atlas/pipeline.py"], capture_output=True, text=True, timeout=20)
     except Exception:
         pytest.skip("git unavailable")
-    if out.returncode != 0:
+    if rest.returncode != 0:
         pytest.skip("accepted baseline commit not present in this checkout")
-    assert out.stdout.strip() == ""  # byte-identical stock_atlas/ control layer
+    assert rest.stdout.strip() == ""  # every other control-layer file is byte-identical to the accepted baseline
+    removed = [l for l in pipe.stdout.splitlines() if l.startswith("-") and not l.startswith("---")]
+    assert removed == []  # purely additive: no existing Stage 7 line was changed or removed
+    added = "\n".join(l for l in pipe.stdout.splitlines() if l.startswith("+") and not l.startswith("+++"))
+    assert "price_basis" in added and "evaluate_stage7_candidate" not in added
 
 
 def test_capability_matrix_is_honest_and_in_sync():

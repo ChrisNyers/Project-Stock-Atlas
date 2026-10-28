@@ -21,7 +21,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Callable
 
-from capital_decision_facade import CapitalDecisionFacade, ControlFailure, FUNDING_ACTIONS
+from capital_decision_facade import CapitalDecisionFacade, ControlFailure, FUNDING_ACTIONS, FundedFreshnessEvidence
 from live_price_binding import LiveBindingError, bind_price_snapshot
 from live_session_calendar import SessionCalendarError, latest_completed_session
 from stock_atlas.freeze import canonical_json_bytes, freeze_payload, verify_frozen_ref_file
@@ -355,6 +355,8 @@ class Stage7Service:
             VerificationStatus(r["constraint_state"]),
             OverlapStatus(r["overlap_status"]) if r.get("overlap_status") else None, r["comparison_header"])
         bundle = {"decision_time": data["decision_time"], "result": result, "rendered_text": data["rendered_text"]}
+        if "price_basis" in data:  # FROZEN_CONTROL_CHANGE_001 artifacts; older ones simply lack it (and cannot fund)
+            bundle["price_basis"] = data["price_basis"]
         if hashlib.sha256(canonical_json_bytes(bundle)).hexdigest() != ref.sha256:
             raise Blocked("NOT VERIFIED: rehydrated Stage 7 result does not reproduce its frozen hash")
         run = Stage7Run(result=result, rendered_text=data["rendered_text"], artifact_ref=ref)
@@ -371,7 +373,7 @@ class Stage7Service:
                              "price", "price_as_of", "price_session_date", "latest_completed_session_date",
                              "market_session_status", "adjusted", "price_mode", "freshness_status")
 
-    def _fresh_price_gate(self, entry: dict, form: dict, now: datetime, reject) -> None:
+    def _fresh_price_gate(self, entry: dict, form: dict, now: datetime, reject) -> FundedFreshnessEvidence:
         """Existing process: Stage 7 -> FRESH-PRICE CHECK -> Human Stage 8.
 
         The facade/store verify a retained run's hash but never its age or whether the market moved, so a funded
@@ -402,6 +404,7 @@ class Stage7Service:
         except Blocked as exc:
             reject(f"fresh-price check failed: {exc}")
         fresh = ev.to_dict()["price_binding"]
+        s_fresh = ev.snapshot
         changed = [f"{k}: Stage 7 {frozen.get(k)!r} vs now {fresh.get(k)!r}" for k in self.PRICE_IDENTITY_FIELDS
                    if frozen.get(k) != fresh.get(k)]
         for k in ("exchange", "calendar_name", "session_date"):
@@ -436,6 +439,11 @@ class Stage7Service:
                                  "treasury_reattested": {"yield_decimal": new_val, "as_of": new_asof.isoformat(),
                                                          "source_ref": form["tsy_source_ref"].strip(), "human_attested": True},
                                  "result": "REPRODUCED"}, default=str) + "\n")
+        basis_t = json.loads(Path(entry["stage7"]["artifact_path"]).read_text(encoding="utf-8"))["price_basis"]["treasury_reference"]
+        return FundedFreshnessEvidence(
+            fresh_price=s_fresh,
+            treasury_reattested=MarketReferenceSnapshot(basis_t["reference_key"], new_val, new_asof, basis_t["provider"],
+                                                        FreshnessStatus.FRESH, basis_t["currency"]))
 
     # ---------------------------------------------------------------- Stage 8 (paper only)
     def ledger_rows(self) -> list[dict]:
@@ -475,8 +483,7 @@ class Stage7Service:
         revisit = RevisitTriggers(req.get("revisit_price", ""), datetime.fromisoformat(req["revisit_date"] + "T00:00:00+00:00"),
                                   req.get("revisit_thesis") or None)
         funded = action in FUNDING_ACTIONS
-        if funded:
-            self._fresh_price_gate(entry, form, now, reject)
+        evidence = self._fresh_price_gate(entry, form, now, reject) if funded else None
         try:
             rec = self.ws.facade.record_final_decision(
                 run, record_id=f"S8-{run_id}", human_stage8_action=action,
@@ -490,7 +497,8 @@ class Stage7Service:
                 why_this_vs_alternatives=(form.get("why_vs") or "").strip() or None,
                 why_this_size=(form.get("why_size") or "").strip() or None,
                 allocation_wrong_if=(form.get("wrong_if") or "").strip() or None,
-                why_not_this_increment=(form.get("why_not") or "").strip() or None)
+                why_not_this_increment=(form.get("why_not") or "").strip() or None,
+                funded_freshness=evidence)
         except ControlFailure as exc:
             reject(f"backend refused: {exc}")
         rows_after = self.ledger_rows()

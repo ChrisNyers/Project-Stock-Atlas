@@ -74,3 +74,37 @@ Human Stage 8 authority; no new provider, agent, optimizer, scoring, FX handling
 Regression tests for direct-facade and UI-funded paths (stale run, new session, changed price/provider/instrument/currency, omitted evidence,
 Treasury change, USD-only, old-format artifact); ledger byte-identity after every rejection; HOLD CASH / DO NOTHING still recorded; the previously
 accepting direct-facade scenarios replayed against `c8c8c09` and against the fixed code; the control pin regenerated and reviewed against this record.
+
+
+---
+
+## 7. Implementation outcome (appended after the proposal; sections 1–6 are unchanged)
+
+Status: **IMPLEMENTED** in the commit that follows `af6f61f`.
+
+**Files changed in frozen-control territory (exactly two):** `stock_atlas/pipeline.py` (+11 lines: the `AlternativeType` import, the
+Treasury lookup and the `price_basis` key; no existing line modified or removed — a test asserts the diff is purely additive) and
+`capital_decision_facade.py` (new `FundedFreshnessEvidence`, `MAX_STAGE7_RUN_AGE_HOURS`, the `funded_freshness` keyword and
+`_verify_funded_freshness`). The control pin `atlas_ui/FROZEN_CONTROL_SHA256.txt` differs from `c8c8c09` in exactly those two lines.
+`controls.py`, `decision_store.py`, `models.py`, `freeze.py`, `presentation.py`, `portfolio.py`, `allocation_rationale.py`,
+`live_price_binding.py`, `live_session_calendar.py` are byte-identical.
+
+**Test fixtures adjusted (assertions about frozen behaviour unchanged):** `tests/test_integration_facade.py` (fixture session moved to
+2026-09-02 so it agrees with the real XNYS calendar at `NOW`; `quoted_instrument` added; helper `funded_evidence`; the one funded-success
+test passes the evidence), `tests/test_allocation_rationale.py` (`_fund` passes the evidence; one attested-session test now compares
+against 2026-09-03, still a mismatch), `tests/test_atlas_ui*.py` (characterization of the old gap replaced by the rejection; frozen-layer
+test now allows exactly the pipeline change).
+
+**Previously accepting cases (replay of `atlas_ui/evidence/direct_facade_cases.py`):**
+
+| Direct-facade funded INITIATE | `c8c8c09` | after this change |
+|---|---|---|
+| 8-day-old eligible run | ACCEPTED (1 row) | REJECTED, 0 rows — STALE Stage 7 run |
+| same-session run, evidence omitted | ACCEPTED (1 row) | REJECTED, 0 rows — evidence is mandatory |
+| fresh price $100 → $130 | ACCEPTED (1 row) | REJECTED, 0 rows — price does not reproduce |
+| unchanged evidence (control) | ACCEPTED | ACCEPTED (1 row; check artifact retained) |
+
+Raw outputs: `atlas_ui/evidence/EVIDENCE_BEFORE_c8c8c09.txt`, `EVIDENCE_AFTER_fix.txt`.
+
+**Still true (section 5):** raw `DecisionStore.append` is not a sanctioned path and is unchanged; the freshness of the fresh bind is only as
+trustworthy as its caller's Gate B call; the 96 h bound is provisional and subordinate to session authority and exact consistency.

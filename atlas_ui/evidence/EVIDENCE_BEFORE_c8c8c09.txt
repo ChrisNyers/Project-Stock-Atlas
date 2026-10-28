@@ -1,0 +1,8 @@
+[OLD facade] 8-day-old eligible Stage 7 run
+    -> ACCEPTED — ledger rows: 1
+[OLD facade] same-session run, evidence argument OMITTED
+    -> ACCEPTED — ledger rows: 1
+[OLD facade] same-session run, fresh price moved $100 -> $130
+    -> ACCEPTED — ledger rows: 1
+[OLD facade] same-session run, unchanged evidence (control case)
+    -> ACCEPTED — ledger rows: 1

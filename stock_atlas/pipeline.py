@@ -8,6 +8,7 @@ from typing import Sequence
 from .controls import evaluate_stage7_candidate, validate_stage7_language
 from .freeze import freeze_payload
 from .models import (
+    AlternativeType,
     CandidateUnderwriting,
     ComparisonAlternative,
     FrozenInputRef,
@@ -58,10 +59,19 @@ def run_stage7_pipeline(
     )
     rendered = render_stage7_result(result)
     validate_stage7_language(rendered)
+    treasury = next((a.market_reference for a in alternatives
+                     if a.alternative_type == AlternativeType.TREASURY_CASH and a.market_reference is not None), None)
     bundle = {
         "decision_time": decision_time,
         "result": result,
         "rendered_text": rendered,
+        # Frozen pricing basis (FROZEN_CONTROL_CHANGE_001): lets a later funded Stage 8 prove it is still
+        # looking at the same price/reference evidence. Inside the hashed artifact the ledger already binds.
+        "price_basis": {
+            "price_snapshot": underwriting.price_snapshot,
+            "treasury_reference": treasury,
+            "known_latest_session_date": known_latest_session_date,
+        },
     }
     artifact_ref = freeze_payload(bundle, version="stage7-control-v0.2", destination=artifact_destination)
     return Stage7Run(result=result, rendered_text=rendered, artifact_ref=artifact_ref)

@@ -3440,3 +3440,23 @@ Open for human approval: the 96h run-age bound, and a narrow authorized facade c
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## FROZEN_CONTROL_CHANGE_001_MANDATORY_FUNDED_FRESHNESS
+
+| | |
+|---|---|
+| Date | 2026-10-28 |
+| Status | **IMPLEMENTED — authorized narrow safety change to frozen controls** |
+| Context | Human decisions of 2026-10-28 on the `d2df7af` review; record `controlled_live_pilot/FROZEN_CONTROL_CHANGE_001.md` (proposal `af6f61f`) |
+
+### Decision
+
+`CapitalDecisionFacade.record_final_decision` now REQUIRES `FundedFreshnessEvidence` for INITIATE/ADD (omission raises). The facade checks, with
+an independent calendar and no provider: run age (96 h, provisional, subordinate), the latest completed session, exact reproduction of the frozen
+Stage 7 price evidence (no tolerance), USD-only, and an equal Treasury re-attestation inside the reference window. `stock_atlas/pipeline.py` retains
+the pricing basis inside the hashed Stage 7 artifact (purely additive). HOLD CASH / DO NOTHING are unchanged. Only two frozen-control files changed;
+no provider, agent, optimizer, FX or architecture was added. MCD (2026-11-04) and RPM (2026-11-09) remain PARKED.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

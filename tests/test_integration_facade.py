@@ -25,6 +25,7 @@ from pathlib import Path
 import pytest
 
 from capital_decision_facade import (
+    FundedFreshnessEvidence,
     CapitalDecisionFacade,
     ControlFailure,
     assert_no_legacy_capital_writer,
@@ -62,7 +63,7 @@ from stock_atlas.pipeline import Stage7Run
 from stock_atlas.portfolio import build_position_proposal
 
 NOW = datetime(2026, 9, 2, 21, 0, tzinfo=timezone.utc)
-SESSION = date(2026, 9, 1)
+SESSION = date(2026, 9, 2)  # the XNYS session that closed (20:00Z) before NOW; keeps the fixture calendar-consistent
 
 
 # ---------------------------------------------------------------------------
@@ -75,7 +76,7 @@ def _price(key: str, ticker: str, value: float) -> PriceSnapshot:
         security_key=key,
         ticker=ticker,
         price=value,
-        price_as_of=datetime(2026, 9, 1, 20, 0, tzinfo=timezone.utc),
+        price_as_of=datetime(2026, 9, 2, 20, 0, tzinfo=timezone.utc),
         price_session_date=SESSION,
         latest_completed_session_date=SESSION,
         currency="USD",
@@ -85,6 +86,7 @@ def _price(key: str, ticker: str, value: float) -> PriceSnapshot:
         freshness_status=FreshnessStatus.FRESH,
         price_mode=PriceMode.COMPLETED_SESSION,
         quoted_security_key=key,
+        quoted_instrument=f"{ticker} (XNYS)",
     )
 
 
@@ -108,6 +110,14 @@ def _underwriting(key: str, ticker: str, *, rb: ReturnBand | None, drivers=("ent
         dominant_drivers=drivers,
         revisit_triggers=RevisitTriggers("±25% price", NOW + timedelta(days=90)),
         underwriting_provenance=("integration facade test",),
+    )
+
+
+def funded_evidence(key: str = "SEC:ELIG", ticker: str = "ELIG", price: float = 100.0, now=None):
+    """What a funded Stage 8 must now supply: a fresh bind and Treasury re-attestation that match the frozen Stage 7 evidence."""
+    return FundedFreshnessEvidence(
+        fresh_price=_price(key, ticker, price),
+        treasury_reattested=MarketReferenceSnapshot("UST-13W", 0.039, now or NOW, "INTEGRATION_FIXTURE", FreshnessStatus.FRESH, "USD"),
     )
 
 
@@ -371,6 +381,7 @@ def test_initiate_succeeds_only_through_the_facade_with_a_real_bundle(tmp_path):
         dominant_drivers=("enterprise IT",),
         revisit_triggers=RevisitTriggers("±25% price", NOW + timedelta(days=90)),
         starter_cap_weight=0.10,
+        funded_freshness=funded_evidence(),
     )
     assert record.human_stage8_action == PortfolioAction.INITIATE
     assert record.stage7_status == "ELIGIBLE FOR STAGE 8"

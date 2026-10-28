@@ -366,31 +366,25 @@ def test_f6_successful_funded_paper_action_logs_its_fresh_price_check(demo_app):
     assert chk[0]["treasury_reattested"]["human_attested"] is True
 
 
-def test_f6_characterization_the_frozen_facade_alone_does_not_check_run_age(tmp_path):
-    """Investigation result, recorded as a test: the unchanged facade/store accept an old retained ELIGIBLE run.
-    That is why the adapter-level fresh-price checkpoint above exists. (Isolated tmp workspace, fixture data.)"""
+def test_f6_the_canonical_facade_now_rejects_an_old_run_on_its_own(tmp_path):
+    """Formerly a characterization of the gap (the unchanged facade accepted an 8-day-old run). Since
+    FROZEN_CONTROL_CHANGE_001 the facade itself refuses it, with no UI guard involved."""
+    from capital_decision_facade import ControlFailure
+    from stock_atlas.models import RevisitTriggers
     app = build(True, tmp_path / "chr")
     clk = Clock(NOW - timedelta(days=8))
     svc = clocked_svc(app, clk)
     e = svc.run(good_req(tsy_ref_date=(NOW - timedelta(days=8)).date().isoformat(),
                          revisit_date=(NOW + timedelta(days=100)).date().isoformat()), clk())
     run, versions, _entry = svc.load_run(e["run_id"])
-    rec = app.ws.facade.record_final_decision(
-        run, record_id="CHARACTERIZE", human_stage8_action="INITIATE", human_rationale="characterization only",
-        alternatives_considered=("SPY", "Treasury/Cash", "Do Nothing"), input_versions=versions, created_at=NOW,
-        portfolio_snapshot_id="X", dominant_drivers=("fixture driver",), starter_cap_weight=0.02,
-        revisit_triggers=run.result.position and __import__("stock_atlas.models", fromlist=["RevisitTriggers"]).RevisitTriggers("p", NOW + timedelta(days=90)))
-    assert rec.record_id == "CHARACTERIZE"  # facade did not object to an 8-day-old run
-    # ...and the UI service refuses the same thing in the real path:
-    app2 = build(True, tmp_path / "chr2")
-    clk2 = Clock(NOW - timedelta(days=8))
-    svc2 = clocked_svc(app2, clk2)
-    e2 = svc2.run(good_req(tsy_ref_date=(NOW - timedelta(days=8)).date().isoformat(),
-                           revisit_date=(NOW + timedelta(days=100)).date().isoformat()), clk2())
-    clk2.t = NOW
-    with pytest.raises(Rejected):
-        svc2.record_stage8(e2["run_id"], s8(), NOW)
-    assert app2.svc.ledger_rows() == []
+    before = ledger_bytes(app)
+    with pytest.raises(ControlFailure, match="requires FundedFreshnessEvidence|STALE"):
+        app.ws.facade.record_final_decision(
+            run, record_id="DIRECT", human_stage8_action="INITIATE", human_rationale="direct call",
+            alternatives_considered=("SPY", "Treasury/Cash", "Do Nothing"), input_versions=versions, created_at=NOW,
+            portfolio_snapshot_id="X", dominant_drivers=("fixture driver",), starter_cap_weight=0.02,
+            revisit_triggers=RevisitTriggers("p", NOW + timedelta(days=90)))
+    assert ledger_bytes(app) == before and app.svc.ledger_rows() == []
 
 
 # ===================== F7: run-id collisions ===========================================================
