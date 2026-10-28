@@ -108,3 +108,6 @@ Raw outputs: `atlas_ui/evidence/EVIDENCE_BEFORE_c8c8c09.txt`, `EVIDENCE_AFTER_fi
 
 **Still true (section 5):** raw `DecisionStore.append` is not a sanctioned path and is unchanged; the freshness of the fresh bind is only as
 trustworthy as its caller's Gate B call; the 96 h bound is provisional and subordinate to session authority and exact consistency.
+
+*Correction to section 7 (append-only):* `git diff --stat c8c8c09 3466a03` measures `stock_atlas/pipeline.py` at **+10 lines, 0 removed**
+(not +11) and `capital_decision_facade.py` at +127/−1 (the one removed line is the widened `datetime` import).
