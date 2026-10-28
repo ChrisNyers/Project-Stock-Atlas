@@ -3378,3 +3378,25 @@ other change to the MVP.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## DECISION_UI_INTEGRATION_001
+
+| | |
+|---|---|
+| Date | 2026-10-28 |
+| Status | **IMPLEMENTED — presentation layer; Stage 7/8 fixture-tested only; live binding BLOCKED** |
+| Context | Handoff package `Stock_Atlas_Claude_Code_UI_Handoff_2026-10-28.zip`; repo HEAD `106ba59` |
+
+### Decision
+
+The supplied dashboard is integrated as `atlas_ui/`, an adapter layer with no investment logic. Canonical
+Cycle 0 is the repo's frozen 2026-10-07 baseline; the handoff's $500K/2026-09-02 snapshot and its MCD
+cash-starter framing conflict with it and are NOT adopted (MCD stays PARKED to 2026-11-04). The UI cannot start
+Stage 7 for a candidate that is not READY_FOR_CAPITAL_COMPARISON, cannot accept a fixture price in canonical mode,
+and cannot record INITIATE/ADD without a hash-verified ELIGIBLE run and VERIFIED constraints (rechecked server-side;
+the facade and DecisionStore re-verify independently). Pre-Atlas stances are versioned immutable ledger events.
+No new control, ranking, paid data, agent or execution path; control layer untouched.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

@@ -36,6 +36,8 @@ INVESTOR DAY` (MCD PARKED until 2026-11-04).**
 
 **Update 2026-10-14 (Operating MVP increment 2): `UNDERWRITING TEMPLATE v0.1 + EVIDENCE LEDGER v0.1 ON THE CANDIDATE PAGE; QUICK_TEST MANDATORY FOR NEW CANDIDATES (MCD/RPM GRANDFATHERED)`** (`operating_mvp/`).
 
+**Update 2026-10-28 (UI integration): `DECISION UI INTEGRATED AS PRESENTATION LAYER (atlas_ui/) — READ-ONLY CANONICAL STATE, INTAKE AND HISTORY PROVEN; STAGE 7/8 FIXTURE-TESTED ONLY; LIVE BINDING BLOCKED (NO TWELVEDATA KEY)`** (`atlas_ui/INTEGRATION_REPORT.md`). MCD remains PARKED until 2026-11-04.
+
 ---
 
 ## Governing Mission
@@ -1756,6 +1758,22 @@ template/evidence entries were transcribed (backfilled, appended) from their
 frozen cycle records; no new research. No ranking, optimizer, ML, automated
 recommendation, paid feed, execution or Stage 7 integration. Tests: 290 passed,
 25 skipped (BLOCKED), 1 warning.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### Decision UI integration (2026-10-28; append-only)
+
+Supplied UI prototype integrated into the existing repo as `atlas_ui/` (stdlib, no new
+dependencies, loopback only, no JavaScript). Presentation plus thin adapters: Stage 7 runs only through
+`CapitalDecisionFacade.run_stage7`, Human Stage 8 (paper) only through `record_final_decision` after the retained
+run is rehydrated and re-verified against its SHA-256; no second capital writer, no ranking/scoring, no
+execution. Canonical state is read from the frozen Cycle 0 record ($683,905.93, 28 holdings, ADD-ONLY), not from
+the handoff's $500K snapshot (conflict reported, not silently resolved). Immutable versioned stance freeze added
+to the discovery ledger. Live Gate B binding wired but BLOCKED (key absent); funded paths exercised only with a
+labelled FIXTURE provider in an isolated DEMO workspace, which canonical mode refuses. `stock_atlas/` control
+layer unchanged. Tests: 340 passed, 25 skipped (BLOCKED), 1 warning.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 

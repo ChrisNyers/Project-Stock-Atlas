@@ -133,6 +133,7 @@ def replay(path: Path = DEFAULT_LEDGER) -> dict[str, dict]:
                 reason="", waiting_on="", parked_until="", parked_until_verified=False,
                 revisit_questions=[], notes=[], grandfathered=cid in GRANDFATHERED,
                 quick_test_visited=False, falsifications=[], evidence=[], unresolved=[], strongest={},
+                stances=[],
             )
         elif ev["event_type"] == "STATE_CHANGE":
             c = cands[cid]
@@ -165,10 +166,14 @@ def replay(path: Path = DEFAULT_LEDGER) -> dict[str, dict]:
                         item["status"], item["note"] = p["status"], p["note"]
         elif ev["event_type"] == "STRONGEST":
             cands[cid]["strongest"][p["direction"]] = p["target_seq"]
+        elif ev["event_type"] == "STANCE":
+            cands[cid]["stances"].append({**p, "seq": ev["seq"], "date": ev["effective_date"],
+                                          "recorded_at": ev["recorded_at"], "backfilled": ev["backfilled"]})
         summary = ((f"{p['tag']} {p['direction']} [{p['grade']}]: {p['text']}" if ev["event_type"] == "EVIDENCE" else "")
                    or p.get("to_state") or p.get("text") or p.get("question") or p.get("test")
                    or (f"{p['status']} #{p['target_seq']}" if ev["event_type"] == "RESOLVE" else "")
                    or (f"strongest {p['direction']} = #{p['target_seq']}" if ev["event_type"] == "STRONGEST" else "")
+                   or (f"stance v{p['version']}" if ev["event_type"] == "STANCE" else "")
                    or "SURFACED")
         cands[cid]["history"].append(
             {"seq": ev["seq"], "type": ev["event_type"], "date": ev["effective_date"],
@@ -352,3 +357,25 @@ def set_strongest(path: Path = DEFAULT_LEDGER, *, candidate_id: str, direction: 
         raise LedgerError(f"item #{target_seq} must be active evidence marked {direction}")
     return _append(path, "STRONGEST", candidate_id, _iso(effective_date or date.today()),
                    {"direction": direction, "target_seq": int(target_seq)}, backfilled)
+
+
+def freeze_stance(path: Path = DEFAULT_LEDGER, *, candidate_id: str, stance_text: str,
+                  intended_action: str = "", amount: str = "", funding: str = "", concern: str = "",
+                  without_atlas: str = "", effective_date=None, backfilled: bool = False) -> dict:
+    """Freeze the human's independent view as an immutable, versioned event.
+
+    Never edited: a later view is a NEW version. Only a version recorded while the
+    candidate is still SURFACED or QUICK_TEST (and is the first) is the pre-Atlas
+    baseline; later versions are labelled as revisions after analysis. A neutral
+    stance ("no view") is a valid stance; nothing is inferred if fields are blank.
+    """
+    c = _check_candidate(path, candidate_id)
+    if not _clean(stance_text):
+        raise LedgerError("stance_text is required (a neutral stance is a valid stance)")
+    version = len(c["stances"]) + 1
+    pre_atlas = version == 1 and c["state"] in ("SURFACED", "QUICK_TEST")
+    return _append(path, "STANCE", candidate_id, _iso(effective_date or date.today()), {
+        "version": version, "pre_atlas": pre_atlas, "stance_text": _clean(stance_text),
+        "intended_action": _clean(intended_action), "amount": _clean(amount), "funding": _clean(funding),
+        "concern": _clean(concern), "without_atlas": _clean(without_atlas),
+        "state_when_frozen": c["state"]}, backfilled)
