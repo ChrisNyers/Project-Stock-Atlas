@@ -179,7 +179,7 @@ def test_the_real_registers_closed_phase_is_fully_accepted_with_verified_evidenc
     d = project.status(ROOT, now=NOW, capabilities=appmod.CAPABILITIES, run_preflight=False)
     phases = {p["order"]: p for p in d["milestones"]["phases"]}
     assert phases[1]["counts"]["complete"] == phases[1]["counts"]["total"] == 8 or not project.has_git(ROOT)      # commit evidence needs git history
-    assert all(i["status"] != "COMPLETE" for o, p in phases.items() if o > 1 for i in p["items"])                 # nothing after the closed phase is recorded COMPLETE as approved
+    assert {i["id"] for o, p in phases.items() if o > 1 for i in p["items"] if i["status"] == "COMPLETE"} <= {"R0.1"}   # after the closed phase only the accepted dashboard (R0.1) is COMPLETE
     assert [i["id"] for p in phases.values() for i in p["items"] if i["status"] == "BLOCKED"] == ["L1"]
 
 

@@ -3671,3 +3671,24 @@ Open for the human: accept or amend R0; approve or discard the L4 draft; stances
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
+---
+
+## R0_ACCEPTED_33AC152
+
+| | |
+|---|---|
+| Date | 2026-10-29 |
+| Status | **ACCEPTED BY THE HUMAN** — recorded as a `MILESTONE` (R0.1) and an `APPROVED_STATE` event in `docs/authority_register.jsonl` |
+| Context | Independent assessment of R0.1 (the Project Oversight Dashboard) |
+
+### Decision
+
+The human's words: “I've reviewed the independent assessment of R0.1 and accept the Project Oversight Dashboard at commit `33ac152`.” · “Leave L4 as an unapproved draft for now. We will revisit the live-test environment when needed rather than treat the skipped tests as a failure of the market-data provider.” · “No further project-dashboard infrastructure work unless we identify a material defect.” ·
+“After recording acceptance and completing the normal verification and GitHub synchronization, move to the next approved investment-intelligence workstream, beginning with substantive MCD research and benchmark comparison.”
+
+**Recorded.** (1) R0.1 is COMPLETE (human-approved, evidence resolves). (2) The approved state is `33ac15280a793108798cc7f092d44618de56bbc8`, superseding `0733c77`: I read “accept … at commit `33ac152`” as accepting the reviewed code and records through that commit; the record of the acceptance is a later commit, as before. Nothing else is approved by this entry: no stance, candidate status, portfolio snapshot or decision.
+(3) L4 stays an unapproved draft; the 25 skipped live tests are not a finding against the market-data provider. (4) The active work moves to R1/R2/R3 with MCD first; milestones R1.1, R2.1, R2.2 and R3.1 are recorded IN_PROGRESS under that direction. MCD stays PARKED until evidence and the human's approval justify a change; GEV, RMD and ORCL stay SURFACED; no stance is invented.
+The dashboard and the investment UI are preserved (pinned by tests); no further dashboard work unless a material defect is found. No frozen control changed.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
