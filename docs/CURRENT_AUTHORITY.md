@@ -17,6 +17,7 @@ python -m atlas_ui authority show   # the resolved approved state, portfolio sna
 5. *Controls change only through a change record* (`controls.authorized_changes`); the pin file, this block and the change record move together. Controls are not operating values and are deliberately pinned here.
 6. *After each major improvement* add one dated **Milestone review** section to the Master Plan (what changed and was verified / incomplete or potentially overlooked / next) and update the capability matrix. Minor fixes do not need one. Nothing else is created.
 7. Paper only. No real trades. No new provider, agent, ML or architecture without explicit authorization.
+8. *Publishing.* The private GitHub repository `ChrisNyers/Project-Stock-Atlas` (`origin`, branch `main`) is the shared copy for Claude and ChatGPT. Push only after the human has independently reviewed and accepted a major milestone (and asked for it to be published); a new commit is never published automatically. Never force-push or rewrite history. Before any push: `preflight` passes, and no `.env`, key, credential or `deliverables/` content is tracked. GitHub `main` can be ahead of the approved state: the approved state is the register's latest approved `APPROVED_STATE`, never the branch tip. After a push, confirm `git ls-remote origin` equals local `HEAD`.
 
 <!-- The block below is parsed by `atlas_ui/verify.py`. Edit it deliberately; a bad edit fails preflight. -->
 ```json
