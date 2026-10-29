@@ -1,6 +1,6 @@
 # Stock Atlas — standing instructions for Claude Code sessions
 
-**Authority.** `docs/CURRENT_AUTHORITY.md` is the single reference for what governs current work (approved Master Plan state, portfolio baseline, frozen controls, candidate restrictions, active work). Older handoffs, Pilot 1–5 material, and "Sprint 1/2" documents are historical and never direct current work; the newest commit is not the approved state.
+**Authority.** `docs/CURRENT_AUTHORITY.md` is the single reference for what governs current work (approved Master Plan state, portfolio snapshot, frozen controls, candidate restrictions, active work). The values that change live in `docs/authority_register.jsonl`; `python -m atlas_ui authority show` prints what currently governs. **Never append an approved record on your own judgment:** only on the human's instruction, quoting their words; otherwise record a draft (omit `--approved-by-human`). Older handoffs, Pilot 1–5 material, and "Sprint 1/2" documents are historical and never direct current work; the newest commit is not the approved state.
 
 **Before any major assignment** run `python -m atlas_ui preflight` (use `.venv/bin/python` if `python` is not on PATH). If it reports FAIL, stop and report; do not work around it.
 

@@ -1915,6 +1915,29 @@ Compared against the governing “Backend-first completion” entry (Priorities 
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
+### October 29, 2026 — Milestone review: dynamic authority register and delivery gate (append-only)
+
+Compared against the governing “Backend-first completion” entry and Priority 0 (latest-source discipline). Supplements the review above; where it says `approved_state` lives in `docs/CURRENT_AUTHORITY.md`, that value now lives in the register described here.
+
+**What changed and was verified.**
+- *Operating values are data, not code.* The approved state, the portfolio snapshot, the active work and the candidate-ledger acceptance are HUMAN-approved events in `docs/authority_register.jsonl` (hash-chained, append-only). The authority reference, the preflight and the app contain no October 7, no MCD/RPM and no commit id; the app's Stage 7 service now reads the latest approved snapshot, and the Cycle 0 record is the first snapshot (loads identically to the frozen loader; earlier Stage 7 ids still reconstruct).
+- *Latest approved governs; drafts and newer commits do not.* A record without a valid HUMAN approval is a recorded draft and is never followed; a newer record supersedes only by naming its predecessor; two heads, a fork, a duplicate, an unknown or draft predecessor, a non-increasing date, an edited approved document, a tampered line or a ledger-hash mismatch fails closed. A revisit date raises a flag; it never changes a status.
+- *Delivery gate.* `deliver` now fails if the repository preflight, the clean-extraction preflight or either test run fails, even when every application test passes; a failed delivery's ZIP and patch are renamed `.REJECTED`.
+- *Verified:* acceptance scenarios 1–6 on isolated records and on repository copies (`tests/test_authority_register.py`), seven negative mutations that fail the new tests (`atlas_ui/evidence/authority/`), full suite and clean-extraction run (see the delivery report). No frozen control changed.
+
+**Incomplete or potentially overlooked.**
+- *Approval is checked for presence and consistency, not for genuineness.* Software cannot tell that the human said it; the register stores their words and the record that holds them, and appending is data that must follow their instruction. The first four register events transcribe values the human had already accepted (the prior manifest); they are not new approvals and should be confirmed on review.
+- *Candidate approval is enforced in the authority view (resolver, preflight, `authority show`), not in the app's own Stage 7 gate or the Discovery board,* which still read the candidate ledger directly so that the human's existing workflow is unchanged. An unapproved READY_FOR_CAPITAL_COMPARISON is therefore reported by preflight as awaiting approval but is not yet blocked in the UI. Closing that is a decision, not a bug.
+- *The approved state is still a working baseline* (`8cbcb37`); the commits since are unapproved until the human accepts them.
+- Everything listed as incomplete in the review above is unchanged: nothing has tested edge, the live Stage 7/8 path is unproven, portfolio inputs are old and approximate, no SPY/Treasury benchmark source exists.
+
+**What we should do next.**
+1. Independent review of this delivery; on acceptance the human's words are appended to the register as a new APPROVED_STATE event (`python -m atlas_ui authority append …`); that is the only thing that moves the approved state.
+2. Then the next priority set by the human: the investment-intelligence capabilities in this plan (stances for GEV, RMD, ORCL and the first live paper-only Stage 7 dry run; MCD revisit 2026-11-04, RPM 2026-11-09).
+3. Decide whether the app's candidate gate should also require register approval (a behaviour change; not started).
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
 ---
 
 ## Immediate Next Actions

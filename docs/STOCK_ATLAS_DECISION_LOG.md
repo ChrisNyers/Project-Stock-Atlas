@@ -3566,3 +3566,25 @@ and the single ZIP + patch + DELIVERY.md. `CLAUDE.md` makes the preflight the fi
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+---
+
+## AUTHORITY_REGISTER_AND_DELIVERY_GATE
+
+| | |
+|---|---|
+| Date | 2026-10-29 |
+| Status | **DELIVERED FOR INDEPENDENT REVIEW — no further phase started** |
+| Context | Human clarification: the source-of-truth controls must follow the latest approved records (portfolio snapshot, candidate status), never permanently hardcode October 7, MCD/RPM PARKED or the current commit; historical records must never be overwritten; `deliver` must fail on a failed preflight |
+
+### Decision
+
+(1) **Dynamic records.** The approved state, portfolio snapshot, active work and candidate-ledger acceptance moved out of `docs/CURRENT_AUTHORITY.md` into the append-only, hash-chained `docs/authority_register.jsonl`, resolved by `atlas_ui/authority.py`.
+Only an event with a valid HUMAN approval (who, date, a record that exists, the human's words) is followed; others are recorded drafts. A newer record supersedes only by naming its predecessor; conflicts fail closed (resolver, preflight, `canonical.current_portfolio`, and write-time refusal in `append`).
+The app's Stage 7 service and views read the latest approved snapshot (`canonical.current_portfolio`); superseded snapshots stay loadable (`portfolio_as_of`); earlier Stage 7 snapshot ids still reconstruct. Candidate status for the authority view = the candidate ledger as the register accepts it;
+revisit dates raise a flag and never change a status. (2) **Enforcement.** The manifest, `verify.py` and the app contain no October 7, MCD/RPM, commit id or expected decision-row count (a test asserts it); the newest commit is reported against the latest approved state. (3) **Delivery gate.** `deliver` fails when the
+repository preflight, the clean-extraction preflight or either test run fails, even when all tests pass; the failed delivery's ZIP and patch are renamed `.REJECTED`; a crashing preflight counts as failed. (4) Acceptance scenarios 1–6 are regression tests on isolated records; seven mutations fail them.
+No frozen control, investment logic, provider, agent or ML changed. Recorded limits: approval genuineness cannot be checked by software; the first four register events transcribe values from the prior manifest; the app's own candidate gate still reads the candidate ledger directly (unchanged workflow).
+MCD and RPM remain PARKED; no Stage 7 run, no decision.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**

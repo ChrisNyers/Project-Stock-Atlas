@@ -41,6 +41,12 @@ class Cycle0:
     doc_path: str
     doc_sha256: str
     label: str = "HUMAN-SUPPLIED BASELINE — APPROXIMATE (defensive ≈ $59,000); not a live account balance"
+    snapshot_id: str = ""
+
+    @property
+    def portfolio_snapshot_id(self) -> str:
+        """The id a Stage 7 artifact names. Legacy Cycle 0 keeps its original derivation so earlier runs still reconstruct."""
+        return self.snapshot_id or f"CYCLE0-{self.doc_sha256[:12]}"
 
     @property
     def effective_at(self) -> datetime:
@@ -79,6 +85,62 @@ def load_cycle0(doc: Path = BASELINE_DOC) -> Cycle0:
                   hashlib.sha256(raw).hexdigest())
 
 
+def load_snapshot(spec: dict, repo: Path = REPO) -> Cycle0:
+    """Load one APPROVED portfolio snapshot named by the authority register and re-validate it against what was approved: the document's SHA-256,
+    holding count, unique tickers, declared total and any declared per-holding checks. Any mismatch fails closed. Nothing is adjusted."""
+    doc = Path(repo) / spec["doc"]
+    if not doc.is_file():
+        raise CanonicalError(f"approved portfolio snapshot {spec['snapshot_id']!r}: record missing: {spec['doc']}")
+    raw = doc.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != spec["doc_sha256"]:
+        raise CanonicalError(f"approved portfolio snapshot {spec['snapshot_id']!r}: {spec['doc']} differs from the approved bytes (edited after approval)")
+    text = raw.decode("utf-8")
+    if spec["table_marker"] not in text:
+        raise CanonicalError(f"snapshot record lacks its holdings section {spec['table_marker']!r}")
+    rows = re.findall(r"\|\s*([A-Z]{1,5})\s*\|\s*\$([\d,]+\.\d{2})\s*\|", text[text.index(spec["table_marker"]):])
+    names = [t for t, _ in rows]
+    if len(names) != int(spec["holdings"]) or len(set(names)) != len(names):
+        raise CanonicalError(f"expected {spec['holdings']} unique holdings, parsed {len(names)}/{len(set(names))}")
+    holdings = tuple((t, Decimal(v.replace(",", ""))) for t, v in rows)
+    total = sum(v for _, v in holdings)
+    if total != Decimal(str(spec["stocks_total"])):
+        raise CanonicalError(f"holdings sum {total} != approved {spec['stocks_total']}; not adjusted")
+    for t, v in (spec.get("value_checks") or {}).items():
+        if dict(holdings).get(t) != Decimal(str(v)):
+            raise CanonicalError(f"{t} value does not match the approved {v}")
+    defensive = Decimal(str(spec["defensive_approx"]))
+    note = spec.get("as_of_note")
+    return Cycle0(holdings, total, defensive, total + defensive, f"{spec['as_of']} ({note})" if note else spec["as_of"],
+                  str(doc.relative_to(repo)), hashlib.sha256(raw).hexdigest(),
+                  label=spec.get("label") or "HUMAN-SUPPLIED BASELINE — APPROXIMATE; not a live account balance", snapshot_id=spec["snapshot_id"])
+
+
+def current_portfolio(repo: Path = REPO) -> Cycle0:
+    """The latest APPROVED portfolio snapshot per the authority register (never a hardcoded date or file). Conflicting or unreadable authority
+    records raise CanonicalError: callers fail closed rather than fall back to an older snapshot."""
+    from atlas_ui import authority
+    try:
+        res = authority.resolve(Path(repo) / authority.REGISTER)
+    except authority.AuthorityError as exc:
+        raise CanonicalError(f"authority register: {exc}")
+    spec = res.current_snapshot
+    if spec is None:
+        raise CanonicalError("no approved portfolio snapshot in the authority register")
+    return load_snapshot(spec, repo)
+
+
+def portfolio_as_of(on, repo: Path = REPO) -> Cycle0:
+    """The approved snapshot in force on a date, for reconstructing a past analysis. Superseded snapshots stay loadable."""
+    from atlas_ui import authority
+    try:
+        spec = authority.resolve(Path(repo) / authority.REGISTER).snapshot_as_of(on)
+    except authority.AuthorityError as exc:
+        raise CanonicalError(f"authority register: {exc}")
+    if spec is None:
+        raise CanonicalError(f"no approved portfolio snapshot was in force on {on}")
+    return load_snapshot(spec, repo)
+
+
 def build_portfolio_snapshot(c0: Cycle0, *, as_of: datetime, funding_amount: float = FUNDING_POCKET_MAX,
                              tax: VerificationStatus = VerificationStatus.UNVERIFIED,
                              liquidity: VerificationStatus = VerificationStatus.UNVERIFIED,
@@ -92,7 +154,7 @@ def build_portfolio_snapshot(c0: Cycle0, *, as_of: datetime, funding_amount: flo
         for t, v in c0.holdings
     )
     return PortfolioSnapshot(
-        snapshot_id=f"CYCLE0-{c0.doc_sha256[:12]}",
+        snapshot_id=c0.portfolio_snapshot_id,
         as_of=as_of,
         total_value=ident,
         holdings=holdings,

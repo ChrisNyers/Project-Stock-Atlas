@@ -120,8 +120,13 @@ def _slug(name: str) -> str:
 
 def replay(path: Path = DEFAULT_LEDGER) -> dict[str, dict]:
     """Derive current candidate state by replaying the event log."""
+    return replay_events(read_events(path))
+
+
+def replay_events(events: list[dict]) -> dict[str, dict]:
+    """The same derivation over a list of events (lets a caller replay a filtered view, e.g. only the approved state changes)."""
     cands: dict[str, dict] = {}
-    for ev in read_events(path):
+    for ev in events:
         cid, p = ev["candidate_id"], ev["payload"]
         if ev["event_type"] == "SURFACED":
             c = cands.setdefault(cid, {"candidate_id": cid, "history": []})

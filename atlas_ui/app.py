@@ -29,7 +29,7 @@ NAV = [("/", "Overview"), ("/intake", "Opportunity intake"), ("/cohort", "Resear
 # Single source of truth for the honest capability matrix (page + CAPABILITY_MATRIX.md).
 CAPABILITIES = [
     ("A. Overview: canonical Cycle 0 portfolio/policy, pilot status, candidates", "PROVEN CANONICAL OFFLINE",
-     "Parsed and re-validated from the frozen baseline record (28 names, sum $624,905.93; defensive ≈ $59K so the denominator is approximate); as-of and source shown."),
+     "The latest HUMAN-APPROVED portfolio snapshot named by the authority register (docs/authority_register.jsonl), re-validated on every load (SHA-256, holding count, total); the denominator stays approximate; as-of and source shown; superseded snapshots stay loadable."),
     ("B. Intake + immutable versioned pre-Atlas stance (source provenance, no source privilege, QUICK_TEST mandatory)", "PROVEN CANONICAL OFFLINE",
      "Writes the existing append-only discovery ledger; later stance versions are labelled revisions, never edits."),
     ("C1. SEC/issuer ingestion modules (sec_adapter, xbrl_parser, identity_resolver, point-in-time)", "PROVEN CANONICAL OFFLINE",
@@ -49,7 +49,7 @@ CAPABILITIES = [
     ("H. Unranked research cohort and descriptive 'attractive at the verified price?' assessment view", "PROVEN CANONICAL OFFLINE",
      "Built on live SEC + Gate B data for MCD (parked), GEV, RMD, ORCL (SURFACED, INSUFFICIENT EVIDENCE). Assessments are DRAFT_BY_RECORDER and not human-accepted; no ranks, no scores, no Stage 7 or capital control in the view. No candidate yet permitted a 'SUPPORTED' example. Saved research snapshots are referenced by a bare file name inside the research workspace and bound to their SHA-256, so an extracted ZIP loads them anywhere; a missing, tampered or mis-bound snapshot is shown as a RESEARCH EVIDENCE ERROR, never as 'no research'."),
     ("I. Source-of-truth reference, preflight, regression verification and delivery (tooling)", "PROVEN CANONICAL OFFLINE",
-     "docs/CURRENT_AUTHORITY.md names the approved state, baseline, controls, restrictions and active work; `python -m atlas_ui preflight` verifies them (and distinguishes the newest commit from the approved state), `verify` runs the suite with skips classified and an optional clean-extraction run, `deliver` builds one ZIP, one patch and one report. Historical Pilot 2 / Sprint 2 instructions are marked non-governing. Tooling only: no investment logic."),
+     "docs/CURRENT_AUTHORITY.md holds the rules; the values that change (approved state, portfolio snapshot, active work, candidate-ledger acceptance) are HUMAN-approved, hash-chained events in docs/authority_register.jsonl, resolved by `python -m atlas_ui preflight` and by the app (latest approved snapshot only; drafts and unapproved newer records are never followed; conflicting approved records fail closed; superseded snapshots stay loadable; a revisit date is a trigger, never a promotion). `verify` runs the suite with skips classified and an optional clean-extraction run; `deliver` builds one ZIP, one patch and one report and fails if the repository preflight, the clean-extraction preflight or either test run fails. Historical Pilot 2 / Sprint 2 instructions are marked non-governing. Tooling only: no investment logic."),
     ("Real trades / broker connectivity / execution", "NOT IMPLEMENTED", "By design: paper only. No order API exists."),
 ]
 
@@ -215,13 +215,22 @@ def assessment_panel(app: App, c: dict) -> str:
             f'<section class="panel"><h2>Later observations (append-only, linked)</h2><div class="audit">{obs or "<p class=subtle>None recorded.</p>"}</div></section>')
 
 
+def baseline_phrase() -> str:
+    """Wording for the acknowledgement checkbox, taken from the currently approved snapshot (not a fixed date)."""
+    try:
+        c0 = canonical.current_portfolio()
+        return f"dated {c0.as_of[:10]} (snapshot {c0.portfolio_snapshot_id}, defensive ≈ ${c0.defensive_approx:,.0f})"
+    except canonical.CanonicalError:
+        return "(UNAVAILABLE: the authority records failed validation; Stage 7 will refuse)"
+
+
 def ledger_holding_note(c: dict) -> str:
     try:
-        w = canonical.load_cycle0().weight(c.get("ticker") or "")
+        w = canonical.current_portfolio().weight(c.get("ticker") or "")
     except canonical.CanonicalError:
         return "existing holdings unavailable (canonical baseline failed validation)"
     return (f"{c['ticker']} is an existing holding at ≈{w:.2%} of the approximate identified value." if w > 0 else
-            f"{c.get('ticker') or c['candidate_id']} is not among the 28 baseline holdings; driver overlap is not assigned (human-authored at Stage 7).")
+            f"{c.get('ticker') or c['candidate_id']} is not among the baseline holdings; driver overlap is not assigned (human-authored at Stage 7).")
 
 
 def cohort_page(app: App) -> str:
@@ -263,7 +272,7 @@ MCD and RPM remain PARKED (dates are revisit triggers, not promotions). Admissio
 
 
 def overview(app: App) -> str:
-    c0 = canonical.load_cycle0()
+    c0 = canonical.current_portfolio()
     cands = ledger.replay(app.ws.candidate_ledger)
     runs = app.svc.list_runs()
     ks, kk = key_status(app)
@@ -288,7 +297,7 @@ def overview(app: App) -> str:
     body = f"""<div class="view active"><p class="eyebrow">Portfolio and pilot</p><h1>Your investment decision workspace</h1>
 <p class="intro">Canonical portfolio context, your independent judgment, verified Stage 7 results and a deliberate paper decision — through the existing Stock Atlas controls.</p>
 <div class="topstats"><div class="stat"><div class="statlabel">Identified portfolio</div><div class="statvalue">≈ ${ident:,.0f}</div><div class="statsub">APPROXIMATE (defensive ≈ $59K) · HUMAN-SUPPLIED as of {e(c0.as_of)} · {(app.clock() - c0.effective_at).days} days old · not live</div></div>
-<div class="stat"><div class="statlabel">28 stocks</div><div class="statvalue">{money(c0.stocks_total)}</div><div class="statsub">exact, reconciled by the loader</div></div>
+<div class="stat"><div class="statlabel">{len(c0.holdings)} stocks</div><div class="statvalue">{money(c0.stocks_total)}</div><div class="statsub">exact, reconciled by the loader</div></div>
 <div class="stat"><div class="statlabel">Defensive (T-bills + MM)</div><div class="statvalue">≈ {money(c0.defensive_approx)}</div><div class="statsub">approximate by design</div></div>
 <div class="stat"><div class="statlabel">Funding pocket</div><div class="statvalue">$25–50K</div><div class="statsub">new outside capital · T+1 · ADD-ONLY</div></div></div>
 <div class="layout"><div><section class="panel"><div class="panel-head"><h2>Frozen portfolio exposure</h2>{pill("HUMAN-SUPPLIED BASELINE","wait")}</div>
@@ -399,7 +408,7 @@ def stage7_page(app: App, err="", flash="", market: str = "") -> str:
 {S("gate","Underwriting gate",["UNVERIFIED","CLEAR","MARGINAL","FAIL"])}{S("capacity","Candidate capacity",["UNVERIFIED","AVAILABLE","CONSTRAINED"])}{F("remaining_capacity","Remaining capacity % of post-trade portfolio")}
 {S("classification","Position classification (human)",["STARTER","OTHER","ADD"])}
 {S("tax","Tax constraint (human-attested)",["UNVERIFIED","VERIFIED"])}{S("liquidity","Liquidity (human-attested)",["UNVERIFIED","VERIFIED"])}{S("execution","Execution (human-attested)",["UNVERIFIED","VERIFIED"])}
-<div class="full"><label class="field"><input type="checkbox" name="baseline_ack" value="1" style="width:auto"> I acknowledge the portfolio baseline is the frozen human-supplied record of 2026-10-07 (holdings are NOT live) and the denominator is approximate (defensive ≈ $59,000). *</label></div>
+<div class="full"><label class="field"><input type="checkbox" name="baseline_ack" value="1" style="width:auto"> I acknowledge the portfolio baseline is the approved human-supplied record {e(baseline_phrase())} (holdings are NOT live) and the denominator is approximate. *</label></div>
 <div class="full"><label class="field"><input type="checkbox" name="accept_unverified" value="1" style="width:auto"> Proceed to Stage 7 with UNVERIFIED constraints (a funded Stage 8 will still fail closed)</label></div></div>
 <div class="btn-row" style="margin-top:16px"><button class="btn primary">Bind market data and run Stage 7 via the facade</button></div></form>"""
     else:
@@ -462,7 +471,7 @@ def run_page(app: App, run_id: str, err="", flash="") -> str | None:
     unc = "".join(f"<li>{e(l)}</li>" for l in req["uncertainties"].splitlines() if l.strip())
     body = f"""<div class="view active"><p class="eyebrow">Stage 7 run</p><h1>{e(run_id)}</h1><div class="btn-row">{status_pill(r.status)}{pill("mode: " + entry["mode"], "danger" if entry["mode"] == "DEMO" else "ok")}{pill("integrity VERIFIED","ok")}</div>
 <section class="panel" style="margin-top:16px"><h2>Retained artifact</h2><div class="rowlist"><div><strong>Stage 7 SHA-256</strong><span class="mono">{e(entry["stage7"]["sha256"])}</span></div></div>
-<div class="rowlist"><div><strong>Baseline</strong><span>valuation as of <b>2026-10-07</b> (human-supplied, not live); evaluated {e(entry["created_at"][:19])} · denominator approximate · <span class="mono">{e(entry["baseline_doc_sha256"][:24])}…</span></span></div></div>
+<div class="rowlist"><div><strong>Baseline</strong><span>valuation as of <b>{e(entry.get("baseline_as_of", "2026-10-07")[:10])}</b> (human-supplied, not live); evaluated {e(entry["created_at"][:19])} · denominator approximate · <span class="mono">{e(entry["baseline_doc_sha256"][:24])}…</span></span></div></div>
 <div class="rowlist"><div><strong>Priced session</strong><span>{e(entry.get("priced_session", "n/a"))} (XNYS). A funded Stage 8 must pass a fresh-price check against the current session.</span></div></div>
 <div class="rowlist"><div><strong>Gating result</strong><span>{e("; ".join(r.reasons))}</span></div></div>
 <div class="rowlist"><div><strong>Position</strong><span>{"" if pos is None else f"increment {money(pos.proposed_increment_dollars)} · post-trade weight {pos.post_trade_weight:.2%} · {e(pos.classification.value)} · capacity {e(pos.capacity_status.value)}"}</span></div></div>
@@ -525,7 +534,7 @@ def matrix_markdown() -> str:
 
 # ------------------------------------------------------------------ API (JSON)
 def api_state(app: App) -> dict:
-    c0 = canonical.load_cycle0()
+    c0 = canonical.current_portfolio()
     return {"mode": app.mode, "paper_only": True,
             "baseline": {"as_of": c0.as_of, "source": c0.doc_path, "sha256": c0.doc_sha256, "label": c0.label,
                          "identified_value": str(c0.identified_value), "stocks_total": str(c0.stocks_total),

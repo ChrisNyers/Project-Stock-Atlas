@@ -5,15 +5,18 @@
 ```bash
 python -m atlas_ui preflight        # run before any major assignment (fails on control, baseline, restriction or append-only drift)
 python -m atlas_ui verify           # preflight + the offline regression suite, with skips classified (add --clean-extract to prove a clean copy)
-python -m atlas_ui deliver          # one ZIP + patch + DELIVERY.md for the current HEAD, verified from the extracted ZIP
+python -m atlas_ui deliver          # one ZIP + patch + DELIVERY.md for the current HEAD; FAILS if either preflight or either test run fails
+python -m atlas_ui authority show   # the resolved approved state, portfolio snapshot, active work and candidate status
 ```
 
 **Rules**
-1. *Newest commit is not approved state.* `approved_state.commit` is the last state the human accepted. `preflight` always prints how far HEAD is ahead of it and which governed files changed since. Only the human moves it.
-2. *Later approved records supersede older handoffs; older files stay intact.* Anything under `historical_not_governing` cannot direct current work, however it is worded ("NEXT", "active task", "Sprint 2").
-3. *Controls change only through a change record* (`controls.authorized_changes`); the pin file, this block and the change record move together.
-4. *After each major improvement* add one dated **Milestone review** section to the Master Plan (what changed and was verified / incomplete or potentially overlooked / next) and update the capability matrix. Minor fixes do not need one. Nothing else is created.
-5. Paper only. No real trades. No new provider, agent, ML or architecture without explicit authorization.
+1. *Newest commit is not approved state.* The approved state is the latest HUMAN-approved `APPROVED_STATE` event in `docs/authority_register.jsonl` (the last state the human accepted). `preflight` prints how far HEAD is ahead of it and which governed files changed since. Only the human moves it, by instructing that an event be appended with their words.
+2. *Operating values are records, not code or text in this file.* The approved state, portfolio snapshot, active work and candidate-ledger acceptance live in the register: append-only, hash-chained, never edited. The latest **approved** record governs; a record without a valid HUMAN approval is a draft and is never followed; a newer record supersedes only by naming its predecessor; conflicting approved records fail closed. Superseded records stay loadable, so any past analysis can be reconstructed. A new snapshot or a candidate status change is a data append, not a software change (`python -m atlas_ui authority show | append`).
+3. *A revisit date is a trigger to reassess, never an authorization or a promotion.*
+4. *Later approved records supersede older handoffs; older files stay intact.* Anything under `historical_not_governing` cannot direct current work, however it is worded ("NEXT", "active task", "Sprint 2").
+5. *Controls change only through a change record* (`controls.authorized_changes`); the pin file, this block and the change record move together. Controls are not operating values and are deliberately pinned here.
+6. *After each major improvement* add one dated **Milestone review** section to the Master Plan (what changed and was verified / incomplete or potentially overlooked / next) and update the capability matrix. Minor fixes do not need one. Nothing else is created.
+7. Paper only. No real trades. No new provider, agent, ML or architecture without explicit authorization.
 
 <!-- The block below is parsed by `atlas_ui/verify.py`. Edit it deliberately; a bad edit fails preflight. -->
 ```json
@@ -23,11 +26,7 @@ python -m atlas_ui deliver          # one ZIP + patch + DELIVERY.md for the curr
     "doc": "docs/STOCK_ATLAS_MASTER_PROJECT_PLAN.md",
     "section": "## Governing Mission"
   },
-  "approved_state": {
-    "commit": "8cbcb37c82ac6367415d517f2938cf2d0c50e2d5",
-    "status": "WORKING BASELINE: the human directed on 2026-10-29 that work proceed from this commit; independent acceptance of it has not been reported",
-    "update_rule": "Changed only by an explicit human acceptance, quoted in the Decision Log. A commit existing, or its tests passing, never approves it."
-  },
+  "register": "docs/authority_register.jsonl",
   "documents": {
     "master_plan": "docs/STOCK_ATLAS_MASTER_PROJECT_PLAN.md",
     "decision_log": "docs/STOCK_ATLAS_DECISION_LOG.md",
@@ -36,22 +35,13 @@ python -m atlas_ui deliver          # one ZIP + patch + DELIVERY.md for the curr
   },
   "append_only": [
     "docs/STOCK_ATLAS_MASTER_PROJECT_PLAN.md",
-    "docs/STOCK_ATLAS_DECISION_LOG.md"
+    "docs/STOCK_ATLAS_DECISION_LOG.md",
+    "docs/authority_register.jsonl"
   ],
   "plan_markers": {
     "top_pointer": "docs/CURRENT_AUTHORITY.md",
     "immediate_next_actions_heading": "## Immediate Next Actions",
     "immediate_next_actions_superseded": "SUPERSEDED AS THE ACTIVE WORK LIST (2026-10-29)"
-  },
-  "portfolio_baseline": {
-    "doc": "docs/controlled_live_pilot/CYCLE0_BASELINE_001.md",
-    "canonical": "Cycle 0 Correction 002 (2026-10-07)",
-    "sha256": "ef35534d5e04f8d49f1f4043bbf01d85e630c661707e49938131487ef38a0f5e",
-    "holdings": 28,
-    "stocks_total": "624905.93",
-    "identified_value_approx": "683905.93",
-    "policy": "ADD-ONLY; $25-50K outside capital T+1; defensive assets about $59K (approximate)",
-    "historical_not_current": "the September 2026 $500,000 eight-stock handoff snapshot"
   },
   "controls": {
     "pin_file": "atlas_ui/FROZEN_CONTROL_SHA256.txt",
@@ -75,26 +65,12 @@ python -m atlas_ui deliver          # one ZIP + patch + DELIVERY.md for the curr
   },
   "candidates": {
     "ledger": "operating_mvp/data/candidate_ledger.jsonl",
-    "parked": {
-      "MCD": "2026-11-04",
-      "RPM": "2026-11-09"
-    },
-    "rule": "Parked dates are revisit triggers, never promotions."
+    "rule": "Status is read from the candidate ledger as the register accepts it. A revisit date is a trigger to reassess, never a promotion."
   },
   "capital": {
-    "status": "NO REAL PORTFOLIO ACTION",
-    "decision_ledger": "atlas_ui/data/live/decisions.jsonl",
-    "canonical_decision_rows": 0
+    "decision_ledger": "atlas_ui/data/live/decisions.jsonl"
   },
-  "active_work": {
-    "plan_heading_prefix": "### October 28, 2026 — Backend-first completion to an evidence-based opportunity UI",
-    "summary": "Backend-first completion: Priority 0 latest-source discipline, 1 funded-decision safety, 2 primary-source research to underwriting, 3 unranked multi-candidate research view, 4 outcome learning; sequential release gates 1-5.",
-    "state": "Gate 1 safety remediated (changes 001-003) and awaiting independent acceptance; gate 2 passed read-only; gate 3 reached with limits; gate 4 view only; gate 5 partial. Stop points: independent review after each delivery."
-  },
-  "last_milestone_review": {
-    "plan_heading": "### October 29, 2026 — Milestone review",
-    "reviewed_commit": "18f44d7be6e9df512a0880c9532e35186fac4def"
-  },
+  "milestone_review_marker": "Milestone review",
   "historical_not_governing": [
     {
       "where": "docs/STOCK_ATLAS_MASTER_PROJECT_PLAN.md",

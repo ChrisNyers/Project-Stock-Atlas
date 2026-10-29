@@ -1,6 +1,6 @@
 """Source-of-truth preflight, regression verification and delivery bundle.
 
-Tooling over records that already exist (the pin file, the Cycle 0 loader, the discovery-ledger hash chain, git, pytest). It adds no data source,
+Tooling over records that already exist (the pin file, the approval register, the discovery-ledger hash chain, git, pytest). It adds no data source,
 store, provider or investment logic. ``docs/CURRENT_AUTHORITY.md`` is the one reference it reads.
 
     python -m atlas_ui preflight [--json]
@@ -81,7 +81,7 @@ def _section(text: str, heading_prefix: str) -> str | None:
 
 
 # ------------------------------------------------------------------------------------------------------ preflight
-def preflight(repo: Path = REPO, *, use_git: bool = True) -> list[Check]:
+def preflight(repo: Path = REPO, *, use_git: bool = True, today: date | None = None) -> list[Check]:
     repo = Path(repo)
     cs: list[Check] = []
     add = lambda name, status, detail="": cs.append(Check(name, status, detail))
@@ -94,9 +94,9 @@ def preflight(repo: Path = REPO, *, use_git: bool = True) -> list[Check]:
     add("authority reference", "OK", AUTHORITY)
 
     # --- referenced documents exist
-    missing = [p for p in [*a["documents"].values(), a["portfolio_baseline"]["doc"], a["controls"]["pin_file"], a["candidates"]["ledger"],
+    missing = [p for p in [*a["documents"].values(), a["register"], a["controls"]["pin_file"], a["candidates"]["ledger"],
                            *(c["record"] for c in a["controls"]["authorized_changes"])] if not (repo / p).is_file()]
-    add("referenced records exist", "FAIL" if missing else "OK", f"missing: {missing}" if missing else f"{len(a['documents'])} governing documents, baseline, pin, ledger, change records")
+    add("referenced records exist", "FAIL" if missing else "OK", f"missing: {missing}" if missing else f"{len(a['documents'])} governing documents, register, pin, candidate ledger, change records")
 
     # --- frozen controls
     pin_path = repo / a["controls"]["pin_file"]
@@ -116,43 +116,71 @@ def preflight(repo: Path = REPO, *, use_git: bool = True) -> list[Check]:
     else:
         add("frozen controls pinned", "FAIL", "pin file missing")
 
-    # --- portfolio baseline (reuses the canonical loader's own validation)
-    b = a["portfolio_baseline"]
+    # --- the approval register: every operating value below is RESOLVED from it, never read from this file or from code
+    sys.path.insert(0, str(repo)) if str(repo) not in sys.path else None
+    from atlas_ui import authority, canonical
+    res = None
     try:
-        sys.path.insert(0, str(repo)) if str(repo) not in sys.path else None
-        from atlas_ui import canonical
-        c0 = canonical.load_cycle0(repo / b["doc"])
-        ok = (len(c0.holdings) == b["holdings"] and str(c0.stocks_total) == b["stocks_total"] and str(c0.identified_value) == b["identified_value_approx"]
-              and c0.doc_sha256 == b["sha256"])
-        add("portfolio baseline (Cycle 0 Correction 002)", "OK" if ok else "FAIL",
-            f"{len(c0.holdings)} holdings, stocks ${c0.stocks_total}, identified ≈${c0.identified_value}" if ok else "baseline record or its totals differ from the authority reference")
+        res = authority.resolve(repo / a["register"])
+        add("authority register", "OK", f"{a['register']}: {len(res.events)} events, hash chain intact, no conflicting approved records; "
+                                        f"{len(res.drafts)} draft(s) recorded and NOT followed")
+    except authority.AuthorityConflict as exc:
+        add("authority register", "FAIL", f"CONFLICT (fails closed): {exc}")
     except Exception as exc:
-        add("portfolio baseline (Cycle 0 Correction 002)", "FAIL", str(exc))
+        add("authority register", "FAIL", f"{exc}")
+    if res is not None:
+        bad = [f"seq {e['seq']} {e['type']}: {e['approval']['record']}" for fam in res.chains.values() for e in fam if not authority.record_exists(repo, e["approval"]["record"])]
+        add("approval records resolve", "FAIL" if bad else "OK", f"approval record not found: {bad}" if bad else "every approved record names a repository record that exists")
+        for d in res.drafts:
+            key = d["payload"].get(authority.FAMILIES[d["type"]][0]) if d["type"] in authority.FAMILIES else None
+            add("unapproved record (draft)", "INFO", f"seq {d['seq']} {d['type']} {key or ''} has no valid HUMAN approval and is not followed")
 
-    # --- candidate restrictions
-    try:
-        from operating_mvp import ledger
-        ledger.verify_chain(repo / a["candidates"]["ledger"])
-        cands = ledger.replay(repo / a["candidates"]["ledger"])
-        bad, notes = [], []
-        for t, until in a["candidates"]["parked"].items():
-            c = cands.get(t)
-            if not c or c["state"] != "PARKED" or c["parked_until"] != until:
-                bad.append(f"{t}: {None if not c else (c['state'], c['parked_until'])} != PARKED until {until}")
-            elif date.fromisoformat(until) <= date.today():
-                notes.append(f"{t} revisit date {until} reached (a trigger to review, not a promotion)")
-        add("candidate ledger chain + parked restrictions", "FAIL" if bad else "OK",
-            "; ".join(bad) if bad else ", ".join(f"{t} PARKED until {u}" for t, u in a["candidates"]["parked"].items()))
-        for n in notes:
-            add("revisit trigger", "INFO", n)
-    except Exception as exc:
-        add("candidate ledger chain + parked restrictions", "FAIL", str(exc))
+    # --- portfolio snapshot: the latest APPROVED one; superseded ones must stay loadable (history reconstructable)
+    if res is None:
+        add("approved portfolio snapshot", "SKIP", "authority register did not resolve")
+    else:
+        try:
+            snaps = res.snapshots
+            if not snaps:
+                raise canonical.CanonicalError("the register holds no approved portfolio snapshot")
+            loaded = [(sp, canonical.load_snapshot(sp, repo)) for sp in snaps]
+            sp, c0 = loaded[-1]
+            hist = [f"{x['snapshot_id']} ({x['as_of']})" for x, _ in loaded[:-1]]
+            add("approved portfolio snapshot", "OK", f"{sp['snapshot_id']} as of {c0.as_of}: {len(c0.holdings)} holdings, stocks ${c0.stocks_total}, identified ≈${c0.identified_value}"
+                + (f"; supersedes {', '.join(hist)} (still loadable)" if hist else "; no earlier snapshot"))
+        except Exception as exc:
+            add("approved portfolio snapshot", "FAIL", str(exc))
 
-    # --- capital status
+    # --- candidate restrictions: from the ledger, as the register accepts it
+    if res is None:
+        add("candidate ledger chain + restrictions", "SKIP", "authority register did not resolve")
+    else:
+        try:
+            cands = authority.resolve_candidates(res, repo / a["candidates"]["ledger"], today)
+            restr = [f"{c['candidate_id']} {c['state']}" + (f" until {c['parked_until']}" if c["parked_until"] else "") for c in cands.values() if c["state"] in ("PARKED", "REJECTED")]
+            add("candidate ledger chain + restrictions", "OK", f"{len(cands)} candidates; " + ("; ".join(restr) if restr else "no PARKED/REJECTED candidate"))
+            for c in cands.values():
+                if c["revisit_due"]:
+                    add("revisit trigger", "INFO", f"{c['candidate_id']} revisit date {c['parked_until']} reached: a trigger to reassess, NOT a promotion — it stays {c['state']}")
+                if c["pending"]:
+                    add("candidate status awaiting approval", "WARN", f"{c['candidate_id']}: ledger change(s) {[(p['seq'], p['to_state']) for p in c['pending']]} are not approved in the register; "
+                                                                       f"the authoritative status is still {c['state']}")
+        except Exception as exc:
+            add("candidate ledger chain + restrictions", "FAIL", str(exc))
+
+    # --- capital status: counted, and the chain verified when there is anything to verify (no hardcoded expected count)
     dl = repo / a["capital"]["decision_ledger"]
     rows = sum(1 for ln in dl.read_text().splitlines() if ln.strip()) if dl.is_file() else 0
-    add("canonical decision ledger", "OK" if rows == a["capital"]["canonical_decision_rows"] else "WARN",
-        f"{rows} rows (authority expects {a['capital']['canonical_decision_rows']}); {a['capital']['status']}")
+    if rows == 0:
+        add("canonical decision ledger", "OK", "0 rows; NO REAL PORTFOLIO ACTION recorded")
+    else:
+        try:
+            from capital_decision_facade import CapitalDecisionFacade     # the only sanctioned reader of the decision ledger
+            with tempfile.TemporaryDirectory(prefix="atlas_verify_") as scratch:
+                ok = CapitalDecisionFacade(dl, scratch).verify_ledger()
+            add("canonical decision ledger", "INFO" if ok else "FAIL", f"{rows} human-recorded row(s); hash chain {'verified' if ok else 'BROKEN'}")
+        except Exception as exc:
+            add("canonical decision ledger", "FAIL", f"{rows} rows; verification failed: {exc}")
 
     # --- master plan / decision log structure and "historical never governs"
     docs = a["documents"]
@@ -164,14 +192,20 @@ def preflight(repo: Path = REPO, *, use_git: bool = True) -> list[Check]:
     sup = plan.find(pm["immediate_next_actions_superseded"], i) if i >= 0 else -1
     add("outdated Pilot 2 work list marked superseded", "OK" if (i >= 0 and sup > i) or i < 0 else "FAIL",
         "the 'Immediate Next Actions' section is marked as not governing" if (i >= 0 and sup > i) else "'Immediate Next Actions' is not marked superseded; its Pilot 2 instructions could read as active")
-    aw = _section(plan, a["active_work"]["plan_heading_prefix"])
-    add("active work is a Master Plan entry", "OK" if aw else "FAIL", a["active_work"]["plan_heading_prefix"].lstrip("# ") if aw else "heading not found")
-    mr = _section(plan, a["last_milestone_review"]["plan_heading"])
+    aw_rec = res.active_work if res else None
+    if aw_rec is None:
+        add("active work is a Master Plan entry", "SKIP" if res is None else "FAIL", "no approved active-work record" if res else "authority register did not resolve")
+    else:
+        aw = _section(plan, aw_rec["plan_heading_prefix"])
+        add("active work is a Master Plan entry", "OK" if aw else "FAIL", aw_rec["plan_heading_prefix"].lstrip("# ") if aw else f"approved active work {aw_rec['work_id']!r}: heading not found in the Master Plan")
+    heads = [ln for ln in plan.splitlines() if re.match(r"^#{2,4} ", ln) and a["milestone_review_marker"].lower() in ln.lower()]
+    mr = _section(plan, heads[-1]) if heads else None
     if mr is None:
-        add("latest milestone review present", "FAIL", f"'{a['last_milestone_review']['plan_heading']}' not found in the Master Plan")
+        add("latest milestone review present", "FAIL", f"no Master Plan heading containing '{a['milestone_review_marker']}'")
     else:
         lacking = [lbl for lbl in MILESTONE_LABELS if lbl.lower() not in mr.lower()]
-        add("latest milestone review present", "FAIL" if lacking else "OK", f"missing sections: {lacking}" if lacking else "has changed/verified, incomplete/overlooked, next")
+        add("latest milestone review present", "FAIL" if lacking else "OK",
+            f"'{heads[-1].lstrip('# ')[:60]}': missing sections {lacking}" if lacking else f"'{heads[-1].lstrip('# ')[:60]}' has changed/verified, incomplete/overlooked, next")
     hist = a["historical_not_governing"]
     found = 0
     for h in hist:
@@ -184,10 +218,20 @@ def preflight(repo: Path = REPO, *, use_git: bool = True) -> list[Check]:
     if not use_git or not has_git(repo):
         add("git position / append-only / controls since approval", "SKIP", "no git history in this tree (extracted ZIP): not checkable here — run from the repository")
         return cs
-    approved, head = a["approved_state"]["commit"], _git(repo, "rev-parse", "HEAD").strip()
+    if res is None or res.approved_state is None:
+        add("approved state", "FAIL" if res is not None else "SKIP", "the register holds no approved state" if res is not None else "authority register did not resolve")
+        return cs
+    approved, head = res.approved_state["commit"], _git(repo, "rev-parse", "HEAD").strip()
     if _git(repo, "cat-file", "-e", f"{approved}^{{commit}}") is None:
         add("approved state in history", "FAIL", f"approved commit {approved[:12]} not found in this repository")
         return cs
+    states = [e["payload"]["commit"] for e in res.chains["APPROVED_STATE"]]
+    for old, new in zip(states, states[1:]):
+        if any(_git(repo, "cat-file", "-e", f"{c}^{{commit}}") is None for c in (old, new)):
+            continue                              # an older approved commit this clone does not hold cannot be checked here
+        if subprocess.run(["git", "-C", str(repo), "merge-base", "--is-ancestor", old, new], capture_output=True).returncode != 0:
+            add("approved states form one history", "FAIL", f"approved state {new[:12]} does not descend from the state it supersedes ({old[:12]})")
+            return cs
     is_anc = subprocess.run(["git", "-C", str(repo), "merge-base", "--is-ancestor", approved, "HEAD"], capture_output=True).returncode == 0
     if not is_anc:
         add("approved state is an ancestor of HEAD", "FAIL", f"{approved[:12]} is not an ancestor of {head[:12]} (wrong branch or rewritten history)")
@@ -197,7 +241,7 @@ def preflight(repo: Path = REPO, *, use_git: bool = True) -> list[Check]:
         add("newest commit vs approved state", "OK", f"HEAD {head[:12]} IS the approved state")
     else:
         add("newest commit vs approved state", "INFO",
-            f"NEWEST COMMIT {head[:12]} is {len(ahead)} commit(s) ahead of the LATEST APPROVED STATE {approved[:12]}; those commits are unapproved until the human accepts them: "
+            f"NEWEST COMMIT {head[:12]} is {len(ahead)} commit(s) ahead of the LATEST APPROVED STATE {approved[:12]} (register seq {res.approved_state['register_seq']}); those commits are unapproved until the human accepts them: "
             + " | ".join(ln[:70] for ln in ahead[:6]) + (" | …" if len(ahead) > 6 else ""))
     # governed files changed since approval
     changed_ctrl = []
@@ -211,13 +255,14 @@ def preflight(repo: Path = REPO, *, use_git: bool = True) -> list[Check]:
     stat = _git(repo, "diff", "--numstat", approved, "--", *a["append_only"]) or ""
     removed = [(p, int(d)) for ad, d, p in (ln.split("\t") for ln in stat.splitlines() if ln.count("\t") == 2) if d.isdigit() and int(d) > 0]
     add("append-only records since the approved state", "FAIL" if removed else "OK",
-        f"lines removed or edited in {removed}" if removed else "Master Plan and Decision Log have additions only")
+        f"lines removed or edited in {removed}" if removed else "Master Plan, Decision Log and authority register have additions only")
     dirty = [ln for ln in (_git(repo, "status", "--porcelain") or "").splitlines() if ln and not ln[3:].startswith("deliverables/")]
     add("working tree", "WARN" if dirty else "OK", f"{len(dirty)} uncommitted change(s)" if dirty else "clean")
-    rc = a["last_milestone_review"]["reviewed_commit"]
-    if rc and rc != "PENDING" and _git(repo, "cat-file", "-e", f"{rc}^{{commit}}") is not None:
-        since = [ln for ln in (_git(repo, "log", "--oneline", f"{rc}..HEAD", "--", *CODE_PATHS) or "").splitlines() if ln]
-        add("code commits since the last milestone review", "INFO", f"{len(since)}" + (" — a review is due after the next major improvement" if since else ""))
+    if heads:
+        rc = (_git(repo, "log", "-1", "--format=%H", f"-S{heads[-1]}", "--", docs["master_plan"]) or "").strip()
+        if rc:
+            since = [ln for ln in (_git(repo, "log", "--oneline", f"{rc}..HEAD", "--", *CODE_PATHS) or "").splitlines() if ln]
+            add("code commits since the last milestone review", "INFO", f"{len(since)} (review recorded at {rc[:12]})" + (" — a review is due after the next major improvement" if since else ""))
     return cs
 
 
@@ -336,6 +381,31 @@ def _frozen_table(repo: Path, base: str, head: str, a: dict) -> list[str]:
     return rows
 
 
+def _failed(checks: list[Check]) -> list[Check]:
+    return [c for c in checks if c.status == "FAIL"]
+
+
+def _guarded_preflight(repo: Path, **kw) -> list[Check]:
+    """A preflight that crashes is a failed preflight, never an absent one."""
+    try:
+        return preflight(repo, **kw)
+    except Exception as exc:
+        return [Check("preflight", "FAIL", f"preflight raised {type(exc).__name__}: {exc}")]
+
+
+def delivery_blockers(*, run_tests: bool, tests_ok: bool, repo_checks: list[Check], zip_checks: list[Check]) -> list[str]:
+    """Everything that makes a delivery unacceptable. The three are independent: passing application tests never excuses a failed
+    source-of-truth preflight, in the repository or in the clean extraction of the ZIP."""
+    out = []
+    if run_tests and not tests_ok:
+        out.append("the test runs failed or produced no results")
+    if _failed(repo_checks):
+        out.append("repository preflight FAILED (" + "; ".join(c.name for c in _failed(repo_checks)) + ")")
+    if _failed(zip_checks):
+        out.append("clean-extraction preflight FAILED (" + "; ".join(c.name for c in _failed(zip_checks)) + ")")
+    return out
+
+
 def deliver(repo: Path = REPO, *, base: str | None = None, out: Path | None = None, run_tests: bool = True) -> Path:
     """One ZIP of the committed tree, one patch, and one DELIVERY.md of mechanical facts — everything verified from the extracted ZIP."""
     repo = Path(repo)
@@ -347,7 +417,11 @@ def deliver(repo: Path = REPO, *, base: str | None = None, out: Path | None = No
     a = load_authority(repo)
     head = _git(repo, "rev-parse", "HEAD").strip()
     short = head[:7]
-    base = _git(repo, "rev-parse", base or a["approved_state"]["commit"]).strip()
+    from atlas_ui import authority
+    approved = authority.resolve(repo / a["register"]).approved_state     # the latest HUMAN-APPROVED state in the register, not a pinned commit
+    if base is None and approved is None:
+        raise SystemExit("no approved state in the authority register and no --base given")
+    base = _git(repo, "rev-parse", base or approved["commit"]).strip()
     out = Path(out or repo / "deliverables" / f"delivery_{short}")
     out.mkdir(parents=True, exist_ok=True)
     zname = f"Stock_Atlas_{short}_full_source.zip"
@@ -368,20 +442,26 @@ def deliver(repo: Path = REPO, *, base: str | None = None, out: Path | None = No
         leaked = bool(key) and any(key in (tree / n.split("/", 1)[1]).read_text(errors="ignore") for n in names if (tree / n.split("/", 1)[1]).is_file())
         repo_tests = run_pytest(repo) if run_tests else None
         clean_tests = run_pytest(tree, hide_original=repo) if run_tests else None
-        pre = render(preflight(repo))
-        pre_zip = render(preflight(tree, use_git=False))
+        repo_checks = _guarded_preflight(repo)
+        zip_checks = _guarded_preflight(tree, use_git=False)
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
     tests_ok = (not run_tests) or (tests_clean(repo_tests) and tests_clean(clean_tests))
+    pre, pre_zip = render(repo_checks), render(zip_checks)
+    blockers = delivery_blockers(run_tests=run_tests, tests_ok=tests_ok, repo_checks=repo_checks, zip_checks=zip_checks)
     log = _git(repo, "log", "--oneline", f"{base}..{head}") or ""
     stat = _git(repo, "diff", "--stat", base, head) or ""
     zsha = hashlib.sha256((out / zname).read_bytes()).hexdigest()
+    ms_heading = next((ln.lstrip("# ") for ln in reversed((repo / a["documents"]["master_plan"]).read_text(encoding="utf-8").splitlines())
+                       if re.match(r"^#{2,4} ", ln) and a["milestone_review_marker"].lower() in ln.lower()), "(none found)")
     md = f"""# Delivery — HEAD `{short}`
 
 - **Commit:** `{head}` · **Base for the diff (latest approved state):** `{base}`
 - **ZIP:** `{zname}` · SHA-256 `{zsha}` · {len(names)} files · `.env` members: {secrets or 'none'} · API key present in any ZIP file: {'**YES**' if leaked else 'no'}
 - **Patch:** `{patch.name}` ({len(patch.read_text().splitlines())} lines)
 - **Tests:** {'**NOT RUN**' if not run_tests else ('PASS (both runs clean)' if tests_ok else '**FAILED OR INCOMPLETE — do not accept this delivery**')}
+- **Source-of-truth preflight:** repository {'PASS' if not _failed(repo_checks) else '**FAIL**'} · clean extraction {'PASS' if not _failed(zip_checks) else '**FAIL**'}
+- **Verdict:** {'**DELIVERY NOT CLEAN — do not accept; the ZIP and patch were renamed .REJECTED**' if blockers else 'CLEAN'}
 
 ## Commits since the approved state
 ```
@@ -409,12 +489,46 @@ Same check on the extracted ZIP (no git history there):
 ```
 {pre_zip}
 ```
-Milestone review: Master Plan, section "{a['last_milestone_review']['plan_heading'].lstrip('# ')}". Capability matrix: `{a['documents']['capability_matrix']}`.
+Milestone review: Master Plan, section "{ms_heading}". Capability matrix: `{a['documents']['capability_matrix']}`.
 """
+    if blockers:
+        for f in (out / zname, patch):                       # a failed delivery must not leave a deliverable-looking ZIP behind
+            f.rename(f.with_name(f.name + ".REJECTED"))
+        md = md.replace(f"- **ZIP:** `{zname}`", f"- **ZIP (REJECTED):** `{zname}.REJECTED`").replace(f"- **Patch:** `{patch.name}`", f"- **Patch (REJECTED):** `{patch.name}.REJECTED`")
     (out / "DELIVERY.md").write_text(md, encoding="utf-8")
-    if not tests_ok:
-        raise SystemExit(f"DELIVERY NOT CLEAN: the test runs failed or produced no results; see {out / 'DELIVERY.md'}")
+    if blockers:
+        raise SystemExit("DELIVERY NOT CLEAN: " + "; ".join(blockers) + f"; see {out / 'DELIVERY.md'}")
     return out
+
+
+def authority_cli(x) -> int:
+    from atlas_ui import authority
+    reg = REPO / load_authority(REPO)["register"]
+    if x.action == "show":
+        res = authority.resolve(reg)
+        cands = authority.resolve_candidates(res, REPO / load_authority(REPO)["candidates"]["ledger"])
+        st, sn, aw = res.approved_state, res.current_snapshot, res.active_work
+        print(f"approved state : {st['commit'][:12]} — {st['status']}" if st else "approved state : none")
+        print(f"portfolio      : {sn['snapshot_id']} as of {sn['as_of']} (" + ", ".join(f"{s['snapshot_id']}" for s in res.snapshots[:-1]) + (" superseded)" if len(res.snapshots) > 1 else "no earlier snapshot)") if sn else "portfolio      : none")
+        print(f"active work    : {aw['work_id']}" if aw else "active work    : none")
+        for c in cands.values():
+            print(f"candidate      : {c['candidate_id']:5s} {c['state']}" + (f" until {c['parked_until']}" if c["parked_until"] else "")
+                  + (" [REVISIT DUE — reassess, not a promotion]" if c["revisit_due"] else "") + (f" [pending approval: {[p['seq'] for p in c['pending']]}]" if c["pending"] else ""))
+        for d in res.drafts:
+            print(f"draft (not followed): seq {d['seq']} {d['type']}")
+        return 0
+    if not x.type or not x.payload:
+        print("append needs --type and --payload"); return 2
+    raw = x.payload
+    payload = json.loads(Path(raw[1:]).read_text(encoding="utf-8") if raw.startswith("@") else raw)
+    approval = None
+    if x.approved_by_human:
+        if not (x.approval_record and x.approval_quote):
+            print("--approved-by-human needs --approval-record and --approval-quote (the human's words)"); return 2
+        approval = {"by": "HUMAN", "date": x.approval_date or date.today().isoformat(), "record": x.approval_record, "quote": x.approval_quote}
+    ev = authority.append(reg, x.type, payload, approval=approval, check_record=lambda r: authority.record_exists(REPO, r))
+    print(f"appended seq {ev['seq']} {ev['type']} ({'APPROVED' if approval else 'DRAFT — not followed'})")
+    return 0
 
 
 def main(argv: list[str]) -> int:
@@ -424,7 +538,14 @@ def main(argv: list[str]) -> int:
     p = sub.add_parser("preflight"); p.add_argument("--json", action="store_true")
     v = sub.add_parser("verify"); v.add_argument("--clean-extract", action="store_true")
     d = sub.add_parser("deliver"); d.add_argument("--base"); d.add_argument("--out")
+    au = sub.add_parser("authority", help="show the resolved approved records, or append a record to the register")
+    au.add_argument("action", choices=["show", "append"])
+    au.add_argument("--type"); au.add_argument("--payload", help="JSON object, or @file.json")
+    au.add_argument("--approved-by-human", action="store_true", help="the HUMAN approved this record (record it only on the human's instruction); omit to record a DRAFT")
+    au.add_argument("--approval-record"); au.add_argument("--approval-quote"); au.add_argument("--approval-date")
     x = ap.parse_args(argv)
+    if x.cmd == "authority":
+        return authority_cli(x)
     if x.cmd == "preflight":
         cs = preflight()
         print(json.dumps([c.__dict__ for c in cs], indent=1) if x.json else render(cs))

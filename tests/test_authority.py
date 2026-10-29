@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from atlas_ui import verify
+from atlas_ui import authority, verify
 
 ROOT = Path(__file__).resolve().parent.parent
 GIT_ENV = {**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}
@@ -45,13 +45,23 @@ def edit_authority(tree: Path, fn):
     p.write_text(text[:m.start(1)] + json.dumps(a, indent=2, ensure_ascii=False) + text[m.end(1):])
 
 
+HUMAN = {"by": "HUMAN", "date": "2026-10-29", "record": "Decision Log: SOURCE_OF_TRUTH_AND_PORTABILITY", "quote": "test approval"}
+
+
+def approve_state(tree: Path, sha: str):
+    """The human accepts a commit: one appended register event that supersedes the previous approved state."""
+    reg = tree / authority.REGISTER
+    prev = authority.resolve(reg).approved_state["commit"]
+    authority.append(reg, "APPROVED_STATE", {"commit": sha, "supersedes": prev, "status": "test acceptance"}, approval=HUMAN)
+
+
 def git_init(tree: Path) -> str:
     run = lambda *a: subprocess.run(["git", "-C", str(tree), *a], env=GIT_ENV, capture_output=True, text=True, check=True).stdout.strip()
     run("init", "-q", "-b", "main")
     run("add", "-A")
     run("commit", "-q", "-m", "baseline")
     sha = run("rev-parse", "HEAD")
-    edit_authority(tree, lambda a: a["approved_state"].__setitem__("commit", sha))
+    approve_state(tree, sha)
     run("add", "-A")
     run("commit", "-q", "-m", "authority names the baseline")   # HEAD is now one commit ahead of the approved state
     return sha
@@ -67,7 +77,7 @@ def test_preflight_passes_on_the_real_repository_with_no_failures():
     checks = verify.preflight(ROOT)
     assert [c.line() for c in checks if c.status == "FAIL"] == []
     names = {c.name for c in checks}
-    for must in ("frozen controls pinned", "pin file matches authority", "portfolio baseline (Cycle 0 Correction 002)", "candidate ledger chain + parked restrictions",
+    for must in ("frozen controls pinned", "pin file matches authority", "authority register", "approved portfolio snapshot", "candidate ledger chain + restrictions",
                  "outdated Pilot 2 work list marked superseded", "master plan points to the authority reference", "latest milestone review present"):
         assert must in names, must
 
@@ -102,21 +112,19 @@ def test_moving_the_pin_without_the_authority_record_fails(tree):
     assert status(verify.preflight(tree, use_git=False), "pin file matches authority").status == "FAIL"
 
 
-def test_a_changed_baseline_record_fails(tree):
+def test_an_approved_snapshot_record_edited_after_approval_fails(tree):
     b = tree / "docs/controlled_live_pilot/CYCLE0_BASELINE_001.md"
     b.write_text(b.read_text() + "\nsilent addition\n")
-    assert status(verify.preflight(tree, use_git=False), "portfolio baseline").status == "FAIL"
+    c = status(verify.preflight(tree, use_git=False), "approved portfolio snapshot")
+    assert c.status == "FAIL" and "edited after approval" in c.detail
 
 
-def test_unparking_or_tampering_a_candidate_fails(tree):
-    edit_authority(tree, lambda a: a["candidates"]["parked"].__setitem__("MCD", "2026-11-05"))
-    assert status(verify.preflight(tree, use_git=False), "parked restrictions").status == "FAIL"
-    edit_authority(tree, lambda a: a["candidates"]["parked"].__setitem__("MCD", "2026-11-04"))
+def test_tampering_with_the_candidate_ledger_fails(tree):
     led = tree / "operating_mvp/data/candidate_ledger.jsonl"
     text = led.read_text()
     assert '"MCD"' in text
     led.write_text(text.replace('"MCD"', '"MCX"', 1))   # an edited recorded event: the hash chain must reject it
-    assert status(verify.preflight(tree, use_git=False), "parked restrictions").status == "FAIL"
+    assert status(verify.preflight(tree, use_git=False), "candidate ledger chain").status == "FAIL"
 
 
 def test_a_plan_without_the_pointer_or_with_the_pilot2_list_unmarked_fails(tree):
@@ -146,10 +154,10 @@ def test_a_missing_record_or_unreadable_authority_fails(tree):
     assert [c.status for c in verify.preflight(tree, use_git=False)] == ["FAIL"]
 
 
-def test_a_nonempty_decision_ledger_warns_it_does_not_hide(tree):
-    (tree / "atlas_ui/data/live/decisions.jsonl").write_text('{"record":{}}\n')
+def test_a_nonempty_decision_ledger_is_counted_and_its_chain_verified_not_assumed_empty(tree):
+    (tree / "atlas_ui/data/live/decisions.jsonl").write_text('{"record":{}}\n')      # not a valid chained row: must not pass as a decision history
     c = status(verify.preflight(tree, use_git=False), "canonical decision ledger")
-    assert c.status == "WARN" and "1 rows" in c.detail
+    assert c.status == "FAIL" and "1 rows" in c.detail or "BROKEN" in c.detail
 
 
 def test_without_git_the_git_checks_are_skipped_not_passed(tree):
@@ -163,7 +171,7 @@ def test_newest_commit_is_distinguished_from_the_approved_state(tree):
     c = status(verify.preflight(tree), "newest commit vs approved state")
     assert c.status == "INFO" and "NEWEST COMMIT" in c.detail and "1 commit(s) ahead" in c.detail and base[:12] in c.detail and "unapproved" in c.detail
     head = subprocess.run(["git", "-C", str(tree), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
-    edit_authority(tree, lambda a: a["approved_state"].__setitem__("commit", head))      # the human accepts HEAD (uncommitted edit, so HEAD stays put)
+    approve_state(tree, head)      # the human accepts HEAD (an uncommitted register append, so HEAD stays put)
     c = status(verify.preflight(tree), "newest commit vs approved state")
     assert c.status == "OK" and "IS the approved state" in c.detail
 
@@ -204,13 +212,13 @@ def test_an_approved_commit_that_is_not_an_ancestor_fails(tree):
     commit(tree, "side branch")
     side = subprocess.run(["git", "-C", str(tree), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     subprocess.run(["git", "-C", str(tree), "checkout", "-q", "main"], env=GIT_ENV, check=True)
-    edit_authority(tree, lambda a: a["approved_state"].__setitem__("commit", side))
+    approve_state(tree, side)
     assert status(verify.preflight(tree), "ancestor").status == "FAIL"
 
 
 def test_an_unknown_approved_commit_fails(tree):
     git_init(tree)
-    edit_authority(tree, lambda a: a["approved_state"].__setitem__("commit", "0" * 40))
+    approve_state(tree, "0" * 40)
     assert status(verify.preflight(tree), "approved state in history").status == "FAIL"
 
 

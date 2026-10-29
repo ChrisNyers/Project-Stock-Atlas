@@ -227,7 +227,7 @@ class Stage7Service:
         tsy_fresh = FreshnessStatus.FRESH if age_h <= 96 else FreshnessStatus.STALE
 
         # --- baseline: valuation date is the frozen record's, not the decision time
-        c0 = canonical.load_cycle0()
+        c0 = canonical.current_portfolio()
         baseline_age = (now - c0.effective_at).days
         if req.get("baseline_ack") not in ("1", "on"):
             raise Blocked(f"acknowledge that the portfolio baseline is dated {c0.as_of} ({baseline_age} days old), "
@@ -297,11 +297,11 @@ class Stage7Service:
             raise Blocked(f"run id {run_id} already exists; nothing was written")
         in_ref = lambda name, ver, payload: freeze_payload(payload, version=ver, destination=d / f"{name}.json")
         refs = InputVersions(
-            portfolio_snapshot=in_ref("portfolio_snapshot", "cycle0-baseline", {
+            portfolio_snapshot=in_ref("portfolio_snapshot", c0.snapshot_id and "snapshot-" + c0.snapshot_id or "cycle0-baseline", {
                 "baseline_doc": c0.doc_path, "baseline_doc_sha256": c0.doc_sha256,
                 "baseline_effective_at": c0.effective_at, "baseline_as_of_label": c0.as_of,
                 "evaluated_at": now, "baseline_age_days": baseline_age,
-                "valuation_uncertainty": "stocks exact per human record; defensive ≈ $59,000 approximate, so the "
+                "valuation_uncertainty": f"stocks exact per human record; defensive ≈ ${c0.defensive_approx:,.0f} approximate, so the "
                                          "identified denominator and every weight are approximate",
                 "identified_value": str(c0.identified_value), "holdings": [(t, str(v)) for t, v in c0.holdings],
                 "defensive_approx": str(c0.defensive_approx), "label": c0.label, "snapshot": snapshot}),
@@ -324,7 +324,7 @@ class Stage7Service:
         entry = {
             "run_id": run_id, "created_at": now.isoformat(), "mode": self.ws.mode, "ticker": ticker,
             "candidate_id": cid, "security_key": key, "status": run.result.status,
-            "baseline_doc_sha256": c0.doc_sha256, "increment_dollars": increment,
+            "baseline_doc_sha256": c0.doc_sha256, "portfolio_snapshot_id": c0.portfolio_snapshot_id, "baseline_as_of": c0.as_of, "increment_dollars": increment,
             "priced_session": ev.attestation.session_date.isoformat(),
             "stage7": _ref_dict(run.artifact_ref, self.ws.root),
             "inputs": {k: _ref_dict(getattr(refs, k), self.ws.root) for k in refs.__dataclass_fields__},
@@ -519,7 +519,7 @@ class Stage7Service:
                 run, record_id=f"S8-{run_id}", human_stage8_action=action,
                 human_rationale=form["rationale"].strip(),
                 alternatives_considered=("SPY/beta", "Treasury/Cash", "Do Nothing", entry["ticker"]),
-                input_versions=versions, created_at=now, portfolio_snapshot_id=f"CYCLE0-{entry['baseline_doc_sha256'][:12]}",
+                input_versions=versions, created_at=now, portfolio_snapshot_id=entry.get("portfolio_snapshot_id") or f"CYCLE0-{entry['baseline_doc_sha256'][:12]}",
                 dominant_drivers=drivers if funded else (), revisit_triggers=revisit if funded else None,
                 starter_cap_weight=canonical.STARTER_CAP_WEIGHT if funded else None,
                 cluster_note=(form.get("cluster_note") or "").strip() or None,
