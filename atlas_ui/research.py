@@ -8,6 +8,7 @@ are excluded (no look-ahead).
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from datetime import date, datetime, timezone
@@ -28,6 +29,13 @@ LABEL = {"revenue": "Revenue", "operating_income": "Operating income", "net_inco
 
 class ResearchError(Exception):
     pass
+
+
+class ResearchIntegrityError(ResearchError):
+    """A retained research reference exists but cannot be trusted: missing, hash-mismatched, mis-bound, unsafe path or unreadable index.
+
+    Never swallowed into "no research exists": absence of a reference is ``None``; an untrustworthy reference is this error.
+    """
 
 
 def _filed(fact: dict) -> date | None:
@@ -226,22 +234,96 @@ def research_candidate(ledger_path: Path, candidate_id: str, out_dir: Path, *, d
     out_dir = Path(out_dir)
     ref = freeze_payload(snap, version="research-snapshot-v1", destination=out_dir / f"{ticker}-{decision_time:%Y%m%dT%H%M%S%fZ}.json")
     rec = write_evidence(ledger_path, candidate_id, snap, decision_time.date())
+    # Portable reference: the file NAME, relative to the directory that holds research_index.jsonl (the research workspace root).
+    # No absolute path is ever written (FROZEN-control-independent portability fix; see CHANGE_003 record section 7).
     entry = {"candidate_id": candidate_id, "ticker": ticker, "security_key": res.security_key, "latest_fy_end": latest_end,
-             "snapshot": {"sha256": ref.sha256, "artifact_path": ref.artifact_path}, "recorded_at": decision_time.isoformat(), **rec}
+             "snapshot": {"sha256": ref.sha256, "artifact_rel": Path(ref.artifact_path).name}, "recorded_at": decision_time.isoformat(), **rec}
     with open(out_dir / "research_index.jsonl", "a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, sort_keys=True) + "\n")
     return entry
 
 
-def latest_snapshot(out_dir: Path, candidate_id: str) -> dict | None:
-    """Newest retained snapshot for a candidate, only if its file still matches its recorded SHA-256."""
-    import hashlib
+_SEPARATORS = re.compile(r"[\\/]")
+_SNAPSHOT_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*\.json$")
+_SHA256 = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _snapshot_filename(ref: dict) -> str:
+    """The file NAME a snapshot reference designates inside the research root. Never a path.
+
+    New entries carry ``artifact_rel`` (a bare file name). Historical entries (e.g. the four committed on 2026-10-29) carry the writing machine's
+    absolute ``artifact_path``; those lines are preserved byte-for-byte and only the final component is used — the directory part is never
+    followed, so a moved or extracted workspace resolves inside itself. The SHA-256 in the index, not the path, is what binds the content.
+    """
+    raw = ref.get("artifact_rel") if "artifact_rel" in ref else ref.get("artifact_path")
+    if not isinstance(raw, str) or not raw:
+        raise ResearchIntegrityError("research snapshot reference has no artifact_rel / artifact_path")
+    parts = _SEPARATORS.split(raw)
+    if ".." in parts or "\x00" in raw:
+        raise ResearchIntegrityError(f"research snapshot reference {raw!r} contains path traversal; refused")
+    if "artifact_rel" in ref and len(parts) != 1:
+        raise ResearchIntegrityError(f"artifact_rel {raw!r} must be a bare file name within the research root; refused")
+    name = parts[-1]
+    if not _SNAPSHOT_NAME.match(name):
+        raise ResearchIntegrityError(f"research snapshot file name {name!r} is not an allowed snapshot name; refused")
+    return name
+
+
+def resolve_snapshot_path(out_dir: Path, ref: dict) -> Path:
+    """Resolve a snapshot reference inside ``out_dir`` and nowhere else (no traversal, no symlink, must exist)."""
+    root = Path(out_dir).resolve()
+    name = _snapshot_filename(ref)
+    path = root / name
+    if path.is_symlink():
+        raise ResearchIntegrityError(f"research snapshot {name} is a symbolic link; refused")
+    if not path.is_file():
+        raise ResearchIntegrityError(f"retained research snapshot {name} is missing from the research workspace {root}")
+    if path.resolve().parent != root:
+        raise ResearchIntegrityError(f"research snapshot {name} resolves outside the research workspace; refused")
+    return path
+
+
+def _index_rows(out_dir: Path) -> list[dict]:
     idx = Path(out_dir) / "research_index.jsonl"
     if not idx.exists():
+        return []
+    rows = []
+    for n, line in enumerate(idx.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+            if not isinstance(row, dict) or not isinstance(row.get("candidate_id"), str):
+                raise ValueError("not an index row")
+        except ValueError as exc:
+            raise ResearchIntegrityError(f"research_index.jsonl line {n} is unreadable ({exc}); refusing to treat the index as complete") from exc
+        rows.append(row)
+    return rows
+
+
+def latest_snapshot(out_dir: Path, candidate_id: str) -> dict | None:
+    """Newest retained snapshot for a candidate.
+
+    ``None`` means exactly one thing: the index holds no snapshot for this candidate. If one exists but cannot be verified (missing file,
+    SHA-256 mismatch, a file that belongs to another security, an unsafe or unreadable reference) this raises ``ResearchIntegrityError`` — an older
+    snapshot is never silently served in its place.
+    """
+    rows = [r for r in _index_rows(out_dir) if r["candidate_id"] == candidate_id]
+    if not rows:
         return None
-    rows = [json.loads(l) for l in idx.read_text().splitlines() if l.strip() and json.loads(l)["candidate_id"] == candidate_id]
-    for row in reversed(rows):
-        p = Path(row["snapshot"]["artifact_path"])
-        if p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest() == row["snapshot"]["sha256"]:
-            return {**row, "data": json.loads(p.read_text())}
-    return None
+    row = rows[-1]
+    ref = row.get("snapshot")
+    if not isinstance(ref, dict) or not isinstance(ref.get("sha256"), str) or not _SHA256.match(ref["sha256"]):
+        raise ResearchIntegrityError(f"research index entry for {candidate_id} has no valid snapshot sha256")
+    path = resolve_snapshot_path(out_dir, ref)
+    raw = path.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != ref["sha256"]:
+        raise ResearchIntegrityError(f"retained research snapshot {path.name} does not match its recorded SHA-256 (tampered or corrupt)")
+    try:
+        data = json.loads(raw.decode("utf-8"))
+    except ValueError as exc:
+        raise ResearchIntegrityError(f"retained research snapshot {path.name} is not valid JSON") from exc
+    if data.get("ticker") != row.get("ticker") or data.get("security_key") != row.get("security_key"):
+        raise ResearchIntegrityError(f"snapshot {path.name} belongs to {data.get('ticker')}/{data.get('security_key')}, not the indexed "
+                                     f"{row.get('ticker')}/{row.get('security_key')}; refused")
+    return {**row, "data": data, "resolved_path": str(path)}

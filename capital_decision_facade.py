@@ -57,7 +57,6 @@ no ranking, and no scoring.
 from __future__ import annotations
 
 import json
-import sys
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -106,6 +105,20 @@ CREATED_AT_TOLERANCE = timedelta(minutes=5)
 #: Provisional paper-pilot bound (FROZEN_CONTROL_CHANGE_001). Subordinate to session authority and exact
 #: evidence consistency: it can only make a funded decision stricter, never admit one they reject.
 MAX_STAGE7_RUN_AGE_HOURS = 96.0
+
+
+def _sealed_utc_clock(_now=datetime.now, _utc=timezone.utc):
+    """The backend's own UTC clock (FROZEN_CONTROL_CHANGE_003).
+
+    The real ``datetime.now`` and ``timezone.utc`` are bound into this closure at import, so neither an attribute on the facade, a subclass, the
+    test runner being loaded, nor a later patch of this module's ``datetime`` name can change the time the public entry point uses.
+    """
+    def backend_utc_now() -> datetime:
+        return _now(_utc)
+    return backend_utc_now
+
+
+_BACKEND_UTC_NOW = _sealed_utc_clock()
 
 
 @dataclass(frozen=True)
@@ -225,7 +238,60 @@ class CapitalDecisionFacade:
         why_not_this_increment: str | None = None,
         funded_freshness: FundedFreshnessEvidence | None = None,
     ) -> DecisionRecord:
-        """Persist a final human Stage 8 capital decision.
+        """Persist a final human Stage 8 capital decision (the only public capital write path).
+
+        Takes the time from the backend's own sealed UTC clock. There is no clock parameter, no overridable clock method, and no test-runner
+        exemption (FROZEN_CONTROL_CHANGE_003); see ``_record_final_decision_at`` for the behaviour itself.
+        """
+        return self._record_final_decision_at(
+            stage7_run,
+            record_id=record_id,
+            human_stage8_action=human_stage8_action,
+            human_rationale=human_rationale,
+            alternatives_considered=alternatives_considered,
+            input_versions=input_versions,
+            created_at=created_at,
+            portfolio_snapshot_id=portfolio_snapshot_id,
+            dominant_drivers=dominant_drivers,
+            revisit_triggers=revisit_triggers,
+            starter_cap_weight=starter_cap_weight,
+            cluster_note=cluster_note,
+            prior_record_id=prior_record_id,
+            why_this_vs_alternatives=why_this_vs_alternatives,
+            why_this_size=why_this_size,
+            allocation_wrong_if=allocation_wrong_if,
+            why_not_this_increment=why_not_this_increment,
+            funded_freshness=funded_freshness,
+            now=_BACKEND_UTC_NOW(),
+        )
+
+    def _record_final_decision_at(
+        self,
+        stage7_run: Stage7Run,
+        *,
+        record_id: str,
+        human_stage8_action: str | PortfolioAction,
+        human_rationale: str,
+        alternatives_considered: Sequence[str],
+        input_versions: InputVersions,
+        created_at: datetime,
+        portfolio_snapshot_id: str,
+        dominant_drivers: Sequence[str] = (),
+        revisit_triggers: RevisitTriggers | None = None,
+        starter_cap_weight: float | None = None,
+        cluster_note: str | None = None,
+        prior_record_id: str | None = None,
+        why_this_vs_alternatives: str | None = None,
+        why_this_size: str | None = None,
+        allocation_wrong_if: str | None = None,
+        why_not_this_increment: str | None = None,
+        funded_freshness: FundedFreshnessEvidence | None = None,
+        now: datetime,
+    ) -> DecisionRecord:
+        """Implementation of ``record_final_decision`` with the trusted time passed in.
+
+        PRIVATE. Only ``record_final_decision`` (real backend clock) and the test fixture in ``tests/conftest.py`` (pinned fixture time) call it.
+        No production module may (enforced by an AST test); a caller that does is editing the control, not using it.
 
         The Stage 7 facts written to the ledger are read from the frozen run,
         never from caller-supplied arguments. ``DecisionStore.append`` then
@@ -255,7 +321,7 @@ class CapitalDecisionFacade:
 
         if action.value in FUNDING_ACTIONS:
             # Mandatory: omitting the evidence can never bypass verification (FROZEN_CONTROL_CHANGE_001).
-            self._verify_funded_freshness(stage7_run, funded_freshness, created_at, record_id)
+            self._verify_funded_freshness(stage7_run, funded_freshness, created_at, record_id, now)
 
         position = getattr(result, "position", None)
         # Derived from field PRESENCE only — never from content, never generated.
@@ -294,28 +360,6 @@ class CapitalDecisionFacade:
         )
         return self._store.append(record)
 
-    # -- trusted clock (FROZEN_CONTROL_CHANGE_002) ----------------------------
-
-    def _now(self) -> datetime:
-        """The ONLY time source for funded-decision freshness: the backend's UTC system clock.
-
-        There is deliberately no public clock parameter anywhere. Tests substitute this method from the test side.
-        """
-        return datetime.now(timezone.utc)
-
-    def _trusted_now(self) -> datetime:
-        replaced = (
-            "_now" in vars(self)
-            or type(self)._now is not _ORIGINAL_NOW
-            or CapitalDecisionFacade._now is not _ORIGINAL_NOW
-        )
-        if replaced and "pytest" not in sys.modules:
-            raise ControlFailure("The facade clock has been replaced outside a test run; a funded decision fails closed")
-        now = self._now()
-        if now.tzinfo is None or now.utcoffset() != timedelta(0):
-            raise ControlFailure("The facade clock must be timezone-aware UTC")
-        return now
-
     # -- funded-decision freshness (mandatory for INITIATE / ADD) -----------
 
     def _verify_funded_freshness(
@@ -324,8 +368,12 @@ class CapitalDecisionFacade:
         evidence: FundedFreshnessEvidence | None,
         created_at: datetime,
         record_id: str,
+        now: datetime,
     ) -> None:
-        """Fail closed unless the funded action still stands on the evidence Stage 7 froze. Writes nothing on failure."""
+        """Fail closed unless the funded action still stands on the evidence Stage 7 froze. Writes nothing on failure.
+
+        ``now`` is the trusted time handed in by ``record_final_decision`` (FROZEN_CONTROL_CHANGE_003); it must be timezone-aware UTC.
+        """
         if not isinstance(evidence, FundedFreshnessEvidence):
             raise ControlFailure(
                 "INITIATE/ADD requires FundedFreshnessEvidence (fresh price bind and Treasury re-attestation); "
@@ -345,7 +393,8 @@ class CapitalDecisionFacade:
             )
         frozen_price = basis["price_snapshot"]
         # Every freshness comparison below uses the TRUSTED backend clock, never the caller's created_at.
-        now = self._trusted_now()
+        if getattr(now, "tzinfo", None) is None or now.utcoffset() != timedelta(0):
+            raise ControlFailure("The facade clock must be timezone-aware UTC")
         created = created_at if created_at.tzinfo else created_at.replace(tzinfo=timezone.utc)
         if abs(created - now) > CREATED_AT_TOLERANCE:
             raise ControlFailure(
@@ -424,8 +473,6 @@ class CapitalDecisionFacade:
     def ledger_manifest_hash(self) -> str:
         return self._store.manifest_hash()
 
-
-_ORIGINAL_NOW = CapitalDecisionFacade._now  # sentinel for the replaced-clock guard (FROZEN_CONTROL_CHANGE_002)
 
 
 def _as_portfolio_action(action: str | PortfolioAction) -> PortfolioAction:

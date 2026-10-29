@@ -48,6 +48,8 @@ INVESTOR DAY` (MCD PARKED until 2026-11-04).**
 
 **Update 2026-10-28 (backend completion B–E done, stopped for review): `READ-ONLY LIVE GATE B + SEC RESEARCH ADAPTER + UNRANKED RESEARCH COHORT DELIVERED; NO STAGE 7, NO DECISION; MCD/RPM PARKED; GEV/RMD/ORCL SURFACED`** (`controlled_live_pilot/BACKEND_COMPLETION_RESULTS_001.md`).
 
+**Update 2026-10-29 (independent review of 1683f98 remediated): `PYTEST-PRESENCE CLOCK EXEMPTION REMOVED (FROZEN-CONTROL CHANGE 003); RESEARCH SNAPSHOT REFERENCES MADE PORTABLE; NO NEW FEATURES; NO STAGE 7, NO DECISION; MCD/RPM PARKED`** (`controlled_live_pilot/FROZEN_CONTROL_CHANGE_003.md`; section "October 29, 2026").
+
 ---
 
 ## Governing Mission
@@ -1864,6 +1866,21 @@ ERROR that passed on re-run (details in `controlled_live_pilot/BACKEND_COMPLETIO
 filings; the source-to-assessment chain is demonstrated, but its dispositions are DRAFT_BY_RECORDER and no example reached SUPPORTED (none is permitted by the lifecycle). **Gate 4 reached (view only):** unranked research cohort
 without any Stage 7 or capital control. **Gate 5 partial:** one linked, append-only, price-only observation (MCD); benchmark comparison UNVERIFIED. MCD (2026-11-04) and RPM (2026-11-09) remain PARKED (revisit triggers);
 GEV, RMD, ORCL are SURFACED, unpromoted, without a stance. No Stage 7 run, no decision (canonical ledger: 0 rows), no capital action. Execution **stopped for independent review**; no further development phase is started.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### October 29, 2026 — Remediation of the independent review of 1683f98 (append-only; stops for independent review)
+
+Two findings were reproduced and corrected; nothing else was started. **(1) Trusted clock:** the change-002 guard let any process that imported `pytest` replace the facade clock; a plain script recorded a stale paper INITIATE
+(reproduced on `1683f98`: four ordinary routes accepted). Pre-change record `FROZEN_CONTROL_CHANGE_003.md` was committed before implementation; `capital_decision_facade.py` alone changed: the exemption and the replaceable
+`_now` were removed and the public `record_final_decision` reads a sealed backend UTC clock (same signature, no clock parameter); deterministic tests pin time through a test-side fixture. All four routes are now refused with a
+byte-identical ledger; the residual (code that edits the control inside the process) is stated, not claimed closed. The 96 h bound stays provisional. **(2) Research portability:** research snapshot references are now bare
+file names inside the research workspace, SHA-256-bound and confined to it; the four historical committed entries are byte-preserved and resolved by name; a missing/tampered/mis-bound snapshot is an explicit error shown in the UI.
+My earlier "clean extract" evidence was invalid (the original absolute path still existed) and is withdrawn; the full suite now runs from a copy in another directory with the original tree blocked from reading. The Stage 7 run index has
+the same absolute-path property for future runs (none exist) and is left for a human decision. MCD (2026-11-04) and RPM (2026-11-09) remain PARKED (revisit triggers); GEV, RMD, ORCL SURFACED; no Stage 7 run, no decision
+(canonical ledger: 0 rows), no capital action. Execution **stopped for independent review**.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 

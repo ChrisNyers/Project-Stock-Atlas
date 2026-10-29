@@ -30,14 +30,19 @@ class _FakeDatetime(datetime):
         return NOW
 
 
-def attempt(label, tamper):
+def attempt(label, tamper, *, private_entry=False, factory=None):
     tmp = Path(tempfile.mkdtemp())
-    facade = _facade(tmp)
+    facade = (factory or _facade)(tmp)
     run = _eligible_run(facade)
-    restore = tamper(facade)
-    before = Path(facade.store.path).read_bytes() if Path(facade.store.path).exists() else b""
     try:
-        facade.record_final_decision(
+        restore = tamper(facade)
+    except AttributeError:
+        print(f"N/A       (does not exist at this commit)  {label}")
+        return "N/A"
+    before = Path(facade.store.path).read_bytes() if Path(facade.store.path).exists() else b""
+    call = (lambda *a, **k: facade._record_final_decision_at(*a, now=NOW, **k)) if private_entry else facade.record_final_decision
+    try:
+        call(
             run, record_id="PROBE", human_stage8_action="INITIATE", human_rationale="standalone clock replacement probe",
             alternatives_considered=("ELIG", "SPY", "Treasury/Cash", "Do Nothing"), input_versions=_input_versions(tmp),
             created_at=NOW, portfolio_snapshot_id="PROBE", dominant_drivers=("fixture",),
@@ -65,6 +70,22 @@ def v_class(f):
     return lambda: setattr(CapitalDecisionFacade, "_now", orig) if orig else delattr(CapitalDecisionFacade, "_now")
 
 
+def v_subclass(f):
+    return lambda: None  # the tamper is the subclass itself (see factory below)
+
+
+def v_private_entry(f):
+    f._record_final_decision_at  # AttributeError if absent  # noqa: B018
+    return lambda: None
+
+
+def v_overwrite_sealed_clock(f):
+    cdf._BACKEND_UTC_NOW  # AttributeError if absent  # noqa: B018
+    orig = cdf._BACKEND_UTC_NOW
+    cdf._BACKEND_UTC_NOW = lambda: NOW
+    return lambda: setattr(cdf, "_BACKEND_UTC_NOW", orig)
+
+
 def v_module_datetime(f):
     orig = cdf.datetime
     cdf.datetime = _FakeDatetime
@@ -73,9 +94,25 @@ def v_module_datetime(f):
 
 if __name__ == "__main__":
     print(f"real wall clock {datetime.now(timezone.utc):%Y-%m-%d %H:%MZ}; fixture run dated {NOW:%Y-%m-%d %H:%MZ}; pytest imported: {'pytest' in sys.modules}")
+    class Sneaky(CapitalDecisionFacade):
+        def _now(self):
+            return NOW
+
+    sneaky = lambda tmp: Sneaky(ledger_path=tmp / "decisions.jsonl", artifact_dir=tmp / "artifacts")
+    print("-- ordinary routes: every one must be REJECTED --")
     results = [
         attempt("replace instance facade._now", v_instance),
         attempt("replace class CapitalDecisionFacade._now", v_class),
+        attempt("subclass defining _now", v_subclass, factory=sneaky),
         attempt("replace capital_decision_facade.datetime", v_module_datetime),
+        attempt("pytest imported, nothing replaced, honest stale call", lambda f: (lambda: None)),
     ]
-    print("SUMMARY:", "ALL REFUSED" if all(r == "REJECTED" for r in results) else "AT LEAST ONE ACCEPTED A STALE FUNDED INITIATE")
+    print("-- documented RESIDUAL (editing the control from inside the process; see FROZEN_CONTROL_CHANGE_003 section 4) --")
+    residual = [
+        attempt("RESIDUAL a: call private _record_final_decision_at(now=...) directly", v_private_entry, private_entry=True),
+        attempt("RESIDUAL b: overwrite module _BACKEND_UTC_NOW", v_overwrite_sealed_clock),
+    ]
+    bad = [r for r in results if r == "ACCEPTED"]
+    print("SUMMARY ordinary routes:", "ALL REFUSED" if not bad else f"{len(bad)} ACCEPTED A STALE FUNDED INITIATE")
+    print("SUMMARY residual (not claimed closed):", ", ".join(residual))
+    sys.exit(1 if bad else 0)

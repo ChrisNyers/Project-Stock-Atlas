@@ -1,0 +1,12 @@
+real wall clock 2026-10-29 12:53Z; fixture run dated 2026-09-02 21:00Z; pytest imported: True
+-- ordinary routes: every one must be REJECTED --
+REJECTED  ledger_rows=0 ledger_unchanged=True  replace instance facade._now  [created_at 2026-09-02T21:00:00+00:00 is 81593.2 min from the trusted b]
+REJECTED  ledger_rows=0 ledger_unchanged=True  replace class CapitalDecisionFacade._now  [created_at 2026-09-02T21:00:00+00:00 is 81593.2 min from the trusted b]
+REJECTED  ledger_rows=0 ledger_unchanged=True  subclass defining _now  [created_at 2026-09-02T21:00:00+00:00 is 81593.2 min from the trusted b]
+REJECTED  ledger_rows=0 ledger_unchanged=True  replace capital_decision_facade.datetime  [created_at 2026-09-02T21:00:00+00:00 is 81593.2 min from the trusted b]
+REJECTED  ledger_rows=0 ledger_unchanged=True  pytest imported, nothing replaced, honest stale call  [created_at 2026-09-02T21:00:00+00:00 is 81593.2 min from the trusted b]
+-- documented RESIDUAL (editing the control from inside the process; see FROZEN_CONTROL_CHANGE_003 section 4) --
+ACCEPTED  ledger_rows=1 ledger_unchanged=False  RESIDUAL a: call private _record_final_decision_at(now=...) directly
+ACCEPTED  ledger_rows=1 ledger_unchanged=False  RESIDUAL b: overwrite module _BACKEND_UTC_NOW
+SUMMARY ordinary routes: ALL REFUSED
+SUMMARY residual (not claimed closed): ACCEPTED, ACCEPTED

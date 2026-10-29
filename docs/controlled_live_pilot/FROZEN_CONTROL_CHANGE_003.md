@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Date | 2026-10-29 |
-| Status | **AUTHORIZED by the human in chat (quoted in §5); not yet implemented when this section was written — see §6 for the outcome** |
+| Status | **AUTHORIZED by the human in chat (quoted in §5); IMPLEMENTED — see §6 (frozen-control change) and §7 (research portability, not a frozen control). §§1–5 are as written before implementation.** |
 | Trigger | Independent review of `1683f98` (`Stock_Atlas_1683f98_Independent_Review_2026-10-28.md`), Material finding 1 |
 | Baseline | HEAD `1683f98` (change 002 included) |
 | Frozen-control files touched | `capital_decision_facade.py` only. `stock_atlas/*`, `allocation_rationale.py`, `live_price_binding.py`, `live_session_calendar.py` are not touched. |
@@ -78,3 +78,54 @@ data source or feature) is not authorized and is not done.
 ## 6. Implementation outcome
 
 _(appended after implementation; §§1–5 stay unchanged)_
+
+**What changed in `capital_decision_facade.py`** (diff in `SOURCE_DIFF_1683f98_to_corrected.patch`): removed `_now`, `_trusted_now`, `_ORIGINAL_NOW`, `import sys` and every `pytest`/`sys.modules`
+reference; added the sealed clock `_BACKEND_UTC_NOW` (real `datetime.now`/`timezone.utc` bound in a closure at import); `record_final_decision` keeps its exact signature and forwards to the private
+`_record_final_decision_at(..., now)` (the former body, with `now` threaded to `_verify_funded_freshness`, whose checks are unchanged; `now` must still be timezone-aware UTC, now validated by duck typing
+so that patching the module's `datetime` name cannot change the verdict). No other control file changed (`git diff 1683f98 -- stock_atlas allocation_rationale.py live_price_binding.py live_session_calendar.py` is empty;
+the 12-file pin was updated for `capital_decision_facade.py` only).
+
+**Before / after, same extended probe, plain `python` (not pytest), pytest imported, real clock 2026-10-29, fixture run 2026-09-02:**
+
+| Route | 1683f98 | after |
+|---|---|---|
+| replace instance `facade._now` (the reviewer's route) | **ACCEPTED**, 1 ledger row | REJECTED, ledger byte-identical |
+| replace class `CapitalDecisionFacade._now` | **ACCEPTED** | REJECTED |
+| subclass defining `_now` | **ACCEPTED** | REJECTED |
+| replace `capital_decision_facade.datetime` | **ACCEPTED** | REJECTED |
+| pytest imported, nothing replaced, honest stale call | REJECTED | REJECTED |
+| RESIDUAL a: call private `_record_final_decision_at(now=...)` | n/a | ACCEPTED (documented, §4; not claimed closed) |
+| RESIDUAL b: overwrite module `_BACKEND_UTC_NOW` | n/a | ACCEPTED (documented, §4; not claimed closed) |
+
+Evidence: `atlas_ui/evidence/change003/clock_probe_BEFORE.txt` (original three-route probe), `clock_probe_BEFORE_extended_at_1683f98.txt`, `clock_probe_AFTER.txt`.
+
+**Tests** (`tests/test_clock_not_caller_controllable.py`, 15): the reviewer's route run in a subprocess outside the pytest runner; instance / class / subclass / `datetime` patch / pytest-loaded / consistent-created_at / ADD as
+well as INITIATE, each asserting REJECTED + ledger bytes identical + no freshness artifact; HOLD CASH / DO NOTHING still recordable through the real entry; a negative mutation inside the suite; source-text and AST checks
+that the removed machinery stays removed and that only `tests/` and `atlas_ui/evidence/` reference the private time entry; naive / non-UTC time refused. **Mutation run:** re-introducing a replaceable clock into the facade
+(`now=self._now() if hasattr(self, "_now") else ...`) fails 6 of the 15 (`change003/mutation_replaceable_clock_FAILS.txt`); the file was restored and its SHA-256 verified. Legitimate fresh funded decisions
+(UI path, real clock) and the existing 100+ freshness/boundary/allocation tests pass with the fixture-side clock pin.
+
+**Honest note on the residual.** Items a and b are accepted by the probe and are reported as such. They are not "ordinary caller" routes: both require code that deliberately calls a private name or overwrites a private
+module global — editing the control from inside the process. Python cannot prevent that; who may run or modify backend code on the host must. The 96 h run-age bound remains provisional and subordinate.
+
+## 7. Research snapshot portability (independent review finding 2) — NOT a frozen-control change
+
+`atlas_ui/research.py` (not a control file) and `atlas_ui/app.py` only. Reproduced: the committed `research_index.jsonl` stored the writing Mac's absolute paths; `latest_snapshot` read only that path. **My own earlier
+clean-extract check was falsely green** because the original Mac path still existed on the machine that built the ZIP, so the "extract" silently read the originals. Evidence: `change003/research_portability_BEFORE.txt`
+(the extract's index points outside the extract; with the original path hidden all four of MCD/GEV/RMD/ORCL return `None`).
+
+Fix: new entries store `artifact_rel`, a bare file name relative to the research workspace root (the directory holding `research_index.jsonl`); readers resolve a reference only inside that root (no separators, no `..`, NUL, hidden
+or non-`.json` names, no symlinks, parent must equal the root), verify the index SHA-256, and check that the file belongs to the indexed ticker/security key. **Historical lines are not rewritten**: the four committed
+lines (first-4-lines SHA-256 `96a3c536…`) and the four snapshot files keep their bytes and hashes (pinned in the tests); for their absolute `artifact_path` only the final file name is used and the directory part is never followed.
+`latest_snapshot` returns `None` only when the index holds no snapshot for the candidate; a missing, tampered, mis-bound, symlinked, traversal or unreadable-index reference raises `ResearchIntegrityError`, an older snapshot is never
+served in place of a corrupt newest one, and the UI/API show `RESEARCH EVIDENCE ERROR` / `UNAVAILABLE` and `research_error` instead of "no research".
+
+**Tests** (`tests/test_research_portability.py`, 30): bare-name entries; moved workspace; byte-preserved history; all four committed snapshots load from a copy elsewhere; the original absolute path is never consulted (a tampered
+copy is refused while the original is intact); foreign/Windows-style legacy paths; absent vs untrustworthy; corrupt newest not replaced by older; unreadable index line; cross-security binding; 13 malicious `artifact_rel`
+values, legacy traversal, symlink, malformed hash; UI/API error surfacing; a clean extraction in another directory in a subprocess whose audit hook fails if any project file is opened from the original tree, rendering all four
+cohort rows and assessment panels; and the extracted tree's own research tests. **Mutation run:** making the loader follow the old absolute path fails 6 of the 30 (`change003/mutation_absolute_path_FAILS.txt`); restored, hash verified.
+
+**Not fixed, stated:** the Stage 7 run index in `atlas_ui/service.py` also stores each frozen reference's absolute `artifact_path` (the frozen `FrozenArtifactRef` carries it). No Stage 7 run exists in the committed data
+(`decisions.jsonl` 0 bytes, no run index), so no delivered artifact is affected, but a workspace holding future runs would not be relocatable. That is the same class of defect in a path that touches a frozen control type;
+I have not changed it without authorization and list it as a decision for the human.
+

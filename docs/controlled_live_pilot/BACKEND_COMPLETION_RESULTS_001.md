@@ -29,3 +29,7 @@ decisions and HOLD CASH / DO NOTHING still work.
 
 ## 4. Not done / requires a decision
 See `DELIVERY_REPORT.md`.
+
+## 5. Corrections after independent review (appended 2026-10-29; §§1–4 unchanged)
+- The statement above that "a replaced clock fails closed outside a pytest run" is **withdrawn**: that guard was bypassable by an ordinary script (see `FROZEN_CONTROL_CHANGE_003.md`); it was removed and the clock is no longer replaceable through any facade attribute.
+- The "clean ZIP extract 519 passed / 26 skipped" check reported with this delivery was **not valid evidence of portability**: the research index held absolute paths to the original machine, which still existed, so the extract read the originals. Fixed and re-verified with the original tree blocked (`FROZEN_CONTROL_CHANGE_003.md` §7).

@@ -41,13 +41,13 @@ CAPABILITIES = [
     ("E. Stage 7 via CapitalDecisionFacade.run_stage7, retained hashed run, side-by-side alternatives", "FIXTURE-TESTED",
      "Runs through the real facade with a FIXTURE price provider in DEMO mode and tests. No canonical run exists. MCD is PARKED until 2026-11-04. Treasury reference is human-attested; security decision is explicit; all % inputs use one unit."),
     ("F. Human Stage 8 (paper only): facade-enforced funded freshness, non-actions, ledger proof", "FIXTURE-TESTED",
-     "Real facade + DecisionStore; funded freshness is mandatory (FundedFreshnessEvidence, frozen-control change 001) and rejected paths leave zero ledger rows. Freshness uses a trusted backend UTC clock (change 002); a caller-supplied created_at cannot establish the time used, and a created_at more than 5 minutes from it is refused."),
+     "Real facade + DecisionStore; funded freshness is mandatory (FundedFreshnessEvidence, frozen-control change 001) and rejected paths leave zero ledger rows. Freshness uses a sealed backend UTC clock (changes 002 and 003): a caller-supplied created_at cannot establish the time used and a created_at more than 5 minutes from it is refused; no facade attribute, subclass, patched datetime name or test-runner import can choose the clock (the pytest-presence exemption was removed). Residual: code that edits the control inside the same process (private entry, overwriting the sealed clock) is prevented operationally, not by Python."),
     ("G1. Decision history (append-only ledger) + manual linked revisit note", "PROVEN CANONICAL OFFLINE",
      "Reads the real ledger; a revisit is a dated linked note, the original record is never edited."),
     ("G2. Linked later observation (append-only, price-only) ", "PROVEN CANONICAL OFFLINE",
      "MCD: dated observation linked to the underwriting record with a price-only change (+7.9%, SECONDARY vs UNCERTIFIED originals). Benchmark comparison vs time-matched cash/Treasury and SPY adjusted total return is UNVERIFIED / NOT IMPLEMENTED; monitoring cadence is out of scope."),
     ("H. Unranked research cohort and descriptive 'attractive at the verified price?' assessment view", "PROVEN CANONICAL OFFLINE",
-     "Built on live SEC + Gate B data for MCD (parked), GEV, RMD, ORCL (SURFACED, INSUFFICIENT EVIDENCE). Assessments are DRAFT_BY_RECORDER and not human-accepted; no ranks, no scores, no Stage 7 or capital control in the view. No candidate yet permitted a 'SUPPORTED' example."),
+     "Built on live SEC + Gate B data for MCD (parked), GEV, RMD, ORCL (SURFACED, INSUFFICIENT EVIDENCE). Assessments are DRAFT_BY_RECORDER and not human-accepted; no ranks, no scores, no Stage 7 or capital control in the view. No candidate yet permitted a 'SUPPORTED' example. Saved research snapshots are referenced by a bare file name inside the research workspace and bound to their SHA-256, so an extracted ZIP loads them anywhere; a missing, tampered or mis-bound snapshot is shown as a RESEARCH EVIDENCE ERROR, never as 'no research'."),
     ("Real trades / broker connectivity / execution", "NOT IMPLEMENTED", "By design: paper only. No order API exists."),
 ]
 
@@ -119,6 +119,14 @@ def research_dir(app: App) -> Path:
     return app.ws.root / "research"
 
 
+def research_snapshot(app: App, candidate_id: str) -> tuple[dict | None, str | None]:
+    """(snapshot | None, error | None). A retained snapshot that fails verification is returned as an ERROR to display, never as 'no research'."""
+    try:
+        return research.latest_snapshot(research_dir(app), candidate_id), None
+    except research.ResearchIntegrityError as exc:
+        return None, str(exc)
+
+
 def effective_disposition(c: dict) -> tuple[str, str, dict | None]:
     """Latest recorded assessment, else a lifecycle-derived default. Nothing here scores or recommends."""
     a = c["assessments"][-1] if c["assessments"] else None
@@ -163,8 +171,11 @@ def assessment_panel(app: App, c: dict) -> str:
     disp, src, a = effective_disposition(c)
     label, kind = DISPOSITION_TEXT[disp]
     lst = lambda xs, empty="none recorded": "".join(f"<li>{e(x)}</li>" for x in xs) or f"<li class='mut'>{e(empty)}</li>"
-    snap = research.latest_snapshot(research_dir(app), c["candidate_id"])
+    snap, snap_err = research_snapshot(app, c["candidate_id"])
     fin, price = '<p class="subtle">No source-backed financial snapshot has been retained for this candidate (run <span class="mono">python -m atlas_ui research ' + e(c["candidate_id"]) + '</span>).</p>', ""
+    if snap_err:
+        fin = (f'<p class="subtle">{pill("RESEARCH EVIDENCE UNAVAILABLE", "danger")} {e(snap_err)}<br>This is an integrity failure of the retained snapshot, '
+               f'not an absence of research; nothing is displayed in its place.</p>')
     if snap:
         table, data = snapshot_rows(snap)
         gaps = "".join(f"<li>{e(x)}</li>" for x in data["gaps"][:12]) + (f"<li class='mut'>… {len(data['gaps']) - 12} more UNVERIFIED items in the unresolved list</li>" if len(data["gaps"]) > 12 else "")
@@ -217,9 +228,9 @@ def cohort_page(app: App) -> str:
     for c in cands:
         disp, src, a = effective_disposition(c)
         label, kind = DISPOSITION_TEXT[disp]
-        snap = research.latest_snapshot(research_dir(app), c["candidate_id"])
+        snap, snap_err = research_snapshot(app, c["candidate_id"])
         price = fcf = opm = rg = pe = "n/a"
-        sess = "—"
+        sess = "RESEARCH EVIDENCE ERROR" if snap_err else "—"
         if snap:
             d = snap["data"]
             le = max(d["periods"])
@@ -237,7 +248,7 @@ def cohort_page(app: App) -> str:
         rows += (f'<tr><td><b><a href="/candidate/{urllib_q(c["candidate_id"])}">{e(c["candidate_id"])}</a></b><br><span class="small">{e(c["source"])}</span></td>'
                  f'<td>{pill(c["state"].replace("_", " ") + until)}<br><span class="small">stance: {e(stance)}<br>QUICK_TEST: {e(qts)}</span></td>'
                  f'<td>{pill(label, kind)}<br><span class="small">{e(src)}</span></td><td>{price}<br><span class="small">{e(sess)}</span></td><td>{pe}</td>'
-                 f'<td>{rg}<br><span class="small">op margin {opm}<br>FCF/NI {fcf}</span></td><td class="small">{e(risk)}</td><td class="small">{e(chg)}</td></tr>')
+                 f'<td>{rg}<br><span class="small">op margin {opm}<br>FCF/NI {fcf}</span>' + (f'<br>{pill("RESEARCH EVIDENCE ERROR", "danger")}<br><span class="small">{e(snap_err)}</span>' if snap_err else '') + '</td><td class="small">{e(risk)}</td><td class="small">{e(chg)}</td></tr>')
     alts = ("<div class='cols'>" + "".join(f"<div class='alt'><b>{t}</b><span class='subtle'>{d}</span></div>" for t, d in (
         ("SPY / beta", "Stage 7 only: needs a human-authored basis; not computed here."), ("Treasury / Cash", "Stage 7 only: needs an attested reference; not computed here."),
         ("Relevant existing holdings", "Human-assigned drivers at Stage 7; ADD-ONLY (no recycle)."), ("Do Nothing", "Always preserved."))) + "</div>")
@@ -529,10 +540,10 @@ def api_cohort(app: App) -> list[dict]:
     out = []
     for c in sorted(ledger.replay(app.ws.candidate_ledger).values(), key=lambda c: c["candidate_id"]):
         disp, src, a = effective_disposition(c)
-        snap = research.latest_snapshot(research_dir(app), c["candidate_id"])
+        snap, snap_err = research_snapshot(app, c["candidate_id"])
         out.append({"candidate_id": c["candidate_id"], "state": c["state"], "parked_until": c["parked_until"], "source": c["source"],
                     "research_disposition": disp, "disposition_source": src, "rank": None,
-                    "snapshot_sha256": snap["snapshot"]["sha256"] if snap else None,
+                    "snapshot_sha256": snap["snapshot"]["sha256"] if snap else None, "research_error": snap_err,
                     "price_relative": snap["data"].get("price_relative_inference") if snap else None})
     return out
 

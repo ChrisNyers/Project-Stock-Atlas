@@ -3519,3 +3519,26 @@ without a stance and are not promoted. MCD and RPM remain PARKED. A key that exi
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+---
+
+## REVIEW_1683F98_REMEDIATION
+
+| | |
+|---|---|
+| Date | 2026-10-29 |
+| Status | **DELIVERED FOR INDEPENDENT REVIEW — no further phase started** |
+| Context | Human instruction after the independent review of `1683f98`; record `controlled_live_pilot/FROZEN_CONTROL_CHANGE_003.md` (pre-change record committed first as `1bf8be1`) |
+
+### Decision
+
+(1) `capital_decision_facade.py` only: remove the `"pytest" in sys.modules` exemption and the replaceable `_now`/`_trusted_now`; `record_final_decision` (unchanged signature, no clock parameter) takes time from a sealed backend UTC clock and
+delegates to the private `_record_final_decision_at(..., now)`; tests pin time from the test side. Reproduced before (plain script, pytest imported: instance, class, subclass and `datetime`-patch routes all ACCEPTED a stale funded INITIATE) and
+after (all REJECTED, ledger byte-identical). Residual stated: in-process code that deliberately calls the private entry or overwrites the sealed clock is prevented operationally. No investment control, threshold or the provisional 96 h bound changed.
+(2) Research snapshot references are bare names relative to the research workspace root, SHA-256-bound and confined; historical entries preserved byte for byte and resolved by name; integrity failures are explicit errors, shown in the UI.
+Withdrawn: the earlier "clean extract" evidence and the "fails closed outside pytest" claim. Open for a human decision: the same absolute-path property in the Stage 7 run index (no runs exist); keep/change the provisional 96 h bound; the
+earlier open decisions (draft assessments, key rotation, benchmark source) are unchanged. MCD and RPM remain PARKED; no Stage 7, no decision.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

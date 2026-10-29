@@ -4,7 +4,6 @@
 ledger byte-identical. Fixture data; paper only.
 """
 import inspect
-import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -74,55 +73,17 @@ def test_tolerance_is_not_a_freshness_input_a_consistent_timestamp_on_a_stale_ru
     refused(facade, run, tmp, "STALE", created_at=t, now=t, evidence=funded_evidence(now=t))
 
 
-# ---- no public clock parameter; replaced clock fails closed outside a test run ---------------------------------------------
+# ---- no public clock parameter (the replaced-clock / pytest-presence guard was REMOVED by FROZEN_CONTROL_CHANGE_003: see test_clock_not_caller_controllable.py) --
 def test_there_is_no_public_way_to_choose_now():
     for fn in (CapitalDecisionFacade.__init__, CapitalDecisionFacade.record_final_decision, CapitalDecisionFacade.run_stage7):
         names = set(inspect.signature(fn).parameters)
         assert not ({"clock", "now", "utc_now", "trusted_now", "time_source"} & names), (fn.__name__, names)
 
 
-def test_instance_subclass_and_class_clock_overrides_fail_closed_outside_pytest(setup, monkeypatch):
-    facade, run, tmp = setup
-    monkeypatch.delitem(sys.modules, "pytest")  # simulate a production process: the test runner is not loaded
-    # the autouse fixture already replaced the class method -> detected
-    refused(facade, run, tmp, "clock has been replaced", created_at=NOW)
-    monkeypatch.undo()
-
-
-def test_instance_attribute_override_is_detected(tmp_path, monkeypatch):
-    facade = _facade(tmp_path)
-    run = _eligible_run(facade)
-    facade._now = lambda: NOW  # an ordinary caller trying to choose "now" on the instance
-    monkeypatch.delitem(sys.modules, "pytest")
-    with pytest.raises(ControlFailure, match="clock has been replaced"):
-        fund(facade, run, tmp_path)
-
-
-def test_subclass_override_is_detected(tmp_path, monkeypatch):
-    class Sneaky(CapitalDecisionFacade):
-        def _now(self):
-            return NOW
-
-    facade = Sneaky(ledger_path=tmp_path / "d.jsonl", artifact_dir=tmp_path / "artifacts")
-    run = _eligible_run(facade)
-    monkeypatch.delitem(sys.modules, "pytest")
-    with pytest.raises(ControlFailure, match="clock has been replaced"):
-        fund(facade, run, tmp_path)
-    assert not (tmp_path / "d.jsonl").exists() or facade.verify_ledger()
-
-
 def test_naive_or_non_utc_clock_fails_closed(setup, facade_clock):
     facade, run, tmp = setup
     refused(facade, run, tmp, "UTC", created_at=NOW, now=datetime(2026, 9, 2, 21, 0))  # naive
     refused(facade, run, tmp, "UTC", created_at=NOW, now=NOW.astimezone(timezone(timedelta(hours=2))))
-
-
-def test_unreplaced_default_clock_is_the_real_system_time(tmp_path):
-    f = _facade(tmp_path)
-    assert type(f)._now is CapitalDecisionFacade._now  # (patched by the autouse fixture during tests; the real one is exercised below)
-    real = datetime.now(timezone.utc)
-    from capital_decision_facade import _ORIGINAL_NOW
-    assert abs(_ORIGINAL_NOW(f) - real) < timedelta(seconds=5) and _ORIGINAL_NOW(f).utcoffset() == timedelta(0)
 
 
 def test_checked_evidence_records_the_trusted_time_and_the_claimed_created_at(setup):

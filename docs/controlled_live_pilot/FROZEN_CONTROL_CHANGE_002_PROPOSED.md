@@ -93,3 +93,9 @@ legitimate decisions and HOLD CASH / DO NOTHING (even with a wildly different tr
 from the test side (`tests/conftest.py: facade_clock`); their assertions are unchanged.
 
 Residual (unchanged from Section 4): host clock integrity is trusted; a fabricated snapshot equal to a still-current frozen one passes; raw `DecisionStore.append` stays unsanctioned.
+
+## 8. Superseded in part (appended 2026-10-29; §§1–7 unchanged)
+
+Independent review of `1683f98` showed that the "replaced clock fails closed unless the pytest runner is loaded" guard described in §7 was not a trust boundary (any process can `import pytest`). That mechanism — `_now`,
+`_trusted_now` and the `pytest`-presence exemption — was removed by `FROZEN_CONTROL_CHANGE_003.md`. The rest of change 002 (trusted backend UTC time, `created_at` consistency within 5 minutes in either direction, no public clock
+parameter) stands.

@@ -176,9 +176,10 @@ def test_price_relative_ratios_need_bound_price_and_verified_share_scale(env):
 def test_tampered_snapshot_is_not_served(env):
     run(env, facts_doc())
     snap = research.latest_snapshot(env[1], "XYZ")
-    p = Path(snap["snapshot"]["artifact_path"])
+    p = Path(snap["resolved_path"])
     p.write_text(p.read_text().replace("XYZ", "XYQ", 1))
-    assert research.latest_snapshot(env[1], "XYZ") is None
+    with pytest.raises(research.ResearchIntegrityError, match="SHA-256"):  # an explicit error, never "no research" (CHANGE_003 section 7)
+        research.latest_snapshot(env[1], "XYZ")
 
 
 # ---- D: descriptive assessment / unranked cohort ------------------------------------------------------------------------------
