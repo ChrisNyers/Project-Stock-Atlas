@@ -93,7 +93,7 @@ python -m atlas_ui deliver          # one ZIP + patch + DELIVERY.md for the curr
   },
   "last_milestone_review": {
     "plan_heading": "### October 29, 2026 — Milestone review",
-    "reviewed_commit": "PENDING"
+    "reviewed_commit": "511fc465c79d3f5a5c5dd599889545b0aae09d7d"
   },
   "historical_not_governing": [
     {
