@@ -256,3 +256,32 @@ def test_deliver_refuses_a_dirty_tree(tree):
     (tree / "uncommitted.txt").write_text("x")
     with pytest.raises(SystemExit, match="uncommitted"):
         verify.deliver(tree, out=tree.parent / "out", run_tests=False)
+
+
+# ---- an empty, unparseable or failing test run can never be reported as a success -----------------------------------------------------------
+def test_an_empty_or_unparseable_run_is_not_clean_and_is_rendered_as_a_failure():
+    empty = verify.summarize_pytest("ERROR collecting\nImportError: nope\n")
+    empty.update(returncode=2, tail="ImportError: nope")
+    assert not verify.tests_clean(empty) and "NO PYTEST SUMMARY" in verify.render_tests("repo", empty) and "treat as FAILED" in verify.render_tests("repo", empty)
+    ok = {**verify.summarize_pytest("1 passed in 0.1s\n"), "returncode": 0}
+    assert verify.tests_clean(ok)
+    for bad in ({**ok, "returncode": 1}, {**ok, "failed": 1}, {**ok, "error": 2}, {**ok, "passed": 0}, None):
+        assert not verify.tests_clean(bad)
+
+
+def test_deliver_extracts_outside_the_repo_runs_both_suites_and_fails_loudly_when_they_are_not_clean(tree, monkeypatch):
+    git_init(tree)
+    calls = []
+
+    def fake(cwd, *, hide_original=None):
+        calls.append((Path(cwd).resolve(), hide_original))
+        return {**verify.summarize_pytest("2 passed in 0.1s\n"), "returncode": 0, "tail": ""} if len(calls) == 1 else {**verify.summarize_pytest(""), "returncode": 2, "tail": "boom"}
+
+    monkeypatch.setattr(verify, "run_pytest", fake)
+    with pytest.raises(SystemExit, match="DELIVERY NOT CLEAN"):
+        verify.deliver(tree, out=tree.parent / "out")
+    (repo_cwd, repo_hide), (zip_cwd, zip_hide) = calls
+    assert repo_cwd == tree.resolve() and repo_hide is None
+    assert tree.resolve() not in zip_cwd.parents and zip_cwd != tree.resolve() and zip_hide == tree      # extracted elsewhere, original tree blocked
+    report = next((tree.parent / "out").glob("DELIVERY.md")).read_text()
+    assert "FAILED OR INCOMPLETE" in report and "NO PYTEST SUMMARY" in report

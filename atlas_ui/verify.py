@@ -274,10 +274,17 @@ def run_pytest(cwd: Path, *, hide_original: Path | None = None) -> dict:
     finally:
         if tmp:
             shutil.rmtree(tmp, ignore_errors=True)
-    return {**summarize_pytest(r.stdout + r.stderr), "returncode": r.returncode}
+    return {**summarize_pytest(r.stdout + r.stderr), "returncode": r.returncode, "tail": (r.stdout + r.stderr)[-700:]}
+
+
+def tests_clean(s: dict | None) -> bool:
+    """A run counts only if pytest exited 0, produced a summary, passed something, and nothing failed or errored. An empty or unparseable run is NOT clean."""
+    return bool(s) and s["returncode"] == 0 and bool(s["summary_line"]) and s["passed"] > 0 and s["failed"] == 0 and s["error"] == 0
 
 
 def render_tests(label: str, s: dict) -> str:
+    if not s["summary_line"]:
+        return f"{label}: **NO PYTEST SUMMARY** (exit code {s.get('returncode')}) — treat as FAILED. Output tail:\n{s.get('tail', '')}"
     skips = "; ".join(f"{n} {k}" for k, n in s["skip_classes"].items()) or "none"
     return (f"{label}: {s['passed']} passed, {s['failed']} failed, {s['error']} errors, {s['skipped']} skipped, {s['warnings']} warning(s)\n"
             f"  skipped by class: {skips}" + (f"\n  FAILED: {s['failed_tests']}" if s["failed_tests"] else ""))
@@ -347,10 +354,11 @@ def deliver(repo: Path = REPO, *, base: str | None = None, out: Path | None = No
     subprocess.run(["git", "-C", str(repo), "archive", "--format=zip", "--prefix=stock-atlas/", "-o", str(out / zname), head], check=True)
     patch = out / f"SOURCE_DIFF_{base[:7]}_to_{short}.patch"
     patch.write_text(_git(repo, "diff", base, head) or "")
+    scratch = Path(tempfile.mkdtemp(prefix="atlas_deliver_"))     # outside the repo: the repo suite must not collect it, and the original-tree block must not cover it
     with zipfile.ZipFile(out / zname) as z:
         names = [n for n in z.namelist() if not n.endswith("/")]
-        z.extractall(out / ".extract")
-    tree = out / ".extract" / "stock-atlas"
+        z.extractall(scratch)
+    tree = scratch / "stock-atlas"
     try:
         secrets = [n for n in names if re.search(r"(^|/)\.env($|\.(?!example))", n)]
         key = ""
@@ -363,7 +371,8 @@ def deliver(repo: Path = REPO, *, base: str | None = None, out: Path | None = No
         pre = render(preflight(repo))
         pre_zip = render(preflight(tree, use_git=False))
     finally:
-        shutil.rmtree(out / ".extract", ignore_errors=True)
+        shutil.rmtree(scratch, ignore_errors=True)
+    tests_ok = (not run_tests) or (tests_clean(repo_tests) and tests_clean(clean_tests))
     log = _git(repo, "log", "--oneline", f"{base}..{head}") or ""
     stat = _git(repo, "diff", "--stat", base, head) or ""
     zsha = hashlib.sha256((out / zname).read_bytes()).hexdigest()
@@ -372,6 +381,7 @@ def deliver(repo: Path = REPO, *, base: str | None = None, out: Path | None = No
 - **Commit:** `{head}` · **Base for the diff (latest approved state):** `{base}`
 - **ZIP:** `{zname}` · SHA-256 `{zsha}` · {len(names)} files · `.env` members: {secrets or 'none'} · API key present in any ZIP file: {'**YES**' if leaked else 'no'}
 - **Patch:** `{patch.name}` ({len(patch.read_text().splitlines())} lines)
+- **Tests:** {'**NOT RUN**' if not run_tests else ('PASS (both runs clean)' if tests_ok else '**FAILED OR INCOMPLETE — do not accept this delivery**')}
 
 ## Commits since the approved state
 ```
@@ -402,6 +412,8 @@ Same check on the extracted ZIP (no git history there):
 Milestone review: Master Plan, section "{a['last_milestone_review']['plan_heading'].lstrip('# ')}". Capability matrix: `{a['documents']['capability_matrix']}`.
 """
     (out / "DELIVERY.md").write_text(md, encoding="utf-8")
+    if not tests_ok:
+        raise SystemExit(f"DELIVERY NOT CLEAN: the test runs failed or produced no results; see {out / 'DELIVERY.md'}")
     return out
 
 
