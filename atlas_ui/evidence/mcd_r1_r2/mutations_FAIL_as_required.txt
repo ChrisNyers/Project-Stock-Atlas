@@ -1,0 +1,12 @@
+MUTATION valuation.py: IRR day-count changed from actual/365 to actual/360
+   -> 2 failed, 19 passed in 0.11s   (restored, sha256 verified)
+MUTATION valuation.py: scenario dividends no longer scale with EPS
+   -> 1 failed, 20 passed in 0.11s   (restored, sha256 verified)
+MUTATION valuation.py: total return ignores reinvested dividends
+   -> 3 failed, 18 passed in 0.12s   (restored, sha256 verified)
+MUTATION valuation.py: perpetual-growth formula wrong
+   -> 1 failed, 20 passed in 0.11s   (restored, sha256 verified)
+MUTATION valuation.py: dividends inferred from the wrong close (ex-date instead of previous)
+   -> 1 failed, 20 passed in 0.11s   (restored, sha256 verified)
+MUTATION evidence/mcd_r1_r2/MCD_R1_R2_result.json: one derived number in the committed artifact is altered
+   -> 2 failed, 19 passed in 0.11s   (restored, sha256 verified)

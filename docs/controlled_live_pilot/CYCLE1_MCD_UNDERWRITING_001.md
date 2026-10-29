@@ -223,3 +223,79 @@ stance are unchanged.
 **Thresholds preserved unchanged (pre-registered judgment thresholds, not permanent methodology):** Promotion evidence — Q3 U.S. comp ≥ −1.0%; evidence of U.S. comps turning positive in September/Q4; FY2026 outlook unchanged; partnering economics consistent with roughly ≥4% EPS growth in 2027–28. Negative evidence — Q3 U.S. comp < −2.0%, or a material FY2026 outlook cut.
 
 **Disposition: unchanged — `CONTINUE_UNDERWRITING_FOR_SPECIFIC_EVIDENCE`. MCD is PARKED until the officially scheduled Q3 2026 earnings release/call on 2026-11-04** (official IR calendar). No Stage 7, no Stage 8, no new candidate, no sizing. **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## Addendum 003 — R1/R2 research run: reverse valuation, reference cases and benchmark comparison (2026-10-29; append-only)
+
+*What this is.* New, measured evidence on the questions this record left open (a certified price; matched SPY and Treasury/cash comparisons; reverse valuation). It is **descriptive research, not a capital verdict**: MCD stays **PARKED until 2026-11-04**, no stance was written, no allocation is implied, and nothing here promotes it. Facts, market data, assumptions and outputs are labelled; gaps are listed.
+Inputs and arithmetic: `atlas_ui/evidence/mcd_r1_r2/` (`fetch_inputs.py`, `run_mcd_r1_r2.py`, the result `MCD_R1_R2_result.json` sha256 `ebb2a2d5c0848993cff30a56d51ef4eb27aba5fd72951f67e5690918817b853e`, the retained U.S. Treasury CSVs); formulas: `atlas_ui/valuation.py` (unit-tested). Recorded in the candidate ledger as seven evidence entries, five open questions, one linked observation and assessment v2 (`DRAFT_BY_RECORDER`).
+
+### 1. Data integrity (checked before any conclusion)
+| Check | Result |
+|---|---|
+| Provider close on 2026-10-28 vs the Gate B bind | $250.50 = $250.50 (equal). The provider's 2026-10-29 bar is an unfinished intraday bar and is excluded. |
+| Adjustment convention (prevents double counting) | `adjust=all` is a **dividend-adjusted** series, `adjust=none` raw closes. The adjusted series' return equals raw-close return with reinvested dividends to within 0.3 percentage points in every window tested (MCD 10y +184% vs +184%; SPY 10y +325% vs +326%). **Dividends are never added to the adjusted series** (doing so would overstate MCD's 5-year return by 15 points). |
+| Dividends endpoint | **Not on TwelveData's free plan (HTTP 403)**; the earlier benchmark note saying otherwise is wrong. Dividends were inferred from the adjusted/unadjusted ratio and tie to the SEC's declared per-share dividends within 0.9% in every fiscal year 2008–2025 (2.5% in FY2007, the first year). |
+| SPY | Same provider method; verified structurally, **not** against a primary distribution record (gap). |
+| Treasury | The keyless official CSV reproduces **every** hand-attested value in this record and the RPM record (3-month, 2-year, 10-year on 2026-10-06 and 2026-10-08); latest observation 2026-10-28 (0 days stale); no non-numeric cells. |
+| Year-end trailing P/E | Recomputed from provider closes and SEC EPS: 2021–2025 = 26.7x, 31.6x, 25.6x, 25.5x, 25.6x, identical to the table in §3 above (which used uncertified Yahoo closes). |
+| The earlier price | The 2026-10-07 reference price was $232.24 (uncertified); the provider's close is **$230.88**. The earlier observation's “+7.9%” becomes **+8.5%** on certified prices. |
+
+### 2. Measured: MCD against SPY and cash (total return; same dates; history, not a forecast)
+| Window | Dates used | MCD | SPY | Cash (3-mo par) | MCD−SPY (pts) | MCD−cash (pts) | Annualized MCD / SPY / cash |
+|---|---|---|---|---|---|---|---|
+| since 2026-10-07 | 2026-10-07 → 2026-10-28 | +8.5% | -0.6% | +0.2% | +9.1 | +8.3 | n/a (<1 year) |
+| 1 year | 2025-10-28 → 2026-10-28 | -16.2% | +13.6% | +3.9% | -29.8 | -20.1 | -16.2% / +13.6% / +3.9% |
+| 3 years | 2023-10-27 → 2026-10-28 | +5.3% | +95.0% | +14.5% | -89.7 | -9.2 | +1.7% / +24.9% / +4.6% |
+| 5 years | 2021-10-28 → 2026-10-28 | +14.6% | +80.1% | +22.0% | -65.6 | -7.5 | +2.8% / +12.5% / +4.1% |
+| 10 years | 2016-10-28 → 2026-10-28 | +183.7% | +325.2% | +28.9% | -141.5 | +154.8 | +11.0% / +15.6% / +2.6% |
+| full history | 2006-12-13 → 2026-10-28 | +887.1% | +679.2% | +38.2% | +207.9 | +848.9 | +12.2% / +10.9% / +1.6% |
+
+MCD lagged SPY in every window from one to ten years (one year: MCD -16.2% vs SPY +13.6%) and trailed cash over one, three and five years; over the full common history it led SPY (+12.2% vs +10.9% a year). Price is -26.6% from the 52-week high close ($341.06, 2026-02-27); worst peak-to-trough in the last year -32.3%. Relative performance is regime-dependent; this is not evidence of an edge in either direction.
+
+### 3. Reverse valuation: what the price requires (INFERENCE; arithmetic on stated inputs)
+Inputs. FACT: price $250.50, FY2025 diluted EPS $11.95 (SEC 10-K), FCF/share $10.03. MARKET DATA: dividend run-rate $7.44/yr (underwriting record; inferred tie-out $7.39). ASSUMPTION: exit on 2030-12-31, dividends scale with EPS. Constant EPS growth from FY2025 needed to earn each hurdle, by exit multiple:
+
+| Hurdle | Hurdle rate | Multiple unchanged (21.0x) | Observed minimum (19.4x) | 12-year median (25.5x) |
+|---|---|---|---|---|
+| Cash (3-month par yield) | +4.2% | +0.9% | +2.3% | -2.7% |
+| 5-year Treasury | +4.8% | +1.4% | +2.8% | -2.2% |
+| 10-year Treasury | +5.0% | +1.6% | +3.0% | -2.0% |
+| SPY, trailing 10-year total return (history) | +15.6% | +9.8% | +11.4% | +5.9% |
+| SPY, total return since 2006-12-13 (history) | +10.9% | +6.2% | +7.6% | +2.4% |
+
+Reading: with the multiple unchanged the price needs only about +0.9% to +1.6% a year of EPS growth to match cash and Treasuries, about +6.2% to match SPY's full-history return and about +9.8% to match SPY's last ten years. EPS growth was +1.7% a year over FY2023–FY2025, the median observed five-year window is +8.9% (range +5.5% to +13.6%) and the ten-year CAGR is +9.6%. Free-cash-flow view: at required returns of 8% / 9% / 10% the price implies perpetual FCF growth of +3.8% / +4.8% / +5.8%. (A negative number under a higher exit multiple means the multiple alone would carry the return.)
+
+### 4. Reference cases (NOT forecasts, NOT probabilities; no expected value)
+Each input is an observed reference point from MCD's own history; BASE is the middle reference case, **not the likeliest outcome**. Annual IRR from $250.50 to 2030-12-31.
+
+| Case | EPS growth | Exit multiple | FY2030 EPS | Exit price | IRR | vs cash (4.18%) | vs SPY 10y history (+15.6%) | vs SPY full history (+10.9%) |
+|---|---|---|---|---|---|---|---|---|
+| BEAR: latest 2-year growth persists; lowest observed year-end P/E | +1.7% | 19.4x | $12.98 | $252 | **+3.4%** | -0.8 pts | -12.2 pts | -7.5 pts |
+| BASE: only growth normalizes (median 5-year window); multiple unchanged | +8.9% | 21.0x | $18.32 | $384 | **+14.4%** | +10.2 pts | -1.2 pts | +3.5 pts |
+| BULL: growth normalizes and the multiple reverts to the 12-year median | +8.9% | 25.5x | $18.32 | $467 | **+19.5%** | +15.4 pts | +4.0 pts | +8.7 pts |
+
+**What changed since this record's own base case (5% EPS growth, 19x exit, an Atlas judgment):** at the 2026-10-07 close the same assumptions earn +9.1%; at the 2026-10-28 price they earn +7.0%. The +8.5% move alone removed 2.1 points of prospective return.
+
+IRR grid (rows: EPS growth from FY2025; columns: exit P/E):
+
+| EPS growth | 16x | 18x | 20x | 22x | 24x | 26x |
+|---|---|---|---|---|---|---|
+| 0% | -3.0% | -0.4% | +2.0% | +4.2% | +6.2% | +8.2% |
+| 2% | -0.6% | +2.1% | +4.5% | +6.7% | +8.8% | +10.8% |
+| 4% | +1.8% | +4.5% | +7.0% | +9.3% | +11.4% | +13.5% |
+| 6% | +4.2% | +7.0% | +9.5% | +11.9% | +14.1% | +16.1% |
+| 8% | +6.6% | +9.4% | +12.0% | +14.4% | +16.7% | +18.8% |
+| 10% | +9.0% | +11.9% | +14.6% | +17.0% | +19.3% | +21.5% |
+
+### 5. What this does and does not establish
+- **Established (measured):** the price needs little growth to beat cash and Treasuries but a great deal to beat SPY's recent record; the bear case (+3.4%) is below cash (4.18%); the spread between cases (about 16 points) is mostly the growth regime (recent +1.7% vs long-run +8.9%) plus the multiple; the Oct-7→Oct-28 rally made every case less attractive.
+- **Not established:** that the long-run growth regime returns (the only evidence for it is management's Investor-Day claims, already recorded as MANAGEMENT CLAIM), any advantage over SPY, or any probability. **No edge is demonstrated.** The question is now sharply testable on **2026-11-04** (Q3 results; the pre-registered thresholds above still apply) and, later, by the retained reference cases (R4: compare outcomes with these recorded IRRs, SPY and cash, assumptions unchanged).
+- **Gaps (also recorded as open questions):** no forward EPS, guidance schedule or partnering phasing is evidenced; scenarios start from FY2025 EPS ($11.95), below the TTM $12.31 in §3; dividends inferred (the paid endpoint is unavailable); SPY adjustment verified structurally only; cash is a par-yield proxy, not a fund return; taxes and costs not modeled.
+
+### 6. Treasury source evaluation (R2.1): evaluated, NOT integrated
+Source: U.S. Department of the Treasury, Daily Treasury Par Yield Curve Rates, CSV (home.treasury.gov), keyless, one read-only GET per year; 5211 daily rows 2006-01-03 → 2026-10-28; PRIMARY if integrated. Findings: complete and numeric; reproduces all six hand-attested values; fresh to the cutoff; the only daily moves over 50 bp in the 3-month or 10-year series are six, all in 2007–2009 (stress periods; real, not data errors). **Schema drift:** the CSV gained columns over time (11 in 2015, 14 from 2025), so a parser must select columns by name. **Not verified by software:** the site's terms of use.
+Governance approvals needed **before any integration** (none is assumed): (1) the human's explicit approval of a new data source (standing rule: no new provider without authorization); (2) confirmation of the terms of use; (3) because a funded Stage 8 requires a human re-attested Treasury reference (frozen-control change 001), an automated source may only *inform or pre-fill* that attestation unless a frozen-control change record is separately authorized; (4) a staleness policy (a last observation older than N days is UNKNOWN); (5) a retention decision (public data; the CSVs are retained here with SHA-256). Until then the Treasury inputs in this addendum are an evaluation artifact, not a Stock Atlas data feed.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**

@@ -1983,6 +1983,30 @@ Compared against the R0 scope above and the human's eight conditions.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
+### October 29, 2026 — Milestone review: first MCD research and benchmark increment (R1/R2/R3, append-only)
+
+Compared against the R0–R4 direction above (R1 reverse valuation and scenarios; R2 SPY and Treasury/cash comparison and the Treasury-source evaluation; R3 MCD as the first case; R4 learning).
+
+**What changed and was verified.**
+- *R1:* `atlas_ui/valuation.py` (reverse valuation, reference cases, total return, cash accrual; pure arithmetic, 12 tests with hand-derived answers) and a MCD run that keeps verified facts, market data, assumptions, outputs and gaps visibly separate. Addendum 003 to the MCD underwriting record, seven evidence entries, five open questions, a linked observation and a `DRAFT_BY_RECORDER` assessment v2 are in the existing ledger and visible on the MCD page of the investment UI.
+- *R2:* matched SPY and cash comparisons over 1, 3, 5, 10 years and the full history; the adjustment convention was verified so dividends are not double counted (a 15-point error on MCD's 5-year return was avoided); the TwelveData `/dividends` endpoint is unavailable on the free plan; the keyless official Treasury par-yield CSV reproduces all six values that had been attested by hand. Evaluated, not integrated; the approvals needed are listed in the Decision Log.
+- *Findings:* the price needs little growth to beat cash and Treasuries but about 6–10% a year to match SPY, against 1.7% recently; reference cases span +3.4% to +19.5%; MCD lagged SPY in every 1–10 year window and led over the full history; the +8.5% rally since 2026-10-07 cut the prospective return of the record's own base case from 9.1% to 7.0%. No edge is demonstrated.
+- *Verified:* result artifact re-derived from committed files (9 tests: Treasury hashes and values, cash returns, reverse-valuation inverses, cases, ledger linkage, state unchanged, no recommendation language); MCD still PARKED, no stance, no decision.
+
+**Incomplete or potentially overlooked.**
+- Nothing here forecasts MCD: whether growth returns toward its long-run rate is the open question, and the only evidence available before 2026-11-04 is management's claims. R3 is incomplete until the Q3 results and any 2027–28 framework can be incorporated.
+- SPY's adjustment is verified structurally, not against a primary distribution record; dividends are inferred; cash is a par-yield proxy; TTM EPS is not re-derived; taxes and costs are not modeled.
+- The run is a script on cached provider data, not an app feature; the raw provider series are deliberately not committed, so a fresh run needs the key and network (the artifact and its input hashes are committed).
+- R1.1, R2.1, R2.2 are proposed COMPLETE and need the human's decision; GEV, RMD and ORCL remain SURFACED with no stance (blocked on the human); the same treatment has not been applied to them.
+- Edge validation has not started: R4 needs recorded decisions and later outcomes; the retained reference cases are the first prospective test (outcome versus the recorded IRRs, SPY and cash).
+
+**What we should do next.**
+1. Independent review of this increment through GitHub; the human accepts, amends or rejects R1.1, R2.1 and R2.2 and decides whether to authorize any Treasury-source integration (and its governance steps).
+2. 2026-11-04: incorporate the MCD Q3 results against the pre-registered thresholds and the recorded reference cases (R3.1), then update the assessment as a new version; do not change MCD's state without evidence and the human's approval.
+3. Apply the same method to RMD and ORCL/GEV only after the human decides whether and how they enter research (no stance is invented).
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
 ---
 
 ## Immediate Next Actions

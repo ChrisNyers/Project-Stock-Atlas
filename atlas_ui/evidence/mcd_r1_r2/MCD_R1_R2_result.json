@@ -1,0 +1,907 @@
+{
+ "generated_at": "2026-10-29T19:44:28+00:00",
+ "cutoff_session": "2026-10-28",
+ "labels": "FACT | MARKET DATA | ASSUMPTION | OUTPUT | GAP",
+ "inputs": {
+  "twelvedata_cached_responses_sha256": {
+   "MCD_companyfacts.json": "deb3510c581f0db7fe5977be5afd185126e8030b1929ea4266aebf6a96b65b80",
+   "MCD_ts_all.json": "3c1433ed298e9e4b34461342ca7eaf816394e572af41b203c88f9b296052aed7",
+   "MCD_ts_none.json": "696ab0670f432f5982edbfd54d18645f3c899dfac9702f3c9c90bf05f53e5a9b",
+   "SPY_ts_all.json": "2b32b19d211af851078b1d4c8f25375b12ba6261e99f03b7f7010b3bdcb5f368",
+   "SPY_ts_none.json": "c2f5b91f61e4dd85ab8e387372d00a671e8e8281da916e15ceb43ecc1a1171d8"
+  },
+  "treasury_csv_sha256": {
+   "treasury_par_yield_curve_2006.csv": "cdbdcd8b32735caa453e00280232ff70c7012c055b7daf7b8cf1d9aaa8c66bfe",
+   "treasury_par_yield_curve_2007.csv": "297f6be4059a605b1ec0f266eb7b8467c3d40504a0dd53341746223276e6e6d8",
+   "treasury_par_yield_curve_2008.csv": "686db01584dd45f67addc243ee0c42339d491171a0e947c8f88ecac78ee0e9ea",
+   "treasury_par_yield_curve_2009.csv": "3c9294cfa71136e1d5330b09a00bf996ecf86c865d593d7ee954d11984a5bdb1",
+   "treasury_par_yield_curve_2010.csv": "f973bd3988989d3e408655cbc7fed89faefbaa8a1c111ec313241fb47fc75e2d",
+   "treasury_par_yield_curve_2011.csv": "224eaf29d6fe7cbccc746c7a8c845f189cf91424bab43f46ca386a74e98d81f7",
+   "treasury_par_yield_curve_2012.csv": "9c889b6e3cb87f40f3760bddb69f05f7525800ac480ef5712b2cf318765fa184",
+   "treasury_par_yield_curve_2013.csv": "1e1a98426d9274afcc68467962f9238104db775b8765e48f45ac7488b33ff338",
+   "treasury_par_yield_curve_2014.csv": "8d560698e03e4c0d8d22ff8be7f5f7c5c0d472b1e33a22b6a75373a57e84aa0f",
+   "treasury_par_yield_curve_2015.csv": "b7665d1ce46d6ed6d08fbda34aae1831de38e274e3c7caed81904042aac9b5bc",
+   "treasury_par_yield_curve_2016.csv": "b4d0a8d86e2734bc64d84d9a9824434d841737621582daeac58f13c7129f325c",
+   "treasury_par_yield_curve_2017.csv": "56074da7c32103a28cf4ba2bdf5eaa12f98fd49852047aef1a6eb16e64bd6e83",
+   "treasury_par_yield_curve_2018.csv": "e8375524a7a8d3e8091bbe7690d0378b9365be09efff5b18b8eefddc25f718d3",
+   "treasury_par_yield_curve_2019.csv": "83fc47c17325e222c45fd3a1eb26c69ae01f62d33b793030b4b8b350ca0a290b",
+   "treasury_par_yield_curve_2020.csv": "edcf1c8be9622f3cd92eb7de1847aefc3977e2118e2ff9af67f46614a5c306a7",
+   "treasury_par_yield_curve_2021.csv": "1be57e49c63a99f6002431a1030c8fbe539b71066c3eaf14f9f58ddc34492cea",
+   "treasury_par_yield_curve_2022.csv": "c33cb2758e5e34c2c23b7ab759d18681091860f3f9e5960112859f64f31cd814",
+   "treasury_par_yield_curve_2023.csv": "edb7f3904e11dcaa502cdcc03ad9b1b16c893802d166ce9bc5fa1118251249d4",
+   "treasury_par_yield_curve_2024.csv": "6775840b76cd7fd41121f61d6f6c60184eca6b2ba49954ec7372c463cbeef34d",
+   "treasury_par_yield_curve_2025.csv": "cf2fa3da7f160384b63d2ead698532b1d76cd9f789ce4911e2304db85b14e6d5",
+   "treasury_par_yield_curve_2026.csv": "97fdefe668a47928b852a94978f62273dedfb494107553d6640b9858de4b02ac"
+  },
+  "note": "TwelveData raw responses stay in the git-ignored atlas_cache/ (provider storage terms); only hashes and derived numbers are committed.",
+  "sec_company_facts_sha256": "deb3510c581f0db7fe5977be5afd185126e8030b1929ea4266aebf6a96b65b80"
+ },
+ "market_data": {
+  "grade": "SECONDARY (provider, independent exchange calendar fixes the session)",
+  "mcd_close_at_cutoff": 250.5,
+  "gate_b_bound_price_2026-10-28": 250.5,
+  "equals_gate_b_bind": true,
+  "mcd_first_bar": "2006-12-13",
+  "spy_first_bar": "2006-12-13",
+  "excluded": "the provider's 2026-10-29 bar is an unfinished intraday bar (partial volume) and is not used"
+ },
+ "adjustment_convention": {
+  "finding": "TwelveData adjust=all returns a DIVIDEND-ADJUSTED series (and adjust=none the raw closes). Total return = the adjusted series' price return; never add dividends to it.",
+  "dividends_endpoint": "NOT available on the free plan (HTTP 403); dividends are inferred from the adjusted/unadjusted ratio steps and checked against the SEC's per-share dividend facts below.",
+  "diagnostics": {
+   "MCD_1y": {
+    "verdict": "DIVIDEND_ADJUSTED",
+    "candidate_price_return": -0.16154851445977358,
+    "unadjusted_price_return": -0.18244122658097994,
+    "unadjusted_total_return_with_reinvested_dividends": -0.16146198407295775,
+    "double_counting_error_if_dividends_were_added_to_the_candidate": 0.021636461067771506
+   },
+   "MCD_5y": {
+    "verdict": "DIVIDEND_ADJUSTED",
+    "candidate_price_return": 0.14563944929180273,
+    "unadjusted_price_return": 0.020366598778004175,
+    "unadjusted_total_return_with_reinvested_dividends": 0.1457566741824572,
+    "double_counting_error_if_dividends_were_added_to_the_candidate": 0.14919117185999609
+   },
+   "MCD_10y": {
+    "verdict": "DIVIDEND_ADJUSTED",
+    "candidate_price_return": 1.8374282728149338,
+    "unadjusted_price_return": 1.234611993481035,
+    "unadjusted_total_return_with_reinvested_dividends": 1.8380610945813505,
+    "double_counting_error_if_dividends_were_added_to_the_candidate": 0.8754634103684187
+   },
+   "SPY_1y": {
+    "verdict": "DIVIDEND_ADJUSTED",
+    "candidate_price_return": 0.13617394325679788,
+    "unadjusted_price_return": 0.12407941409507006,
+    "unadjusted_total_return_with_reinvested_dividends": 0.13615537508029107,
+    "double_counting_error_if_dividends_were_added_to_the_candidate": 0.012273712058985087
+   },
+   "SPY_5y": {
+    "verdict": "DIVIDEND_ADJUSTED",
+    "candidate_price_return": 0.8012523894622479,
+    "unadjusted_price_return": 0.6850889840048657,
+    "unadjusted_total_return_with_reinvested_dividends": 0.8015322702601881,
+    "double_counting_error_if_dividends_were_added_to_the_candidate": 0.12835065002710055
+   },
+   "SPY_10y": {
+    "verdict": "DIVIDEND_ADJUSTED",
+    "candidate_price_return": 3.252196297295092,
+    "unadjusted_price_return": 2.633716177365022,
+    "unadjusted_total_return_with_reinvested_dividends": 3.255050741193217,
+    "double_counting_error_if_dividends_were_added_to_the_candidate": 0.7878509236160518
+   }
+  },
+  "dividend_events_inferred": {
+   "MCD": 76,
+   "SPY": 79
+  }
+ },
+ "facts": {
+  "grade": "PRIMARY (SEC XBRL company facts; annual 10-K diluted EPS, approved concept, explicit period)",
+  "eps_by_fiscal_year": {
+   "2014": {
+    "period_end": "2014-12-31",
+    "eps": 4.82,
+    "accession": "0000063908-15-000016",
+    "filed": "2015-02-24"
+   },
+   "2015": {
+    "period_end": "2015-12-31",
+    "eps": 4.8,
+    "accession": "0000063908-16-000103",
+    "filed": "2016-02-25"
+   },
+   "2016": {
+    "period_end": "2016-12-31",
+    "eps": 5.44,
+    "accession": "0000063908-17-000017",
+    "filed": "2017-03-01"
+   },
+   "2017": {
+    "period_end": "2017-12-31",
+    "eps": 6.37,
+    "accession": "0000063908-18-000010",
+    "filed": "2018-02-23"
+   },
+   "2018": {
+    "period_end": "2018-12-31",
+    "eps": 7.54,
+    "accession": "0000063908-19-000010",
+    "filed": "2019-02-22"
+   },
+   "2019": {
+    "period_end": "2019-12-31",
+    "eps": 7.88,
+    "accession": "0000063908-20-000022",
+    "filed": "2020-02-26"
+   },
+   "2020": {
+    "period_end": "2020-12-31",
+    "eps": 6.31,
+    "accession": "0000063908-21-000013",
+    "filed": "2021-02-23"
+   },
+   "2021": {
+    "period_end": "2021-12-31",
+    "eps": 10.04,
+    "accession": "0000063908-22-000011",
+    "filed": "2022-02-24"
+   },
+   "2022": {
+    "period_end": "2022-12-31",
+    "eps": 8.33,
+    "accession": "0000063908-23-000012",
+    "filed": "2023-02-24"
+   },
+   "2023": {
+    "period_end": "2023-12-31",
+    "eps": 11.56,
+    "accession": "0000063908-24-000072",
+    "filed": "2024-02-22"
+   },
+   "2024": {
+    "period_end": "2024-12-31",
+    "eps": 11.39,
+    "accession": "0000063908-25-000012",
+    "filed": "2025-02-25"
+   },
+   "2025": {
+    "period_end": "2025-12-31",
+    "eps": 11.95,
+    "accession": "0000063908-26-000035",
+    "filed": "2026-02-24"
+   }
+  },
+  "dividends_per_share_declared_by_fiscal_year": {
+   "2007": 1.5,
+   "2008": 1.625,
+   "2009": 2.05,
+   "2010": 2.26,
+   "2011": 2.53,
+   "2012": 2.87,
+   "2013": 3.12,
+   "2014": 3.28,
+   "2015": 3.44,
+   "2016": 3.61,
+   "2017": 3.83,
+   "2018": 4.19,
+   "2019": 4.73,
+   "2020": 5.04,
+   "2021": 5.25,
+   "2022": 5.66,
+   "2023": 6.23,
+   "2024": 6.78,
+   "2025": 7.17
+  },
+  "fcf_fy2025": 7186000000.0,
+  "weighted_diluted_shares_fy2025_millions": 716.4
+ },
+ "dividend_cross_check": {
+  "grade": "inferred (secondary) vs declared (primary)",
+  "years": {
+   "2007": {
+    "inferred_from_ratio_steps": 1.463,
+    "sec_declared": 1.5,
+    "difference": -0.037
+   },
+   "2008": {
+    "inferred_from_ratio_steps": 1.613,
+    "sec_declared": 1.625,
+    "difference": -0.012
+   },
+   "2009": {
+    "inferred_from_ratio_steps": 2.032,
+    "sec_declared": 2.05,
+    "difference": -0.018
+   },
+   "2010": {
+    "inferred_from_ratio_steps": 2.242,
+    "sec_declared": 2.26,
+    "difference": -0.018
+   },
+   "2011": {
+    "inferred_from_ratio_steps": 2.511,
+    "sec_declared": 2.53,
+    "difference": -0.019
+   },
+   "2012": {
+    "inferred_from_ratio_steps": 2.848,
+    "sec_declared": 2.87,
+    "difference": -0.022
+   },
+   "2013": {
+    "inferred_from_ratio_steps": 3.095,
+    "sec_declared": 3.12,
+    "difference": -0.025
+   },
+   "2014": {
+    "inferred_from_ratio_steps": 3.253,
+    "sec_declared": 3.28,
+    "difference": -0.027
+   },
+   "2015": {
+    "inferred_from_ratio_steps": 3.411,
+    "sec_declared": 3.44,
+    "difference": -0.029
+   },
+   "2016": {
+    "inferred_from_ratio_steps": 3.583,
+    "sec_declared": 3.61,
+    "difference": -0.027
+   },
+   "2017": {
+    "inferred_from_ratio_steps": 3.806,
+    "sec_declared": 3.83,
+    "difference": -0.024
+   },
+   "2018": {
+    "inferred_from_ratio_steps": 4.164,
+    "sec_declared": 4.19,
+    "difference": -0.026
+   },
+   "2019": {
+    "inferred_from_ratio_steps": 4.702,
+    "sec_declared": 4.73,
+    "difference": -0.028
+   },
+   "2020": {
+    "inferred_from_ratio_steps": 5.009,
+    "sec_declared": 5.04,
+    "difference": -0.031
+   },
+   "2021": {
+    "inferred_from_ratio_steps": 5.221,
+    "sec_declared": 5.25,
+    "difference": -0.029
+   },
+   "2022": {
+    "inferred_from_ratio_steps": 5.629,
+    "sec_declared": 5.66,
+    "difference": -0.031
+   },
+   "2023": {
+    "inferred_from_ratio_steps": 6.195,
+    "sec_declared": 6.23,
+    "difference": -0.035
+   },
+   "2024": {
+    "inferred_from_ratio_steps": 6.74,
+    "sec_declared": 6.78,
+    "difference": -0.04
+   },
+   "2025": {
+    "inferred_from_ratio_steps": 7.129,
+    "sec_declared": 7.17,
+    "difference": -0.041
+   }
+  }
+ },
+ "treasury_evaluation": {
+  "source": "U.S. Department of the Treasury, Daily Treasury Par Yield Curve Rates, CSV download (home.treasury.gov); keyless, read-only, one GET per calendar year",
+  "grade_if_integrated": "PRIMARY",
+  "years_retained": [
+   "2006",
+   "2007",
+   "2008",
+   "2009",
+   "2010",
+   "2011",
+   "2012",
+   "2013",
+   "2014",
+   "2015",
+   "2016",
+   "2017",
+   "2018",
+   "2019",
+   "2020",
+   "2021",
+   "2022",
+   "2023",
+   "2024",
+   "2025",
+   "2026"
+  ],
+  "rows": 5211,
+  "first_date": "2006-01-03",
+  "last_date": "2026-10-28",
+  "days_between_last_observation_and_cutoff": 0,
+  "non_numeric_cells": [],
+  "daily_moves_over_50bp_in_3Mo_or_10Yr": [
+   [
+    "2007-08-20",
+    "3 Mo",
+    -0.64
+   ],
+   [
+    "2008-01-22",
+    "3 Mo",
+    -0.51
+   ],
+   [
+    "2008-03-24",
+    "3 Mo",
+    0.61
+   ],
+   [
+    "2008-09-17",
+    "3 Mo",
+    -0.81
+   ],
+   [
+    "2008-09-19",
+    "3 Mo",
+    0.76
+   ],
+   [
+    "2009-03-18",
+    "10 Yr",
+    -0.51
+   ]
+  ],
+  "schema_changes": {
+   "2015": [
+    "1 Mo",
+    "3 Mo",
+    "6 Mo",
+    "1 Yr",
+    "2 Yr",
+    "3 Yr",
+    "5 Yr",
+    "7 Yr",
+    "10 Yr",
+    "20 Yr",
+    "30 Yr"
+   ],
+   "2018": [
+    "1 Mo",
+    "2 Mo",
+    "3 Mo",
+    "6 Mo",
+    "1 Yr",
+    "2 Yr",
+    "3 Yr",
+    "5 Yr",
+    "7 Yr",
+    "10 Yr",
+    "20 Yr",
+    "30 Yr"
+   ],
+   "2022": [
+    "1 Mo",
+    "2 Mo",
+    "3 Mo",
+    "4 Mo",
+    "6 Mo",
+    "1 Yr",
+    "2 Yr",
+    "3 Yr",
+    "5 Yr",
+    "7 Yr",
+    "10 Yr",
+    "20 Yr",
+    "30 Yr"
+   ],
+   "2025": [
+    "1 Mo",
+    "1.5 Month",
+    "2 Mo",
+    "3 Mo",
+    "4 Mo",
+    "6 Mo",
+    "1 Yr",
+    "2 Yr",
+    "3 Yr",
+    "5 Yr",
+    "7 Yr",
+    "10 Yr",
+    "20 Yr",
+    "30 Yr"
+   ],
+   "2026": [
+    "1 Mo",
+    "1.5 Month",
+    "2 Mo",
+    "3 Mo",
+    "4 Mo",
+    "6 Mo",
+    "1 Yr",
+    "2 Yr",
+    "3 Yr",
+    "5 Yr",
+    "7 Yr",
+    "10 Yr",
+    "20 Yr",
+    "30 Yr"
+   ]
+  },
+  "reproduces_values_previously_recorded_by_the_human_attestation": {
+   "2026-10-06": {
+    "recorded_in_underwriting": {
+     "3 Mo": 4.21,
+     "2 Yr": 4.79,
+     "10 Yr": 5.27
+    },
+    "treasury_csv": {
+     "3 Mo": 4.21,
+     "2 Yr": 4.79,
+     "10 Yr": 5.27
+    },
+    "all_match": true
+   },
+   "2026-10-08": {
+    "recorded_in_underwriting": {
+     "3 Mo": 4.23,
+     "2 Yr": 4.75,
+     "10 Yr": 5.22
+    },
+    "treasury_csv": {
+     "3 Mo": 4.23,
+     "2 Yr": 4.75,
+     "10 Yr": 5.22
+    },
+    "all_match": true
+   }
+  },
+  "latest_yields_pct": {
+   "3 Mo": {
+    "date": "2026-10-28",
+    "yield": 4.18
+   },
+   "2 Yr": {
+    "date": "2026-10-28",
+    "yield": 4.67
+   },
+   "5 Yr": {
+    "date": "2026-10-28",
+    "yield": 4.85
+   },
+   "10 Yr": {
+    "date": "2026-10-28",
+    "yield": 5.05
+   }
+  }
+ },
+ "benchmarks": {
+  "method": "TOTAL return = the dividend-adjusted (adjust=all) series' price return, same dates for every series; SPY and MCD from one provider; cash = 3-month par yield compounded (proxy, not a T-bill fund)",
+  "grade": "SECONDARY (market data); cash proxy PRIMARY (Treasury)",
+  "windows": {
+   "since 2026-10-07 (underwriting reference date)": {
+    "start_used": "2026-10-07",
+    "end_used": "2026-10-28",
+    "days": 21,
+    "mcd_price_return": 0.08497920997920994,
+    "mcd_total_return": 0.08497920997920994,
+    "spy_total_return": -0.006317349256993565,
+    "cash_3mo_par_proxy": 0.0024451459699355027,
+    "mcd_minus_spy_pts": 9.12965592362035,
+    "mcd_minus_cash_pts": 8.253406400927442,
+    "annualized": "not annualized (window under one year)"
+   },
+   "1 year": {
+    "start_used": "2025-10-28",
+    "end_used": "2026-10-28",
+    "days": 365,
+    "mcd_price_return": -0.18244122658097994,
+    "mcd_total_return": -0.16154851445977358,
+    "spy_total_return": 0.13617394325679788,
+    "cash_3mo_par_proxy": 0.03897242387724953,
+    "mcd_minus_spy_pts": -29.772245771657147,
+    "mcd_minus_cash_pts": -20.052093833702312,
+    "annualized": {
+     "mcd": -0.16154851445977358,
+     "spy": 0.13617394325679788,
+     "cash": 0.03897242387724953
+    }
+   },
+   "3 years": {
+    "start_used": "2023-10-27",
+    "end_used": "2026-10-28",
+    "days": 1097,
+    "mcd_price_return": -0.02056611747599768,
+    "mcd_total_return": 0.05250280762266657,
+    "spy_total_return": 0.9497581869154919,
+    "cash_3mo_par_proxy": 0.14492585789033785,
+    "mcd_minus_spy_pts": -89.72553792928252,
+    "mcd_minus_cash_pts": -9.242305026767127,
+    "annualized": {
+     "mcd": 0.017171653714924018,
+     "spy": 0.24877450716817995,
+     "cash": 0.046060334877924936
+    }
+   },
+   "5 years": {
+    "start_used": "2021-10-28",
+    "end_used": "2026-10-28",
+    "days": 1826,
+    "mcd_price_return": 0.020366598778004175,
+    "mcd_total_return": 0.14563944929180273,
+    "spy_total_return": 0.8012523894622479,
+    "cash_3mo_par_proxy": 0.22020954623021893,
+    "mcd_minus_spy_pts": -65.56129401704452,
+    "mcd_minus_cash_pts": -7.457009693841621,
+    "annualized": {
+     "mcd": 0.027550380737046076,
+     "spy": 0.12483007870403995,
+     "cash": 0.040584653359436285
+    }
+   },
+   "10 years": {
+    "start_used": "2016-10-28",
+    "end_used": "2026-10-28",
+    "days": 3652,
+    "mcd_price_return": 1.234611993481035,
+    "mcd_total_return": 1.8374282728149338,
+    "spy_total_return": 3.252196297295092,
+    "cash_3mo_par_proxy": 0.2892748027449068,
+    "mcd_minus_spy_pts": -141.47680244801583,
+    "mcd_minus_cash_pts": 154.8153470070027,
+    "annualized": {
+     "mcd": 0.10985868522575148,
+     "spy": 0.15565154647070267,
+     "cash": 0.025719250821468753
+    }
+   },
+   "full common history (since 2006-12-13)": {
+    "start_used": "2006-12-13",
+    "end_used": "2026-10-28",
+    "days": 7259,
+    "mcd_price_return": 4.746730901582931,
+    "mcd_total_return": 8.871108153062467,
+    "spy_total_return": 6.791723265140747,
+    "cash_3mo_par_proxy": 0.3816484464828296,
+    "mcd_minus_spy_pts": 207.93848879217202,
+    "mcd_minus_cash_pts": 848.9459706579637,
+    "annualized": {
+     "mcd": 0.12201616127451453,
+     "spy": 0.1087496109634627,
+     "cash": 0.01638799566159954
+    }
+   }
+  }
+ },
+ "price_context": {
+  "close_at_cutoff": 250.5,
+  "52w_high_close": {
+   "date": "2026-02-27",
+   "close": 341.059998
+  },
+  "below_52w_high": -0.265525123236528,
+  "max_drawdown_last_year": -0.32305165849440953,
+  "close_2026-10-07": 230.88,
+  "price_change_since_2026-10-07": 0.08497920997920994,
+  "earlier_observation_used_uncertified_yahoo_close_232_24": "the provider's 2026-10-07 close differs; see price_change_since_2026-10-07"
+ },
+ "history": {
+  "grade": "PRIMARY EPS (SEC) / SECONDARY price",
+  "year_end_trailing_pe": {
+   "2014": {
+    "fiscal_year_end_close": 93.7,
+    "close_date": "2014-12-31",
+    "eps": 4.82,
+    "trailing_pe": 19.439834024896264
+   },
+   "2015": {
+    "fiscal_year_end_close": 118.14,
+    "close_date": "2015-12-31",
+    "eps": 4.8,
+    "trailing_pe": 24.6125
+   },
+   "2016": {
+    "fiscal_year_end_close": 121.72,
+    "close_date": "2016-12-30",
+    "eps": 5.44,
+    "trailing_pe": 22.374999999999996
+   },
+   "2017": {
+    "fiscal_year_end_close": 172.12,
+    "close_date": "2017-12-29",
+    "eps": 6.37,
+    "trailing_pe": 27.020408163265305
+   },
+   "2018": {
+    "fiscal_year_end_close": 177.57001,
+    "close_date": "2018-12-31",
+    "eps": 7.54,
+    "trailing_pe": 23.55039920424403
+   },
+   "2019": {
+    "fiscal_year_end_close": 197.61,
+    "close_date": "2019-12-31",
+    "eps": 7.88,
+    "trailing_pe": 25.077411167512693
+   },
+   "2020": {
+    "fiscal_year_end_close": 214.58,
+    "close_date": "2020-12-31",
+    "eps": 6.31,
+    "trailing_pe": 34.00633914421554
+   },
+   "2021": {
+    "fiscal_year_end_close": 268.070007,
+    "close_date": "2021-12-31",
+    "eps": 10.04,
+    "trailing_pe": 26.700199900398406
+   },
+   "2022": {
+    "fiscal_year_end_close": 263.53,
+    "close_date": "2022-12-30",
+    "eps": 8.33,
+    "trailing_pe": 31.636254501800718
+   },
+   "2023": {
+    "fiscal_year_end_close": 296.51001,
+    "close_date": "2023-12-29",
+    "eps": 11.56,
+    "trailing_pe": 25.64965484429066
+   },
+   "2024": {
+    "fiscal_year_end_close": 289.89001,
+    "close_date": "2024-12-31",
+    "eps": 11.39,
+    "trailing_pe": 25.451273924495172
+   },
+   "2025": {
+    "fiscal_year_end_close": 305.63,
+    "close_date": "2025-12-31",
+    "eps": 11.95,
+    "trailing_pe": 25.575732217573222
+   }
+  },
+  "pe_summary": {
+   "n": 12,
+   "min": 19.439834024896264,
+   "median": 25.513503071034197,
+   "max": 34.00633914421554
+  },
+  "eps_cagr_3y_by_end_year": {
+   "2017": 0.09739791662222474,
+   "2018": 0.16245648017344316,
+   "2019": 0.13146842583029117,
+   "2020": -0.0031496271617639238,
+   "2021": 0.10015562171180292,
+   "2022": 0.018684257290526807,
+   "2023": 0.22360945716234104,
+   "2024": 0.04294963653286077,
+   "2025": 0.12782305435705021
+  },
+  "eps_cagr_5y_by_end_year": {
+   "2019": 0.10330563388049518,
+   "2020": 0.05622787394752904,
+   "2021": 0.13038650117270723,
+   "2022": 0.055118198683204556,
+   "2023": 0.08922423979205085,
+   "2024": 0.07646397757080625,
+   "2025": 0.1362338129334184
+  },
+  "eps_cagr_3y_summary": {
+   "n": 9,
+   "min": -0.0031496271617639238,
+   "median": 0.10015562171180292,
+   "max": 0.22360945716234104
+  },
+  "eps_cagr_5y_summary": {
+   "n": 7,
+   "min": 0.055118198683204556,
+   "median": 0.08922423979205085,
+   "max": 0.1362338129334184
+  },
+  "note_underwriting_record_year_end_pe_2021_2025": "26.7x, 31.6x, 25.6x, 25.5x, 25.6x (SEC EPS / uncertified Yahoo closes) \u2014 compare with trailing_pe above"
+ },
+ "reverse_valuation": {
+  "question": "At the bound price, what EPS growth (FY2025 -> FY2030, constant) is needed to earn each hurdle, for each exit multiple?",
+  "inputs": {
+   "label_FACT": {
+    "price_p0_2026-10-28": 250.5,
+    "eps_fy2025_diluted_sec": 11.95,
+    "fcf_per_share_fy2025": 10.03070910106086
+   },
+   "label_MARKET_DATA": {
+    "dps_run_rate_used_from_underwriting_record_primary": 7.44,
+    "dps_run_rate_latest_quarter_x4_inferred_tie_out": 7.39,
+    "dps_ttm_inferred": 7.393,
+    "underwriting_record_run_rate": 7.44
+   },
+   "label_ASSUMPTION": {
+    "exit_date": "2030-12-31",
+    "constant_payout_ratio": "DPS scales with EPS",
+    "exit_pe_set": {
+     "current (P0 / FY2025 EPS)": 20.96234309623431,
+     "observed minimum": 19.439834024896264,
+     "observed median": 25.513503071034197,
+     "observed maximum": 34.00633914421554
+    }
+   }
+  },
+  "implied_cagr": {
+   "cash (3-month par yield, 2026-10-28)": {
+    "hurdle": 0.0418,
+    "implied_eps_cagr_by_exit_pe": {
+     "current (P0 / FY2025 EPS)": 0.008907208265736707,
+     "observed minimum": 0.02293677418492735,
+     "observed median": -0.027047028718516216,
+     "observed maximum": -0.07796864002011715
+    }
+   },
+   "5-year Treasury par yield, 2026-10-28": {
+    "hurdle": 0.048499999999999995,
+    "implied_eps_cagr_by_exit_pe": {
+     "current (P0 / FY2025 EPS)": 0.01422333489172161,
+     "observed minimum": 0.02832225137390197,
+     "observed median": -0.02190990089438855,
+     "observed maximum": -0.07308785752393301
+    }
+   },
+   "10-year Treasury par yield, 2026-10-28": {
+    "hurdle": 0.050499999999999996,
+    "implied_eps_cagr_by_exit_pe": {
+     "current (P0 / FY2025 EPS)": 0.01580895031802357,
+     "observed minimum": 0.02992854281328619,
+     "observed median": -0.02037765444256365,
+     "observed maximum": -0.07163204667158422
+    }
+   },
+   "SPY trailing 10-year annualized total return (HISTORY, not a forecast)": {
+    "hurdle": 0.15565154647070267,
+    "implied_eps_cagr_by_exit_pe": {
+     "current (P0 / FY2025 EPS)": 0.0983703052159399,
+     "observed minimum": 0.11356092668138446,
+     "observed median": 0.059417621651664365,
+     "observed maximum": 0.004198159044608482
+    }
+   },
+   "SPY annualized total return since 2006-12-13 (HISTORY, not a forecast)": {
+    "hurdle": 0.1087496109634627,
+    "implied_eps_cagr_by_exit_pe": {
+     "current (P0 / FY2025 EPS)": 0.06173560270108283,
+     "observed minimum": 0.07645232318900527,
+     "observed median": 0.024007207760587342,
+     "observed maximum": -0.029456441430374968
+    }
+   }
+  },
+  "perpetual_growth_view": {
+   "required_return_8pct": 0.03841885255475391,
+   "required_return_9pct": 0.04803384193026089,
+   "required_return_10pct": 0.05764883130576788
+  }
+ },
+ "scenarios": {
+  "construction": "each case takes its two inputs from a named OBSERVED reference point (the company's own recent and long-run EPS growth; its own year-end P/E range), because the key uncertainty is which growth regime applies. NOT forecasts, NOT probabilities, no expected value; read the grid. BASE is the middle reference case, NOT the most likely outcome.",
+  "eps_cagr_reference_points": {
+   "latest_2y_FY2023_FY2025": 0.016728589261388427,
+   "five_year_windows": {
+    "n": 7,
+    "min": 0.055118198683204556,
+    "median": 0.08922423979205085,
+    "max": 0.1362338129334184
+   },
+   "ten_year_FY2015_FY2025": 0.09550071864054899
+  },
+  "named": {
+   "BEAR \u2014 the recent regime persists: EPS growth = the latest 2-year CAGR (FY2023-FY2025); exit multiple = the lowest year-end P/E observed in 12 years": {
+    "eps_cagr": 0.016728589261388427,
+    "exit_pe": 19.439834024896264,
+    "irr": 0.034086979524363424,
+    "eps_fy2030": 12.983538894391772,
+    "exit_price": 252.39784116276118,
+    "minus_cash_pts": -0.7713020475636573,
+    "minus_5y_treasury_pts": -1.441302047563657,
+    "minus_spy_10y_history_pts": -12.156456694633924,
+    "minus_spy_full_history_pts": -7.466263143909926
+   },
+   "BASE \u2014 only growth normalizes: EPS growth = the median of the observed 5-year EPS CAGR windows; exit multiple = today's multiple, unchanged": {
+    "eps_cagr": 0.08922423979205085,
+    "exit_pe": 20.96234309623431,
+    "irr": 0.14390631670867152,
+    "eps_fy2030": 18.321220159151196,
+    "exit_price": 384.05570291777195,
+    "minus_cash_pts": 10.210631670867151,
+    "minus_5y_treasury_pts": 9.540631670867153,
+    "minus_spy_10y_history_pts": -1.1745229762031157,
+    "minus_spy_full_history_pts": 3.515670574520882
+   },
+   "BULL \u2014 growth normalizes AND the multiple reverts: median 5-year EPS growth; exit multiple = the 12-year median year-end P/E": {
+    "eps_cagr": 0.08922423979205085,
+    "exit_pe": 25.513503071034197,
+    "irr": 0.19542099759237316,
+    "eps_fy2030": 18.321220159151196,
+    "exit_price": 467.4385067955977,
+    "minus_cash_pts": 15.362099759237315,
+    "minus_5y_treasury_pts": 14.692099759237317,
+    "minus_spy_10y_history_pts": 3.976945112167049,
+    "minus_spy_full_history_pts": 8.667138662891047
+   },
+   "REFERENCE \u2014 the 2026-10-07 underwriting base case (5% EPS growth, 19x exit; an Atlas judgment, not history)": {
+    "eps_cagr": 0.05,
+    "exit_pe": 19.0,
+    "irr_at_2026-10-28_price_250.50": 0.07008767072511549,
+    "irr_at_2026-10-07_close_230.88": 0.09123728045342433,
+    "note": "same assumptions, same exit date; only the entry price moved. (The record itself reported about 8.9% from a different horizon and an uncertified $232.24.)"
+   }
+  },
+  "grid_irr": {
+   "0%": {
+    "16x": -0.02954749176678887,
+    "18x": -0.003868704780688855,
+    "20x": 0.01981117955037917,
+    "22x": 0.04182032198332309,
+    "24x": 0.062409431729247455,
+    "26x": 0.0817747428754956
+   },
+   "2%": {
+    "16x": -0.005768119595813911,
+    "18x": 0.020515309227994293,
+    "20x": 0.04475363275814743,
+    "22x": 0.0672824829027377,
+    "24x": 0.08835829977433607,
+    "26x": 0.1081818180911796
+   },
+   "4%": {
+    "16x": 0.018124914458530844,
+    "18x": 0.04501489611320722,
+    "20x": 0.06981345727654117,
+    "22x": 0.09286371486123243,
+    "24x": 0.11442785118051688,
+    "26x": 0.13471111158396526
+   },
+   "6%": {
+    "16x": 0.04213038081834385,
+    "18x": 0.06962878802696651,
+    "20x": 0.094989350364267,
+    "22x": 0.11856268273513704,
+    "24x": 0.14061672082279986,
+    "26x": 0.16136122961288493
+   },
+   "8%": {
+    "16x": 0.06624709570860432,
+    "18x": 0.09435576491559916,
+    "20x": 0.12028005811334877,
+    "22x": 0.1443781012731051,
+    "24x": 0.16692359405460594,
+    "26x": 0.18813083021414054
+   },
+   "10%": {
+    "16x": 0.09047391951207828,
+    "18x": 0.11919465122955444,
+    "20x": 0.14568437241869112,
+    "22x": 0.17030873206567776,
+    "24x": 0.1933472043700021,
+    "26x": 0.21501862017066734
+   }
+  },
+  "exit_date": "2030-12-31",
+  "base_eps_fy2025": 11.95
+ },
+ "gaps": [
+  "Weighted diluted shares for fiscal period ending 2022-12-31 is CONFLICTED between approved concepts; no value chosen",
+  "Weighted diluted shares for fiscal period ending 2021-12-31 is CONFLICTED between approved concepts; no value chosen",
+  "Dividend amounts are inferred from the provider's adjusted/unadjusted ratio (the /dividends endpoint needs a paid plan); checked against SEC declared per-share dividends only for fiscal years where that fact exists.",
+  "SPY has no primary dividend record in this repository: its adjustment is verified structurally (the same provider method as MCD, which ties to SEC), not against a State Street distribution record.",
+  "No forward EPS, consensus, guidance schedule or NEXT partnering phasing is evidenced: the scenarios use the company's own past growth, which is not a forecast; the 2026-11-04 Q3 results are not yet available.",
+  "TTM EPS ($12.31) in the underwriting record comes from a 10-Q and is not re-derived here; the scenarios start from the FY2025 annual XBRL EPS ($11.95), which is lower.",
+  "Cash is a 3-month par-yield proxy (bond-equivalent, compounded by days/365), not a T-bill fund or money-market return; Treasury yields are par yields, not total returns of Treasury securities.",
+  "A buyer's taxes, transaction costs and the dividend's tax treatment are not modeled."
+ ]
+}

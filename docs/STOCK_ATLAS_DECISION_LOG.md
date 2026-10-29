@@ -3692,3 +3692,25 @@ The dashboard and the investment UI are preserved (pinned by tests); no further 
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
+---
+
+## R1_R2_MCD_RESEARCH_INCREMENT
+
+| | |
+|---|---|
+| Date | 2026-10-29 |
+| Status | **DELIVERED FOR INDEPENDENT REVIEW — MCD stays PARKED; no stance, allocation or approval created** |
+| Context | First investment-intelligence increment after the acceptance of R0 (`R0_ACCEPTED_33AC152`): MCD research (R1/R3) and benchmark comparison (R2) |
+
+### Decision
+
+**Recorded.** A reverse valuation and three reference cases for MCD at the certified Gate B price ($250.50), matched total-return comparisons against SPY and Treasury/cash, and an evaluation of a keyless official U.S. Treasury yield source — as Addendum 003 to `CYCLE1_MCD_UNDERWRITING_001.md`, seven evidence entries, five open questions, one linked observation and assessment v2 (`DRAFT_BY_RECORDER`) in the existing candidate ledger,
+and a derived-only result artifact with input hashes (`atlas_ui/evidence/mcd_r1_r2/`). Arithmetic lives in `atlas_ui/valuation.py` (unit-tested; no data access, forecast, score or rank). **Findings (descriptive):** at an unchanged multiple the price needs about 0.9–1.6% a year of EPS growth to match cash and Treasuries but about 6% to match SPY's full-history return and about 10% to match its last ten years, against 1.7% over the last two fiscal years and a 8.9% median five-year window;
+the reference cases span +3.4% (bear, below cash) to +19.5% a year to 2030-12-31 and are not forecasts or probabilities; MCD lagged SPY over every window of one to ten years and led over the full history; the +8.5% move since 2026-10-07 lowered the prospective return of the record's own base case from 9.1% to 7.0%. **No edge is demonstrated;** the question is testable on 2026-11-04.
+**Corrections made while doing it:** TwelveData's `/dividends` endpoint is not on the free plan (an earlier benchmark note said it was); the provider's `adjust=all` series is dividend-adjusted, so dividends must never be added to it (the avoided error is about 15 points on MCD's 5-year return); the earlier “+7.9%” observation used an uncertified $232.24 reference and is +8.5% on certified prices; the provider's last bar was an unfinished intraday bar and is excluded.
+
+**Treasury source (R2.1): evaluated, NOT integrated.** It reproduces every hand-attested Treasury value in the MCD and RPM records. Before any integration the human must approve: a new data source (standing rule); the terms of use (not verified by software); how it interacts with the funded Stage 8 requirement that the Treasury reference be human re-attested (frozen-control change 001: it may only inform or pre-fill unless a separate frozen-control change is authorized); a staleness policy; a retention decision. The raw TwelveData series are not committed (provider storage terms); only hashes and derived numbers are.
+**Milestones.** R1.1, R2.1 and R2.2 are *proposed* COMPLETE as unapproved register events for the human's decision; R3.1 stays IN_PROGRESS until the 2026-11-04 results can be incorporated; R4.1 stays UPCOMING (the reference cases are retained so later outcomes can be compared with them, assumptions unchanged). No frozen control, provider, agent, ML or paid data was added; the project dashboard and the investment UI are unchanged.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
