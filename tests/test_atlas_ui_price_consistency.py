@@ -141,5 +141,5 @@ def test_only_the_guarded_service_writes_final_decisions_in_production_code():
                 callers.append(f.relative_to(repo).as_posix())
             if isinstance(n, ast.Call) and getattr(n.func, "id", getattr(n.func, "attr", "")) == "DecisionStore":
                 store_writers.append(f.relative_to(repo).as_posix())
-    assert sorted(set(callers)) == ["atlas_ui/evidence/direct_facade_cases.py", "atlas_ui/service.py"], callers  # operational caller + the replay script (temp ledgers only)
+    assert sorted(set(callers)) == ["atlas_ui/evidence/direct_facade_cases.py", "atlas_ui/evidence/probe_backdated_created_at.py", "atlas_ui/service.py"], callers  # operational caller + the replay script (temp ledgers only)
     assert set(store_writers) <= {"capital_decision_facade.py"}, store_writers  # nothing else opens the ledger for writing

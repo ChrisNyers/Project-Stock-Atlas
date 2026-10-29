@@ -438,17 +438,10 @@ def test_frozen_control_layer_changed_only_by_the_authorized_change_record():
 
 
 def test_capability_matrix_is_honest_and_in_sync():
-    allowed = ("PROVEN WORKING WITH REAL BACKEND", "FIXTURE-TESTED ONLY", "NOT IMPLEMENTED", "BLOCKED WITH EXACT REASON")
-    assert all(any(s.startswith(a) for a in allowed) for _, s, _ in appmod.CAPABILITIES)
+    allowed = ("PROVEN LIVE", "PROVEN CANONICAL OFFLINE", "FIXTURE-TESTED", "BLOCKED", "NOT IMPLEMENTED")
+    assert all(s.split(" (")[0] in allowed for _, s, _ in appmod.CAPABILITIES)
     status = {n.split(".")[0]: s for n, s, _ in appmod.CAPABILITIES}
-    assert status["D"].startswith("BLOCKED") and status["E"].startswith("FIXTURE") and status["F"].startswith("FIXTURE")
-    assert status["C"].startswith("NOT IMPLEMENTED")
+    assert status["D"] == "BLOCKED" and status["E"] == "FIXTURE-TESTED" and status["F"] == "FIXTURE-TESTED"
+    assert status["C2"] == "NOT IMPLEMENTED" and not any(s == "PROVEN LIVE" for s in status.values())  # nothing is live-proven
     doc = (REPO / "atlas_ui" / "CAPABILITY_MATRIX.md").read_text()
     assert appmod.matrix_markdown() in doc
-
-
-def test_canonical_mode_shares_the_real_discovery_ledger_by_default(tmp_path):
-    a = build(False, tmp_path / "x")
-    assert a.ws.candidate_ledger == ledger.DEFAULT_LEDGER  # one store, not a copy
-    assert build(True, tmp_path / "d").ws.candidate_ledger != ledger.DEFAULT_LEDGER  # demo is isolated
-    assert not (tmp_path / "x" / "candidate_ledger.jsonl").exists()

@@ -3460,3 +3460,23 @@ no provider, agent, optimizer, FX or architecture was added. MCD (2026-11-04) an
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## BACKEND_COMPLETION_PACKAGE_WORKSTREAM_A_FINDING
+
+| | |
+|---|---|
+| Date | 2026-10-28 |
+| Status | **STOPPED AT WORKSTREAM A — Material finding; frozen-control change PROPOSED (not implemented)** |
+| Context | Backend Completion Package applied at HEAD `11bd220`; Master Plan entry appended (`c1301d7`); proposal `controlled_live_pilot/FROZEN_CONTROL_CHANGE_002_PROPOSED.md` |
+
+### Decision
+
+Preflight passed (HEAD `11bd220`, `af6f61f`/`3466a03`/`11bd220` ancestors, 473 passed / 25 skipped). Independent verification of
+change 001 reproduced all designed rejections but also a Material gap in it: freshness is measured against the caller-supplied `created_at`,
+so a direct facade caller can backdate it and an 8-day-old run was ACCEPTED (one funded ledger row in an isolated fixture workspace). Per the work
+order the build stops here: no frozen code was edited; a narrow pre-change record (injected facade clock; funded `created_at` within 5 min of it)
+awaits human disposition. Read-only live check (Workstream B) and Workstreams C–E were not started. MCD and RPM remain PARKED; no capital action.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

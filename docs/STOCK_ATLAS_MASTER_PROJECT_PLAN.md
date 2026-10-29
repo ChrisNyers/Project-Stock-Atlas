@@ -1831,6 +1831,19 @@ Stage 8 actions (investigation: the unchanged facade/store do not check run age)
 
 ---
 
+### October 28, 2026 — Backend completion: execution status after Workstream A (append-only)
+
+Preflight PASSED at HEAD `11bd220`; release gate 1 (latest HEAD, canonical baseline, parked candidates, safety remediation) is **NOT passed**:
+independent verification reproduced a Material gap in change 001 (freshness measured against the caller-supplied `created_at`; a direct caller
+can backdate it — an 8-day-old run was accepted in an isolated fixture workspace). Execution **stopped** per the work order. A pre-change record
+(`controlled_live_pilot/FROZEN_CONTROL_CHANGE_002_PROPOSED.md`) awaits human disposition; no frozen control was edited. Release gate 2 (live
+read-only check), the research-to-assessment adapter, the cohort comparison and outcome linkage are **not started**. MCD (2026-11-04) and RPM
+(2026-11-09) remain PARKED. Nothing above is marked COMPLETE.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
 ## Immediate Next Actions
 
 | # | Action | State |

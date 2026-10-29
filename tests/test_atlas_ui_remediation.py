@@ -465,7 +465,7 @@ def test_every_rejected_funded_path_adds_zero_ledger_rows(demo_app, mutate):
 
 def test_capability_matrix_states_the_attestation_and_stage8_freshness():
     text = " ".join(d for _, _, d in appmod.CAPABILITIES)
-    assert "human-attested" in text.lower() and "fresh-price" in text.lower()
+    assert "human-attested" in text.lower() and "funded freshness" in text.lower()
 
 
 def test_frozen_control_files_match_the_pinned_hashes():
