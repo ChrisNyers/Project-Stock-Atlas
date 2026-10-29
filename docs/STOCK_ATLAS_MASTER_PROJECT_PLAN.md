@@ -5,6 +5,8 @@ rewritten.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
+**Governing current state (2026-10-29): [`docs/CURRENT_AUTHORITY.md`](CURRENT_AUTHORITY.md)** — the one machine-verified reference for the approved Master Plan state, portfolio baseline, frozen controls, candidate restrictions and active work (`python -m atlas_ui preflight`). It supersedes every dated state pointer and “next action” list below and in older handoff documents; those remain, unaltered, for provenance.
+
 **Current state pointer (2026-10-05): `CONTROLLED LIVE PILOT AUTHORIZED — CYCLE 1
 NOT YET STARTED`.** Gate B Closure Review: `COMPLETE — PASS / GATE B CLOSED`.
 See "Gate B Closure Verdict" under Live Capital. Pilot 5 is formally closed.
@@ -1886,6 +1888,35 @@ the same absolute-path property for future runs (none exist) and is left for a h
 
 ---
 
+### October 29, 2026 — Milestone review: backend completion, review remediation and source-of-truth tooling (append-only)
+
+Compared against the governing “Backend-first completion” entry (Priorities 0–4, release gates 1–5). Covers `11bd220` → current; supersedes no earlier entry.
+
+**What changed and was verified.**
+- *Priority 0, latest-source discipline* — now enforced, not just stated: `docs/CURRENT_AUTHORITY.md` + `python -m atlas_ui preflight` verify controls, Cycle 0 Correction 002, MCD/RPM restrictions, append-only records and the distance between the newest commit and the approved state; the Pilot 2 list above is marked superseded.
+- *Priority 1, funded-decision safety* — mandatory funded-freshness evidence, trusted backend clock with no caller- or test-runner-controllable path (changes 001–003), and Stage 7 run artifacts that are workspace-relative and survive being moved. Each fix was reproduced first, has an adversarial regression test, a negative mutation that fails it, and a zero-ledger-write proof. Fixture-level only: the funded branch has never run on live data.
+- *Priority 2, research → underwriting* — SEC company facts become point-in-time PRIMARY evidence (25/25 selected facts re-found in the 10-Ks); snapshots are hash-bound and portable; integrity failures are explicit errors.
+- *Priority 3, multi-candidate view* — unranked cohort and descriptive assessments for MCD, GEV, RMD, ORCL (assessments are DRAFT_BY_RECORDER).
+- *Gates:* 1 remediated, awaiting independent acceptance · 2 passed (read-only, 4 names; live suite 54/55, one unexplained transient) · 3 reached with limits · 4 view only · 5 partial.
+
+**Incomplete or potentially overlooked.**
+- *Nothing has yet tested edge.* The mission is evidence of alpha, and green tests are not that. The only outcome record is one unbenchmarked price-only observation (MCD +7.9%); there is no SPY total-return or Treasury benchmark source, and Treasury references are human-attested.
+- *The live loop is unproven where it matters.* No candidate has a human-accepted stance, so none is READY: Stage 7 and Stage 8 have never run on a live price, and the first live run will itself be the first test of the ELIGIBLE branch.
+- *Portfolio inputs are old and approximate* (October 7 baseline, ≈$59K defensive); real balances must be refreshed before any funded decision.
+- *Time-bound triggers:* MCD revisit 2026-11-04 and RPM 2026-11-09 (triggers to review, not promotions); preflight now flags them when reached.
+- *Open policy items:* the 96 h run-age bound is still provisional; key rotation / `--env-file` convention; the unexplained ADBE provider error in the live suite.
+- *Residual control boundary:* code that edits the control inside the process is prevented operationally, not by Python (change 003 §4).
+
+**What we should do next.**
+1. Independent review of this delivery; the human then accepts or amends it, which is the only thing that moves `approved_state` in the authority reference.
+2. Human stances (or rejection) for GEV, RMD, ORCL; then one paper-only Stage 7 dry run on a live Gate B price, with no funded decision, to exercise the live path for the first time.
+3. MCD revisit on 2026-11-04 and RPM on 2026-11-09 using the linked-observation record.
+4. Decide whether to commission a SPY total-return / Treasury benchmark source (decision only; nothing is built until authorized).
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
 ## Immediate Next Actions
 
 | # | Action | State |
@@ -1908,3 +1939,6 @@ Action 3 was a human investment judgement, as it had to be. Atlas did not
 select the basket — doing so would have invented investment conclusions and
 contaminated the very hypothesis Pilot 2 exists to test. The charter specified
 what the discrimination set must *do*; the names came from Chris.
+
+> **SUPERSEDED AS THE ACTIVE WORK LIST (2026-10-29).** The table and the “Current active task” above are the September 2026 Pilot 2 work list. Pilot 2 and the pilots after it are closed, and none of this
+> is active. The active work is the “Backend-first completion” entry (October 28, 2026), as recorded in `docs/CURRENT_AUTHORITY.md`. The text above is kept unaltered for provenance.

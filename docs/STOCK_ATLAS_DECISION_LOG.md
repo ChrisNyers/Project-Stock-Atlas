@@ -3542,3 +3542,27 @@ earlier open decisions (draft assessments, key rotation, benchmark source) are u
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+---
+
+## SOURCE_OF_TRUTH_AND_PORTABILITY
+
+| | |
+|---|---|
+| Date | 2026-10-29 |
+| Status | **DELIVERED FOR INDEPENDENT REVIEW — no further phase started** |
+| Context | Human instruction to resolve recurring issues once: Stage 7 portability; a permanent source-of-truth reference; milestone review; automated verification and delivery |
+
+### Decision
+
+(1) **Stage 7 portability** (`atlas_ui/service.py`, `app.py`; no control file): the run index stores `artifact_rel` (workspace-relative) instead of the writing machine's absolute path; references resolve only inside the current workspace (traversal, wrong
+directory, symlink and escape refused, zero ledger rows); older absolute-path entries resolve by their `artifacts/`/`inputs/` tail; the SHA-256 chain and the frozen `FrozenArtifactRef` are unchanged. (2) **One authority reference**
+(`docs/CURRENT_AUTHORITY.md`), verified by `python -m atlas_ui preflight`: approved state vs newest commit, pinned controls (changes 001–003), Cycle 0 Correction 002, MCD/RPM restrictions, append-only Master Plan and Decision Log, historical
+material declared non-governing; the Master Plan's “Immediate Next Actions” (Pilot 2) is marked superseded and README/INDEX carry a not-governing note, all by addition. `approved_state` is the last commit the human accepted
+(currently `8cbcb37`, a working baseline: the human directed work to proceed from it); only a human acceptance recorded here moves it. (3) **Milestone review** is one dated Master Plan section after each major improvement (first one: October 29, 2026),
+checked for its three parts by preflight; no separate report. (4) `verify` and `deliver` automate the regression run (skips classified: live-credential BLOCKED vs environment vs other), the clean-extraction run with the original tree blocked from reading,
+and the single ZIP + patch + DELIVERY.md. `CLAUDE.md` makes the preflight the first step of future sessions. No frozen control, investment logic, provider, agent or ML was added or changed. MCD and RPM remain PARKED; no Stage 7 run, no decision.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

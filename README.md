@@ -1,3 +1,5 @@
+> **Historical (Sprint 1 era).** This document does not govern current work, including any “Sprint 2” instruction in it. The current authority is [`docs/CURRENT_AUTHORITY.md`](docs/CURRENT_AUTHORITY.md) (`python -m atlas_ui preflight`).
+
 # Project Atlas: Equities — Sprint 1
 
 **Status**: Sprint 1 Implementation

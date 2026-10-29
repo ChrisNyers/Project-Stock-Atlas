@@ -1,4 +1,4 @@
-"""python -m atlas_ui serve [--demo] [--port N] | matrix"""
+"""python -m atlas_ui serve [--demo] [--port N] | matrix | preflight | verify | deliver"""
 import argparse
 import os
 import tempfile
@@ -112,6 +112,11 @@ def live_check(ticker: str, env_file: str | None, out: str | None) -> int:
 
 
 def main(argv=None):
+    import sys
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] in ("preflight", "verify", "deliver"):  # source-of-truth tooling (atlas_ui/verify.py)
+        from . import verify
+        return verify.main(argv)
     ap = argparse.ArgumentParser(prog="atlas_ui")
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("serve"); s.add_argument("--demo", action="store_true"); s.add_argument("--port", type=int, default=8770)
