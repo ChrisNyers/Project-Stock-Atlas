@@ -420,8 +420,8 @@ def run_page(app: App, run_id: str, err="", flash="") -> str | None:
         if not any(r["run_id"] == run_id for r in read_index(app.ws.index_path)):
             return None
         return page(app, "/stage7", run_id, f'<div class="view active"><h1>{e(run_id)}</h1><div class="err"><b>NOT VERIFIED.</b> {e(str(exc))}</div><p class="subtle">Stage 8 is disabled for this run.</p></div>')
-    req = json.loads(Path(entry["inputs"]["scenario_model"]["artifact_path"]).read_text())["request"]
-    evd = json.loads(Path(entry["inputs"]["evidence_set"]["artifact_path"]).read_text())
+    req = json.loads(Path(app.ws.ref(entry["inputs"]["scenario_model"]).artifact_path).read_text())["request"]
+    evd = json.loads(Path(app.ws.ref(entry["inputs"]["evidence_set"]).artifact_path).read_text())
     pb = evd["price_binding"]["price_binding"]
     r = run.result
     pos = r.position
@@ -627,8 +627,9 @@ def make_handler(app: App):
                             return self._send(409, "NOT VERIFIED: retained artifact does not match its recorded SHA-256", "text/plain")
                         if entry:
                             ref = entry["stage7"] if name == "stage7.json" else entry["inputs"].get(name[:-5])
-                            if ref and Path(ref["artifact_path"]).is_file():
-                                return self._send(200, Path(ref["artifact_path"]).read_text(), "application/json; charset=utf-8")
+                            path = Path(app.ws.ref(ref).artifact_path) if ref else None
+                            if path and path.is_file():
+                                return self._send(200, path.read_text(), "application/json; charset=utf-8")
                     return self._send(404, "not found", "text/plain")
                 if p == "/api/state":
                     return self._json(api_state(app))

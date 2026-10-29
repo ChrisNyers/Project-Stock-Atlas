@@ -181,7 +181,7 @@ def test_api_key_never_reaches_the_browser(demo_app, monkeypatch):
     e = demo_app.svc.run(good_req(), NOW)
     pages = [appmod.overview(demo_app), appmod.stage7_page(demo_app), appmod.run_page(demo_app, e["run_id"]),
              appmod.history_page(demo_app), json.dumps(appmod.api_state(demo_app), default=str),
-             Path(e["stage7"]["artifact_path"]).read_text(), Path(e["inputs"]["evidence_set"]["artifact_path"]).read_text()]
+             Path(demo_app.ws.ref(e["stage7"]).artifact_path).read_text(), Path(demo_app.ws.ref(e["inputs"]["evidence_set"]).artifact_path).read_text()]
     assert all("sk-TESTSECRET" not in p for p in pages)
     assert all("<script" not in p.lower() for p in pages[:4])
 
@@ -194,7 +194,7 @@ def test_stage7_runs_through_facade_is_retained_and_rehydrates_exactly(demo_app)
     assert run.artifact_ref.sha256 == e["stage7"]["sha256"] and Path(run.artifact_ref.artifact_path).exists()
     assert not hasattr(run.result, "portfolio_action") and "NO PORTFOLIO ACTION" in run.result.comparison_header
     assert set(entry["inputs"]) == {"portfolio_snapshot", "scenario_model", "exposure_map", "evidence_set", "control_contract"}
-    ctr = json.loads(Path(entry["inputs"]["control_contract"]["artifact_path"]).read_text())
+    ctr = json.loads(Path(demo_app.ws.ref(entry["inputs"]["control_contract"]).artifact_path).read_text())
     assert ctr["accepted_baseline"] == "4c71d06afe0853389beb4a77ec2708656c3fc708" and "stock_atlas/controls.py" in ctr["control_files_sha256"]
     assert demo_app.svc.list_runs()[0]["verified"] is True
     assert demo_app.svc.ledger_rows() == []  # Stage 7 alone writes no decision
@@ -202,7 +202,7 @@ def test_stage7_runs_through_facade_is_retained_and_rehydrates_exactly(demo_app)
 
 def test_tampered_artifact_is_not_verified_and_blocks_stage8(demo_app):
     e = demo_app.svc.run(good_req(), NOW)
-    path = Path(e["stage7"]["artifact_path"])
+    path = Path(demo_app.ws.ref(e["stage7"]).artifact_path)
     path.write_text(path.read_text().replace("ELIGIBLE FOR STAGE 8", "ELIGIBLE FOR STAGE 9"))
     assert demo_app.svc.list_runs()[0]["verified"] is False
     with pytest.raises(Blocked, match="NOT VERIFIED"):

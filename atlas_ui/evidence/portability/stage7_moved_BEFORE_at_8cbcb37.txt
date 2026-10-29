@@ -1,0 +1,4 @@
+== 8cbcb37 (before) ==
+run created in /var/folders/z9/pl6nnscs2p94b1581b13l1440000gn/T/atlas_a_2pp5fdpk/ws | verified there: True
+moved to /var/folders/z9/pl6nnscs2p94b1581b13l1440000gn/T/atlas_b_pwj8674f/ws (old location removed) | verified: False | retained artifact missing or hash-mismatched: /var/folders/z9/pl6nnscs2p94b1581b13l1440000gn/T/atlas_a_2pp5fdp
+funded INITIATE after the move: REJECTED — NOT VERIFIED: retained artifact missing or hash-mismatched: /var/folders/z9/pl6nnscs2p94b1581b13l1440000gn/T/a

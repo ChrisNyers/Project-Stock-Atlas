@@ -14,6 +14,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import subprocess
 import uuid
 from dataclasses import dataclass, field
@@ -39,6 +40,7 @@ from operating_mvp import ledger
 from . import canonical
 
 REPO = canonical.REPO
+_SEGMENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 BASELINE_COMMIT = "4c71d06afe0853389beb4a77ec2708656c3fc708"
 STAGE7_VERSION = "stage7-control-v0.2"
 PAPER_ACTIONS = ("INITIATE", "ADD", "HOLD CASH", "DO NOTHING")
@@ -117,6 +119,31 @@ class Workspace:
     @property
     def index_path(self) -> Path:
         return self.root / "runs_index.jsonl"
+
+    def ref(self, d: dict) -> FrozenInputRef:
+        """Rebuild a frozen reference from a run-index entry, located INSIDE this workspace.
+
+        New entries hold ``artifact_rel`` (e.g. ``artifacts/<run>.json``), relative to the workspace root, so a copied or extracted workspace
+        resolves its own files. Entries written earlier hold the writing machine's absolute ``artifact_path``; the index is append-only and is not
+        rewritten, so only the tail from ``artifacts/`` or ``inputs/`` is used. The SHA-256, not the path, binds the content; every other shape
+        (absolute, ``..``, wrong directory, symlink, escape) is refused.
+        """
+        rel = d.get("artifact_rel")
+        if rel is None:
+            parts = re.split(r"[\\/]", str(d.get("artifact_path", "")))
+            idx = max((i for i, x in enumerate(parts) if x in ("artifacts", "inputs")), default=None)
+            rel = "/".join(parts[idx:]) if idx is not None else ""
+        segs = rel.split("/") if isinstance(rel, str) else []
+        if not (2 <= len(segs) <= 3 and segs[0] in ("artifacts", "inputs") and segs[-1].endswith(".json")
+                and all(_SEGMENT.match(x) for x in segs)):
+            raise Blocked(f"unsafe retained-artifact reference {rel!r}; refused")
+        path = self.root.joinpath(*segs)
+        for i in range(1, len(segs) + 1):
+            if self.root.joinpath(*segs[:i]).is_symlink():
+                raise Blocked(f"retained artifact {rel} passes through a symbolic link; refused")
+        if self.root.resolve() not in path.resolve().parents:
+            raise Blocked(f"retained artifact {rel} resolves outside the workspace; refused")
+        return FrozenInputRef(version=d["version"], sha256=d["sha256"], artifact_path=str(path))
 
 
 class Stage7Service:
@@ -299,7 +326,8 @@ class Stage7Service:
             "candidate_id": cid, "security_key": key, "status": run.result.status,
             "baseline_doc_sha256": c0.doc_sha256, "increment_dollars": increment,
             "priced_session": ev.attestation.session_date.isoformat(),
-            "stage7": _ref_dict(run.artifact_ref), "inputs": {k: _ref_dict(getattr(refs, k)) for k in refs.__dataclass_fields__},
+            "stage7": _ref_dict(run.artifact_ref, self.ws.root),
+            "inputs": {k: _ref_dict(getattr(refs, k), self.ws.root) for k in refs.__dataclass_fields__},
         }
         _append_index(self.ws.index_path, entry)
         return entry
@@ -325,7 +353,9 @@ class Stage7Service:
 
     def verify_entry(self, e: dict) -> tuple[bool, str]:
         try:
-            refs = [FrozenInputRef(**e["stage7"])] + [FrozenInputRef(**v) for v in e["inputs"].values()]
+            refs = [self.ws.ref(e["stage7"])] + [self.ws.ref(v) for v in e["inputs"].values()]
+        except Blocked as exc:
+            return False, str(exc)
         except Exception:
             return False, "malformed index entry"
         for r in refs:
@@ -341,7 +371,7 @@ class Stage7Service:
         ok, why = self.verify_entry(entry)
         if not ok:
             raise Blocked(f"NOT VERIFIED: {why}")
-        ref = FrozenInputRef(**entry["stage7"])
+        ref = self.ws.ref(entry["stage7"])
         data = json.loads(Path(ref.artifact_path).read_text(encoding="utf-8"))
         r = data["result"]
         p = r.get("position")
@@ -360,7 +390,7 @@ class Stage7Service:
         if hashlib.sha256(canonical_json_bytes(bundle)).hexdigest() != ref.sha256:
             raise Blocked("NOT VERIFIED: rehydrated Stage 7 result does not reproduce its frozen hash")
         run = Stage7Run(result=result, rendered_text=data["rendered_text"], artifact_ref=ref)
-        versions = InputVersions(**{k: FrozenInputRef(**v) for k, v in entry["inputs"].items()})
+        versions = InputVersions(**{k: self.ws.ref(v) for k, v in entry["inputs"].items()})
         return run, versions, entry
 
     # ---------------------------------------------------------------- fresh-price checkpoint
@@ -396,7 +426,7 @@ class Stage7Service:
                    f"{self.mic} session is {att.session_date}; re-run Stage 7")
 
         # --- compare a fresh Gate B bind with the FROZEN Stage 7 evidence, field by field
-        evd = json.loads(Path(entry["inputs"]["evidence_set"]["artifact_path"]).read_text(encoding="utf-8"))
+        evd = json.loads(Path(self.ws.ref(entry["inputs"]["evidence_set"]).artifact_path).read_text(encoding="utf-8"))
         frozen = evd["price_binding"]["price_binding"]
         frozen_att = evd["price_binding"]["session_attestation"]
         try:
@@ -439,7 +469,7 @@ class Stage7Service:
                                  "treasury_reattested": {"yield_decimal": new_val, "as_of": new_asof.isoformat(),
                                                          "source_ref": form["tsy_source_ref"].strip(), "human_attested": True},
                                  "result": "REPRODUCED"}, default=str) + "\n")
-        basis_t = json.loads(Path(entry["stage7"]["artifact_path"]).read_text(encoding="utf-8"))["price_basis"]["treasury_reference"]
+        basis_t = json.loads(Path(self.ws.ref(entry["stage7"]).artifact_path).read_text(encoding="utf-8"))["price_basis"]["treasury_reference"]
         return FundedFreshnessEvidence(
             fresh_price=s_fresh,
             treasury_reattested=MarketReferenceSnapshot(basis_t["reference_key"], new_val, new_asof, basis_t["provider"],
@@ -478,7 +508,7 @@ class Stage7Service:
                 reject(f"{action} requires Stage 7 status 'ELIGIBLE FOR STAGE 8'; retained run says {run.result.status!r}")
             if run.result.constraint_state != VerificationStatus.VERIFIED:
                 reject("tax, liquidity and execution constraints are not all VERIFIED; funded action fails closed")
-        req = json.loads(Path(entry["inputs"]["scenario_model"]["artifact_path"]).read_text())["request"]
+        req = json.loads(Path(self.ws.ref(entry["inputs"]["scenario_model"]).artifact_path).read_text())["request"]
         drivers = _lines(req.get("drivers", ""))
         revisit = RevisitTriggers(req.get("revisit_price", ""), datetime.fromisoformat(req["revisit_date"] + "T00:00:00+00:00"),
                                   req.get("revisit_thesis") or None)
@@ -508,8 +538,10 @@ class Stage7Service:
                 "paper_only": True}
 
 
-def _ref_dict(r: FrozenInputRef) -> dict:
-    return {"version": r.version, "sha256": r.sha256, "artifact_path": r.artifact_path}
+def _ref_dict(r: FrozenInputRef, root: Path) -> dict:
+    """Index form of a frozen reference: workspace-relative, never an absolute path of the machine that wrote it."""
+    rel = Path(r.artifact_path).resolve().relative_to(Path(root).resolve()).as_posix()
+    return {"version": r.version, "sha256": r.sha256, "artifact_rel": rel}
 
 
 def read_index(path: Path) -> list[dict]:

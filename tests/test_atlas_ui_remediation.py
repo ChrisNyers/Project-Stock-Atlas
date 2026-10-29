@@ -248,7 +248,7 @@ def test_f4_evidence_is_recorded_as_human_attested_and_unverified_by_atlas(demo_
     e = demo_app.svc.run(good_req(), NOW)
     ref = spy.calls[-1][0][3][1].market_reference
     assert "HUMAN-ATTESTED" in ref.provider and "not independently verified" in ref.provider
-    ev = json.loads(Path(e["inputs"]["evidence_set"]["artifact_path"]).read_text())["treasury_evidence"]
+    ev = json.loads(Path(demo_app.ws.ref(e["inputs"]["evidence_set"]).artifact_path).read_text())["treasury_evidence"]
     assert ev["verification"] == "UNVERIFIED_BY_ATLAS" and ev["human_attested"] is True and ev["source_ref"]
     assert "NOT source verification" in ev["freshness_label_basis"]
     assert "HUMAN-ATTESTED, not independently verified" in appmod.run_page(demo_app, e["run_id"])
@@ -259,7 +259,7 @@ def test_f5_snapshot_as_of_is_the_baseline_valuation_date_not_decision_time(demo
     spy = Spy(demo_app, monkeypatch)
     e = demo_app.svc.run(good_req(), NOW)
     assert spy.portfolio.as_of == datetime(2026, 10, 7, tzinfo=timezone.utc) and spy.portfolio.as_of != NOW
-    snap = json.loads(Path(e["inputs"]["portfolio_snapshot"]["artifact_path"]).read_text())
+    snap = json.loads(Path(demo_app.ws.ref(e["inputs"]["portfolio_snapshot"]).artifact_path).read_text())
     assert snap["baseline_effective_at"].startswith("2026-10-07") and snap["evaluated_at"][:10] == NOW.date().isoformat()
     assert snap["baseline_age_days"] == (NOW - datetime(2026, 10, 7, tzinfo=timezone.utc)).days
     assert "approximate" in snap["valuation_uncertainty"] and "≈ $59,000" in snap["valuation_uncertainty"]
@@ -412,7 +412,7 @@ def test_artifact_download_fails_closed_when_hash_mismatches(http_app):
     e = app.svc.run(good_req(), NOW)
     rid = urllib.parse.quote(e["run_id"])
     assert req(port, "GET", f"/artifact/{rid}/stage7.json")[0] == 200
-    p = Path(e["inputs"]["scenario_model"]["artifact_path"])
+    p = Path(app.ws.ref(e["inputs"]["scenario_model"]).artifact_path)
     p.write_text(p.read_text().replace("fixture", "tampered"))
     for name in ("stage7.json", "scenario_model.json", "evidence_set.json"):
         st, body, _h = req(port, "GET", f"/artifact/{rid}/{name}")
@@ -444,9 +444,9 @@ def test_every_rejected_funded_path_adds_zero_ledger_rows(demo_app, mutate):
     e = demo_app.svc.run(good_req(), NOW)
     rid, form = e["run_id"], s8()
     if mutate == "tamper_stage7":
-        p = Path(e["stage7"]["artifact_path"]); p.write_text(p.read_text() + " ")
+        p = Path(demo_app.ws.ref(e["stage7"]).artifact_path); p.write_text(p.read_text() + " ")
     elif mutate == "tamper_inputs":
-        p = Path(e["inputs"]["evidence_set"]["artifact_path"]); p.write_text(p.read_text() + " ")
+        p = Path(demo_app.ws.ref(e["inputs"]["evidence_set"]).artifact_path); p.write_text(p.read_text() + " ")
     elif mutate == "unknown_run":
         rid = "S7-NOPE"
     elif mutate == "no_confirm":

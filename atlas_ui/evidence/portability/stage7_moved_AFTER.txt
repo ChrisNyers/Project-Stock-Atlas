@@ -1,0 +1,4 @@
+== working tree (after) ==
+run created in /var/folders/z9/pl6nnscs2p94b1581b13l1440000gn/T/atlas_a_fosz5amu/ws | verified there: True
+moved to /var/folders/z9/pl6nnscs2p94b1581b13l1440000gn/T/atlas_b_4ai1dc1t/ws (old location removed) | verified: True | all retained artifacts match their recorded SHA-256
+funded INITIATE after the move: ACCEPTED
