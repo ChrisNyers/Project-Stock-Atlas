@@ -44,6 +44,8 @@ INVESTOR DAY` (MCD PARKED until 2026-11-04).**
 
 **Update 2026-10-28 (frozen-control change 001): `DIRECT-FACADE FUNDED-FRESHNESS BYPASS CLOSED IN THE CANONICAL BACKEND (AUTHORIZED NARROW CHANGE: pipeline.py + capital_decision_facade.py); LIVE STAGE 7 / FUNDED STAGE 8 REMAIN HELD`** (`controlled_live_pilot/FROZEN_CONTROL_CHANGE_001.md`). MCD and RPM remain PARKED.
 
+**Update 2026-10-28 (backend completion package applied): `BACKEND-FIRST COMPLETION PLAN ENTRY APPENDED AT HEAD 11bd220 — EXECUTION IN SEQUENCE; MCD/RPM REMAIN PARKED (REVISIT TRIGGERS ONLY); NO CAPITAL ACTION`** (section "October 28, 2026 — Backend-first completion").
+
 ---
 
 ## Governing Mission
@@ -1795,6 +1797,37 @@ Stage 8 actions (investigation: the unchanged facade/store do not check run age)
 (12 files pinned). Tests: 412 passed, 25 skipped (BLOCKED), 1 warning. No live call, no funded decision.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### October 28, 2026 — Backend-first completion to an evidence-based opportunity UI (proposed; apply against latest approved HEAD)
+
+*Applied 2026-10-28 on the human's instruction from the Backend Completion Package (`00_READ_ME_FIRST.md` … `04_…`), verbatim, against HEAD `11bd220` after the mandatory preflight. Execution status for each workstream is appended below as dated entries; nothing here is marked COMPLETE until tests and artifacts show it.*
+
+**Governing objective.** The front end should answer *“Is this a good investment opportunity at the currently verified price, relative to alternatives?”* Behind the scenes Atlas reuses current discovery, quick falsification, evidence ledger, SEC/issuer and financial normalization, market binding, underwriting, independent challenge, Stage 7 comparison, Human Stage 8 and append-only decision/revisit records. Provide concise, **non-directive** security-level conclusions; never turn an attractive security view into an automatic capital action.
+
+**Priority 0 — Latest-source discipline.** For all future changes, first inspect current repository HEAD, latest Master Plan, Decision Log, formal corrected Cycle 0 record, active candidate lifecycle and approved change records. Later **approved** records supersede older handoffs; older files remain immutable for provenance. The September $500K eight-stock pilot is historical; the October 7 Correction 002 is the identified later canonical snapshot **unless a still later approved record supersedes it**. The approximate defensive value and denominator must remain marked approximate. MCD/RPM park triggers do not lift themselves.
+
+**Priority 1 — Funded decision safety, prove before extending.** Independently verify the latest reported canonical-facade funded-price/Treasury/session/run-age remediation (reported final commit `11bd220`; verify actual current HEAD). For INITIATE/ADD, require mandatory, tamper-evident comparison against retained Stage 7 price, identity, venue, currency/FX where applicable, freshness, calendar session and appropriate benchmark/Treasury references; stale/changed evidence must reject or cause fresh underwriting and Stage 7, never reuse old return bands. Human Stage 8 remains sole authority; HOLD CASH and DO NOTHING remain legal. The 96-hour run-age limit is **provisional** pending review; it is not a substitute for latest-completed-session truth. No real trades.
+
+**Priority 2 — Primary-source research to underwriting (existing infrastructure first).** Inventory and reuse `sec_adapter.py`, `xbrl_parser.py`, Phase 4A.5 work, current `operating_mvp` evidence fields and any existing normalization/issuer connectors. Wire SEC/issuer disclosures and financial statements to point-in-time evidence with ticker/class/CIK distinction, accession, accepted/known-at, period granularity, units, currency, adjustments, as-of and source quality. Reconcile incompatible periods; show `UNVERIFIED` where evidence is insufficient. No paid data or second data provider by default.
+
+**Priority 3 — Clear UI opportunity assessment and multiple security research cases.** For every eligible **research** candidate show: business quality, what is priced in, variant/falsification, value/return band if supportable, dominant risks and driver exposures, evidence gaps, freshness, what could change the thesis, and Stage 7 status. Show a **side-by-side, unranked** comparison for surviving opportunities and SPY/beta, Treasury/Cash, relevant incumbents and Do Nothing. Candidate intake/source neutral. The proposed MCD/GEV/RMD/ORCL research cohort is **not** authorization to unpark MCD, auto-promote a research entry or expand the governing 3–5 capital-decision cycles. Confirm individual venue/identity eligibility before formal Stage 7.
+
+**Priority 4 — Decision history and prospective outcome learning.** Reuse append-only ledger and existing pre-Atlas/human counterfactual/revisit records. At an approved event or horizon append a new dated observation, preserving original decision evidence; compare with time-matched cash/Treasury and SPY where adjusted total-return evidence permits. Distinguish observed outcome, inference, and unknown. Do not create a separate memory store or train a model from the handful of pilot cases.
+
+**Optional future research (not authorized to install).** Only after existing outcome/process quality is proven, define one isolated read-only experiment on a demonstrated gap using a repository pattern such as TradingAgents (adversarial arguments), Microsoft Qlib (historical signals) or RD-Agent (hypothesis generation). Demand point-in-time and out-of-sample evidence, net incremental information value, and explicit approval. Preserve one-new-information-family-per-experiment; no models may write eligibility or capital decisions.
+
+**Release gates, sequential:**
+1. Latest HEAD, canonical baseline, parked candidates and safety remediation verified.
+2. Read-only live price/identity/XNYS check verified with local credentials when available; otherwise BLOCKED and never counted as PASS.
+3. One reproducible primary-source research-to-assessment case with full provenance and fail-closed unknowns.
+4. Multi-candidate **research** side-by-side without ranks or auto-Stage 8.
+5. A linked revisit/outcome record demonstrated prospectively; do not claim alpha from a small sample.
+
+**Status:** planning/execution direction approved by user; specific code changes remain subject to frozen controls and the existing pilot's decision gates. No automatically authorized allocation, new architecture, model installation or production execution.
+
+**Do not mark anything COMPLETE until the tests and artifacts demonstrate it.** Apply corrections by adding dated entries, not altering the original evidence.
 
 ---
 
