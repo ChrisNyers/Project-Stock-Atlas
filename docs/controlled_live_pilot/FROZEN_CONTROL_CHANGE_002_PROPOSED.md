@@ -51,3 +51,25 @@ detect); appending directly to `DecisionStore` remains an unsanctioned path (rep
 
 Approve, amend, or reject Section 2. Until then no further backend-completion workstream (research adapter, assessment view, cohort comparison, outcome
 linkage) is started, per the work order.
+
+---
+
+## 6. Disposition (2026-10-28, recorded BEFORE implementation; sections 1–5 are unchanged)
+
+**APPROVED WITH AMENDMENTS** by the human. The amendments below govern; where they differ from Section 2, they supersede it.
+
+1. **Trusted backend UTC clock.** The canonical facade uses a trusted backend UTC clock for *all* funded-decision freshness checks: Stage 7 run age, XNYS
+   session currency and Treasury reference freshness. A caller-supplied `created_at` must never establish the time used for any of them.
+2. **`created_at` tolerance.** The five-minute tolerance is approved **only** as an operational timestamp-consistency check: for INITIATE/ADD, a `created_at`
+   more than five minutes away from the trusted clock **in either direction** is rejected. It is not a freshness input.
+3. **Clock injection cannot become a production bypass.** *Clarification of Section 2.1:* there is **no public clock parameter** — not on `__init__`, not on
+   `record_final_decision`. The clock is a private method (`_now()`) returning the system UTC time. Deterministic tests substitute it by patching that method
+   from the test side; nothing in production code offers a way to choose "now". As a defence in depth, the funded check **fails closed if `_now` has been replaced
+   (on the class, a subclass, or the instance) in any process where the pytest test runner is not loaded**, so an ordinary production caller cannot supply a clock
+   by overriding or monkeypatching it.
+
+Everything else in Sections 2–5 stands: `capital_decision_facade.py` only; no other frozen-control change; HOLD CASH / DO NOTHING untouched; Human Stage 8
+authority unchanged; Cycle 0 Correction 002 and the MCD/RPM revisit restrictions preserved.
+
+Acceptance required by the human: the strict-xfail reproduction becomes a passing regression test; an eight-day-old funded decision with a backdated timestamp is
+rejected with zero ledger writes; legitimate fresh decisions and non-actions still work.
