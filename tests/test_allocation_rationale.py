@@ -45,6 +45,12 @@ from test_integration_facade import (  # noqa: E402
     _input_versions,
 )
 
+@pytest.fixture(autouse=True)
+def _pin_facade_clock(facade_clock):
+    """Fixture time is 2026-09-02; the facade's trusted clock must agree (deterministic test substitution)."""
+    facade_clock.set(NOW)
+
+
 COMPLETE = dict(
     why_this_vs_alternatives="Own versus SPY/Treasury because the modeled return "
     "opportunity remains attractive after considering the identified uncertainty.",

@@ -73,3 +73,23 @@ authority unchanged; Cycle 0 Correction 002 and the MCD/RPM revisit restrictions
 
 Acceptance required by the human: the strict-xfail reproduction becomes a passing regression test; an eight-day-old funded decision with a backdated timestamp is
 rejected with zero ledger writes; legitimate fresh decisions and non-actions still work.
+
+---
+
+## 7. Implementation outcome (appended; sections 1–6 unchanged)
+
+Status: **IMPLEMENTED.** Files in frozen-control territory changed: **`capital_decision_facade.py` only** (+41/−5). All other control files are byte-identical to `11bd220`;
+`atlas_ui/FROZEN_CONTROL_SHA256.txt` differs from the previous pin in exactly that file's line.
+
+What changed: private `CapitalDecisionFacade._now()` (system UTC) and `_trusted_now()` (refuses a naive/non-UTC clock, and refuses a replaced `_now` — on the class, a subclass or the
+instance — whenever the pytest runner is not loaded); `CREATED_AT_TOLERANCE = 5 min`. `_verify_funded_freshness` now takes "now" from `_trusted_now()` for run age, the latest completed
+XNYS session and the Treasury window; for INITIATE/ADD a `created_at` more than five minutes from the trusted clock in either direction is refused. No public clock parameter exists on
+`__init__`, `run_stage7` or `record_final_decision` (a test asserts this). The retained check artifact records both the trusted `checked_at` and the claimed `created_at`.
+
+Verification: the strict-xfail reproduction is **promoted to a passing regression**; the replay of the 8-day-old backdated direct call is now REJECTED with zero ledger writes
+(`atlas_ui/evidence/EVIDENCE_BACKDATED_CREATED_AT_after_change_002.txt`, before: `…_at_11bd220.txt`); `tests/test_trusted_clock.py` (25 cases incl. tolerance in both directions, replaced-clock
+guards, naive/non-UTC clocks); three negative mutations (freshness back on `created_at`, one-directional tolerance, guard removed) each failed the tests and were reverted. Fresh
+legitimate decisions and HOLD CASH / DO NOTHING (even with a wildly different trusted time) still work. Existing tests that record funded decisions at fixture times now substitute the clock
+from the test side (`tests/conftest.py: facade_clock`); their assertions are unchanged.
+
+Residual (unchanged from Section 4): host clock integrity is trusted; a fabricated snapshot equal to a still-current frozen one passes; raw `DecisionStore.append` stays unsanctioned.

@@ -1844,6 +1844,17 @@ read-only check), the research-to-assessment adapter, the cohort comparison and 
 
 ---
 
+### October 28, 2026 — Backend completion: safety gate passed (append-only)
+
+Change 002 (approved with amendments; `controlled_live_pilot/FROZEN_CONTROL_CHANGE_002_PROPOSED.md`, disposition committed before implementation) is implemented in
+`capital_decision_facade.py` only. The backdated eight-day-old funded call that was accepted at `11bd220` is now rejected with zero ledger writes; the reproduction test is promoted; legitimate fresh decisions
+and non-actions work. **Release gate 1 PASSED** on fixture evidence (no live evidence exists). Workstreams B–E proceed in order; each stops on a new Material/Critical finding. MCD (2026-11-04) and RPM
+(2026-11-09) remain PARKED. Cycle 0 Correction 002 unchanged.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
 ## Immediate Next Actions
 
 | # | Action | State |

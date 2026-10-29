@@ -179,6 +179,12 @@ def _position(portfolio: PortfolioSnapshot, current_weight: float = 0.0):
     )
 
 
+@pytest.fixture(autouse=True)
+def _pin_facade_clock(facade_clock):
+    """Fixture time is 2026-09-02; the facade's trusted clock must agree (deterministic test substitution)."""
+    facade_clock.set(NOW)
+
+
 def _facade(tmp_path: Path) -> CapitalDecisionFacade:
     return CapitalDecisionFacade(
         ledger_path=tmp_path / "decisions.jsonl",

@@ -24,7 +24,19 @@ def ledger_bytes(facade) -> bytes:
     return p.read_bytes() if p.exists() else b""
 
 
-def fund(facade, run, tmp_path, *, action="INITIATE", evidence="default", created_at=NOW, record_id="F-1", **kw):
+_CLOCK = {}
+
+
+@pytest.fixture(autouse=True)
+def _clock(facade_clock, request):
+    _CLOCK["c"] = facade_clock
+    # UI-path tests run on the real clock (the UI passes its own real "now"); fixture tests pin the fixture time.
+    facade_clock.set(None if request.node.name.startswith("test_ui_") else NOW)
+
+
+def fund(facade, run, tmp_path, *, action="INITIATE", evidence="default", created_at=NOW, record_id="F-1", now="same", **kw):
+    """`now` is the TRUSTED backend time; by default an honest caller whose created_at equals it."""
+    _CLOCK["c"].set(created_at if now == "same" else now)
     ev = funded_evidence() if evidence == "default" else evidence
     return facade.record_final_decision(
         run, record_id=record_id, human_stage8_action=action, human_rationale="paper decision",

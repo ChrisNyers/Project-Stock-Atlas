@@ -3480,3 +3480,22 @@ awaits human disposition. Read-only live check (Workstream B) and Workstreams C�
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## FROZEN_CONTROL_CHANGE_002_TRUSTED_BACKEND_CLOCK
+
+| | |
+|---|---|
+| Date | 2026-10-28 |
+| Status | **IMPLEMENTED — approved with amendments (disposition recorded before implementation, `223b873`)** |
+| Context | Closes the Workstream A finding of `BACKEND_COMPLETION_PACKAGE_WORKSTREAM_A_FINDING`; record `controlled_live_pilot/FROZEN_CONTROL_CHANGE_002_PROPOSED.md` |
+
+### Decision
+
+`capital_decision_facade.py` only: funded-decision freshness (run age, XNYS session currency, Treasury window) is measured on a trusted backend UTC clock; a caller-supplied `created_at`
+never sets that time and must agree with it within five minutes in either direction. No public clock parameter; a replaced clock fails closed outside a test run. The strict-xfail reproduction is a
+passing regression; an 8-day-old backdated funded call is rejected with zero ledger writes. No other frozen-control change. Safety gate (release gate 1) reopened for Workstreams B–E.
+MCD and RPM remain PARKED.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---

@@ -1,0 +1,8 @@
+[NEW facade] 8-day-old eligible Stage 7 run
+    -> REJECTED — ledger rows: 0 — STALE Stage 7 run: 192.0h old (limit 96h); re-run Stage 7
+[NEW facade] same-session run, evidence argument OMITTED
+    -> REJECTED — ledger rows: 0 — INITIATE/ADD requires FundedFreshnessEvidence (fresh price bind and Treasury re-attestation); omitting it cannot bypass verification
+[NEW facade] same-session run, fresh price moved $100 -> $130
+    -> REJECTED — ledger rows: 0 — Fresh price evidence does not reproduce the frozen Stage 7 evidence (price: Stage 7 100.0 vs now 130.0); re-run Stage 7
+[NEW facade] same-session run, unchanged evidence (control case)
+    -> ACCEPTED — ledger rows: 1

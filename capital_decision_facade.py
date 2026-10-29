@@ -57,6 +57,7 @@ no ranking, and no scoring.
 from __future__ import annotations
 
 import json
+import sys
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -98,6 +99,9 @@ STAGE7_ELIGIBLE = "ELIGIBLE FOR STAGE 8"
 
 #: Actions that move capital and therefore require a passing Stage 7 bundle.
 FUNDING_ACTIONS = frozenset({"INITIATE", "ADD"})
+
+#: Operational timestamp-consistency tolerance (FROZEN_CONTROL_CHANGE_002). NOT a freshness input.
+CREATED_AT_TOLERANCE = timedelta(minutes=5)
 
 #: Provisional paper-pilot bound (FROZEN_CONTROL_CHANGE_001). Subordinate to session authority and exact
 #: evidence consistency: it can only make a funded decision stricter, never admit one they reject.
@@ -290,6 +294,28 @@ class CapitalDecisionFacade:
         )
         return self._store.append(record)
 
+    # -- trusted clock (FROZEN_CONTROL_CHANGE_002) ----------------------------
+
+    def _now(self) -> datetime:
+        """The ONLY time source for funded-decision freshness: the backend's UTC system clock.
+
+        There is deliberately no public clock parameter anywhere. Tests substitute this method from the test side.
+        """
+        return datetime.now(timezone.utc)
+
+    def _trusted_now(self) -> datetime:
+        replaced = (
+            "_now" in vars(self)
+            or type(self)._now is not _ORIGINAL_NOW
+            or CapitalDecisionFacade._now is not _ORIGINAL_NOW
+        )
+        if replaced and "pytest" not in sys.modules:
+            raise ControlFailure("The facade clock has been replaced outside a test run; a funded decision fails closed")
+        now = self._now()
+        if now.tzinfo is None or now.utcoffset() != timedelta(0):
+            raise ControlFailure("The facade clock must be timezone-aware UTC")
+        return now
+
     # -- funded-decision freshness (mandatory for INITIATE / ADD) -----------
 
     def _verify_funded_freshness(
@@ -318,12 +344,19 @@ class CapitalDecisionFacade:
                 "Stage 7 artifact carries no frozen price basis (older format); re-run Stage 7 before a funded action"
             )
         frozen_price = basis["price_snapshot"]
+        # Every freshness comparison below uses the TRUSTED backend clock, never the caller's created_at.
+        now = self._trusted_now()
         created = created_at if created_at.tzinfo else created_at.replace(tzinfo=timezone.utc)
+        if abs(created - now) > CREATED_AT_TOLERANCE:
+            raise ControlFailure(
+                f"created_at {created.isoformat()} is {abs(created - now).total_seconds() / 60:.1f} min from the trusted backend "
+                f"clock (tolerance {CREATED_AT_TOLERANCE.total_seconds() / 60:g} min, either direction); funded decision refused"
+            )
 
         # 1. run age (provisional, subordinate)
         decided = datetime.fromisoformat(str(payload["decision_time"]))
         decided = decided if decided.tzinfo else decided.replace(tzinfo=timezone.utc)
-        age = created - decided
+        age = now - decided
         if age < timedelta(seconds=-60) or age > timedelta(hours=MAX_STAGE7_RUN_AGE_HOURS):
             raise ControlFailure(
                 f"STALE Stage 7 run: {age.total_seconds() / 3600:.1f}h old (limit {MAX_STAGE7_RUN_AGE_HOURS:g}h); re-run Stage 7"
@@ -339,7 +372,7 @@ class CapitalDecisionFacade:
         if not mic:
             raise ControlFailure("Frozen price evidence names no exchange (MIC); session freshness cannot be established")
         try:
-            latest = latest_completed_session(created, mic=mic).session_date.isoformat()
+            latest = latest_completed_session(now, mic=mic).session_date.isoformat()
         except (SessionCalendarError, ControlFailure) as exc:
             raise ControlFailure(f"Session authority could not be established for {mic}: {exc}") from exc
         fresh = evidence.fresh_price
@@ -371,13 +404,13 @@ class CapitalDecisionFacade:
         if not same:
             raise ControlFailure("Treasury reference re-attestation differs from the frozen Stage 7 reference; re-run Stage 7")
         t_asof = t.as_of if t.as_of.tzinfo else t.as_of.replace(tzinfo=timezone.utc)
-        if t.freshness_status != FreshnessStatus.FRESH or (created - t_asof) > timedelta(hours=MAX_STAGE7_RUN_AGE_HOURS) \
-                or (t_asof - created) > timedelta(seconds=60):
+        if t.freshness_status != FreshnessStatus.FRESH or (now - t_asof) > timedelta(hours=MAX_STAGE7_RUN_AGE_HOURS) \
+                or (t_asof - now) > timedelta(seconds=60):
             raise ControlFailure("Treasury reference is outside the reference window at decision time; re-run Stage 7")
 
         # Retain exactly what was checked (written only after every check passed; same-content rewrites are idempotent).
         freeze_payload(
-            {"record_id": record_id, "stage7_sha256": ref.sha256, "checked_at": created, "frozen_price_basis": basis,
+            {"record_id": record_id, "stage7_sha256": ref.sha256, "checked_at": now, "created_at": created, "frozen_price_basis": basis,
              "fresh_price": fresh, "treasury_reattested": t, "session_authority": {"mic": mic, "latest_completed_session": latest}},
             version="funded-freshness-v1",
             destination=self._config.artifact_dir / f"{record_id}.funded_freshness.json",
@@ -390,6 +423,9 @@ class CapitalDecisionFacade:
 
     def ledger_manifest_hash(self) -> str:
         return self._store.manifest_hash()
+
+
+_ORIGINAL_NOW = CapitalDecisionFacade._now  # sentinel for the replaced-clock guard (FROZEN_CONTROL_CHANGE_002)
 
 
 def _as_portfolio_action(action: str | PortfolioAction) -> PortfolioAction:

@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from capital_decision_facade import ControlFailure
-from test_funded_freshness_facade import fund, ledger_bytes, rejects
+from test_funded_freshness_facade import _clock, fund, ledger_bytes, rejects  # noqa: F401  (_clock = autouse trusted-clock fixture)
 from test_integration_facade import NOW, _eligible_run, _facade, funded_evidence
 
 CLOSE_SEP3 = datetime(2026, 9, 3, 20, 0, tzinfo=timezone.utc)  # XNYS regular close on 2026-09-03 (EDT)
@@ -49,11 +49,13 @@ def test_all_rejections_above_left_the_ledger_intact(setup):
     assert ledger_bytes(facade) == before and facade.verify_ledger()
 
 
-@pytest.mark.xfail(strict=True, reason="REPRODUCED MATERIAL FINDING (see FROZEN_CONTROL_CHANGE_002_PROPOSED.md): the facade measures run "
-                   "age and session against the CALLER-SUPPLIED created_at, so a direct caller who states a created_at near the run "
-                   "defeats the staleness safeguard. Real wall-clock now is ~2026-10; the fixture run is 2026-09-02.")
 def test_a_direct_caller_cannot_backdate_created_at_to_defeat_the_staleness_safeguard(setup):
+    """PROMOTED from the strict-xfail reproduction of the Workstream A finding (FROZEN_CONTROL_CHANGE_002).
+    The fixture run is 2026-09-02; the trusted backend clock is the REAL wall clock (2026-10 or later). The caller states a
+    created_at equal to the run's own time and copies the run's evidence — exactly the bypass that was accepted at 11bd220."""
     facade, run, tmp = setup
-    # created_at == the run's own time, evidence copied from the run: identical to what a careless script would do.
-    with pytest.raises(ControlFailure):
-        fund(facade, run, tmp, created_at=NOW, record_id="BACKDATED")
+    before = ledger_bytes(facade)
+    with pytest.raises(ControlFailure, match="trusted backend clock"):
+        fund(facade, run, tmp, created_at=NOW, now=None, record_id="BACKDATED")
+    assert ledger_bytes(facade) == before and facade.verify_ledger()  # zero ledger writes
+    assert not list(facade.artifact_dir.glob("*.funded_freshness.json"))
