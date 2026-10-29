@@ -218,7 +218,8 @@ def test_4c_on_the_repository_a_draft_snapshot_and_a_draft_approved_state_change
     assert authority.resolve(tree / REG).approved_state["commit"] == current
     cs = verify.preflight(tree, use_git=False)
     assert [c.line() for c in cs if c.status == "FAIL"] == []
-    assert len([c for c in cs if c.name == "unapproved record (draft)"]) == 2 and "2 draft(s)" in status(cs, "authority register").detail
+    before = len(authority.resolve(ROOT / REG).drafts)                                    # drafts already recorded in the real register (e.g. an unapproved milestone line)
+    assert len([c for c in cs if c.name == "unapproved record (draft)"]) == before + 2 and f"{before + 2} draft(s)" in status(cs, "authority register").detail
 
 
 def test_4d_a_new_commit_does_not_become_the_approved_state_by_existing(tree):

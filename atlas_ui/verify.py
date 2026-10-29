@@ -132,7 +132,7 @@ def preflight(repo: Path = REPO, *, use_git: bool = True, today: date | None = N
         bad = [f"seq {e['seq']} {e['type']}: {e['approval']['record']}" for fam in res.chains.values() for e in fam if not authority.record_exists(repo, e["approval"]["record"])]
         add("approval records resolve", "FAIL" if bad else "OK", f"approval record not found: {bad}" if bad else "every approved record names a repository record that exists")
         for d in res.drafts:
-            key = d["payload"].get(authority.FAMILIES[d["type"]][0]) if d["type"] in authority.FAMILIES else None
+            key = d["payload"].get(authority.FAMILIES[d["type"]][0]) if d["type"] in authority.FAMILIES else d["payload"].get("milestone_id")
             add("unapproved record (draft)", "INFO", f"seq {d['seq']} {d['type']} {key or ''} has no valid HUMAN approval and is not followed")
 
     # --- portfolio snapshot: the latest APPROVED one; superseded ones must stay loadable (history reconstructable)
@@ -181,6 +181,28 @@ def preflight(repo: Path = REPO, *, use_git: bool = True, today: date | None = N
             add("canonical decision ledger", "INFO" if ok else "FAIL", f"{rows} human-recorded row(s); hash chain {'verified' if ok else 'BROKEN'}")
         except Exception as exc:
             add("canonical decision ledger", "FAIL", f"{rows} rows; verification failed: {exc}")
+
+    # --- milestones: COMPLETE needs a human approval (the resolver only follows approved events) AND evidence that resolves
+    if res is not None and res.milestones:
+        from atlas_ui import project
+        done, bad, missing_commits, unchecked = 0, [], [], 0
+        for mid, m in res.milestones.items():
+            cur = m["current"]
+            if cur and cur["payload"]["status"] == "COMPLETE":
+                done += 1
+                if not cur["payload"]["evidence"]:
+                    bad.append(f"{mid}: no evidence cited")
+                for x in project.verify_evidence(repo, cur["payload"]["evidence"], res, use_git and has_git(repo)):
+                    if x["ok"] is False and x["ref"].startswith("commit:"):
+                        missing_commits.append(f"{mid}: {x['ref']}")       # a clone or copy may not hold that commit; the dashboard still refuses to count it
+                    elif x["ok"] is False:
+                        bad.append(f"{mid}: {x['ref']} ({x['why']})")
+                    elif x["ok"] is None:
+                        unchecked += 1
+        add("milestone evidence resolves", "FAIL" if bad else "WARN" if missing_commits else "OK",
+            f"unsupported COMPLETE milestone evidence: {bad}" if bad else
+            (f"commit evidence not found in this repository's history (those milestones are NOT counted as accepted on the dashboard): {missing_commits}" if missing_commits else
+             f"{done} COMPLETE milestone(s), each human-approved with evidence that resolves" + (f" ({unchecked} commit reference(s) cannot be checked without git history)" if unchecked else "")))
 
     # --- master plan / decision log structure and "historical never governs"
     docs = a["documents"]

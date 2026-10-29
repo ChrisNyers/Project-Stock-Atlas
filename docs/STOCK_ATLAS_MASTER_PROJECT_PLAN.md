@@ -1940,6 +1940,51 @@ Compared against the governing “Backend-first completion” entry and Priority
 
 ---
 
+### October 29, 2026 — Project Oversight Dashboard and investment research intelligence (R0–R4) (append-only)
+
+Direction approved by the human on 2026-10-29 (their words are quoted in the Decision Log entry `PROJECT_OVERSIGHT_AND_RESEARCH_DIRECTION`). The governing objective is unchanged: find and validate genuine investment edge; this work serves it.
+Human Stage 8 authority, every frozen control, paper-only status and the existing investment interface are unchanged.
+
+**R0 — Project Oversight Dashboard (first deliverable; one narrow increment).** A separate PROJECT section in the existing `atlas_ui` sidebar, initial page `/project`; the seven investment pages are preserved and protected by regression tests (`atlas_ui` is the technical application of record; the earlier
+“Integration desk” prototype is preserved untouched until the preferred investment UI appearance is confirmed). It reads the authority register, git, the candidate ledger, the capability list and the Decision Log; it owns no data and is not a second tracking system. Milestone status comes only from a minimal
+`MILESTONE` event type in the existing register: COMPLETE needs explicit human approval and evidence that resolves; unapproved or unsupported status is shown as such; no completion percentage is invented or shown; missing information is UNKNOWN. Git HEAD, the published GitHub HEAD and the approved state are shown separately.
+Stop for independent review through GitHub when it is complete.
+
+**R1 — Investment research.** Reverse valuation and assumption-driven bear/base/bull scenarios where economically appropriate; verified facts, human assumptions, model outputs and evidence gaps kept visibly separate; no artificial confidence, no automated ranking, no allocation recommendation.
+**R2 — Benchmarks.** Evaluate a read-only, keyless primary U.S. Treasury yield source (the human authorized the evaluation; any integration needs a further governance approval, to be identified first) and use the existing TwelveData capability for historical SPY comparison only if data quality is adequate, verifying price/dividend adjustment conventions so nothing is double counted; unavailable returns are never fabricated.
+**R3 — First case.** MCD, including the 2026-11-04 earnings revisit when the information exists; MCD stays PARKED until evidence and human approval justify a change. GEV, RMD and ORCL stay SURFACED; no independent human stance is invented or backfilled.
+**R4 — Learning.** Later: recorded decisions connected to dated outcomes against SPY and Treasury/cash, original assumptions retained, decision value measured honestly.
+
+**Not authorized by this entry:** a broader architecture effort, new agents, paid data, ML, any change to a frozen control, any real trade. R1–R4 proceed in small, testable increments, each returned for independent review; after R0 is accepted the work returns to investment research.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+### October 29, 2026 — Milestone review: R0 project oversight dashboard (append-only)
+
+Compared against the R0 scope above and the human's eight conditions.
+
+**What changed and was verified.**
+- A separate PROJECT section in the existing `atlas_ui` sidebar and a page at `/project`; the seven investment pages, their navigation order, the theme and every investment page function are pinned by regression tests and unchanged; the shared page chrome renders byte-for-byte as before when there are no project pages (`tests/test_investment_ui_unchanged.py`).
+- A minimal `MILESTONE` event type in the existing authority register (no second tracking system). Milestone status, the active assignment and the approved state come from the register; Git HEAD, the published GitHub position and the approved baseline are shown as three separate facts, with an explicit read-only “Check GitHub now”; refresh controls and a last-changed timestamp for every source.
+- A milestone counts as accepted only if a human approved it and its evidence (commit, file, Decision Log entry, register event) resolves; unapproved, unsupported or missing information is shown as such or as UNKNOWN; no percentage is computed or shown; nothing is inferred from prose; conflicting authority records fail closed on the page. The preflight now also fails a COMPLETE milestone whose evidence does not resolve.
+- 21 dashboard tests, 7 investment-UI protection tests and the milestone-resolver tests; six negative mutations each make them fail (`atlas_ui/evidence/authority/dashboard_mutations_FAIL_as_required.txt`). Running application verified on `http://127.0.0.1:8770/project`.
+
+**Incomplete or potentially overlooked.**
+- R0.1 is recorded as a *proposed* COMPLETE (a draft); it is not accepted until the human approves it after independent review.
+- Milestone statuses are only as current as the register: nothing updates them automatically, and a status the human has not approved is shown as proposed. The B-phase statuses rest on the human's acceptance of baseline `0733c77`; the R-phase statuses rest on the approved direction; L4 (live suite blocked by the missing key) is an unapproved draft.
+- “Published on GitHub” is the local tracking position until “Check GitHub now” is pressed; the live check needs network access and the user's SSH key and reports UNKNOWN when it fails.
+- The page is not yet exercised on a phone-width or very narrow pane beyond the existing responsive rules; the Integration-desk prototype remains untouched and unreconciled with `atlas_ui`.
+- Nothing about investment edge has been advanced by R0 itself; no valuation, benchmark or outcome measure exists yet.
+
+**What we should do next.**
+1. Independent review of R0 through GitHub; on acceptance the human's words are appended to the register approving R0.1 (and any amended statuses).
+2. Then R1–R4 in small increments, starting with the MCD integrated case ahead of the 2026-11-04 revisit and the Treasury-source evaluation (identify the governance approval needed before any integration).
+3. Human stances for GEV, RMD and ORCL remain blocked on the human; none will be invented.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
 ## Immediate Next Actions
 
 | # | Action | State |

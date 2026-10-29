@@ -17,7 +17,7 @@ from typing import Callable
 
 from operating_mvp import ledger
 
-from . import canonical, demo, research
+from . import canonical, demo, project, research
 from .service import (BASELINE_COMMIT, PAPER_ACTIONS, Blocked, Rejected, Stage7Service, Workspace, read_index)
 
 THEME = (Path(__file__).parent / "theme.css").read_text(encoding="utf-8")
@@ -25,6 +25,10 @@ EXTRA_CSS = ".rowlist div strong{display:block}.banner-demo{background:#fbeeea;b
 
 NAV = [("/", "Overview"), ("/intake", "Opportunity intake"), ("/cohort", "Research cohort"), ("/stage7", "Stage 7 evidence"),
        ("/desk", "Decision desk"), ("/history", "Decision history"), ("/capabilities", "Capability matrix")]
+
+# Project oversight is a separate sidebar section; the seven investment pages above are unchanged. With PROJECT_NAV empty the shared chrome renders as before.
+NAV_PROJECT_DEFAULT = [("/project", "Project dashboard")]
+PROJECT_NAV = list(NAV_PROJECT_DEFAULT)
 
 # Single source of truth for the honest capability matrix (page + CAPABILITY_MATRIX.md).
 CAPABILITIES = [
@@ -50,6 +54,8 @@ CAPABILITIES = [
      "Built on live SEC + Gate B data for MCD (parked), GEV, RMD, ORCL (SURFACED, INSUFFICIENT EVIDENCE). Assessments are DRAFT_BY_RECORDER and not human-accepted; no ranks, no scores, no Stage 7 or capital control in the view. No candidate yet permitted a 'SUPPORTED' example. Saved research snapshots are referenced by a bare file name inside the research workspace and bound to their SHA-256, so an extracted ZIP loads them anywhere; a missing, tampered or mis-bound snapshot is shown as a RESEARCH EVIDENCE ERROR, never as 'no research'."),
     ("I. Source-of-truth reference, preflight, regression verification and delivery (tooling)", "PROVEN CANONICAL OFFLINE",
      "docs/CURRENT_AUTHORITY.md holds the rules; the values that change (approved state, portfolio snapshot, active work, candidate-ledger acceptance) are HUMAN-approved, hash-chained events in docs/authority_register.jsonl, resolved by `python -m atlas_ui preflight` and by the app (latest approved snapshot only; the Stage 7 and funded Stage 8 server-side gates follow the register-approved candidate status, so an unapproved promotion never opens capital comparison and any unapproved status change closes it; drafts and unapproved newer records are never followed; conflicting approved records fail closed; superseded snapshots stay loadable; a revisit date is a trigger, never a promotion). `verify` runs the suite with skips classified and an optional clean-extraction run; `deliver` builds one ZIP, one patch and one report and fails if the repository preflight, the clean-extraction preflight or either test run fails. Historical Pilot 2 / Sprint 2 instructions are marked non-governing. Tooling only: no investment logic."),
+    ("J. Project oversight dashboard (/project, separate PROJECT section of the same app)", "PROVEN CANONICAL OFFLINE",
+     "One page read live from the authority register (approved state, active work, MILESTONE events), git, the candidate ledger, the capability list and the Decision Log. Shows Git HEAD, the published GitHub position and the approved baseline separately; milestones by phase with counts only (no percentages); a COMPLETE milestone counts only if a human approved it and its evidence resolves; unapproved, unsupported or missing information is shown as such or as UNKNOWN. A project view, not an investment view: it reads no price, makes no assessment and writes nothing except an explicit read-only GitHub check."),
     ("Real trades / broker connectivity / execution", "NOT IMPLEMENTED", "By design: paper only. No order API exists."),
 ]
 
@@ -59,6 +65,7 @@ class App:
     ws: Workspace
     svc: Stage7Service
     clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc)
+    github_live: dict | None = None  # result of the last explicit "Check GitHub now" (read-only ls-remote); never persisted
 
     @property
     def mode(self) -> str:
@@ -79,7 +86,7 @@ def status_pill(status: str) -> str:
     return pill(status, kind)
 
 
-def page(app: App, active: str, title: str, body: str, flash: str = "", err: str = "") -> str:
+def page(app: App, active: str, title: str, body: str, flash: str = "", err: str = "", section: str = "", head_extra: str = "") -> str:
     nav = "".join(f'<a class="navbtn{" active" if p == active else ""}" href="{p}"><span class="number">{i + 1}</span>{e(n)}</a>'
                   for i, (p, n) in enumerate(NAV))
     if app.mode == "DEMO":
@@ -88,14 +95,19 @@ def page(app: App, active: str, title: str, body: str, flash: str = "", err: str
     else:
         banner = ('<div class="warning"><strong>CONNECTED TO STOCK ATLAS — canonical records.</strong> Paper decisions only. '
                   'No real orders. Stage 7 runs only through the frozen facade; Human Stage 8 alone decides.</div>')
+    proj = ""
+    if PROJECT_NAV:
+        proj = ('<div class="navtitle" data-group="project" style="color:#e6c27a;margin-top:18px">PROJECT</div><nav class="nav">'
+                + "".join(f'<a class="navbtn{" active" if p == active else ""}" href="{p}"><span class="number">P{i + 1}</span>{e(n)}</a>' for i, (p, n) in enumerate(PROJECT_NAV)) + "</nav>")
+    crumb = "PROJECT STOCK ATLAS / PROJECT OVERSIGHT" if section == "project" else "PROJECT STOCK ATLAS / CONTROLLED LIVE PILOT"
     msgs = (f'<div class="err">{e(err)}</div>' if err else "") + (f'<div class="okbox">{flash}</div>' if flash else "")
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(title)} · Stock Atlas</title><style>{THEME}{EXTRA_CSS}
-@media(max-width:820px){{.app{{grid-template-columns:1fr}}.sidebar{{position:static;height:auto}}.layout,.topstats,.inputs{{grid-template-columns:1fr}}}}</style></head>
+@media(max-width:820px){{.app{{grid-template-columns:1fr}}.sidebar{{position:static;height:auto}}.layout,.topstats,.inputs{{grid-template-columns:1fr}}}}</style>{head_extra}</head>
 <body><div class="app"><aside class="sidebar"><div class="brand"><div class="mark">A</div><div><span class="brand-name">STOCK ATLAS</span>
-<span class="brand-small">Decision workspace</span></div></div><div class="navtitle">WORKSPACE</div><nav class="nav">{nav}</nav>
+<span class="brand-small">Decision workspace</span></div></div><div class="navtitle">WORKSPACE</div><nav class="nav">{nav}</nav>{proj}
 <div class="sidebottom"><b>Frozen controls preserved</b><p>Baseline {BASELINE_COMMIT[:7]}… Stage 7 compares only. Stage 8 remains human. Paper only.</p></div></aside>
-<main class="main"><div class="topbar"><span class="crumb">PROJECT STOCK ATLAS / CONTROLLED LIVE PILOT · {e(app.mode)}</span><span class="version">UI integration v0.1</span></div>
+<main class="main"><div class="topbar"><span class="crumb">{crumb} · {e(app.mode)}</span><span class="version">UI integration v0.1</span></div>
 {banner}{msgs}{body}<p class="footer-note">Stock Atlas — presentation and input layer over the existing engine · No real trades · Capital status: NO REAL PORTFOLIO ACTION</p></main></div></body></html>"""
 
 
@@ -567,6 +579,202 @@ def api_cohort(app: App) -> list[dict]:
 
 
 # ------------------------------------------------------------------ server
+# ------------------------------------------------------------------ project oversight (separate PROJECT section; reads records, writes nothing)
+PROJECT_CSS = """<style>
+.proj .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.proj .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.proj .g2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:17px}
+.proj .tbox{background:#f6f9f9;border:1px solid #e1eaea;border-radius:10px;padding:13px 14px;min-width:0}
+.proj .tbox .k{font-size:10px;letter-spacing:.9px;text-transform:uppercase;color:#61737d;font-weight:700}
+.proj .tbox .v{font-size:22px;font-weight:800;letter-spacing:-.4px;margin:4px 0 2px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.proj details{border:1px solid #e1eaea;border-radius:10px;margin-bottom:9px;background:#fff}
+.proj summary{cursor:pointer;padding:12px 14px;display:flex;justify-content:space-between;gap:12px;align-items:center;font-weight:700;font-size:13px;list-style:none}
+.proj summary::-webkit-details-marker{display:none}
+.proj summary>span:last-child{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.proj summary>span:first-of-type{flex:1}
+.proj .nw{white-space:nowrap;word-break:normal}
+.proj summary:before{content:"\\25B8";color:#76868e;margin-right:8px;display:inline-block;transition:none}
+.proj details[open]>summary:before{content:"\\25BE"}
+.proj details .inner{padding:2px 14px 12px}
+.proj .toolbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:0 0 18px}
+.proj .unk{color:#8a5a14;font-weight:700}
+.proj .att{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #edf1f2;font-size:12px}
+.proj .att:last-child{border-bottom:0}
+.proj .crit{background:#fdeeee;border:1px solid #e9bcbc;color:#7d2f23;padding:12px 15px;border-radius:11px;font-size:12px;margin-bottom:17px}
+@media(max-width:1150px){.proj .g4{grid-template-columns:repeat(2,1fr)}.proj .g2{grid-template-columns:1fr}}
+@media(max-width:760px){.proj .g3{grid-template-columns:1fr}}
+</style>"""
+MS_PILL = {"COMPLETE": "ok", "IN_PROGRESS": "wait", "BLOCKED": "danger", "UPCOMING": "no", "NOT APPROVED": "no"}
+
+
+def _when(ts) -> str:
+    """A timestamp for people: UTC minute precision. A plain date stays a date; anything else is shown as recorded."""
+    if not ts or ts == project.UNKNOWN:
+        return project.UNKNOWN
+    try:
+        return datetime.fromisoformat(str(ts)).astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC") if "T" in str(ts) else str(ts)
+    except ValueError:
+        return str(ts)
+
+
+def _unk(v) -> str:
+    return '<span class="unk">UNKNOWN</span>' if v in (None, "", project.UNKNOWN) else e(str(v))
+
+
+def project_data(app: App) -> dict:
+    """The dashboard's data: re-read from the records on every call (nothing cached)."""
+    return project.status(project.REPO, now=app.clock(), ws=app.ws, svc=app.svc, research=lambda cid: research_snapshot(app, cid),
+                          capabilities=CAPABILITIES, github_live=app.github_live)
+
+
+def api_project(app: App) -> dict:
+    return project_data(app)
+
+
+def project_page(app: App, auto: int = 0, flash: str = "", err: str = "") -> str:
+    d = project_data(app)
+    t, ms, act = d["truth"], d["milestones"], d["active"]
+    approved, head, pub = t.get("approved"), t.get("head"), t.get("published")
+    sha7 = lambda x: e((x or "")[:7]) if x else '<span class="unk">UNKNOWN</span>'
+    pf = d["preflight"] or {}
+    health = (pill("source-of-truth checks: PASS", "ok") if pf and not pf["fail"] and pf["ok"] is not None else
+              pill("source-of-truth checks: FAIL", "danger") if pf and pf["fail"] else pill("source-of-truth checks: UNKNOWN", "no"))
+    refresh = (f'<a class="btn" href="/project">Refresh now</a>' + (f'<a class="btn ghost" href="/project">Stop auto-refresh</a>' if auto else '<a class="btn ghost" href="/project?auto=60">Auto-refresh every 60 s</a>'))
+    banner = ""
+    if not d["authority"]["ok"]:
+        banner = f'<div class="crit"><b>AUTHORITY RECORDS DO NOT RESOLVE.</b> Approved state, active work and milestones are UNKNOWN until this is fixed (fail closed): {e(d["authority"]["error"])}</div>'
+
+    # ---- headline numbers (counts only; no percentage anywhere)
+    tt = ms["totals"] if ms else None
+    card = lambda label, value, sub: f'<div class="stat"><div class="statlabel">{label}</div><div class="statvalue">{value}</div><div class="statsub">{sub}</div></div>'
+    if tt:
+        cards = (card("Milestones accepted", f'{tt["complete"]} of {tt["milestones"]}', f'{tt["awaiting_acceptance"]} awaiting your acceptance' + (f' · {tt["complete_but_evidence_unverified"]} approved but evidence unverified' if tt["complete_but_evidence_unverified"] else ""))
+                 + card("In progress", str(tt["in_progress"]), "approved status")
+                 + card("Blocked", str(tt["blocked"]), "reasons listed below")
+                 + card("Upcoming", str(tt["upcoming"]), "not started"))
+    else:
+        cards = "".join(card(l, '<span class="unk">UNKNOWN</span>', "authority records unavailable") for l in ("Milestones accepted", "In progress", "Blocked", "Upcoming"))
+
+    # ---- three different things
+    live = t.get("github_live")
+    live_txt = ("not checked in this session" if not live else
+                f'live check {_when(live["checked_at"])}: ' + (f'<b class="mono">{sha7(live["sha"])}</b> · ' + ("matches HEAD" if t.get("live_vs_head") == "SAME" else "DIFFERS from HEAD") if live["ok"] and live["sha"] else
+                                                                  f'UNKNOWN ({e(live.get("error") or "no answer")})'))
+    ahead = t.get("ahead_of_approved") or []
+    rel_head_approved = ("HEAD is the approved baseline" if t.get("head_is_approved") else
+                         (f'HEAD is {len(ahead)} commit(s) ahead of the approved baseline: those commits are unapproved until you accept them' if t.get("available") and ahead is not None and approved else "UNKNOWN"))
+    truth = f"""<section class="panel" id="truth"><div class="panel-head"><div><h2>Code, published copy and approved baseline are three different things</h2>
+<p class="subtle">The newest commit is never assumed to be approved.</p></div>
+<form method="post" action="/project/check-github"><button class="btn">Check GitHub now</button></form></div>
+<div class="g3">
+<div class="tbox"><div class="k">Git HEAD (this Mac)</div><div class="v">{sha7(head and head["sha"])}</div><div class="small">{e(head["subject"]) if head else "UNKNOWN"}<br>{_when(head["date"]) if head else ""} · branch {e(t.get("branch") or "UNKNOWN")} · {"UNKNOWN" if t.get("dirty") is None else str(t["dirty"]) + " uncommitted change(s)"}</div></div>
+<div class="tbox"><div class="k">Published on GitHub</div><div class="v">{sha7(pub and pub["sha"])}</div><div class="small">{("last push or fetch " + _when(pub["as_of"]) + " (local tracking ref, not a live check)") if pub else "UNKNOWN: no published position recorded locally"}<br>{live_txt}</div></div>
+<div class="tbox"><div class="k">Approved baseline (human)</div><div class="v">{sha7(approved and approved["commit"])}</div><div class="small">{("approved " + e(approved["approved_on"]) + " · register event #" + str(approved["register_seq"])) if approved else "UNKNOWN: the register holds no approved state"}</div></div></div>
+<p class="small" style="margin-top:12px"><b>HEAD vs published:</b> {e(t.get("published_vs_head") or "UNKNOWN")} &nbsp;·&nbsp; <b>HEAD vs approved:</b> {e(rel_head_approved)} &nbsp;·&nbsp; remote {e(t.get("remote") or "UNKNOWN")}</p>
+{('<details style="margin-top:10px"><summary>Commits after the approved baseline (' + str(len(ahead)) + ')</summary><div class="inner">' + "".join(f'<div class="small"><span class="mono">{e(c[0])}</span> {e(c[1])}</div>' for c in ahead) + '</div></details>') if ahead else ""}</section>"""
+
+    # ---- active assignment
+    if act:
+        assign = f"""<section class="panel"><h2>Active assignment</h2><p style="margin:8px 0 4px"><b>{e(act["plan_heading"])}</b></p><p class="subtle">{e(act["summary"])}</p><div class="thin"></div>
+<div class="rowlist"><div><strong>State</strong><span>{e(act["state"])}</span></div></div>
+<div class="rowlist"><div><strong>Owner</strong><span>{_unk(act["owner"])}</span></div></div>
+<div class="rowlist"><div><strong>Next action</strong><span>{_unk(act["next_action"])}</span></div></div>
+<div class="rowlist"><div><strong>Dependencies</strong><span>{_unk(act["dependencies"])}</span></div></div>
+<p class="small" style="margin-top:8px">Approved by the human {e(act["approved_on"])} · register event #{act["register_seq"]} · work id <span class="mono">{e(act["work_id"])}</span></p></section>"""
+    else:
+        assign = '<section class="panel"><h2>Active assignment</h2><p class="unk">UNKNOWN — the register holds no approved active-work record.</p></section>'
+
+    # ---- upcoming
+    rows = "".join(f'<tr><td class="mono nw">{e(u["date"])}</td><td>{("in " + str(u["days"]) + " d") if u["days"] > 0 else ("today" if u["days"] == 0 else str(-u["days"]) + " d ago")}</td><td>{e(u["what"])}<br><span class="small subtle">{e(u["kind"])} — {e(u["note"])}</span></td></tr>' for u in d["upcoming"])
+    upcoming = f'<section class="panel"><h2>Upcoming dates</h2><div class="table-wrap"><table><tr><th>Date</th><th>When</th><th>What</th></tr>{rows or "<tr><td colspan=3><span class=unk>UNKNOWN</span> — no dated item is recorded</td></tr>"}</table></div><p class="small subtle" style="margin-top:8px">A revisit date is a trigger to reassess. It never promotes a candidate or authorizes an investment.</p></section>'
+
+    # ---- needs attention (derived only from structured records)
+    att = []
+    if ms:
+        for ph in ms["phases"]:
+            for it in ph["items"]:
+                if it["status"] == "BLOCKED":
+                    att.append(("danger", "BLOCKED", f'{it["id"]} {it["title"]}', it["blocker"] or "no reason recorded"))
+                if it["proposed"] and it["proposed"]["status"] == "COMPLETE":
+                    att.append(("wait", "AWAITING ACCEPTANCE", f'{it["id"]} {it["title"]}', f'proposed COMPLETE (register event #{it["proposed"]["register_seq"]}); not counted until you approve it'))
+                elif it["proposed"] and not it["approved"]:
+                    att.append(("no", "NOT APPROVED", f'{it["id"]} {it["title"]}', f'a {it["proposed"]["status"]} status was proposed but nobody has approved it (register event #{it["proposed"]["register_seq"]})'))
+                if it["status"] == "COMPLETE" and not it["evidence_ok"]:
+                    att.append(("danger", "EVIDENCE UNVERIFIED", f'{it["id"]} {it["title"]}', "approved COMPLETE, but at least one evidence reference does not resolve here; not counted"))
+                if it["unknown_dependencies"]:
+                    att.append(("no", "UNKNOWN DEPENDENCY", f'{it["id"]}', "depends on " + ", ".join(it["unknown_dependencies"]) + ", which is not a recorded milestone"))
+    for c in d["pipeline"]:
+        if c["pending"]:
+            att.append(("wait", "PENDING APPROVAL", f'{c["candidate_id"]} status', f'ledger change(s) {c["pending"]} are not approved in the register; capital comparison stays closed'))
+        if c["revisit_due"]:
+            att.append(("wait", "REVISIT DATE REACHED", f'{c["candidate_id"]}', "a trigger to reassess, not a promotion"))
+    for f in pf.get("fail", []):
+        att.append(("danger", "CHECK FAILED", "source-of-truth preflight", f))
+    for w in pf.get("warn", []):
+        att.append(("wait", "CHECK WARNING", "source-of-truth preflight", w))
+    attention = ('<section class="panel"><h2>Needs attention</h2>' + ("".join(f'<div class="att">{pill(k, c)}<div><b>{e(w)}</b><br><span class="subtle">{e(x)}</span></div></div>' for c, k, w, x in att)
+                 if att else '<p class="subtle">No blocker, proposal, pending approval or failed check is recorded.</p>') + '</section>')
+
+    # ---- milestones by phase
+    if ms and ms["phases"]:
+        blocks = ""
+        for ph in ms["phases"]:
+            c = ph["counts"]
+            op = " open" if (c["in_progress"] or c["blocked"] or c["awaiting_acceptance"]) else ""
+            trs = ""
+            for it in ph["items"]:
+                n_ok = sum(1 for x in it["evidence"] if x["ok"] is True)
+                ev = (pill(f'evidence {n_ok}/{len(it["evidence"])} resolves', "ok") if it["evidence"] and n_ok == len(it["evidence"]) else pill(f'evidence {n_ok}/{len(it["evidence"])} resolves', "wait") if it["evidence"] else pill("no evidence cited", "no"))
+                ev_list = "".join(f'<div class="small mono">{"✓" if x["ok"] is True else "?" if x["ok"] is None else "✗"} {e(x["ref"])}{(" — " + e(x["why"])) if x["why"] else ""}</div>' for x in it["evidence"])
+                extra = "".join(f'<div class="small subtle">{lbl}: {e(str(v))}</div>' for lbl, v in (("blocker", it["blocker"]), ("depends on", ", ".join(it["depends_on"]) if it["depends_on"] else None), ("target", it["target_date"]), ("note", it["notes"])) if v)
+                prop = (f'<div class="small" style="color:#8a5a14">proposed: {e(it["proposed"]["status"].replace("_", " "))} — not approved</div>' if it["proposed"] else "")
+                appr = (f'approved {e(it["approved_on"])} · #{it["register_seq"]}' if it["approved"] else '<span class="unk">NOT APPROVED</span>')
+                trs += (f'<tr><td class="mono nw"><b>{e(it["id"])}</b></td><td>{e(it["title"])}{extra}{prop}</td><td>{pill(it["status"].replace("_", " "), MS_PILL.get(it["status"], "no"))}</td>'
+                        f'<td><details style="border:0;margin:0"><summary style="padding:0;font-weight:400">{ev}</summary><div class="inner" style="padding:6px 0 0">{ev_list}</div></details></td><td class="small">{appr}</td></tr>')
+            acc = str(c["complete"]) + " of " + str(c["total"]) + " accepted"
+            blocks += (f'<details{op}><summary><span>{e(ph["phase"])}</span><span>{pill(acc, "ok" if c["complete"] == c["total"] else "no")}'
+                       + (pill(f'{c["in_progress"]} in progress', "wait") if c["in_progress"] else "") + (pill(f'{c["blocked"]} blocked', "danger") if c["blocked"] else "")
+                       + (pill(f'{c["awaiting_acceptance"]} awaiting acceptance', "wait") if c["awaiting_acceptance"] else "") + '</span></summary>'
+                       f'<div class="inner"><div class="table-wrap"><table><tr><th>ID</th><th>Milestone</th><th>Status</th><th>Evidence</th><th>Approval</th></tr>{trs}</table></div></div></details>')
+        milestones = f'<section class="panel"><div class="panel-head"><h2>Milestones by phase</h2><span class="subtle">counts only · COMPLETE needs your approval and evidence that resolves</span></div>{blocks}</section>'
+    else:
+        milestones = '<section class="panel"><h2>Milestones by phase</h2><p class="unk">UNKNOWN — no milestone is recorded in the register.</p></section>'
+
+    # ---- capabilities, pipeline, loop status
+    cap = d["capabilities"]
+    cap_html = (" ".join(pill(f"{k}: {n}", "ok" if k == "PROVEN LIVE" else "wait" if k in ("BLOCKED", "FIXTURE-TESTED") else "no") for k, n in cap["counts"].items())
+                + '<details style="margin-top:10px"><summary>All capabilities</summary><div class="inner">' + "".join(f'<div class="rowlist"><div><strong>{e(r["name"][:78])}</strong></div><span>{e(r["status"])}</span></div>' for r in cap["rows"]) + '</div></details>') if cap else '<span class="unk">UNKNOWN</span>'
+    capab = f'<section class="panel"><div class="panel-head"><h2>Verified capabilities</h2><a class="btn ghost" href="/capabilities">Full matrix</a></div>{cap_html}<p class="small subtle" style="margin-top:8px">PROVEN LIVE means read-only market data and SEC retrieval only. FIXTURE-TESTED means never run on live data.</p></section>'
+    prow = "".join(f'<tr><td><a href="/candidate/{urllib_q(c["candidate_id"])}"><b>{e(c["candidate_id"])}</b></a></td><td>{pill(c["state"].replace("_", " ") + (" until " + c["parked_until"] if c["parked_until"] else ""), "wait" if c["state"] == "PARKED" else "no")}</td>'
+                   f'<td class="small">{e(c["assessment"])}</td><td class="small">{c["open_questions"]} open · {c["evidence"]} evidence · {c["stances"]} stance(s)</td><td class="small">{_when(c["research_snapshot"]) if c["research_snapshot"][:1].isdigit() else e(c["research_snapshot"])}</td></tr>' for c in d["pipeline"])
+    pipe = f'<section class="panel"><div class="panel-head"><h2>Research pipeline</h2><a class="btn ghost" href="/cohort">Research cohort</a></div><div class="table-wrap"><table><tr><th>Candidate</th><th>Status</th><th>Assessment</th><th>Record</th><th>Research snapshot</th></tr>{prow or "<tr><td colspan=5><span class=unk>UNKNOWN</span></td></tr>"}</table></div><p class="small subtle" style="margin-top:8px">Status only. Analysis lives in the investment pages.</p></section>'
+    s78, ol, pf_ = d["stage78"], d["outcomes"], d["portfolio"]
+    port = (f'<div class="rowlist"><div><strong>Portfolio snapshot</strong><span>{e(pf_["snapshot_id"])} · valuation {e(pf_["as_of"])} · <b>{pf_["age_days"]} days old</b> · {pf_["holdings"]} holdings · approximate, not a live balance</span></div></div>' if pf_ else '<div class="rowlist"><div><strong>Portfolio snapshot</strong><span class="unk">UNKNOWN</span></div></div>')
+    loop = (port + f'<div class="rowlist"><div><strong>Stage 7 runs</strong><span>{_unk(s78["runs"])}' + (f' ({e(", ".join(f"{k}: {v}" for k, v in s78["by_status"].items()))})' if s78.get("by_status") else "") + f' · workspace {e(app.mode)}</span></div></div>'
+            f'<div class="rowlist"><div><strong>Stage 8 decisions recorded</strong><span>{_unk(s78["decisions"])} · decision ledger verified: {_unk(s78["ledger_verified"])}</span></div></div>'
+            f'<div class="rowlist"><div><strong>Outcome learning</strong><span>{_unk(ol["observations"])} dated observation(s) · decisions to measure: {_unk(ol["decisions_to_measure"])} · matched SPY / Treasury comparison: not yet built</span></div></div>')
+    loopp = f'<section class="panel"><h2>Portfolio freshness, Stage 7/8 and outcome learning</h2>{loop}</section>'
+
+    # ---- recent change
+    cm = "".join(f'<tr><td class="mono nw">{e(c["sha"])}</td><td class="small">{_when(c["date"])}</td><td>{e(c["subject"])}</td><td>{pill("approved baseline or earlier", "ok") if c["approved"] else pill("unapproved", "wait")}</td></tr>' for c in d["recent"]["commits"])
+    dl = "".join(f'<tr><td class="mono small">{e(x["name"])}</td><td class="small">{e(x["date"])}</td><td class="small">{e(x["status_text"])}</td></tr>' for x in d["recent"]["decisions"])
+    recent = (f'<section class="panel"><h2>Recent changes</h2><details open><summary>Latest commits</summary><div class="inner"><div class="table-wrap"><table><tr><th>Commit</th><th>Date</th><th>Subject</th><th>Baseline</th></tr>{cm or "<tr><td colspan=4><span class=unk>UNKNOWN</span> — no git history here</td></tr>"}</table></div></div></details>'
+              f'<details><summary>Latest Decision Log entries (Status shown exactly as written)</summary><div class="inner"><div class="table-wrap"><table><tr><th>Entry</th><th>Date</th><th>Status as recorded</th></tr>{dl or "<tr><td colspan=3><span class=unk>UNKNOWN</span></td></tr>"}</table></div></div></details></section>')
+
+    # ---- sources and timestamps
+    srcs = "".join(f'<tr><td>{e(x["name"])}</td><td class="small">{_when(x["last_changed"])}</td><td class="small subtle">{e(x["detail"])}</td></tr>' for x in d["sources"])
+    sources = (f'<section class="panel"><h2>Sources and when each last changed</h2><div class="table-wrap"><table><tr><th>Record</th><th>Last changed</th><th>Detail</th></tr>{srcs}</table></div>'
+               f'<p class="small subtle" style="margin-top:8px">This page was rendered {_when(d["generated_at"])} and re-reads every record each time it is viewed. {d["working_tree_dirty"] if d["working_tree_dirty"] is not None else "UNKNOWN"} uncommitted change(s) in the working tree are included in what you see.</p></section>')
+
+    body = (PROJECT_CSS + f"""<div class="view active proj"><p class="eyebrow">Project oversight</p><h1>Where the project stands</h1>
+<p class="intro">Read live from the authority register, git and the project's own records. Nothing here is investment analysis or a recommendation; that lives in the Workspace pages.</p>
+<div class="toolbar">{refresh}{health}<span class="subtle small">Rendered {_when(d["generated_at"])}{" · refreshing every 60 s" if auto else ""}</span></div>{banner}
+<div class="g4">{cards}</div>{truth}{attention}<div class="g2">{assign}{upcoming}</div>{milestones}<div class="g2">{pipe}{capab}</div>{loopp}{recent}{sources}</div>""")
+    head = f'<meta http-equiv="refresh" content="{auto}">' if auto else ""
+    return page(app, "/project", "Project dashboard", body, flash=flash, err=err, section="project", head_extra=head)
+
+
+
 def make_handler(app: App):
     class H(BaseHTTPRequestHandler):
         server_version = "AtlasUI/0.1"
@@ -606,6 +814,11 @@ def make_handler(app: App):
             try:
                 if p == "/":
                     return self._send(200, overview(app))
+                if p == "/project":
+                    a = (q.get("auto") or [""])[0]
+                    return self._send(200, project_page(app, auto=int(a) if a.isdigit() and 10 <= int(a) <= 600 else 0))
+                if p == "/api/project":
+                    return self._json(api_project(app))
                 if p == "/intake":
                     return self._send(200, intake(app))
                 if p == "/stage7":
@@ -674,6 +887,9 @@ def make_handler(app: App):
             f = {k: v[0] for k, v in urllib.parse.parse_qs(self.rfile.read(n).decode("utf-8"), keep_blank_values=True).items()}
             p = urllib.parse.urlparse(self.path).path
             try:
+                if p == "/project/check-github":
+                    app.github_live = project.check_github(project.REPO)        # explicit, read-only (git ls-remote); the result lives in memory only
+                    return self._redirect("/project#truth")
                 if p == "/intake":
                     ev = ledger.surface(app.ws.candidate_ledger, name=f.get("name", ""), ticker=f.get("ticker", ""),
                                         source=f.get("source", ""), source_detail=f.get("source_detail", ""),

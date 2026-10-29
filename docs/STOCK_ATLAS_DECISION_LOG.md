@@ -3630,3 +3630,44 @@ The human's words: “I accept the independently reviewed Stock Atlas developmen
 **Migration records verified.** The four original register events (portfolio snapshot, approved state, active work, candidate-ledger acceptance), which were transcribed from the `f6cb3d6` authority manifest, were checked field by field against their historical sources: the manifest at `f6cb3d6`, the Cycle 0 record (its bytes and the approval quote verbatim), the Master Plan heading, and the candidate ledger (events 1–197 identical at `f6cb3d6` and now; MCD and RPM restrictions reproduced by replay). 30 checks, all pass (`atlas_ui/evidence/authority/migration_events_verified_against_sources.txt`). The check confirms the events match their sources; it cannot establish that the human originally approved the transcribed values beyond the standing instructions and records they cite. The events were not edited or re-approved.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## PROJECT_OVERSIGHT_AND_RESEARCH_DIRECTION
+
+| | |
+|---|---|
+| Date | 2026-10-29 |
+| Status | **DIRECTION APPROVED BY THE HUMAN** — R0 (project oversight dashboard) in progress; R1–R4 approved in principle, to proceed in small increments each returned for review |
+| Context | The human's replies to the research-intelligence plan and to the project-dashboard proposal |
+
+### Decision
+
+The human's words (verbatim extracts): “I agree with the general R1–R4 direction, with these refinements” · “I approve proceeding with the Stock Atlas Project Oversight Dashboard, subject to these conditions” · “Use `atlas_ui` as our technical application of record. Preserve the earlier Integration Desk prototype until we've confirmed our preferred investment UI appearance. Do not redesign or replace the investment interface.” ·
+“APPROVED: Add a separate PROJECT section to the existing sidebar, with `/project` as the initial project dashboard. Preserve all seven existing investment pages and their functionality.” · “APPROVED: Add a minimal `MILESTONE` event type to the existing authority register. Do not create a second tracking system. Completed milestones must have explicit human approval and verifiable evidence. Display unapproved or unsupported statuses honestly. Do not invent completion percentages.” ·
+“This is one narrow dashboard increment, not authorization for a broader architecture effort. Once complete, stop for independent review through GitHub.” · “GEV, RMD, and ORCL remain SURFACED. Do not invent or backfill independent human stances.”
+
+**Recorded.** (1) The Master Plan entry “Project Oversight Dashboard and investment research intelligence (R0–R4)” and an `ACTIVE_WORK` register event supersede the earlier active-work record. (2) A `MILESTONE` event type exists in `docs/authority_register.jsonl`: a milestone's status is the latest HUMAN-approved event for its id; a later event without a valid approval is shown as proposed / awaiting acceptance and never followed;
+COMPLETE counts only if approved and its evidence references (commit, file, Decision Log entry, register event) resolve; history is append-only. (3) Milestones for the closed backend phase are recorded as COMPLETE under the human's acceptance of baseline `0733c77` (Decision Log `BASELINE_ACCEPTED_0733C77`); milestones for R0–R4 and the live paper loop are recorded under this direction as IN_PROGRESS, UPCOMING or BLOCKED only — none is recorded COMPLETE by this entry.
+(4) The dashboard is a view over the register, git, the candidate ledger, the capability list and the Decision Log; it creates no second source of truth. (5) The Integration desk prototype (`~/Documents/ChatGPT/Project Stock Atlas/dashboard`) is untouched. No frozen control, investment logic, provider, agent or ML changed.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## R0_PROJECT_OVERSIGHT_DASHBOARD_DELIVERED
+
+| | |
+|---|---|
+| Date | 2026-10-29 |
+| Status | **DELIVERED FOR INDEPENDENT REVIEW THROUGH GITHUB — stop; R1 not started** |
+| Context | R0 under the direction recorded in `PROJECT_OVERSIGHT_AND_RESEARCH_DIRECTION` |
+
+### Decision
+
+The Project oversight dashboard (`/project`, a separate PROJECT sidebar section of `atlas_ui`) is delivered. It is a read-only view over the authority register (approved state, active work, `MILESTONE` events), git, the candidate ledger, the capability list and the Decision Log; it owns no data. The seven investment pages are unchanged and pinned by tests.
+The register now holds the active assignment `R0_PROJECT_OVERSIGHT_DASHBOARD_2026-10-29`, 18 milestones across seven phases (the closed backend phase recorded COMPLETE under the human's acceptance of `0733c77`; the live paper loop and R0–R4 under the approved direction; the live-suite blocker L4 as an unapproved draft) and one **proposed** COMPLETE for R0.1 that is not followed until the human approves it.
+Open for the human: accept or amend R0; approve or discard the L4 draft; stances for GEV, RMD and ORCL (not invented). No frozen control, investment logic, provider, agent, ML or paid data changed.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+

@@ -1,0 +1,12 @@
+MUTATION project.py: evidence no longer required for a milestone to count as complete
+   -> 1 failed, 27 passed in 25.55s   (restored, sha256 verified)
+MUTATION authority.py: an UNAPPROVED milestone event is followed as if approved
+   -> 14 failed, 14 passed in 12.34s   (restored, sha256 verified)
+MUTATION project.py: published position assumed equal to HEAD when unknown
+   -> 1 failed, 27 passed in 25.38s   (restored, sha256 verified)
+MUTATION project.py: remote credentials are not stripped
+   -> 1 failed, 27 passed in 25.61s   (restored, sha256 verified)
+MUTATION app.py: the investment Overview page is edited
+   -> 1 failed, 27 passed in 25.55s   (restored, sha256 verified)
+MUTATION app.py: a script is added to the project page
+   -> 1 failed, 27 passed in 25.76s   (restored, sha256 verified)

@@ -34,11 +34,13 @@ FAMILIES = {
     "PORTFOLIO_SNAPSHOT": ("snapshot_id", ("snapshot_id", "doc", "doc_sha256", "table_marker", "as_of", "holdings", "stocks_total", "defensive_approx")),
     "ACTIVE_WORK": ("work_id", ("work_id", "plan_heading_prefix", "summary", "state")),
 }
+MILESTONE_STATUSES = ("COMPLETE", "IN_PROGRESS", "BLOCKED", "UPCOMING")
+MILESTONE_FIELDS = ("milestone_id", "phase", "phase_order", "title", "status", "evidence")     # optional: depends_on, target_date, blocker, notes
 CANDIDATE_TYPES = {
     "LEDGER_ACCEPTED_THROUGH": ("through_seq", "through_event_hash"),
     "CANDIDATE_STATUS_APPROVED": ("ledger_seq", "ledger_event_hash"),
 }
-ALL_TYPES = {**{k: v[1] for k, v in FAMILIES.items()}, **CANDIDATE_TYPES}
+ALL_TYPES = {**{k: v[1] for k, v in FAMILIES.items()}, **CANDIDATE_TYPES, "MILESTONE": MILESTONE_FIELDS}
 
 
 class AuthorityError(Exception):
@@ -101,6 +103,7 @@ class Resolution:
     drafts: list[dict] = field(default_factory=list)                  # events without a valid HUMAN approval: never followed
     ledger_through: tuple[int, str] | None = None
     status_approvals: dict[int, str] = field(default_factory=dict)    # candidate ledger seq -> event_hash approved one by one
+    milestones: dict[str, dict] = field(default_factory=dict)         # milestone_id -> {current, proposed, history}; see _milestones
 
     def head(self, family: str) -> dict | None:
         c = self.chains.get(family) or []
@@ -165,6 +168,28 @@ def _chain(family: str, evs: list[dict]) -> list[dict]:
     return out
 
 
+def _milestones(events: list[dict]) -> dict[str, dict]:
+    """Milestone status from MILESTONE events only (never from prose). ``current`` = the latest HUMAN-APPROVED event for the id (a COMPLETE counts only
+    because a human approved it); ``proposed`` = a later event without a valid approval, shown as awaiting acceptance and never followed;
+    ``history`` = every event, oldest first. Append-only: a status change is a new event."""
+    out: dict[str, dict] = {}
+    for ev in events:
+        if ev.get("type") != "MILESTONE":
+            continue
+        p = ev["payload"]
+        if p["status"] not in MILESTONE_STATUSES or not isinstance(p["evidence"], list) or not isinstance(p["phase_order"], int):
+            raise AuthorityError(f"register event {ev['seq']} (MILESTONE {p.get('milestone_id')!r}): status must be one of {MILESTONE_STATUSES}, evidence a list, phase_order an integer")
+        m = out.setdefault(p["milestone_id"], {"current": None, "proposed": None, "history": []})
+        m["history"].append(ev)
+        if approved(ev):
+            m["current"] = ev
+    for m in out.values():
+        cur = m["current"]["seq"] if m["current"] else 0
+        later = [e for e in m["history"] if not approved(e) and e["seq"] > cur]
+        m["proposed"] = later[-1] if later else None
+    return out
+
+
 def resolve(register: Path) -> Resolution:
     events = read_register(register)
     res = Resolution(events)
@@ -181,6 +206,8 @@ def resolve(register: Path) -> Resolution:
             continue
         if t in FAMILIES:
             by_family[t].append(ev)
+        elif t == "MILESTONE":
+            pass                                                             # resolved by _milestones below
         elif t == "LEDGER_ACCEPTED_THROUGH":
             if res.ledger_through is None or p["through_seq"] > res.ledger_through[0]:
                 res.ledger_through = (int(p["through_seq"]), p["through_event_hash"])
@@ -191,6 +218,7 @@ def resolve(register: Path) -> Resolution:
             res.status_approvals[int(p["ledger_seq"])] = p["ledger_event_hash"]
     for fam, evs in by_family.items():
         res.chains[fam] = _chain(fam, evs)
+    res.milestones = _milestones(events)
     return res
 
 
