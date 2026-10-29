@@ -1,0 +1,10 @@
+clean extract root: /private/tmp/claude-501/-Users-chrisnyers-Documents-Project-Stock-Atlas-stock-atlas-sprint1-live/b8c125b4-bae8-44bb-ad14-d178d4033a7d/scratchpad/before_extract/stock-atlas/atlas_ui/data/live/research
+MCD: loaded=yes  index points inside this extract=False  -> /Users/chrisnyers/Documents/Project-Stock-Atlas/stock-atlas-sprint1-live/atlas_ui/data/live/research/MCD-20261029T001550501047Z.json
+GEV: loaded=yes  index points inside this extract=False  -> /Users/chrisnyers/Documents/Project-Stock-Atlas/stock-atlas-sprint1-live/atlas_ui/data/live/research/GEV-20261029T001616671885Z.json
+RMD: loaded=yes  index points inside this extract=False  -> /Users/chrisnyers/Documents/Project-Stock-Atlas/stock-atlas-sprint1-live/atlas_ui/data/live/research/RMD-20261029T001643267288Z.json
+ORCL: loaded=yes  index points inside this extract=False  -> /Users/chrisnyers/Documents/Project-Stock-Atlas/stock-atlas-sprint1-live/atlas_ui/data/live/research/ORCL-20261029T001709557954Z.json
+--- same extract, on a machine where the original Mac path does not exist (simulated by hiding it from Path.is_file) ---
+MCD: latest_snapshot -> None (BROKEN)
+GEV: latest_snapshot -> None (BROKEN)
+RMD: latest_snapshot -> None (BROKEN)
+ORCL: latest_snapshot -> None (BROKEN)

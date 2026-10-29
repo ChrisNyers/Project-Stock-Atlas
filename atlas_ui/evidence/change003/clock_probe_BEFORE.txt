@@ -1,0 +1,5 @@
+real wall clock 2026-10-29 12:50Z; fixture run dated 2026-09-02 21:00Z; pytest imported: True
+ACCEPTED  ledger_rows=1 ledger_unchanged=False  replace instance facade._now
+ACCEPTED  ledger_rows=1 ledger_unchanged=False  replace class CapitalDecisionFacade._now
+ACCEPTED  ledger_rows=1 ledger_unchanged=False  replace capital_decision_facade.datetime
+SUMMARY: AT LEAST ONE ACCEPTED A STALE FUNDED INITIATE
