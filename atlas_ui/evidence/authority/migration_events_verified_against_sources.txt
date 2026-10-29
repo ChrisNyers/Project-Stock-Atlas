@@ -1,0 +1,45 @@
+register events 1-4 (hash chain intact); source manifest: docs/CURRENT_AUTHORITY.md @ f6cb3d6
+
+1. seq 1 PORTFOLIO_SNAPSHOT CYCLE0-ef35534d5e04
+  [PASS] type/order
+  [PASS] doc path equals the manifest's
+  [PASS] doc_sha256 equals the manifest's
+  [PASS] holdings equals the manifest's — 28
+  [PASS] stocks_total equals the manifest's — 624905.93
+  [PASS] identified value (stocks + defensive) equals the manifest's
+  [PASS] as_of 2026-10-07 / 'Correction 002' equals the manifest's canonical label
+  [PASS] document bytes today == register hash
+  [PASS] the approved bytes exist in git history — first/last commit holding them: 0e14638..0e14638
+  [PASS] approval quote appears verbatim in the source document
+  [PASS] loads identically to the frozen Cycle 0 loader
+  [PASS] approval date equals the document's own freeze date (2026-10-07)
+
+2. seq 2 APPROVED_STATE 8cbcb37c82ac
+  [PASS] commit equals the manifest's
+  [PASS] status text equals the manifest's
+  [PASS] commit exists in git and is an ancestor of the manifest's own commit
+  [PASS] first approved state (supersedes null)
+  [PASS] its status text does not claim acceptance
+
+3. seq 3 ACTIVE_WORK BACKEND_FIRST_COMPLETION_2026-10-28
+  [PASS] heading prefix equals the manifest's
+  [PASS] summary equals the manifest's
+  [PASS] state text equals the manifest's
+  [PASS] heading exists in the Master Plan at the source commit
+  [PASS] heading exists in the Master Plan today
+
+4. seq 4 LEDGER_ACCEPTED_THROUGH through 197
+  [PASS] the ledger at the source commit had exactly this many events — 197
+  [PASS] event hash at that seq equals the ledger at the source commit
+  [PASS] event hash at that seq equals the ledger today
+  [PASS] events 1..197 today are identical to the source commit's
+  [PASS] candidate ledger hash chain verifies today
+  [PASS] manifest restriction MCD PARKED until 2026-11-04 equals the ledger replay — PARKED until 2026-11-04
+  [PASS] manifest restriction RPM PARKED until 2026-11-09 equals the ledger replay — PARKED until 2026-11-09
+  [PASS] resolver today agrees (MCD/RPM PARKED, nothing pending)
+
+Register-level
+  [PASS] the register holds exactly these four events so far
+  [PASS] events 2-4 are labelled transcriptions, not new approvals
+
+RESULT: ALL PASS — the four migrated events match their historical sources

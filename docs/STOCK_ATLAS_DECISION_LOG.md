@@ -3608,3 +3608,25 @@ A shared canonical ledger is governed by the repository register; any other ledg
 MCD (to 2026-11-04) and RPM (to 2026-11-09) restrictions are unchanged; a reached revisit date is a flag and never opens the gate. No frozen control, investment logic, provider, agent or ML changed. Regression tests: `tests/test_candidate_gate_authority.py` (14); three mutations fail them (`atlas_ui/evidence/authority/gate_mutations_FAIL_as_required.txt`).
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## BASELINE_ACCEPTED_0733C77
+
+| | |
+|---|---|
+| Date | 2026-10-29 |
+| Status | **ACCEPTED BY THE HUMAN** — recorded as an `APPROVED_STATE` event in `docs/authority_register.jsonl` |
+| Context | Independent review of the source-of-truth work (`6859082`) and the candidate-gate correction (`9367312`), published to the private GitHub repository at `0733c77` |
+
+### Decision
+
+The human's words: “I accept the independently reviewed Stock Atlas development baseline through GitHub commit `0733c77`, including the candidate-gate correction at `9367312`.”
+
+**Scope of the acceptance.** The development and source-of-truth baseline only: the authority register and resolver, the delivery gate, the Stage 7 / funded Stage 8 gates that follow the register-approved candidate status, and the preceding portability, trusted-clock and research-integrity corrections. It creates **no investment approval**: no stance, no candidate status, no portfolio snapshot and no decision is approved or changed by it. MCD (to 2026-11-04) and RPM (to 2026-11-09) remain PARKED; GEV, RMD and ORCL remain SURFACED; the Cycle 0 Correction 002 snapshot remains the approved portfolio snapshot; the canonical decision ledger has 0 rows.
+
+**Register.** `APPROVED_STATE` `0733c779f65e56c91442882052f5ec044b842399` supersedes `8cbcb37c82ac6367415d517f2938cf2d0c50e2d5` (the earlier working baseline). The commit that records this acceptance necessarily comes after the accepted commit, so GitHub `HEAD` is that record commit; the accepted code is unchanged between the two (only this entry and the register line differ).
+
+**Migration records verified.** The four original register events (portfolio snapshot, approved state, active work, candidate-ledger acceptance), which were transcribed from the `f6cb3d6` authority manifest, were checked field by field against their historical sources: the manifest at `f6cb3d6`, the Cycle 0 record (its bytes and the approval quote verbatim), the Master Plan heading, and the candidate ledger (events 1–197 identical at `f6cb3d6` and now; MCD and RPM restrictions reproduced by replay). 30 checks, all pass (`atlas_ui/evidence/authority/migration_events_verified_against_sources.txt`). The check confirms the events match their sources; it cannot establish that the human originally approved the transcribed values beyond the standing instructions and records they cite. The events were not edited or re-approved.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**

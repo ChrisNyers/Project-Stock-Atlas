@@ -212,9 +212,10 @@ def test_4b_drafts_are_recorded_through_the_api_and_never_followed_for_any_famil
 def test_4c_on_the_repository_a_draft_snapshot_and_a_draft_approved_state_change_nothing(tree):
     snapshot_doc(tree / "docs/DRAFT_SNAPSHOT.md", {"ZZZ": "1,000.00"})
     put(tree, "PORTFOLIO_SNAPSHOT", spec(tree, "docs/DRAFT_SNAPSHOT.md", "DRAFT-1", "2026-12-01", "CYCLE0-ef35534d5e04", {"ZZZ": "1,000.00"}), approval=None)
-    put(tree, "APPROVED_STATE", {"commit": "c" * 40, "supersedes": "8cbcb37c82ac6367415d517f2938cf2d0c50e2d5", "status": "unreviewed HEAD"}, approval=None)
+    current = authority.resolve(tree / REG).approved_state["commit"]                      # whatever the register currently approves (it moves; the test must not pin it)
+    put(tree, "APPROVED_STATE", {"commit": "c" * 40, "supersedes": current, "status": "unreviewed HEAD"}, approval=None)
     assert canonical.current_portfolio(tree).snapshot_id == "CYCLE0-ef35534d5e04"
-    assert authority.resolve(tree / REG).approved_state["commit"].startswith("8cbcb37")
+    assert authority.resolve(tree / REG).approved_state["commit"] == current
     cs = verify.preflight(tree, use_git=False)
     assert [c.line() for c in cs if c.status == "FAIL"] == []
     assert len([c for c in cs if c.name == "unapproved record (draft)"]) == 2 and "2 draft(s)" in status(cs, "authority register").detail
