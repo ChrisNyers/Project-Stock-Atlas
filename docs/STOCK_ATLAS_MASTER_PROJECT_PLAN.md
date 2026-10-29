@@ -46,6 +46,8 @@ INVESTOR DAY` (MCD PARKED until 2026-11-04).**
 
 **Update 2026-10-28 (backend completion package applied): `BACKEND-FIRST COMPLETION PLAN ENTRY APPENDED AT HEAD 11bd220 — EXECUTION IN SEQUENCE; MCD/RPM REMAIN PARKED (REVISIT TRIGGERS ONLY); NO CAPITAL ACTION`** (section "October 28, 2026 — Backend-first completion").
 
+**Update 2026-10-28 (backend completion B–E done, stopped for review): `READ-ONLY LIVE GATE B + SEC RESEARCH ADAPTER + UNRANKED RESEARCH COHORT DELIVERED; NO STAGE 7, NO DECISION; MCD/RPM PARKED; GEV/RMD/ORCL SURFACED`** (`controlled_live_pilot/BACKEND_COMPLETION_RESULTS_001.md`).
+
 ---
 
 ## Governing Mission
@@ -1850,6 +1852,18 @@ Change 002 (approved with amendments; `controlled_live_pilot/FROZEN_CONTROL_CHAN
 `capital_decision_facade.py` only. The backdated eight-day-old funded call that was accepted at `11bd220` is now rejected with zero ledger writes; the reproduction test is promoted; legitimate fresh decisions
 and non-actions work. **Release gate 1 PASSED** on fixture evidence (no live evidence exists). Workstreams B–E proceed in order; each stops on a new Material/Critical finding. MCD (2026-11-04) and RPM
 (2026-11-09) remain PARKED. Cycle 0 Correction 002 unchanged.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+### October 28, 2026 — Backend completion Workstreams B–E: execution status (append-only; stops for independent review)
+
+Gate 1 (safety) passed after change 002. **Gate 2 PASSED (read-only):** live TwelveData + independent XNYS binding for MCD, GEV, RMD, ORCL (FRESH, USD, XNYS); the live Gate B suite ran 54 passed / 1 transient provider
+ERROR that passed on re-run (details in `controlled_live_pilot/BACKEND_COMPLETION_RESULTS_001.md`). **Gate 3 reached with limits:** SEC facts for the four names are ingested as point-in-time PRIMARY evidence and 25/25 selected core facts re-found in the
+filings; the source-to-assessment chain is demonstrated, but its dispositions are DRAFT_BY_RECORDER and no example reached SUPPORTED (none is permitted by the lifecycle). **Gate 4 reached (view only):** unranked research cohort
+without any Stage 7 or capital control. **Gate 5 partial:** one linked, append-only, price-only observation (MCD); benchmark comparison UNVERIFIED. MCD (2026-11-04) and RPM (2026-11-09) remain PARKED (revisit triggers);
+GEV, RMD, ORCL are SURFACED, unpromoted, without a stance. No Stage 7 run, no decision (canonical ledger: 0 rows), no capital action. Execution **stopped for independent review**; no further development phase is started.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
 

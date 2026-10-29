@@ -133,7 +133,7 @@ def replay(path: Path = DEFAULT_LEDGER) -> dict[str, dict]:
                 reason="", waiting_on="", parked_until="", parked_until_verified=False,
                 revisit_questions=[], notes=[], grandfathered=cid in GRANDFATHERED,
                 quick_test_visited=False, falsifications=[], evidence=[], unresolved=[], strongest={},
-                stances=[],
+                stances=[], assessments=[], observations=[],
             )
         elif ev["event_type"] == "STATE_CHANGE":
             c = cands[cid]
@@ -166,6 +166,10 @@ def replay(path: Path = DEFAULT_LEDGER) -> dict[str, dict]:
                         item["status"], item["note"] = p["status"], p["note"]
         elif ev["event_type"] == "STRONGEST":
             cands[cid]["strongest"][p["direction"]] = p["target_seq"]
+        elif ev["event_type"] == "ASSESSMENT":
+            cands[cid]["assessments"].append({**p, "seq": ev["seq"], "date": ev["effective_date"], "backfilled": ev["backfilled"]})
+        elif ev["event_type"] == "OBSERVATION":
+            cands[cid]["observations"].append({**p, "seq": ev["seq"], "date": ev["effective_date"], "backfilled": ev["backfilled"]})
         elif ev["event_type"] == "STANCE":
             cands[cid]["stances"].append({**p, "seq": ev["seq"], "date": ev["effective_date"],
                                           "recorded_at": ev["recorded_at"], "backfilled": ev["backfilled"]})
@@ -174,6 +178,8 @@ def replay(path: Path = DEFAULT_LEDGER) -> dict[str, dict]:
                    or (f"{p['status']} #{p['target_seq']}" if ev["event_type"] == "RESOLVE" else "")
                    or (f"strongest {p['direction']} = #{p['target_seq']}" if ev["event_type"] == "STRONGEST" else "")
                    or (f"stance v{p['version']}" if ev["event_type"] == "STANCE" else "")
+                   or (f"assessment v{p['version']}: {p['disposition']}" if ev["event_type"] == "ASSESSMENT" else "")
+                   or (f"observation: {p['what_changed'][:100]}" if ev["event_type"] == "OBSERVATION" else "")
                    or "SURFACED")
         cands[cid]["history"].append(
             {"seq": ev["seq"], "type": ev["event_type"], "date": ev["effective_date"],
@@ -379,3 +385,68 @@ def freeze_stance(path: Path = DEFAULT_LEDGER, *, candidate_id: str, stance_text
         "intended_action": _clean(intended_action), "amount": _clean(amount), "funding": _clean(funding),
         "concern": _clean(concern), "without_atlas": _clean(without_atlas),
         "state_when_frozen": c["state"]}, backfilled)
+
+
+# ---------------------------------------------------------------- research-level assessment & later observations
+ASSESSMENT_DISPOSITIONS = ("SUPPORTED", "INSUFFICIENT_EVIDENCE", "NOT_SUPPORTED", "PARKED_FOR_REVISIT")
+ASSESSMENT_STATUSES = ("DRAFT_BY_RECORDER", "HUMAN_ACCEPTED")
+
+
+def record_assessment(path: Path = DEFAULT_LEDGER, *, candidate_id: str, disposition: str, priced_in_view: str,
+                      return_band: str = "", return_band_basis: str = "", drivers: list[str] | None = None,
+                      risks: list[str] | None = None, falsifiers: list[str] | None = None, what_would_change: list[str] | None = None,
+                      evidence_gaps: list[str] | None = None, existing_holdings_note: str = "", authored_by: str = "",
+                      status: str = "DRAFT_BY_RECORDER", effective_date=None, backfilled: bool = False) -> dict:
+    """A versioned, descriptive RESEARCH-level answer to "attractive at the verified price?". Never a capital verdict,
+    score or rank; Atlas does not compute the disposition. A return band needs its basis; otherwise it must stay blank
+    (the UI then says "not substantiated")."""
+    c = _check_candidate(path, candidate_id)
+    disposition = _clean(disposition).upper()
+    if disposition not in ASSESSMENT_DISPOSITIONS:
+        raise LedgerError(f"disposition must be one of {ASSESSMENT_DISPOSITIONS}")
+    if status not in ASSESSMENT_STATUSES:
+        raise LedgerError(f"status must be one of {ASSESSMENT_STATUSES}")
+    if not _clean(priced_in_view):
+        raise LedgerError("priced_in_view is required (state 'not established' if it is)")
+    if not _clean(authored_by):
+        raise LedgerError("authored_by is required")
+    if _clean(return_band) and not _clean(return_band_basis):
+        raise LedgerError("a return band requires its basis; leave both blank if it is not substantiated")
+    drivers = [_clean(x) for x in (drivers or []) if _clean(x)]
+    if len(drivers) > 3:
+        raise LedgerError("at most 3 dominant drivers")
+    if disposition == "PARKED_FOR_REVISIT" and c["state"] != "PARKED":
+        raise LedgerError("PARKED_FOR_REVISIT requires the candidate lifecycle state PARKED")
+    return _append(path, "ASSESSMENT", candidate_id, _iso(effective_date or date.today()), {
+        "version": len(c["assessments"]) + 1, "disposition": disposition, "priced_in_view": _clean(priced_in_view),
+        "return_band": _clean(return_band), "return_band_basis": _clean(return_band_basis), "drivers": drivers,
+        "risks": [_clean(x) for x in (risks or []) if _clean(x)], "falsifiers": [_clean(x) for x in (falsifiers or []) if _clean(x)],
+        "what_would_change": [_clean(x) for x in (what_would_change or []) if _clean(x)],
+        "evidence_gaps": [_clean(x) for x in (evidence_gaps or []) if _clean(x)],
+        "existing_holdings_note": _clean(existing_holdings_note), "authored_by": _clean(authored_by), "status": status}, backfilled)
+
+
+def record_observation(path: Path = DEFAULT_LEDGER, *, candidate_id: str, observed_on, linked_to: str, what_changed: str,
+                       price: float | None = None, price_session: str = "", price_source_ref: str = "", price_grade: str = "SECONDARY",
+                       original_price: float | None = None, original_price_ref: str = "", original_price_grade: str = "UNCERTIFIED",
+                       benchmark_note: str = "", effective_date=None, backfilled: bool = False) -> dict:
+    """A NEW dated observation linked to an earlier record. The original evidence is never edited or backfilled as if known then.
+    Only a PRICE change is stated (never a total return); benchmark comparison stays UNVERIFIED unless matched adjusted
+    total-return and Treasury evidence is supplied in ``benchmark_note``."""
+    _check_candidate(path, candidate_id)
+    if not _clean(linked_to) or not _clean(what_changed):
+        raise LedgerError("linked_to (the original record) and what_changed are required")
+    out = {"linked_to": _clean(linked_to), "what_changed": _clean(what_changed), "observed_on": _iso(observed_on),
+           "benchmark": _clean(benchmark_note) or "UNVERIFIED — no matched adjusted total-return / Treasury evidence supplied"}
+    if price is not None:
+        if not _clean(price_session) or not _clean(price_source_ref):
+            raise LedgerError("an observed price needs its session and source reference")
+        out.update(price=float(price), price_session=_iso(price_session), price_source_ref=_clean(price_source_ref), price_grade=_grade(price_grade))
+        if original_price is not None:
+            if not _clean(original_price_ref):
+                raise LedgerError("the original price needs its source reference")
+            out.update(original_price=float(original_price), original_price_ref=_clean(original_price_ref),
+                       original_price_grade=_grade(original_price_grade),
+                       price_change_only=float(price) / float(original_price) - 1.0,
+                       price_change_note="PRICE change only (no dividends/adjustments); not a total return; the two prices may come from different sources")
+    return _append(path, "OBSERVATION", candidate_id, _iso(effective_date or date.today()), out, backfilled)

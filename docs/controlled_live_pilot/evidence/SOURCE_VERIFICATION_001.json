@@ -1,0 +1,258 @@
+[
+ {
+  "ticker": "MCD",
+  "fiscal_year_end": "2025-12-31",
+  "accession": "0000063908-26-000035",
+  "document_url": "https://www.sec.gov/Archives/edgar/data/63908/000006390826000035/mcd-20251231.htm",
+  "document_sha256": "44b25bdd1bd53f20b495e25f11c092be2f1886ef4932559ca1d817dae516dd64",
+  "document_bytes": 2182377,
+  "filing_date": "2026-02-24",
+  "checks": [
+   {
+    "field": "revenue",
+    "selected_value": 26885000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:Revenues",
+    "printed_form_found": "26,885",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "operating_income",
+    "selected_value": 12393000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:OperatingIncomeLoss",
+    "printed_form_found": "12,393",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "net_income",
+    "selected_value": 8563000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:NetIncomeLoss",
+    "printed_form_found": "8,563",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "diluted_eps",
+    "selected_value": 11.95,
+    "unit": "USD/shares",
+    "concept": "us-gaap:EarningsPerShareDiluted",
+    "printed_form_found": "11.95",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "cash_from_operations",
+    "selected_value": 10551000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "printed_form_found": "10,551",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "capex",
+    "selected_value": 3365000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+    "printed_form_found": "3,365",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "weighted_average_diluted_shares",
+    "selected_value": 716.4,
+    "unit": "shares",
+    "concept": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding",
+    "printed_form_found": "716.4",
+    "status": "VERIFIED_IN_FILING"
+   }
+  ]
+ },
+ {
+  "ticker": "GEV",
+  "fiscal_year_end": "2025-12-31",
+  "accession": "0001996810-26-000015",
+  "document_url": "https://www.sec.gov/Archives/edgar/data/1996810/000199681026000015/gev-20251231.htm",
+  "document_sha256": "59f661c4325c7629457109ffb28ea647f9fc59fc9fbb41b7e8e5fb19df3f9afd",
+  "document_bytes": 6020601,
+  "filing_date": "2026-01-29",
+  "checks": [
+   {
+    "field": "revenue",
+    "selected_value": 38068000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+    "printed_form_found": "38,068",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "operating_income",
+    "selected_value": 1388000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:OperatingIncomeLoss",
+    "printed_form_found": "1,388",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "net_income",
+    "selected_value": 4884000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:NetIncomeLoss",
+    "printed_form_found": "4,884",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "diluted_eps",
+    "selected_value": 17.69,
+    "unit": "USD/shares",
+    "concept": "us-gaap:EarningsPerShareDiluted",
+    "printed_form_found": "17.69",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "cash_from_operations",
+    "selected_value": 4987000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "printed_form_found": "4,987",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "capex",
+    "status": "SKIPPED \u2014 no selected SEC fact (already listed as UNVERIFIED/CONFLICTED)"
+   },
+   {
+    "field": "weighted_average_diluted_shares",
+    "selected_value": 276000000.0,
+    "unit": "shares",
+    "concept": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding",
+    "printed_form_found": "276",
+    "status": "VERIFIED_IN_FILING"
+   }
+  ]
+ },
+ {
+  "ticker": "RMD",
+  "fiscal_year_end": "2026-06-30",
+  "accession": "0000943819-26-000047",
+  "document_url": "https://www.sec.gov/Archives/edgar/data/943819/000094381926000047/rmd-20260630.htm",
+  "document_sha256": "a921d2150822d222a92dc28a7c509fb5457eda993201bde9d1cc58c9790f4955",
+  "document_bytes": 2620948,
+  "filing_date": "2026-08-13",
+  "checks": [
+   {
+    "field": "revenue",
+    "selected_value": 5653443000.0,
+    "unit": "USD",
+    "concept": "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+    "printed_form_found": "5,653,443",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "operating_income",
+    "selected_value": 1886715000.0,
+    "unit": "USD",
+    "concept": "us-gaap:OperatingIncomeLoss",
+    "printed_form_found": "1,886,715",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "net_income",
+    "status": "SKIPPED \u2014 no selected SEC fact (already listed as UNVERIFIED/CONFLICTED)"
+   },
+   {
+    "field": "diluted_eps",
+    "selected_value": 10.43,
+    "unit": "USD/shares",
+    "concept": "us-gaap:EarningsPerShareDiluted",
+    "printed_form_found": "10.43",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "cash_from_operations",
+    "selected_value": 1805829000.0,
+    "unit": "USD",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "printed_form_found": "1,805,829",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "capex",
+    "selected_value": 156285000.0,
+    "unit": "USD",
+    "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+    "printed_form_found": "156,285",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "weighted_average_diluted_shares",
+    "selected_value": 146054000.0,
+    "unit": "shares",
+    "concept": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding",
+    "printed_form_found": "146,054",
+    "status": "VERIFIED_IN_FILING"
+   }
+  ]
+ },
+ {
+  "ticker": "ORCL",
+  "fiscal_year_end": "2026-05-31",
+  "accession": "0001193125-26-277521",
+  "document_url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+  "document_sha256": "85a4fe767c9f4b11d67ea2c32f4e721a4a99e35d7b6312e0140bea8b950f80bb",
+  "document_bytes": 6874049,
+  "filing_date": "2026-06-22",
+  "checks": [
+   {
+    "field": "revenue",
+    "selected_value": 67357000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax",
+    "printed_form_found": "67,357",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "operating_income",
+    "selected_value": 20606000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:OperatingIncomeLoss",
+    "printed_form_found": "20,606",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "net_income",
+    "status": "SKIPPED \u2014 no selected SEC fact (already listed as UNVERIFIED/CONFLICTED)"
+   },
+   {
+    "field": "diluted_eps",
+    "selected_value": 5.83,
+    "unit": "USD/shares",
+    "concept": "us-gaap:EarningsPerShareDiluted",
+    "printed_form_found": "5.83",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "cash_from_operations",
+    "selected_value": 31977000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+    "printed_form_found": "31,977",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "capex",
+    "selected_value": 55663000000.0,
+    "unit": "USD",
+    "concept": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment",
+    "printed_form_found": "55,663",
+    "status": "VERIFIED_IN_FILING"
+   },
+   {
+    "field": "weighted_average_diluted_shares",
+    "selected_value": 2914000000.0,
+    "unit": "shares",
+    "concept": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding",
+    "printed_form_found": "2,914",
+    "status": "VERIFIED_IN_FILING"
+   }
+  ]
+ }
+]

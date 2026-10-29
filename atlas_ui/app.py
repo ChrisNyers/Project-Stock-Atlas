@@ -17,13 +17,13 @@ from typing import Callable
 
 from operating_mvp import ledger
 
-from . import canonical, demo
+from . import canonical, demo, research
 from .service import (BASELINE_COMMIT, PAPER_ACTIONS, Blocked, Rejected, Stage7Service, Workspace, read_index)
 
 THEME = (Path(__file__).parent / "theme.css").read_text(encoding="utf-8")
 EXTRA_CSS = ".rowlist div strong{display:block}.banner-demo{background:#fbeeea;border:1px solid #e3b7ad;color:#7d2f23;padding:12px 15px;border-radius:11px;font-size:12px;margin-bottom:22px}pre.rendered{background:#f5f7f7;border:1px solid #dfe6e7;border-radius:10px;padding:12px;font-size:11px;white-space:pre-wrap}.nav a{text-decoration:none}.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.alt{border:1px solid #dce6e6;border-radius:11px;padding:13px;background:#fff}.alt b{display:block;font-size:12px}.alt .band{font-size:20px;font-weight:800;margin:6px 0}.err{border:1px solid #e3b7ad;background:#fbeeea;color:#7d2f23;padding:11px;border-radius:10px;margin-bottom:14px;font-size:12px}.okbox{border:1px solid #cfe4e0;background:#f2f8f7;color:#255a57;padding:11px;border-radius:10px;margin-bottom:14px;font-size:12px}"
 
-NAV = [("/", "Overview"), ("/intake", "Opportunity intake"), ("/stage7", "Stage 7 evidence"),
+NAV = [("/", "Overview"), ("/intake", "Opportunity intake"), ("/cohort", "Research cohort"), ("/stage7", "Stage 7 evidence"),
        ("/desk", "Decision desk"), ("/history", "Decision history"), ("/capabilities", "Capability matrix")]
 
 # Single source of truth for the honest capability matrix (page + CAPABILITY_MATRIX.md).
@@ -34,20 +34,20 @@ CAPABILITIES = [
      "Writes the existing append-only discovery ledger; later stance versions are labelled revisions, never edits."),
     ("C1. SEC/issuer ingestion modules (sec_adapter, xbrl_parser, identity_resolver, point-in-time)", "PROVEN CANONICAL OFFLINE",
      "Exist and are regression-tested in the repo (Phase 4A.5); NOT yet connected to the UI or the evidence ledger."),
-    ("C2. Filings-to-evidence adapter and source-backed underwriting view in the UI", "NOT IMPLEMENTED",
-     "Held behind the Workstream A safety finding; evidence is still typed by the human with PRIMARY/SECONDARY/UNCERTIFIED labels."),
-    ("D. Live price + XNYS session (Gate B)", "BLOCKED",
-     "Wired to the verified Gate B path; not run live — TWELVEDATA_API_KEY is not in the server environment (a key exists in the gitignored .env but no code loads it), and the read-only check is held behind the safety finding. Offline fail-closed paths are tested."),
+    ("C2. SEC filings-to-evidence adapter (company facts -> point-in-time PRIMARY evidence, retained snapshot) and source-backed economics view", "PROVEN LIVE",
+     "Run live against SEC EDGAR for MCD, GEV, RMD, ORCL: approved XBRL concepts, explicit annual periods, accession + filing date as known-at, units; missing/conflicting facts become UNVERIFIED questions, nothing imputed. 25/25 selected core facts re-found in the filings' own primary documents (SOURCE_VERIFICATION_001). Not an independent second data vendor."),
+    ("D. Live price + XNYS session (Gate B), read-only", "PROVEN LIVE",
+     "Real TwelveData binding with the independent XNYS calendar for MCD, GEV, RMD, ORCL (FRESH, USD, XNYS, identity SEC-CIK keys) and the live Gate B suite (54 passed, 1 transient provider ERROR that passed on re-run). Read-only: no Stage 7 run and no decision exists. The ELIGIBLE funded branch has never been exercised on live data."),
     ("E. Stage 7 via CapitalDecisionFacade.run_stage7, retained hashed run, side-by-side alternatives", "FIXTURE-TESTED",
      "Runs through the real facade with a FIXTURE price provider in DEMO mode and tests. No canonical run exists. MCD is PARKED until 2026-11-04. Treasury reference is human-attested; security decision is explicit; all % inputs use one unit."),
     ("F. Human Stage 8 (paper only): facade-enforced funded freshness, non-actions, ledger proof", "FIXTURE-TESTED",
      "Real facade + DecisionStore; funded freshness is mandatory (FundedFreshnessEvidence, frozen-control change 001) and rejected paths leave zero ledger rows. Freshness uses a trusted backend UTC clock (change 002); a caller-supplied created_at cannot establish the time used, and a created_at more than 5 minutes from it is refused."),
     ("G1. Decision history (append-only ledger) + manual linked revisit note", "PROVEN CANONICAL OFFLINE",
      "Reads the real ledger; a revisit is a dated linked note, the original record is never edited."),
-    ("G2. Outcome vs time-matched cash/Treasury and SPY; monitoring cadence", "NOT IMPLEMENTED",
-     "Needs reliable adjusted total-return and Treasury evidence per revisit; not claimed."),
-    ("H. Candidate cohort side-by-side research comparison (no ranks) and 'attractive at the verified price?' assessment view", "NOT IMPLEMENTED",
-     "Held behind the Workstream A safety finding. MCD and RPM stay PARKED; their dates are revisit triggers, not promotions."),
+    ("G2. Linked later observation (append-only, price-only) ", "PROVEN CANONICAL OFFLINE",
+     "MCD: dated observation linked to the underwriting record with a price-only change (+7.9%, SECONDARY vs UNCERTIFIED originals). Benchmark comparison vs time-matched cash/Treasury and SPY adjusted total return is UNVERIFIED / NOT IMPLEMENTED; monitoring cadence is out of scope."),
+    ("H. Unranked research cohort and descriptive 'attractive at the verified price?' assessment view", "PROVEN CANONICAL OFFLINE",
+     "Built on live SEC + Gate B data for MCD (parked), GEV, RMD, ORCL (SURFACED, INSUFFICIENT EVIDENCE). Assessments are DRAFT_BY_RECORDER and not human-accepted; no ranks, no scores, no Stage 7 or capital control in the view. No candidate yet permitted a 'SUPPORTED' example."),
     ("Real trades / broker connectivity / execution", "NOT IMPLEMENTED", "By design: paper only. No order API exists."),
 ]
 
@@ -108,6 +108,147 @@ def candidate_runs(app: App, cid: str, ticker: str) -> list[dict]:
 
 
 # ------------------------------------------------------------------ pages
+
+DISPOSITION_TEXT = {"SUPPORTED": ("SUPPORTED at the verified price (research level)", "ok"),
+                    "INSUFFICIENT_EVIDENCE": ("INSUFFICIENT EVIDENCE", "wait"),
+                    "NOT_SUPPORTED": ("NOT SUPPORTED at the verified price (research level)", "danger"),
+                    "PARKED_FOR_REVISIT": ("PARKED FOR REVISIT", "wait")}
+
+
+def research_dir(app: App) -> Path:
+    return app.ws.root / "research"
+
+
+def effective_disposition(c: dict) -> tuple[str, str, dict | None]:
+    """Latest recorded assessment, else a lifecycle-derived default. Nothing here scores or recommends."""
+    a = c["assessments"][-1] if c["assessments"] else None
+    if a:
+        return a["disposition"], "assessment v%d" % a["version"], a
+    if c["state"] == "PARKED":
+        return "PARKED_FOR_REVISIT", "lifecycle state (no assessment recorded)", None
+    return "INSUFFICIENT_EVIDENCE", "default — no assessment recorded", None
+
+
+def _pct(x) -> str:
+    return "n/a" if x is None else f"{x * 100:.1f}%"
+
+
+def _bn(x) -> str:
+    return "n/a" if x is None else f"${x / 1e9:,.2f}B"
+
+
+def snapshot_rows(snap: dict) -> tuple[str, dict]:
+    data = snap["data"]
+    ends = sorted(data["periods"], reverse=True)
+    latest = ends[0]
+    g = lambda e, f: (data["periods"][e].get(f) or {}).get("value")
+    m = lambda e, k: data["derived_inference"].get(e, {}).get(k)
+    head = "".join(f"<th>FY {e[:4]}</th>" for e in ends)
+    def row(label, fn, note=""):
+        return f"<tr><td>{label}</td>" + "".join(f"<td>{fn(e)}</td>" for e in ends) + f"<td class='small'>{note}</td></tr>"
+    body = (row("Revenue", lambda e: _bn(g(e, "revenue")), "FACT — SEC")
+            + row("Revenue growth", lambda e: _pct(m(e, "revenue_growth")), "INFERENCE — arithmetic")
+            + row("Operating margin", lambda e: _pct(m(e, "operating_margin")), "INFERENCE")
+            + row("Net margin", lambda e: _pct(m(e, "net_margin")), "INFERENCE")
+            + row("Diluted EPS", lambda e: "n/a" if g(e, "diluted_eps") is None else f"${g(e, 'diluted_eps'):.2f}", "FACT — SEC")
+            + row("EPS growth", lambda e: _pct(m(e, "eps_growth")), "INFERENCE")
+            + row("Diluted share change", lambda e: _pct(m(e, "diluted_share_change")), "INFERENCE (dilution if +)")
+            + row("Free cash flow (CFO − capex)", lambda e: _bn(m(e, "free_cash_flow")), "INFERENCE")
+            + row("FCF ÷ net income", lambda e: _pct(m(e, "fcf_conversion_of_net_income")), "INFERENCE")
+            + row("Net debt", lambda e: _bn(m(e, "net_debt")), "INFERENCE — shown only if all legs are SEC facts"))
+    return f"<table><tr><th>Metric</th>{head}<th></th></tr>{body}</table>", data
+
+
+def assessment_panel(app: App, c: dict) -> str:
+    disp, src, a = effective_disposition(c)
+    label, kind = DISPOSITION_TEXT[disp]
+    lst = lambda xs, empty="none recorded": "".join(f"<li>{e(x)}</li>" for x in xs) or f"<li class='mut'>{e(empty)}</li>"
+    snap = research.latest_snapshot(research_dir(app), c["candidate_id"])
+    fin, price = '<p class="subtle">No source-backed financial snapshot has been retained for this candidate (run <span class="mono">python -m atlas_ui research ' + e(c["candidate_id"]) + '</span>).</p>', ""
+    if snap:
+        table, data = snapshot_rows(snap)
+        gaps = "".join(f"<li>{e(x)}</li>" for x in data["gaps"][:12]) + (f"<li class='mut'>… {len(data['gaps']) - 12} more UNVERIFIED items in the unresolved list</li>" if len(data["gaps"]) > 12 else "")
+        fin = (f'<p class="subtle">SEC EDGAR company facts, approved XBRL concepts, annual periods, retained as <span class="mono">{e(snap["snapshot"]["sha256"][:16])}…</span> '
+               f'(recorded {e(snap["recorded_at"][:10])}; each fact carries accession, filing date = known-at, period and units in the evidence ledger).</p>{table}'
+               f'<h3 style="margin-top:12px">UNVERIFIED / conflicting (not imputed)</h3><ul>{gaps or "<li class=mut>none</li>"}</ul>')
+        pr = data.get("price_relative_inference", {})
+        if "inputs" in pr:
+            i = pr["inputs"]
+            try:
+                from live_session_calendar import latest_completed_session
+                cur = latest_completed_session(app.clock(), mic="XNYS").session_date.isoformat()
+            except Exception:
+                cur = "?"
+            stale = "" if cur == i["price_session"] else f' {pill("PRICE SESSION OLDER THAN LATEST COMPLETED " + cur, "danger")}'
+            price = (f'<h3 style="margin-top:12px">What is priced in (arithmetic on the bound price; no forecast)</h3><p>Gate B bound price <b>${i["price"]:g}</b> for session {e(i["price_session"])}.{stale}</p>'
+                     f'<ul><li>P/E on FY{i["fy_end"][:4]} diluted EPS: <b>{pr.get("pe_on_latest_fy_diluted_eps", float("nan")):.1f}×</b> (earnings yield {_pct(pr.get("earnings_yield"))})</li>'
+                     f'<li>FCF yield: <b>{_pct(pr.get("fcf_yield_on_weighted_diluted_shares"))}</b> — {e(pr.get("caveat_fcf_yield") or pr.get("fcf_yield_status", ""))}</li></ul>')
+        else:
+            price = f'<p class="subtle"><b>Price-relative view BLOCKED:</b> {e(str(pr.get("status", "no price evidence")))}</p>'
+    held = ledger_holding_note(c)
+    asmt = (f'<div class="rowlist"><div><strong>Research disposition</strong><span>{e(src)}</span></div>{pill(label, kind)}</div>'
+            + (f'<p class="subtle">Authored by {e(a["authored_by"])} · status <b>{e(a["status"])}</b>{"" if a["status"] == "HUMAN_ACCEPTED" else " (not yet human-accepted)"} · {e(a["date"])}</p>'
+               f'<h3>Priced-in view</h3><p>{e(a["priced_in_view"])}</p>'
+               f'<h3>Coarse return band</h3><p>{e(a["return_band"]) + " — basis: " + e(a["return_band_basis"]) if a["return_band"] else "<i>not substantiated — none shown</i>"}</p>'
+               f'<h3>Dominant drivers (≤3)</h3><ul>{lst(a["drivers"])}</ul><h3>Highest-impact risks</h3><ul>{lst(a["risks"])}</ul>'
+               f'<h3>What would disprove the thesis</h3><ul>{lst(a["falsifiers"])}</ul><h3>New information that would change this assessment</h3><ul>{lst(a["what_would_change"])}</ul>'
+               f'<h3>Evidence gaps</h3><ul>{lst(a["evidence_gaps"])}</ul><h3>Relevant existing holdings</h3><p>{e(a["existing_holdings_note"] or held)}</p>'
+               if a else f'<p class="subtle">{e(held)}</p>'))
+    obs = "".join(f'<div class="event"><strong>{e(o["observed_on"])} — linked to {e(o["linked_to"])}</strong><p>{e(o["what_changed"])}</p>'
+                  + (f'<p class="small">price {o["price"]:g} ({e(o["price_session"])}, {e(o["price_grade"])}) vs original {o["original_price"]:g} ({e(o["original_price_grade"])}) = <b>{o["price_change_only"]:+.1%} price change only</b>. {e(o["price_change_note"])}</p>' if "price_change_only" in o else "")
+                  + f'<p class="small">Benchmark: {e(o["benchmark"])}</p></div>' for o in c["observations"])
+    return (f'<section class="panel"><h2>Opportunity assessment — descriptive research view, not a capital verdict</h2>{asmt}</section>'
+            f'<section class="panel"><h2>Source-backed company economics</h2>{fin}{price}</section>'
+            f'<section class="panel"><h2>Later observations (append-only, linked)</h2><div class="audit">{obs or "<p class=subtle>None recorded.</p>"}</div></section>')
+
+
+def ledger_holding_note(c: dict) -> str:
+    try:
+        w = canonical.load_cycle0().weight(c.get("ticker") or "")
+    except canonical.CanonicalError:
+        return "existing holdings unavailable (canonical baseline failed validation)"
+    return (f"{c['ticker']} is an existing holding at ≈{w:.2%} of the approximate identified value." if w > 0 else
+            f"{c.get('ticker') or c['candidate_id']} is not among the 28 baseline holdings; driver overlap is not assigned (human-authored at Stage 7).")
+
+
+def cohort_page(app: App) -> str:
+    cands = sorted((c for c in ledger.replay(app.ws.candidate_ledger).values() if c["state"] != "REJECTED"), key=lambda c: c["candidate_id"])
+    rows = ""
+    for c in cands:
+        disp, src, a = effective_disposition(c)
+        label, kind = DISPOSITION_TEXT[disp]
+        snap = research.latest_snapshot(research_dir(app), c["candidate_id"])
+        price = fcf = opm = rg = pe = "n/a"
+        sess = "—"
+        if snap:
+            d = snap["data"]
+            le = max(d["periods"])
+            m = d["derived_inference"].get(le, {})
+            opm, rg, fcf = _pct(m.get("operating_margin")), _pct(m.get("revenue_growth")), _pct(m.get("fcf_conversion_of_net_income"))
+            pr = d.get("price_relative_inference", {})
+            if "inputs" in pr:
+                price, sess, pe = f"${pr['inputs']['price']:g}", pr["inputs"]["price_session"], f"{pr.get('pe_on_latest_fy_diluted_eps', 0):.1f}×"
+        stance = (f"v{c['stances'][0]['version']} frozen" if c["stances"] else ("frozen record" if any("STANCE" in r for r in c["refs"]) else "none — human to supply"))
+        qt = next((f for f in reversed(c["falsifications"]) if f["status"] == "ACTIVE"), None)
+        qts = qt["result"] if qt else ("not run (grandfathered)" if c["grandfathered"] else "not run")
+        until = f' · until {e(c["parked_until"])}' if c["parked_until"] else ""
+        risk = (a["risks"][0] if a and a["risks"] else "—")
+        chg = (a["what_would_change"][0] if a and a["what_would_change"] else "—")
+        rows += (f'<tr><td><b><a href="/candidate/{urllib_q(c["candidate_id"])}">{e(c["candidate_id"])}</a></b><br><span class="small">{e(c["source"])}</span></td>'
+                 f'<td>{pill(c["state"].replace("_", " ") + until)}<br><span class="small">stance: {e(stance)}<br>QUICK_TEST: {e(qts)}</span></td>'
+                 f'<td>{pill(label, kind)}<br><span class="small">{e(src)}</span></td><td>{price}<br><span class="small">{e(sess)}</span></td><td>{pe}</td>'
+                 f'<td>{rg}<br><span class="small">op margin {opm}<br>FCF/NI {fcf}</span></td><td class="small">{e(risk)}</td><td class="small">{e(chg)}</td></tr>')
+    alts = ("<div class='cols'>" + "".join(f"<div class='alt'><b>{t}</b><span class='subtle'>{d}</span></div>" for t, d in (
+        ("SPY / beta", "Stage 7 only: needs a human-authored basis; not computed here."), ("Treasury / Cash", "Stage 7 only: needs an attested reference; not computed here."),
+        ("Relevant existing holdings", "Human-assigned drivers at Stage 7; ADD-ONLY (no recycle)."), ("Do Nothing", "Always preserved."))) + "</div>")
+    body = f"""<div class="view active"><p class="eyebrow">Research cohort</p><h1>Side by side — unranked</h1>
+<p class="intro">Candidates are listed alphabetically; no rank, score, ordering by merit or allocation is implied. “Research disposition” is descriptive and never a capital verdict.
+MCD and RPM remain PARKED (dates are revisit triggers, not promotions). Admission to the 3–5 capital-decision cycles is a separate human decision.</p>
+<section class="panel"><div class="table-wrap"><table><tr><th>Candidate</th><th>Lifecycle</th><th>Research disposition</th><th>Verified price</th><th>P/E</th><th>Economics (FY, SEC)</th><th>Highest-impact risk</th><th>What would change the view</th></tr>{rows}</table></div></section>
+<section class="panel"><h2>Capital alternatives (kept separate; Stage 7 only)</h2>{alts}</section></div>"""
+    return page(app, "/cohort", "Research cohort", body)
+
+
 def overview(app: App) -> str:
     c0 = canonical.load_cycle0()
     cands = ledger.replay(app.ws.candidate_ledger)
@@ -206,6 +347,7 @@ def candidate_page(app: App, cid: str, err="", flash="") -> str | None:
 <section class="panel" style="margin-top:16px"><h2>Why it surfaced</h2><p>{e(c["why_surfaced"])}</p><div class="thin"></div><h3>Investment question</h3><p>{e(c["investment_question"])}</p>
 <p class="subtle" style="margin-top:10px">Provenance: {e(c["source"])}{" — " + e(c["source_detail"]) if c["source_detail"] else ""}; surfaced {e(c["surfaced_on"])}.</p></section>
 <section class="panel"><h2>Frozen independent stance</h2><div class="audit">{st}</div></section>
+{assessment_panel(app, c)}
 <section class="panel"><h2>Stage 7 status</h2><p class="subtle">{e(gate)}</p><div class="table-wrap"><table><tr><th>Run</th><th>Status</th><th>Hash</th><th>Retained artifacts</th></tr>{run_rows}</table></div></section>
 <section class="panel"><h2>Records</h2><ul>{refs}</ul><p class="subtle">Evidence ledger, falsification and state changes are edited on the Discovery board (same ledger): <span class="mono">python -m atlas_ui serve</span> also starts it on its own port.</p></section></div>"""
     return page(app, "/", f"{cid}", body, flash=flash, err=err)
@@ -383,6 +525,18 @@ def api_state(app: App) -> dict:
             "decision_rows": len(app.svc.ledger_rows()), "decision_ledger_verified": app.ws.facade.verify_ledger()}
 
 
+def api_cohort(app: App) -> list[dict]:
+    out = []
+    for c in sorted(ledger.replay(app.ws.candidate_ledger).values(), key=lambda c: c["candidate_id"]):
+        disp, src, a = effective_disposition(c)
+        snap = research.latest_snapshot(research_dir(app), c["candidate_id"])
+        out.append({"candidate_id": c["candidate_id"], "state": c["state"], "parked_until": c["parked_until"], "source": c["source"],
+                    "research_disposition": disp, "disposition_source": src, "rank": None,
+                    "snapshot_sha256": snap["snapshot"]["sha256"] if snap else None,
+                    "price_relative": snap["data"].get("price_relative_inference") if snap else None})
+    return out
+
+
 # ------------------------------------------------------------------ server
 def make_handler(app: App):
     class H(BaseHTTPRequestHandler):
@@ -437,6 +591,10 @@ def make_handler(app: App):
                         except Blocked as exc:
                             return self._send(200, stage7_page(app, err=f"BLOCKED — {exc}"))
                     return self._send(200, stage7_page(app, market=mk))
+                if p == "/cohort":
+                    return self._send(200, cohort_page(app))
+                if p == "/api/cohort":
+                    return self._json(api_cohort(app))
                 if p == "/desk":
                     return self._send(200, desk_page(app))
                 if p == "/history":

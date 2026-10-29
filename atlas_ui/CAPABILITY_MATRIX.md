@@ -1,19 +1,19 @@
-# Stock Atlas — capability matrix (2026-10-28, change 002 applied)
+# Stock Atlas — capability matrix (2026-10-28, after backend-completion Workstreams A–E)
 
 Generated from `atlas_ui/app.py:CAPABILITIES`. Vocabulary: PROVEN LIVE / PROVEN CANONICAL OFFLINE / FIXTURE-TESTED / BLOCKED / NOT IMPLEMENTED.
-Paper only. Capital status: **NO REAL PORTFOLIO ACTION**.
+PROVEN LIVE here means READ-ONLY market data and SEC retrieval only. Paper only. Capital status: **NO REAL PORTFOLIO ACTION**.
 
 | Capability | Status | Detail |
 |---|---|---|
 | A. Overview: canonical Cycle 0 portfolio/policy, pilot status, candidates | **PROVEN CANONICAL OFFLINE** | Parsed and re-validated from the frozen baseline record (28 names, sum $624,905.93; defensive ≈ $59K so the denominator is approximate); as-of and source shown. |
 | B. Intake + immutable versioned pre-Atlas stance (source provenance, no source privilege, QUICK_TEST mandatory) | **PROVEN CANONICAL OFFLINE** | Writes the existing append-only discovery ledger; later stance versions are labelled revisions, never edits. |
 | C1. SEC/issuer ingestion modules (sec_adapter, xbrl_parser, identity_resolver, point-in-time) | **PROVEN CANONICAL OFFLINE** | Exist and are regression-tested in the repo (Phase 4A.5); NOT yet connected to the UI or the evidence ledger. |
-| C2. Filings-to-evidence adapter and source-backed underwriting view in the UI | **NOT IMPLEMENTED** | Held behind the Workstream A safety finding; evidence is still typed by the human with PRIMARY/SECONDARY/UNCERTIFIED labels. |
-| D. Live price + XNYS session (Gate B) | **BLOCKED** | Wired to the verified Gate B path; not run live — TWELVEDATA_API_KEY is not in the server environment (a key exists in the gitignored .env but no code loads it), and the read-only check is held behind the safety finding. Offline fail-closed paths are tested. |
+| C2. SEC filings-to-evidence adapter (company facts -> point-in-time PRIMARY evidence, retained snapshot) and source-backed economics view | **PROVEN LIVE** | Run live against SEC EDGAR for MCD, GEV, RMD, ORCL: approved XBRL concepts, explicit annual periods, accession + filing date as known-at, units; missing/conflicting facts become UNVERIFIED questions, nothing imputed. 25/25 selected core facts re-found in the filings' own primary documents (SOURCE_VERIFICATION_001). Not an independent second data vendor. |
+| D. Live price + XNYS session (Gate B), read-only | **PROVEN LIVE** | Real TwelveData binding with the independent XNYS calendar for MCD, GEV, RMD, ORCL (FRESH, USD, XNYS, identity SEC-CIK keys) and the live Gate B suite (54 passed, 1 transient provider ERROR that passed on re-run). Read-only: no Stage 7 run and no decision exists. The ELIGIBLE funded branch has never been exercised on live data. |
 | E. Stage 7 via CapitalDecisionFacade.run_stage7, retained hashed run, side-by-side alternatives | **FIXTURE-TESTED** | Runs through the real facade with a FIXTURE price provider in DEMO mode and tests. No canonical run exists. MCD is PARKED until 2026-11-04. Treasury reference is human-attested; security decision is explicit; all % inputs use one unit. |
 | F. Human Stage 8 (paper only): facade-enforced funded freshness, non-actions, ledger proof | **FIXTURE-TESTED** | Real facade + DecisionStore; funded freshness is mandatory (FundedFreshnessEvidence, frozen-control change 001) and rejected paths leave zero ledger rows. Freshness uses a trusted backend UTC clock (change 002); a caller-supplied created_at cannot establish the time used, and a created_at more than 5 minutes from it is refused. |
 | G1. Decision history (append-only ledger) + manual linked revisit note | **PROVEN CANONICAL OFFLINE** | Reads the real ledger; a revisit is a dated linked note, the original record is never edited. |
-| G2. Outcome vs time-matched cash/Treasury and SPY; monitoring cadence | **NOT IMPLEMENTED** | Needs reliable adjusted total-return and Treasury evidence per revisit; not claimed. |
-| H. Candidate cohort side-by-side research comparison (no ranks) and 'attractive at the verified price?' assessment view | **NOT IMPLEMENTED** | Held behind the Workstream A safety finding. MCD and RPM stay PARKED; their dates are revisit triggers, not promotions. |
+| G2. Linked later observation (append-only, price-only)  | **PROVEN CANONICAL OFFLINE** | MCD: dated observation linked to the underwriting record with a price-only change (+7.9%, SECONDARY vs UNCERTIFIED originals). Benchmark comparison vs time-matched cash/Treasury and SPY adjusted total return is UNVERIFIED / NOT IMPLEMENTED; monitoring cadence is out of scope. |
+| H. Unranked research cohort and descriptive 'attractive at the verified price?' assessment view | **PROVEN CANONICAL OFFLINE** | Built on live SEC + Gate B data for MCD (parked), GEV, RMD, ORCL (SURFACED, INSUFFICIENT EVIDENCE). Assessments are DRAFT_BY_RECORDER and not human-accepted; no ranks, no scores, no Stage 7 or capital control in the view. No candidate yet permitted a 'SUPPORTED' example. |
 | Real trades / broker connectivity / execution | **NOT IMPLEMENTED** | By design: paper only. No order API exists. |
 

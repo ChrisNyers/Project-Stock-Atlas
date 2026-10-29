@@ -1,0 +1,37 @@
+............................................F..........                  [100%]
+=================================== FAILURES ===================================
+_________________ test_b3_pilot2_frozen_basket_venue_readiness _________________
+
+provider = <test_gate_b_live_binding._ThrottledProvider object at 0x10b8ca950>
+
+    @live
+    @requires_key
+    def test_b3_pilot2_frozen_basket_venue_readiness(provider):
+        """Every frozen Pilot 2 name resolves to an explicitly supported MIC.
+    
+        Identity/MIC resolution only. No price is analysed, no valuation or
+        fundamentals are consulted, and no investment conclusion is drawn — this
+        proves venue readiness for session attestation, nothing else. A ticker
+        resolving to an unsupported MIC is a surfaced blocker, not silently
+        bypassed: the assertion below fails loudly and names the offender.
+        """
+        from live_session_calendar import SUPPORTED_MICS
+    
+        unresolved, unsupported = [], []
+        for ticker in PILOT2_FROZEN_BASKET:
+            result = provider.latest_price(ticker).to_dict()
+            if result.get("state") != "AVAILABLE":
+                unresolved.append((ticker, result.get("state")))
+                continue
+            data = result.get("data") or {}
+            raw = result.get("raw") or {}
+            mic = str(data.get("mic_code") or raw.get("mic_code") or "").strip().upper()
+            if mic not in SUPPORTED_MICS:
+                unsupported.append((ticker, mic))
+    
+>       assert not unresolved, f"Could not resolve identity for: {unresolved}"
+E       AssertionError: Could not resolve identity for: [('ADBE', 'ERROR')]
+E       assert not [('ADBE', 'ERROR')]
+
+tests/test_gate_b_live_binding.py:762: AssertionError
+1 failed, 54 passed in 255.51s (0:04:15)

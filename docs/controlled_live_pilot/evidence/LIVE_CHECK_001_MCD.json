@@ -1,0 +1,71 @@
+{
+  "price_binding": {
+    "security_key": "SEC-CIK:0000063908:MCD",
+    "quoted_security_key": "SEC-CIK:0000063908:MCD",
+    "quoted_instrument": "McDonald's Corporation (XNYS)",
+    "ticker": "MCD",
+    "price": 250.5,
+    "currency": "USD",
+    "provider": "twelvedata",
+    "price_as_of": "2026-10-28T19:59:00+00:00",
+    "price_session_date": "2026-10-28",
+    "latest_completed_session_date": "2026-10-28",
+    "market_session_status": "COMPLETED",
+    "adjusted": false,
+    "price_mode": "COMPLETED_SESSION",
+    "freshness_status": "FRESH",
+    "freshness_basis": "derived from independent exchange calendar, not provider self-report"
+  },
+  "session_attestation": {
+    "session_date": "2026-10-28",
+    "session_close_utc": "2026-10-28T20:00:00+00:00",
+    "exchange": "XNYS",
+    "calendar_name": "XNYS",
+    "calendar_version": "exchange_calendars==4.13.2",
+    "decision_time_utc": "2026-10-29T00:10:03.985023+00:00",
+    "authority": "independent exchange calendar",
+    "provider_reported_market_open": null,
+    "provider_agrees_with_calendar": null
+  },
+  "provider_self_report": {
+    "is_market_open": false,
+    "datetime": "2026-10-28",
+    "authority": "NONE \u2014 evidence only, cannot override calendar"
+  },
+  "raw_observation": {
+    "symbol": "MCD",
+    "name": "McDonald's Corporation",
+    "exchange": "NYSE",
+    "mic_code": "XNYS",
+    "currency": "USD",
+    "datetime": "2026-10-28",
+    "timestamp": 1793194200,
+    "last_quote_at": 1793217540,
+    "open": "248.42000",
+    "high": "252.36980",
+    "low": "248.00010681",
+    "close": "250.5",
+    "volume": "3387533",
+    "previous_close": "249.47000",
+    "change": "1.029999",
+    "percent_change": "0.41287480",
+    "average_volume": "5051723",
+    "is_market_open": false,
+    "fifty_two_week": {
+      "low": "229.20000",
+      "high": "341.75",
+      "low_change": "21.30000",
+      "high_change": "-91.25",
+      "low_change_percent": "9.29320",
+      "high_change_percent": "-26.70080",
+      "range": "229.199997 - 341.750000"
+    }
+  },
+  "check": {
+    "mode": "READ-ONLY",
+    "decision_time_utc": "2026-10-29T00:10:03.985023+00:00",
+    "stage7_started": false,
+    "decision_written": false,
+    "key_in_this_file": false
+  }
+}

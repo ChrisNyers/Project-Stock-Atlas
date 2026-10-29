@@ -441,7 +441,8 @@ def test_capability_matrix_is_honest_and_in_sync():
     allowed = ("PROVEN LIVE", "PROVEN CANONICAL OFFLINE", "FIXTURE-TESTED", "BLOCKED", "NOT IMPLEMENTED")
     assert all(s.split(" (")[0] in allowed for _, s, _ in appmod.CAPABILITIES)
     status = {n.split(".")[0]: s for n, s, _ in appmod.CAPABILITIES}
-    assert status["D"] == "BLOCKED" and status["E"] == "FIXTURE-TESTED" and status["F"] == "FIXTURE-TESTED"
-    assert status["C2"] == "NOT IMPLEMENTED" and not any(s == "PROVEN LIVE" for s in status.values())  # nothing is live-proven
+    assert status["E"] == "FIXTURE-TESTED" and status["F"] == "FIXTURE-TESTED"  # Stage 7 / funded Stage 8 have never run on live data
+    assert status["D"] == "PROVEN LIVE" and status["C2"] == "PROVEN LIVE"  # read-only price binding and SEC ingestion only
+    assert {k for k, s in status.items() if s == "PROVEN LIVE"} == {"D", "C2"}  # nothing else is claimed live
     doc = (REPO / "atlas_ui" / "CAPABILITY_MATRIX.md").read_text()
     assert appmod.matrix_markdown() in doc

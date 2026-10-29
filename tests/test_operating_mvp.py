@@ -149,7 +149,7 @@ def test_committed_ledger_verifies_and_holds_mcd_rpm_parked():
     for cid, until in (("MCD", "2026-11-04"), ("RPM", "2026-11-09")):
         c = cands[cid]
         assert c["state"] == "PARKED" and c["parked_until"] == until and c["parked_until_verified"]
-        assert all(h["backfilled"] for h in c["history"])
+        assert all(h["backfilled"] for h in c["history"] if h["type"] in ("SURFACED", "STATE_CHANGE"))  # later research events are live, not backfilled
 
 
 def test_seed_refuses_non_empty_and_reproduces_states(lp):

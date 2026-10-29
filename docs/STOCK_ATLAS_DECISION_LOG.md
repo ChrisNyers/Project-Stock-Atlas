@@ -3499,3 +3499,23 @@ MCD and RPM remain PARKED.
 **Capital status: NO REAL PORTFOLIO ACTION.**
 
 ---
+
+## BACKEND_COMPLETION_WORKSTREAMS_B_TO_E
+
+| | |
+|---|---|
+| Date | 2026-10-28 |
+| Status | **DELIVERED FOR INDEPENDENT REVIEW — no further phase started** |
+| Context | Human instruction after change 002 (`618478b`); results `controlled_live_pilot/BACKEND_COMPLETION_RESULTS_001.md` |
+
+### Decision
+
+Using the existing infrastructure only (`sec_adapter`, `xbrl_parser`, `identity_resolver`, Gate B, the discovery/evidence ledger): (B) read-only live price/identity/XNYS verification of MCD, GEV, RMD, ORCL and the live Gate B
+suite; (C) `atlas_ui/research.py` writes SEC facts as point-in-time PRIMARY evidence with accession/known-at/period/units, fail-closed gaps and a retained hashed snapshot, with 25/25 selected facts re-found in the filings;
+(D) versioned descriptive research assessments (draft-by-recorder; never a verdict, score or rank) and an unranked alphabetical cohort view; (E) a linked append-only price-only observation. Three event types were added to the
+discovery ledger (ASSESSMENT, OBSERVATION; STANCE earlier); no new data source, database, tool or agent; no approved investment control changed beyond change 002. GEV, RMD and ORCL were surfaced as research names on the human's list
+without a stance and are not promoted. MCD and RPM remain PARKED. A key that exists in the gitignored `.env` was loaded into the process on request, never printed or stored.
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
