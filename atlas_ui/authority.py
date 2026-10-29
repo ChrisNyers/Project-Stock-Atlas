@@ -261,6 +261,14 @@ def append(register: Path, type_: str, payload: dict, *, approval: dict | None =
     return ev
 
 
+def accept_ledger_tail(register: Path, ledger_path: Path, approval: dict) -> dict:
+    """Accept the candidate ledger as it stands (one LEDGER_ACCEPTED_THROUGH event). Used to seed a DEMO workspace and by tests acting as the human;
+    nothing in the app or the services calls it for the repository's register."""
+    from operating_mvp import ledger as L
+    last = L.read_events(ledger_path)[-1]
+    return append(register, "LEDGER_ACCEPTED_THROUGH", {"through_seq": last["seq"], "through_event_hash": last["event_hash"]}, approval=approval)
+
+
 def record_exists(repo: Path, ref: str) -> bool:
     """An approval's ``record`` resolves to a repository file, or to a heading in the Decision Log ("Decision Log: NAME")."""
     ref = ref.strip()

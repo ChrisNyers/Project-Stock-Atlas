@@ -7,11 +7,13 @@ price can never back a canonical Stage 7 run. Demo output is NOT evidence.
 from __future__ import annotations
 
 import shutil
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 from live_session_calendar import latest_completed_session
 from operating_mvp import ledger
+
+from . import authority
 
 DEMO_TICKER = "DEMOCO"
 DEMO_KEY = "DEMO-FIXTURE:0000000:DEMOCO"
@@ -63,4 +65,9 @@ def seed_demo_workspace(root: Path, canonical_ledger: Path) -> Path:
                                     grade="UNCERTIFIED", source_ref="FIXTURE")
         ledger.change_state(dest, candidate_id=DEMO_TICKER, to_state="UNDERWRITING", reason="demo")
         ledger.change_state(dest, candidate_id=DEMO_TICKER, to_state="READY_FOR_CAPITAL_COMPARISON", reason="demo")
+        # The demo workspace has its own register, so demo runs through the same approval resolver as canonical mode (no bypass).
+        # The acceptance is a fixture's, for demonstration only; it does not touch the repository's register.
+        authority.accept_ledger_tail(root / "authority_register.jsonl", dest, {
+            "by": "HUMAN", "date": date.today().isoformat(), "record": "DEMO fixture workspace",
+            "quote": "DEMO workspace only: the seeded fixture ledger is accepted for demonstration; this is not a real approval."})
     return dest

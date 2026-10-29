@@ -56,6 +56,8 @@ def canon_app(tmp_path, monkeypatch):
     monkeypatch.delenv("TWELVEDATA_API_KEY", raising=False)
     copy = tmp_path / "candidates.jsonl"
     shutil.copyfile(ledger.DEFAULT_LEDGER, copy)  # tests never touch the committed ledger
+    (tmp_path / "live").mkdir()
+    shutil.copyfile(REPO / "docs" / "authority_register.jsonl", tmp_path / "live" / "authority_register.jsonl")   # nor the committed register
     return build(False, tmp_path / "live", candidate_ledger=copy)
 
 
@@ -137,7 +139,7 @@ def test_live_binding_blocked_without_key_and_nothing_retained(canon_app):
     assert canon_app.svc.ledger_rows() == []
 
 
-def test_fixture_prices_are_refused_in_canonical_mode(canon_app, monkeypatch):
+def test_fixture_prices_are_refused_in_canonical_mode(canon_app, monkeypatch, approve_pending):
     p = canon_app.ws.candidate_ledger
     for st, kw in (("QUICK_TEST", {}), ("UNDERWRITING", {}), ("READY_FOR_CAPITAL_COMPARISON", {})):
         pass
@@ -146,6 +148,7 @@ def test_fixture_prices_are_refused_in_canonical_mode(canon_app, monkeypatch):
     ledger.record_falsification(p, candidate_id="FXCO", test="t", result="SURVIVED", grade="PRIMARY")
     ledger.change_state(p, candidate_id="FXCO", to_state="UNDERWRITING", reason="r")
     ledger.change_state(p, candidate_id="FXCO", to_state="READY_FOR_CAPITAL_COMPARISON", reason="r")
+    approve_pending(canon_app.ws)
     svc = Stage7Service(canon_app.ws, provider_factory=demo.FixtureProvider, identity_fn=lambda t: demo.DEMO_KEY,
                         allowed_providers={"twelvedata"}, key_present=lambda: True)
     with pytest.raises(Blocked, match="not permitted in CANONICAL mode"):

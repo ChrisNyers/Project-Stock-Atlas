@@ -179,7 +179,7 @@ def test_f3_ticker_comes_from_the_server_side_record_not_the_client(demo_app, mo
     assert e["ticker"] == "DEMOCO" and spy.underwriting.ticker == "DEMOCO"
 
 
-def test_f3_ready_candidate_without_recorded_ticker_cannot_run(demo_app):
+def test_f3_ready_candidate_without_recorded_ticker_cannot_run(demo_app, approve_pending):
     p = demo_app.ws.candidate_ledger
     ledger.surface(p, name="No Ticker Co", source="HUMAN", why_surfaced="w", investment_question="q")
     cid = "NO-TICKER-CO"
@@ -187,6 +187,7 @@ def test_f3_ready_candidate_without_recorded_ticker_cannot_run(demo_app):
     ledger.record_falsification(p, candidate_id=cid, test="t", result="SURVIVED", grade="PRIMARY")
     ledger.change_state(p, candidate_id=cid, to_state="UNDERWRITING", reason="r")
     ledger.change_state(p, candidate_id=cid, to_state="READY_FOR_CAPITAL_COMPARISON", reason="r")
+    approve_pending(demo_app.ws)
     with pytest.raises(Blocked, match="no recorded ticker"):
         demo_app.svc.run(good_req(candidate_id=cid, ticker="DEMOCO"), NOW)
 

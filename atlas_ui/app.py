@@ -49,7 +49,7 @@ CAPABILITIES = [
     ("H. Unranked research cohort and descriptive 'attractive at the verified price?' assessment view", "PROVEN CANONICAL OFFLINE",
      "Built on live SEC + Gate B data for MCD (parked), GEV, RMD, ORCL (SURFACED, INSUFFICIENT EVIDENCE). Assessments are DRAFT_BY_RECORDER and not human-accepted; no ranks, no scores, no Stage 7 or capital control in the view. No candidate yet permitted a 'SUPPORTED' example. Saved research snapshots are referenced by a bare file name inside the research workspace and bound to their SHA-256, so an extracted ZIP loads them anywhere; a missing, tampered or mis-bound snapshot is shown as a RESEARCH EVIDENCE ERROR, never as 'no research'."),
     ("I. Source-of-truth reference, preflight, regression verification and delivery (tooling)", "PROVEN CANONICAL OFFLINE",
-     "docs/CURRENT_AUTHORITY.md holds the rules; the values that change (approved state, portfolio snapshot, active work, candidate-ledger acceptance) are HUMAN-approved, hash-chained events in docs/authority_register.jsonl, resolved by `python -m atlas_ui preflight` and by the app (latest approved snapshot only; drafts and unapproved newer records are never followed; conflicting approved records fail closed; superseded snapshots stay loadable; a revisit date is a trigger, never a promotion). `verify` runs the suite with skips classified and an optional clean-extraction run; `deliver` builds one ZIP, one patch and one report and fails if the repository preflight, the clean-extraction preflight or either test run fails. Historical Pilot 2 / Sprint 2 instructions are marked non-governing. Tooling only: no investment logic."),
+     "docs/CURRENT_AUTHORITY.md holds the rules; the values that change (approved state, portfolio snapshot, active work, candidate-ledger acceptance) are HUMAN-approved, hash-chained events in docs/authority_register.jsonl, resolved by `python -m atlas_ui preflight` and by the app (latest approved snapshot only; the Stage 7 and funded Stage 8 server-side gates follow the register-approved candidate status, so an unapproved promotion never opens capital comparison and any unapproved status change closes it; drafts and unapproved newer records are never followed; conflicting approved records fail closed; superseded snapshots stay loadable; a revisit date is a trigger, never a promotion). `verify` runs the suite with skips classified and an optional clean-extraction run; `deliver` builds one ZIP, one patch and one report and fails if the repository preflight, the clean-extraction preflight or either test run fails. Historical Pilot 2 / Sprint 2 instructions are marked non-governing. Tooling only: no investment logic."),
     ("Real trades / broker connectivity / execution", "NOT IMPLEMENTED", "By design: paper only. No order API exists."),
 ]
 
@@ -362,8 +362,13 @@ def candidate_page(app: App, cid: str, err="", flash="") -> str | None:
     runs = candidate_runs(app, cid, c["ticker"])
     run_rows = "".join(f'<tr><td><a href="/run/{urllib_q(r["run_id"])}">{e(r["run_id"])}</a></td><td>{status_pill(r["status"])}</td><td class="mono">{r["stage7"]["sha256"][:16]}…</td><td>{pill("VERIFIED" if r["verified"] else "NOT VERIFIED", "ok" if r["verified"] else "danger")}</td></tr>' for r in runs) \
         or '<tr><td colspan="4"><span class="pill wait">NOT RUN / NOT VERIFIED</span></td></tr>'
-    gate = ("READY — a human has marked this candidate READY FOR CAPITAL COMPARISON." if c["state"] == "READY_FOR_CAPITAL_COMPARISON"
-            else f"Not ready: state is {c['state']}" + (f" until {c['parked_until']}" if c["parked_until"] else "") + ". Stage 7 cannot be started.")
+    try:
+        auth = app.ws.candidates()[cid]
+        why = app.ws.capital_gate(cid, auth)
+        gate = ("READY — a human marked this candidate READY FOR CAPITAL COMPARISON and the authority register approves it." if why is None
+                else f"Not ready: {why}." + (" Revisit date reached: a trigger to reassess, not a promotion." if auth["revisit_due"] else ""))
+    except Blocked as exc:
+        gate = f"Not ready: {exc}"
     body = f"""<div class="view active"><p class="eyebrow">Candidate</p><h1>{e(cid)} — {e(c["name"])}</h1>
 <div class="btn-row">{pill(c["state"].replace("_", " "))}{pill("source: " + c["source"])}{pill("grandfathered") if c["grandfathered"] else ""}</div>
 <section class="panel" style="margin-top:16px"><h2>Why it surfaced</h2><p>{e(c["why_surfaced"])}</p><div class="thin"></div><h3>Investment question</h3><p>{e(c["investment_question"])}</p>
@@ -376,8 +381,10 @@ def candidate_page(app: App, cid: str, err="", flash="") -> str | None:
 
 
 def stage7_page(app: App, err="", flash="", market: str = "") -> str:
-    cands = ledger.replay(app.ws.candidate_ledger)
-    ready = [c for c in cands.values() if c["state"] == "READY_FOR_CAPITAL_COMPARISON"]
+    try:
+        ready = [c for c in app.ws.candidates().values() if app.ws.capital_gate(c["candidate_id"], c) is None]      # only candidates the register approves as READY
+    except Blocked:
+        ready = []
     runs = app.svc.list_runs()
     rr = "".join(f'<tr><td><a href="/run/{urllib_q(r["run_id"])}">{e(r["run_id"])}</a></td><td>{e(r["ticker"])}</td><td>{status_pill(r["status"])}</td><td class="mono">{r["stage7"]["sha256"][:16]}…</td><td>{pill("VERIFIED" if r["verified"] else "NOT VERIFIED", "ok" if r["verified"] else "danger")}</td></tr>' for r in runs) \
         or '<tr><td colspan="5"><span class="pill wait">NOT RUN / NOT VERIFIED — no retained Stage 7 run</span></td></tr>'

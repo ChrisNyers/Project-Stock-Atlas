@@ -37,7 +37,7 @@ from stock_atlas.portfolio import build_position_proposal
 
 from operating_mvp import ledger
 
-from . import canonical
+from . import authority, canonical
 
 REPO = canonical.REPO
 _SEGMENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
@@ -107,14 +107,41 @@ class Workspace:
     root: Path
     mode: str  # "CANONICAL" | "DEMO"
     candidate_ledger: Path | None = None  # canonical mode shares operating_mvp's ledger: one store, not a copy
+    register: Path | None = None          # the approval register that governs candidate status; the repository's when the shared ledger is used
     facade: CapitalDecisionFacade = field(init=False)
 
     def __post_init__(self):
         self.root = Path(self.root)
         self.root.mkdir(parents=True, exist_ok=True)
         self.candidate_ledger = Path(self.candidate_ledger or self.root / "candidate_ledger.jsonl")
+        shared = self.candidate_ledger.resolve() == Path(ledger.DEFAULT_LEDGER).resolve()
+        self.register = Path(self.register or (authority.REPO / authority.REGISTER if shared else self.root / "authority_register.jsonl"))
         self.facade = CapitalDecisionFacade(self.root / "decisions.jsonl", self.root / "artifacts")
         (self.root / "inputs").mkdir(exist_ok=True)
+
+    def candidates(self) -> dict[str, dict]:
+        """Candidate status AS THE AUTHORITY REGISTER APPROVES IT. The one place a server-side gate reads candidate state: a ledger change the register
+        has not approved (a promotion included) is listed under ``pending`` and never followed. If the records cannot be resolved the gate is closed."""
+        try:
+            return authority.resolve_candidates(authority.resolve(self.register), self.candidate_ledger)
+        except (authority.AuthorityError, ledger.LedgerError, OSError, ValueError) as exc:
+            raise Blocked(f"candidate status cannot be established: the authority records did not resolve ({exc}); failing closed, nothing was written")
+
+    @staticmethod
+    def capital_gate(cid: str, cand: dict | None) -> str | None:
+        """None when the candidate may go to capital comparison, else the exact reason. Both server-side entry points use this one rule:
+        the APPROVED status must be READY_FOR_CAPITAL_COMPARISON and no ledger status change may be awaiting approval. An unapproved promotion
+        never opens the gate; an unapproved change of any kind closes it until the register and the ledger agree (fail closed)."""
+        if cand is None:
+            return f"unknown candidate {cid!r}"
+        msg = f"{cid} is {cand['state']}" + (f" until {cand['parked_until']}" if cand["parked_until"] else "")
+        if cand["pending"]:
+            last = cand["pending"][-1]
+            return (msg + f"; ledger status change(s) {[p['seq'] for p in cand['pending']]} (latest: {last['to_state']}) are NOT approved in the authority register and are not followed, "
+                    "and capital comparison stays closed until the register and the ledger agree")
+        if cand["state"] != "READY_FOR_CAPITAL_COMPARISON":
+            return msg + "; Stage 7 starts only for a candidate a human moved to READY_FOR_CAPITAL_COMPARISON and the authority register approved"
+        return None
 
     @property
     def index_path(self) -> Path:
@@ -181,7 +208,7 @@ class Stage7Service:
     def run(self, req: dict, now: datetime) -> dict:
         # --- identity: candidate -> recorded ticker -> bound security. Never trust a client pairing.
         cid = (req.get("candidate_id") or "").strip()
-        cand = ledger.replay(self.ws.candidate_ledger).get(cid)
+        cand = self.ws.candidates().get(cid)
         if cand is None:
             raise Blocked(f"unknown candidate {cid!r}")
         ticker = (cand.get("ticker") or "").strip().upper()
@@ -190,10 +217,9 @@ class Stage7Service:
         claimed = (req.get("ticker") or "").strip().upper()
         if claimed and claimed != ticker:
             raise Blocked(f"ticker mismatch: candidate {cid} is recorded as {ticker}, request named {claimed}")
-        if cand["state"] != "READY_FOR_CAPITAL_COMPARISON":
-            raise Blocked(f"{cid} is {cand['state']}"
-                          + (f" until {cand['parked_until']}" if cand["parked_until"] else "")
-                          + "; Stage 7 starts only for a candidate a human moved to READY_FOR_CAPITAL_COMPARISON")
+        why = self.ws.capital_gate(cid, cand)
+        if why:
+            raise Blocked(why)
 
         # --- explicit human inputs only: nothing is defaulted into a bullish or fresh state
         decision = (req.get("decision") or "").strip().upper()
@@ -410,10 +436,13 @@ class Stage7Service:
         action must pass this checkpoint. Any failure means "re-run Stage 7"; old return ranges are never reused
         against a changed market. Non-actions are exempt. A failure leaves the decision ledger untouched.
         """
-        cand = ledger.replay(self.ws.candidate_ledger).get(entry["candidate_id"])
-        if cand is None or cand["state"] != "READY_FOR_CAPITAL_COMPARISON":
-            reject(f"candidate {entry['candidate_id']} is "
-                   f"{'unknown' if cand is None else cand['state']}; funded action needs it READY_FOR_CAPITAL_COMPARISON")
+        try:
+            cand = self.ws.candidates().get(entry["candidate_id"])
+        except Blocked as exc:
+            reject(str(exc))
+        why = self.ws.capital_gate(entry["candidate_id"], cand)
+        if why:
+            reject("funded action refused: " + why)
         age_h = (now - datetime.fromisoformat(entry["created_at"])).total_seconds() / 3600
         if age_h < -0.02 or age_h > self.MAX_RUN_AGE_HOURS:
             reject(f"STALE Stage 7 run: {age_h:.1f}h old (limit {self.MAX_RUN_AGE_HOURS:g}h); re-run Stage 7 with fresh inputs")

@@ -1,0 +1,6 @@
+MUTATION service.py: Stage 7 and funded gates read the RAW ledger again
+   -> 9 failed, 111 passed in 6.13s   (restored, sha256 verified)
+MUTATION service.py: capital_gate ignores pending (unapproved) changes
+   -> 6 failed, 114 passed in 6.37s   (restored, sha256 verified)
+MUTATION service.py: unresolvable authority records no longer close the gate
+   -> 3 failed, 117 passed in 6.35s   (restored, sha256 verified)

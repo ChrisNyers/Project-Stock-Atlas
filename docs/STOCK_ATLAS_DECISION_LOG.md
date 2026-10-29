@@ -3588,3 +3588,23 @@ No frozen control, investment logic, provider, agent or ML changed. Recorded lim
 MCD and RPM remain PARKED; no Stage 7 run, no decision.
 
 **Capital status: NO REAL PORTFOLIO ACTION.**
+
+---
+
+## CANDIDATE_GATE_FOLLOWS_AUTHORITY_REGISTER
+
+| | |
+|---|---|
+| Date | 2026-10-29 |
+| Status | **DELIVERED FOR INDEPENDENT ACCEPTANCE — infrastructure development stops here** |
+| Context | Independent review of `6859082`: the Stage 7 and funded Stage 8 services still checked raw candidate-ledger states, so an unapproved promotion could authorize capital comparison |
+
+### Decision
+
+Both server-side entry points (`Stage7Service.run` and the funded path in `record_stage8` / `_fresh_price_gate`) now read candidate status only through `Workspace.candidates()` (the existing `authority.resolve_candidates`) and decide with one rule, `Workspace.capital_gate`:
+the APPROVED status must be READY_FOR_CAPITAL_COMPARISON **and** no ledger status change may be awaiting approval. An unapproved promotion never opens the gate; an unapproved change of any kind (for example a re-park) closes it until the register and the ledger agree;
+unresolvable authority records (register missing or tampered, ledger chain broken) close it; every refusal writes nothing. The app's readiness views follow the same rule. The research workflow, the Discovery board and the candidate ledger itself are unchanged.
+A shared canonical ledger is governed by the repository register; any other ledger by its workspace's own register; DEMO workspaces are seeded with their own fixture register (labelled not a real approval), so demo runs through the same resolver. Nothing in the app or services writes the repository register.
+MCD (to 2026-11-04) and RPM (to 2026-11-09) restrictions are unchanged; a reached revisit date is a flag and never opens the gate. No frozen control, investment logic, provider, agent or ML changed. Regression tests: `tests/test_candidate_gate_authority.py` (14); three mutations fail them (`atlas_ui/evidence/authority/gate_mutations_FAIL_as_required.txt`).
+
+**Capital status: NO REAL PORTFOLIO ACTION.**
